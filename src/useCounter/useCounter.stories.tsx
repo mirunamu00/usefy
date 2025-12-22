@@ -1,26 +1,26 @@
-import type { Meta, StoryObj } from '@storybook/react';
-import { useCounter } from './useCounter';
+import type { Meta, StoryObj } from "@storybook/react";
+import { useCounter } from "./useCounter";
 
 function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
   const { count, increment, decrement, reset } = useCounter(initialValue);
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
       <h2>useCounter Hook Demo</h2>
-      <div style={{ fontSize: '48px', fontWeight: 'bold', margin: '20px 0' }}>
+      <div style={{ fontSize: "48px", fontWeight: "bold", margin: "20px 0" }}>
         Count: {count}
       </div>
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: "flex", gap: "10px" }}>
         <button
           onClick={increment}
           style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: 'pointer',
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#4CAF50",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
           }}
         >
           Increment (+1)
@@ -28,13 +28,13 @@ function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
         <button
           onClick={decrement}
           style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: 'pointer',
-            backgroundColor: '#f44336',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#f44336",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
           }}
         >
           Decrement (-1)
@@ -42,19 +42,19 @@ function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
         <button
           onClick={reset}
           style={{
-            padding: '10px 20px',
-            fontSize: '16px',
-            cursor: 'pointer',
-            backgroundColor: '#2196F3',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
+            padding: "10px 20px",
+            fontSize: "16px",
+            cursor: "pointer",
+            backgroundColor: "#2196F3",
+            color: "white",
+            border: "none",
+            borderRadius: "4px",
           }}
         >
           Reset
         </button>
       </div>
-      <div style={{ marginTop: '20px', color: '#666' }}>
+      <div style={{ marginTop: "20px", color: "#666" }}>
         Initial value: {initialValue}
       </div>
     </div>
@@ -62,16 +62,16 @@ function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
 }
 
 const meta = {
-  title: 'Hooks/useCounter',
+  title: "useCounter",
   component: CounterDemo,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     initialValue: {
-      control: { type: 'number' },
-      description: 'The initial value for the counter',
+      control: { type: "number" },
+      description: "The initial value for the counter",
     },
   },
 } satisfies Meta<typeof CounterDemo>;
