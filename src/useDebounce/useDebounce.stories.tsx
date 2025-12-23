@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState, useEffect } from "react";
 import { useDebounce } from "./useDebounce";
+import { within, userEvent, expect, waitFor } from "storybook/test";
 
 /**
  * 1. Search Input Demo
@@ -942,6 +943,26 @@ export const SearchInput: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the search input
+    const searchInput = canvas.getByPlaceholderText("Search...");
+
+    // Initially, check the structure exists
+    await expect(canvas.getByText("API Calls Made:", { exact: false })).toBeInTheDocument();
+
+    // Type "react"
+    await userEvent.type(searchInput, "react", { delay: 50 });
+
+    // Wait for debounce (500ms) and check results appear
+    await waitFor(
+      async () => {
+        await expect(canvas.getByText('Result 1 for "react"')).toBeInTheDocument();
+      },
+      { timeout: 1000 }
+    );
+  },
 };
 
 export const FormValidation: Story = {
@@ -954,6 +975,39 @@ export const FormValidation: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the email input
+    const emailInput = canvas.getByPlaceholderText("Enter your email");
+
+    // Type an invalid email
+    await userEvent.type(emailInput, "invalid", { delay: 50 });
+
+    // Wait for debounce + validation (800ms + 300ms)
+    await waitFor(
+      async () => {
+        await expect(
+          canvas.getByText("✗ Invalid email address")
+        ).toBeInTheDocument();
+      },
+      { timeout: 1500 }
+    );
+
+    // Clear and type a valid email
+    await userEvent.clear(emailInput);
+    await userEvent.type(emailInput, "test@example.com", { delay: 50 });
+
+    // Wait for validation
+    await waitFor(
+      async () => {
+        await expect(
+          canvas.getByText("✓ Valid email address")
+        ).toBeInTheDocument();
+      },
+      { timeout: 1500 }
+    );
+  },
 };
 
 export const AutoSave: Story = {
@@ -965,6 +1019,23 @@ export const AutoSave: Story = {
           "Auto-save content after user stops typing. Prevents excessive save operations while providing a seamless user experience.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the textarea
+    const textarea = canvas.getByPlaceholderText("Start typing...");
+
+    // Type some content
+    await userEvent.type(textarea, "Hello World", { delay: 50 });
+
+    // Wait for auto-save (1000ms debounce) and check Last Saved appears
+    await waitFor(
+      async () => {
+        await expect(canvas.getByText("Last Saved:", { exact: false })).toBeInTheDocument();
+      },
+      { timeout: 1500 }
+    );
   },
 };
 
@@ -1002,6 +1073,25 @@ export const Slider: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the slider
+    const slider = canvas.getByRole("slider");
+
+    // Change slider value
+    await userEvent.click(slider);
+    await userEvent.type(slider, "{arrowright}{arrowright}{arrowright}");
+
+    // Wait a bit for updates
+    await waitFor(
+      async () => {
+        // Just check that expensive updates text exists
+        await expect(canvas.getByText("Expensive Updates (Debounced):", { exact: false })).toBeInTheDocument();
+      },
+      { timeout: 1000 }
+    );
+  },
 };
 
 export const LeadingEdge: Story = {
@@ -1013,6 +1103,27 @@ export const LeadingEdge: Story = {
           "Demonstrates the difference between leading and trailing edge updates. Leading edge fires immediately on first change, while trailing edge waits for inactivity.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the button
+    const button = canvas.getByRole("button", { name: /Click Me!/i });
+
+    // Click the button 3 times rapidly
+    await userEvent.click(button);
+    await userEvent.click(button);
+    await userEvent.click(button);
+
+    // Wait for trailing edge (1000ms) and verify updates happened
+    await waitFor(
+      async () => {
+        await expect(
+          canvas.getByText("Trailing Edge (fires after delay):", { exact: false })
+        ).toBeInTheDocument();
+      },
+      { timeout: 1500 }
+    );
   },
 };
 
@@ -1026,6 +1137,31 @@ export const MaxWait: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the textarea
+    const textarea = canvas.getByPlaceholderText(
+      /Keep typing without stopping/i
+    );
+
+    // Type some content
+    await userEvent.type(
+      textarea,
+      "This is a test of the maxWait feature!",
+      { delay: 50 }
+    );
+
+    // Wait for debounce (2000ms) and verify updates happened
+    await waitFor(
+      async () => {
+        await expect(
+          canvas.getByText("Regular Debounce (2s delay):", { exact: false })
+        ).toBeInTheDocument();
+      },
+      { timeout: 3000 }
+    );
+  },
 };
 
 export const CombinedOptions: Story = {
@@ -1037,5 +1173,43 @@ export const CombinedOptions: Story = {
           "Compares different option combinations (default, leading only, both edges, and maxWait) to help understand their behavior patterns in real-time.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the input
+    const input = canvas.getByPlaceholderText("Type here...");
+
+    // Initially, no updates
+    await expect(
+      canvas.getByText(/No updates yet.../i)
+    ).toBeInTheDocument();
+
+    // Type some text
+    await userEvent.type(input, "test", { delay: 100 });
+
+    // Wait for debounce (1500ms)
+    await waitFor(
+      async () => {
+        // Should have at least one update in the log
+        const log = canvas.queryByText(/No updates yet.../i);
+        expect(log).not.toBeInTheDocument();
+      },
+      { timeout: 2000 }
+    );
+
+    // Should see different update types in the log
+    await expect(
+      canvas.getByText(/Default \(trailing\):/i)
+    ).toBeInTheDocument();
+
+    // Clear button should work
+    const clearButton = canvas.getByRole("button", { name: /Clear All/i });
+    await userEvent.click(clearButton);
+
+    // Should reset to no updates
+    await expect(
+      canvas.getByText(/No updates yet.../i)
+    ).toBeInTheDocument();
   },
 };
