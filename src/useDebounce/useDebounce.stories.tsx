@@ -532,6 +532,387 @@ function SliderDemo() {
 }
 
 /**
+ * 7. Leading Edge Demo
+ */
+function LeadingEdgeDemo() {
+  const [clicks, setClicks] = useState(0);
+  const [immediateCount, setImmediateCount] = useState(0);
+  const [leadingCount, setLeadingCount] = useState(0);
+  const [trailingCount, setTrailingCount] = useState(0);
+
+  const debouncedLeading = useDebounce(clicks, 1000, { leading: true });
+  const debouncedTrailing = useDebounce(clicks, 1000, { trailing: true });
+
+  useEffect(() => {
+    if (clicks > 0) {
+      setImmediateCount((prev) => prev + 1);
+    }
+  }, [clicks]);
+
+  useEffect(() => {
+    if (debouncedLeading > 0) {
+      setLeadingCount((prev) => prev + 1);
+    }
+  }, [debouncedLeading]);
+
+  useEffect(() => {
+    if (debouncedTrailing > 0) {
+      setTrailingCount((prev) => prev + 1);
+    }
+  }, [debouncedTrailing]);
+
+  return (
+    <div style={{ padding: "2rem", maxWidth: "600px" }}>
+      <h2>Leading vs Trailing Edge</h2>
+      <p style={{ color: "#666", marginBottom: "1rem" }}>
+        Click the button multiple times quickly. Leading edge fires immediately,
+        trailing edge fires after 1 second of inactivity.
+      </p>
+
+      <button
+        onClick={() => setClicks((prev) => prev + 1)}
+        style={{
+          width: "100%",
+          padding: "1rem 2rem",
+          fontSize: "1.25rem",
+          backgroundColor: "#007bff",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          marginBottom: "1rem",
+        }}
+      >
+        Click Me! (Clicked {clicks} times)
+      </button>
+
+      <div
+        style={{
+          padding: "1rem",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "4px",
+          marginBottom: "1rem",
+        }}
+      >
+        <div style={{ marginBottom: "0.5rem" }}>
+          <strong>Immediate Updates:</strong> {immediateCount}
+        </div>
+        <div
+          style={{
+            marginBottom: "0.5rem",
+            padding: "0.5rem",
+            backgroundColor: "#d4edda",
+            borderRadius: "4px",
+          }}
+        >
+          <strong>Leading Edge (fires immediately):</strong> {leadingCount}
+        </div>
+        <div
+          style={{
+            padding: "0.5rem",
+            backgroundColor: "#cce5ff",
+            borderRadius: "4px",
+          }}
+        >
+          <strong>Trailing Edge (fires after delay):</strong> {trailingCount}
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: "1rem",
+          backgroundColor: "#fff3cd",
+          borderRadius: "4px",
+        }}
+      >
+        <p style={{ margin: 0, fontSize: "0.875rem" }}>
+          💡 <strong>Leading edge</strong> is useful for actions that should
+          happen immediately on first interaction (like showing a tooltip).
+          <strong> Trailing edge</strong> is better for actions that should wait
+          until user activity stops (like API calls).
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 8. Max Wait Demo
+ */
+function MaxWaitDemo() {
+  const [input, setInput] = useState("");
+  const [regularUpdateCount, setRegularUpdateCount] = useState(0);
+  const [maxWaitUpdateCount, setMaxWaitUpdateCount] = useState(0);
+
+  const debouncedRegular = useDebounce(input, 2000);
+  const debouncedMaxWait = useDebounce(input, 2000, { maxWait: 5000 });
+
+  useEffect(() => {
+    if (debouncedRegular) {
+      setRegularUpdateCount((prev) => prev + 1);
+    }
+  }, [debouncedRegular]);
+
+  useEffect(() => {
+    if (debouncedMaxWait) {
+      setMaxWaitUpdateCount((prev) => prev + 1);
+    }
+  }, [debouncedMaxWait]);
+
+  return (
+    <div style={{ padding: "2rem", maxWidth: "600px" }}>
+      <h2>Max Wait Option</h2>
+      <p style={{ color: "#666", marginBottom: "1rem" }}>
+        Type continuously without stopping. Regular debounce waits indefinitely,
+        but maxWait ensures update happens within 5 seconds maximum.
+      </p>
+
+      <textarea
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        placeholder="Keep typing without stopping for more than 2 seconds..."
+        rows={6}
+        style={{
+          width: "100%",
+          padding: "0.75rem",
+          fontSize: "1rem",
+          border: "2px solid #ddd",
+          borderRadius: "4px",
+          fontFamily: "monospace",
+          marginBottom: "1rem",
+          resize: "vertical",
+        }}
+      />
+
+      <div
+        style={{
+          padding: "1rem",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "4px",
+          marginBottom: "1rem",
+        }}
+      >
+        <div style={{ marginBottom: "0.5rem" }}>
+          <strong>Characters:</strong> {input.length}
+        </div>
+        <div
+          style={{
+            marginBottom: "0.5rem",
+            padding: "0.5rem",
+            backgroundColor: "#e7f3ff",
+            borderRadius: "4px",
+          }}
+        >
+          <strong>Regular Debounce (2s delay):</strong> {regularUpdateCount}{" "}
+          updates
+        </div>
+        <div
+          style={{
+            padding: "0.5rem",
+            backgroundColor: "#d4edda",
+            borderRadius: "4px",
+          }}
+        >
+          <strong>With MaxWait (2s delay, 5s max):</strong> {maxWaitUpdateCount}{" "}
+          updates
+        </div>
+      </div>
+
+      <div
+        style={{
+          padding: "1rem",
+          backgroundColor: "#fff3cd",
+          borderRadius: "4px",
+        }}
+      >
+        <p style={{ margin: 0, fontSize: "0.875rem" }}>
+          💡 <strong>maxWait</strong> ensures that even if the user keeps typing
+          continuously, the debounced value will update at least once every 5
+          seconds. This is useful for auto-save features where you want to
+          ensure changes are saved periodically even during continuous editing.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * 9. Combined Options Demo
+ */
+function CombinedOptionsDemo() {
+  const [value, setValue] = useState("");
+  const [updateLog, setUpdateLog] = useState<
+    Array<{ time: string; type: string; value: string }>
+  >([]);
+
+  const debouncedDefault = useDebounce(value, 1500);
+  const debouncedLeading = useDebounce(value, 1500, {
+    leading: true,
+    trailing: false,
+  });
+  const debouncedBoth = useDebounce(value, 1500, {
+    leading: true,
+    trailing: true,
+  });
+  const debouncedMaxWait = useDebounce(value, 1500, {
+    maxWait: 3000,
+    trailing: true,
+  });
+
+  useEffect(() => {
+    if (debouncedDefault) {
+      setUpdateLog((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          type: "Default (trailing)",
+          value: debouncedDefault,
+        },
+      ]);
+    }
+  }, [debouncedDefault]);
+
+  useEffect(() => {
+    if (debouncedLeading) {
+      setUpdateLog((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          type: "Leading only",
+          value: debouncedLeading,
+        },
+      ]);
+    }
+  }, [debouncedLeading]);
+
+  useEffect(() => {
+    if (debouncedBoth) {
+      setUpdateLog((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          type: "Both edges",
+          value: debouncedBoth,
+        },
+      ]);
+    }
+  }, [debouncedBoth]);
+
+  useEffect(() => {
+    if (debouncedMaxWait) {
+      setUpdateLog((prev) => [
+        ...prev,
+        {
+          time: new Date().toLocaleTimeString(),
+          type: "MaxWait (3s)",
+          value: debouncedMaxWait,
+        },
+      ]);
+    }
+  }, [debouncedMaxWait]);
+
+  return (
+    <div style={{ padding: "2rem", maxWidth: "600px" }}>
+      <h2>Combined Options Comparison</h2>
+      <p style={{ color: "#666", marginBottom: "1rem" }}>
+        Type to see how different option combinations behave. All have 1.5s
+        delay.
+      </p>
+
+      <input
+        type="text"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Type here..."
+        style={{
+          width: "100%",
+          padding: "0.75rem",
+          fontSize: "1rem",
+          border: "2px solid #ddd",
+          borderRadius: "4px",
+          marginBottom: "1rem",
+        }}
+      />
+
+      <button
+        onClick={() => {
+          setValue("");
+          setUpdateLog([]);
+        }}
+        style={{
+          width: "100%",
+          padding: "0.5rem",
+          marginBottom: "1rem",
+          backgroundColor: "#dc3545",
+          color: "white",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+        }}
+      >
+        Clear All
+      </button>
+
+      <div
+        style={{
+          padding: "1rem",
+          backgroundColor: "#f5f5f5",
+          borderRadius: "4px",
+          marginBottom: "1rem",
+          maxHeight: "300px",
+          overflowY: "auto",
+        }}
+      >
+        <h3 style={{ marginTop: 0 }}>Update Log:</h3>
+        {updateLog.length === 0 ? (
+          <p style={{ color: "#666", fontStyle: "italic" }}>
+            No updates yet...
+          </p>
+        ) : (
+          <div>
+            {updateLog
+              .slice()
+              .reverse()
+              .map((log, index) => (
+                <div
+                  key={index}
+                  style={{
+                    padding: "0.5rem",
+                    backgroundColor: "white",
+                    border: "1px solid #ddd",
+                    borderRadius: "4px",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  <div style={{ fontSize: "0.75rem", color: "#666" }}>
+                    {log.time}
+                  </div>
+                  <div>
+                    <strong>{log.type}:</strong> {log.value}
+                  </div>
+                </div>
+              ))}
+          </div>
+        )}
+      </div>
+
+      <div
+        style={{
+          padding: "1rem",
+          backgroundColor: "#e7f3ff",
+          borderRadius: "4px",
+        }}
+      >
+        <p style={{ margin: 0, fontSize: "0.875rem" }}>
+          💡 Compare different option combinations to understand their behavior
+          patterns.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Meta & Stories
  */
 const meta = {
@@ -618,6 +999,42 @@ export const Slider: Story = {
       description: {
         story:
           "Debounce slider updates to avoid running expensive calculations on every value change. Only calculates after user stops dragging.",
+      },
+    },
+  },
+};
+
+export const LeadingEdge: Story = {
+  render: () => <LeadingEdgeDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Demonstrates the difference between leading and trailing edge updates. Leading edge fires immediately on first change, while trailing edge waits for inactivity.",
+      },
+    },
+  },
+};
+
+export const MaxWait: Story = {
+  render: () => <MaxWaitDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Shows the maxWait option which ensures the debounced value updates at least once within the specified maximum time, even during continuous changes. Perfect for auto-save features.",
+      },
+    },
+  },
+};
+
+export const CombinedOptions: Story = {
+  render: () => <CombinedOptionsDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Compares different option combinations (default, leading only, both edges, and maxWait) to help understand their behavior patterns in real-time.",
       },
     },
   },

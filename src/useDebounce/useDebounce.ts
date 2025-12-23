@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Options for useDebounce hook
@@ -75,48 +75,74 @@ export function useDebounce<T>(
   const { maxWait, leading = false, trailing = true } = options;
 
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
-  const [isFirstRender, setIsFirstRender] = useState(true);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const maxWaitTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const lastCallTimeRef = useRef<number>(0);
+  const lastInvokeTimeRef = useRef<number>(0);
+  const firstCallTimeRef = useRef<number>(0);
 
   useEffect(() => {
-    // Handle leading edge on first change
-    if (leading && isFirstRender) {
-      setDebouncedValue(value);
-      setIsFirstRender(false);
-      return;
+    const now = Date.now();
+    const timeSinceLastCall = now - lastCallTimeRef.current;
+    const timeSinceFirstCall = now - firstCallTimeRef.current;
+
+    // Clear existing timeouts
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    if (maxWaitTimeoutRef.current) {
+      clearTimeout(maxWaitTimeoutRef.current);
     }
 
-    setIsFirstRender(false);
+    const invokeFunction = () => {
+      setDebouncedValue(value);
+      lastInvokeTimeRef.current = Date.now();
+      firstCallTimeRef.current = 0; // Reset first call time after invoke
+    };
 
-    let timeoutId: ReturnType<typeof setTimeout> | undefined;
-    let maxWaitTimeoutId: ReturnType<typeof setTimeout> | undefined;
+    // Handle leading edge: invoke immediately if enough time has passed since last call
+    const shouldInvokeLeading = leading && timeSinceLastCall >= delay;
 
-    // Set up the debounce timeout
+    if (shouldInvokeLeading) {
+      invokeFunction();
+    }
+
+    // Track first call time for maxWait
+    if (firstCallTimeRef.current === 0) {
+      firstCallTimeRef.current = now;
+    }
+
+    // Update last call time
+    lastCallTimeRef.current = now;
+
+    // Set up trailing timeout
     if (trailing) {
-      timeoutId = setTimeout(() => {
-        setDebouncedValue(value);
-        if (maxWaitTimeoutId) {
-          clearTimeout(maxWaitTimeoutId);
-        }
+      timeoutRef.current = setTimeout(() => {
+        invokeFunction();
       }, delay);
     }
 
-    // Set up the max wait timeout if specified
+    // Set up maxWait timeout
     if (maxWait !== undefined && maxWait > 0) {
-      maxWaitTimeoutId = setTimeout(() => {
-        setDebouncedValue(value);
-        if (timeoutId) {
-          clearTimeout(timeoutId);
-        }
-      }, maxWait);
+      const timeUntilMaxWait = maxWait - timeSinceFirstCall;
+
+      if (timeUntilMaxWait > 0) {
+        maxWaitTimeoutRef.current = setTimeout(() => {
+          invokeFunction();
+          if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+          }
+        }, timeUntilMaxWait);
+      }
     }
 
     // Cleanup function
     return () => {
-      if (timeoutId) {
-        clearTimeout(timeoutId);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
       }
-      if (maxWaitTimeoutId) {
-        clearTimeout(maxWaitTimeoutId);
+      if (maxWaitTimeoutRef.current) {
+        clearTimeout(maxWaitTimeoutRef.current);
       }
     };
   }, [value, delay, maxWait, leading, trailing]);
