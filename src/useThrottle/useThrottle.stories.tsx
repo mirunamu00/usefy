@@ -1515,6 +1515,37 @@ export const ScrollPosition: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the scrollable container
+    const scrollContainer = canvasElement.querySelector(
+      '[style*="overflow-y: scroll"]'
+    ) as HTMLElement;
+    expect(scrollContainer).toBeInTheDocument();
+
+    // Initially, scroll position should be 0
+    await expect(
+      canvas.getByText("Raw scroll position:", { exact: false })
+    ).toBeInTheDocument();
+
+    // Simulate scroll by changing scrollTop
+    if (scrollContainer) {
+      scrollContainer.scrollTop = 100;
+      scrollContainer.dispatchEvent(new Event("scroll"));
+    }
+
+    // Wait for throttled update
+    await waitFor(
+      async () => {
+        const throttledText = canvas.getByText("Throttled position:", {
+          exact: false,
+        });
+        expect(throttledText).toBeInTheDocument();
+      },
+      { timeout: 500 }
+    );
+  },
 };
 
 export const SearchInput: Story = {
@@ -1526,6 +1557,42 @@ export const SearchInput: Story = {
           "Throttle search input to reduce API calls. Uses trailing edge only to wait for user to finish typing before making the call.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the search input
+    const searchInput = canvas.getByPlaceholderText("Type to search...");
+
+    // Initially, API calls should be 0
+    await expect(
+      canvas.getByText("API Calls Made:", { exact: false })
+    ).toBeInTheDocument();
+
+    // Type quickly
+    await userEvent.type(searchInput, "react hooks", { delay: 50 });
+
+    // Wait for throttle (300ms) and check API call count
+    await waitFor(
+      async () => {
+        const apiCallsText = canvas.getByText("API Calls Made:", {
+          exact: false,
+        }).parentElement;
+        expect(apiCallsText?.textContent).toMatch(/API Calls Made:\s*\d+/);
+      },
+      { timeout: 1000 }
+    );
+
+    // Verify throttled query is updated
+    await waitFor(
+      async () => {
+        const throttledQueryText = canvas.getByText("Throttled Query:", {
+          exact: false,
+        });
+        expect(throttledQueryText).toBeInTheDocument();
+      },
+      { timeout: 500 }
+    );
   },
 };
 
@@ -1539,6 +1606,38 @@ export const WindowResize: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the slider
+    const slider = canvas.getByRole("slider");
+
+    // Initially, check structure exists
+    await expect(
+      canvas.getByText("Raw Width:", { exact: false })
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByText("Throttled Width:", { exact: false })
+    ).toBeInTheDocument();
+
+    // Change slider value
+    await userEvent.click(slider);
+    await userEvent.type(
+      slider,
+      "{arrowright}{arrowright}{arrowright}{arrowright}{arrowright}"
+    );
+
+    // Wait for throttled update
+    await waitFor(
+      async () => {
+        const throttledText = canvas.getByText("Throttled Width:", {
+          exact: false,
+        });
+        expect(throttledText).toBeInTheDocument();
+      },
+      { timeout: 500 }
+    );
+  },
 };
 
 export const MouseMovementBothEdges: Story = {
@@ -1550,6 +1649,26 @@ export const MouseMovementBothEdges: Story = {
           "Default behavior with both leading and trailing edges enabled. Updates immediately when movement starts (leading), throttles during movement, and updates one final time when movement stops (trailing). Best balance for most use cases.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Check structure exists
+    await expect(
+      canvas.getByText("Raw Updates:", { exact: false })
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByText("Throttled Updates:", { exact: false })
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByText("Reduction:", { exact: false })
+    ).toBeInTheDocument();
+
+    // Find the mouse tracking area
+    const trackingArea = canvasElement.querySelector(
+      '[style*="cursor: crosshair"]'
+    ) as HTMLElement;
+    expect(trackingArea).toBeInTheDocument();
   },
 };
 
@@ -1563,6 +1682,22 @@ export const MouseMovementLeadingOnly: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Check structure exists
+    await expect(
+      canvas.getByText("Raw Updates:", { exact: false })
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByText("Throttled Updates:", { exact: false })
+    ).toBeInTheDocument();
+
+    // Check leading only info box
+    await expect(
+      canvas.getByText(/Leading edge only:/i, { exact: false })
+    ).toBeInTheDocument();
+  },
 };
 
 export const MouseMovementTrailingOnly: Story = {
@@ -1574,6 +1709,22 @@ export const MouseMovementTrailingOnly: Story = {
           "Only trailing edge enabled. No immediate update when movement starts - the throttled value lags at first. Updates during throttle intervals and catches up when movement stops. Useful when you only care about the final settled position.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Check structure exists
+    await expect(
+      canvas.getByText("Raw Updates:", { exact: false })
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByText("Throttled Updates:", { exact: false })
+    ).toBeInTheDocument();
+
+    // Check trailing only info box
+    await expect(
+      canvas.getByText(/Trailing edge only:/i, { exact: false })
+    ).toBeInTheDocument();
   },
 };
 
@@ -1587,6 +1738,22 @@ export const MouseMovementBothDisabled: Story = {
       },
     },
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Check structure exists
+    await expect(
+      canvas.getByText("Raw Updates:", { exact: false })
+    ).toBeInTheDocument();
+    await expect(
+      canvas.getByText("Throttled Updates:", { exact: false })
+    ).toBeInTheDocument();
+
+    // Check warning info box
+    await expect(
+      canvas.getByText(/Both edges disabled:/i, { exact: false })
+    ).toBeInTheDocument();
+  },
 };
 
 export const ClickEventThrottle: Story = {
@@ -1598,5 +1765,63 @@ export const ClickEventThrottle: Story = {
           "Demonstrates throttling click events for token renewal. Using `trailing: false` ensures only the first click triggers the action, and subsequent clicks during the cooldown period are ignored. This pattern is useful for preventing duplicate API calls on rapid button clicks.",
       },
     },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Find the button
+    const button = canvas.getByRole("button", { name: /Renew Token/i });
+
+    // Initially, counts should be 0
+    await expect(
+      canvas.getByText("Total Clicks:", { exact: false })
+    ).toBeInTheDocument();
+    const renewalsContainer = canvas.getByText("Actual Renewals:", {
+      exact: false,
+    }).parentElement;
+    expect(renewalsContainer?.textContent).toMatch(/0/);
+
+    // Click the button - first click should trigger renewal immediately
+    await userEvent.click(button);
+
+    // Wait for renewal to be triggered
+    await waitFor(
+      async () => {
+        const renewalsContainer = canvas.getByText("Actual Renewals:", {
+          exact: false,
+        }).parentElement;
+        expect(renewalsContainer?.textContent).toMatch(/1/);
+      },
+      { timeout: 1000 }
+    );
+
+    // Click rapidly multiple times during cooldown
+    await userEvent.click(button);
+    await userEvent.click(button);
+    await userEvent.click(button);
+
+    // Renewals should still be 1 (clicks during cooldown are ignored)
+    await waitFor(
+      async () => {
+        const totalClicksContainer = canvas.getByText("Total Clicks:", {
+          exact: false,
+        }).parentElement;
+        expect(totalClicksContainer?.textContent).toMatch(/4/);
+
+        const renewalsContainer = canvas.getByText("Actual Renewals:", {
+          exact: false,
+        }).parentElement;
+        expect(renewalsContainer?.textContent).toMatch(/1/);
+
+        const ignoredContainer = canvas.getByText("Ignored Clicks:", {
+          exact: false,
+        }).parentElement;
+        expect(ignoredContainer?.textContent).toMatch(/3/);
+      },
+      { timeout: 500 }
+    );
+
+    // Token should be valid
+    await expect(canvas.getByText("Token Status: Valid")).toBeInTheDocument();
   },
 };
