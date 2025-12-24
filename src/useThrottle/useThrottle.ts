@@ -1,3 +1,3 @@
-export function useThrottle<T>(value: T, delay: number = 500): T {
+export function useThrottle() {
   return value;
 }
