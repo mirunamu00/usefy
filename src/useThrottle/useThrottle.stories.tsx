@@ -196,9 +196,7 @@ function SearchInputDemo() {
       >
         <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
           <strong style={{ color: "#374151" }}>Current Input:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>
-            {searchQuery || "(empty)"}
-          </span>
+          <span style={{ color: "#6b7280" }}>{searchQuery || "(empty)"}</span>
         </div>
         <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
           <strong style={{ color: "#374151" }}>Throttled Query:</strong>{" "}
@@ -707,8 +705,8 @@ function MouseMovementLeadingOnlyDemo() {
       >
         <p style={{ margin: 0, fontSize: "0.875rem", color: "#065f46" }}>
           💡 <strong>Leading edge only:</strong> Updates{" "}
-          <strong>immediately</strong> when you start moving, then throttles.
-          No final update when you stop! The green dot may{" "}
+          <strong>immediately</strong> when you start moving, then throttles. No
+          final update when you stop! The green dot may{" "}
           <strong>lag behind</strong> when you stop moving.
         </p>
       </div>
@@ -1105,6 +1103,389 @@ function MouseMovementNoThrottleDemo() {
 }
 
 /**
+ * 5. Click Event Throttle Demo (Token Renewal Pattern)
+ */
+function ClickEventThrottleDemo() {
+  const [clickCount, setClickCount] = useState(0);
+  const [renewalCount, setRenewalCount] = useState(0);
+  const [lastRenewalTime, setLastRenewalTime] = useState<Date | null>(null);
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
+  const [tokenExpiry, setTokenExpiry] = useState<Date | null>(null);
+
+  const THROTTLE_INTERVAL = 5000; // 5 seconds (simulating 5 minutes in real scenario)
+
+  // Throttle the click count - only leading edge, no trailing
+  // This means: execute immediately on first click, ignore subsequent clicks until interval passes
+  const throttledClickCount = useThrottle(clickCount, THROTTLE_INTERVAL, {
+    leading: true,
+    trailing: false,
+  });
+
+  // When throttled value changes, simulate token renewal
+  useEffect(() => {
+    if (throttledClickCount > 0) {
+      setRenewalCount((prev) => prev + 1);
+      const now = new Date();
+      setLastRenewalTime(now);
+      setTokenExpiry(new Date(now.getTime() + 30000)); // Token expires in 30 seconds
+      setCooldownRemaining(THROTTLE_INTERVAL);
+    }
+  }, [throttledClickCount]);
+
+  // Cooldown timer
+  useEffect(() => {
+    if (cooldownRemaining > 0) {
+      const timer = setInterval(() => {
+        setCooldownRemaining((prev) => Math.max(0, prev - 100));
+      }, 100);
+      return () => clearInterval(timer);
+    }
+  }, [cooldownRemaining > 0]);
+
+  // Token expiry countdown
+  const [tokenCountdown, setTokenCountdown] = useState<number | null>(null);
+  useEffect(() => {
+    if (tokenExpiry) {
+      const timer = setInterval(() => {
+        const remaining = tokenExpiry.getTime() - Date.now();
+        setTokenCountdown(remaining > 0 ? remaining : null);
+        if (remaining <= 0) {
+          setTokenExpiry(null);
+        }
+      }, 100);
+      return () => clearInterval(timer);
+    } else {
+      setTokenCountdown(null);
+    }
+  }, [tokenExpiry]);
+
+  const handleClick = () => {
+    setClickCount((prev) => prev + 1);
+  };
+
+  const isOnCooldown = cooldownRemaining > 0;
+  const cooldownPercent = (cooldownRemaining / THROTTLE_INTERVAL) * 100;
+
+  return (
+    <div
+      style={{
+        padding: "2rem",
+        maxWidth: "600px",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      }}
+    >
+      <h2
+        style={{
+          fontSize: "1.75rem",
+          fontWeight: "700",
+          background: "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          marginBottom: "0.5rem",
+        }}
+      >
+        Click Event Throttling
+      </h2>
+      <p
+        style={{
+          color: "#6b7280",
+          marginBottom: "1.5rem",
+          fontSize: "0.95rem",
+          lineHeight: "1.6",
+        }}
+      >
+        Simulates a <strong>token renewal</strong> scenario. Click the button to
+        renew the token, but it can only be renewed once every{" "}
+        <strong>5 seconds</strong>. Using <code>trailing: false</code> ensures
+        only the first click triggers renewal.
+      </p>
+
+      {/* Token Status Card */}
+      <div
+        style={{
+          padding: "1.25rem",
+          background: tokenExpiry
+            ? "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
+            : "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)",
+          borderRadius: "0.75rem",
+          marginBottom: "1.25rem",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+          transition: "background 0.3s ease",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.75rem",
+            marginBottom: "0.75rem",
+          }}
+        >
+          <div
+            style={{
+              width: "12px",
+              height: "12px",
+              borderRadius: "50%",
+              background: tokenExpiry ? "#10b981" : "#ef4444",
+              boxShadow: tokenExpiry
+                ? "0 0 8px rgba(16, 185, 129, 0.5)"
+                : "0 0 8px rgba(239, 68, 68, 0.5)",
+            }}
+          />
+          <strong style={{ color: tokenExpiry ? "#065f46" : "#991b1b" }}>
+            Token Status: {tokenExpiry ? "Valid" : "Expired"}
+          </strong>
+        </div>
+        {tokenCountdown !== null && (
+          <div style={{ fontSize: "0.875rem", color: "#065f46" }}>
+            Expires in: {Math.ceil(tokenCountdown / 1000)}s
+            <div
+              style={{
+                marginTop: "0.5rem",
+                height: "4px",
+                background: "rgba(16, 185, 129, 0.2)",
+                borderRadius: "2px",
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  width: `${(tokenCountdown / 30000) * 100}%`,
+                  background: "#10b981",
+                  transition: "width 0.1s linear",
+                }}
+              />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Click Button */}
+      <div style={{ marginBottom: "1.25rem" }}>
+        <button
+          onClick={handleClick}
+          style={{
+            width: "100%",
+            padding: "1rem 2rem",
+            fontSize: "1.1rem",
+            fontWeight: "600",
+            color: "white",
+            background: isOnCooldown
+              ? "linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)"
+              : "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)",
+            border: "none",
+            borderRadius: "0.75rem",
+            cursor: isOnCooldown ? "not-allowed" : "pointer",
+            transition: "all 0.2s ease",
+            boxShadow: isOnCooldown
+              ? "0 2px 8px rgba(0, 0, 0, 0.1)"
+              : "0 4px 16px rgba(139, 92, 246, 0.4)",
+            position: "relative",
+            overflow: "hidden",
+          }}
+        >
+          {isOnCooldown ? (
+            <>
+              Cooldown... ({Math.ceil(cooldownRemaining / 1000)}s)
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 0,
+                  left: 0,
+                  height: "4px",
+                  width: `${cooldownPercent}%`,
+                  background: "rgba(255, 255, 255, 0.5)",
+                  transition: "width 0.1s linear",
+                }}
+              />
+            </>
+          ) : (
+            "🔄 Renew Token"
+          )}
+        </button>
+      </div>
+
+      {/* Stats */}
+      <div
+        style={{
+          padding: "1.25rem",
+          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
+          borderRadius: "0.75rem",
+          marginBottom: "1.25rem",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+        }}
+      >
+        <div style={{ marginBottom: "0.75rem", fontSize: "0.95rem" }}>
+          <strong style={{ color: "#374151" }}>Total Clicks:</strong>{" "}
+          <span style={{ color: "#6b7280" }}>{clickCount}</span>
+        </div>
+        <div style={{ marginBottom: "0.75rem", fontSize: "0.95rem" }}>
+          <strong style={{ color: "#374151" }}>Actual Renewals:</strong>{" "}
+          <span
+            style={{
+              color: "#8b5cf6",
+              fontWeight: "700",
+              fontSize: "1.1rem",
+            }}
+          >
+            {renewalCount}
+          </span>
+        </div>
+        <div style={{ marginBottom: "0.75rem", fontSize: "0.95rem" }}>
+          <strong style={{ color: "#374151" }}>Ignored Clicks:</strong>{" "}
+          <span style={{ color: "#ef4444", fontWeight: "600" }}>
+            {clickCount - renewalCount}
+          </span>
+        </div>
+        {lastRenewalTime && (
+          <div style={{ fontSize: "0.95rem" }}>
+            <strong style={{ color: "#374151" }}>Last Renewal:</strong>{" "}
+            <span style={{ color: "#6b7280" }}>
+              {lastRenewalTime.toLocaleTimeString()}
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Click History Visualization */}
+      <div
+        style={{
+          padding: "1rem",
+          background: "white",
+          border: "2px solid #e5e7eb",
+          borderRadius: "0.75rem",
+          marginBottom: "1.25rem",
+        }}
+      >
+        <div
+          style={{
+            fontSize: "0.875rem",
+            fontWeight: "600",
+            color: "#374151",
+            marginBottom: "0.75rem",
+          }}
+        >
+          Click Timeline (recent 10):
+        </div>
+        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+          {clickCount === 0 ? (
+            <span style={{ color: "#9ca3af", fontSize: "0.875rem" }}>
+              No clicks yet
+            </span>
+          ) : (
+            Array.from({ length: Math.min(clickCount, 10) }, (_, i) => {
+              const clickNum = clickCount - Math.min(clickCount, 10) + i + 1;
+              const isRenewal =
+                clickNum === 1 ||
+                (clickNum - 1) % Math.ceil(THROTTLE_INTERVAL / 1000) === 0;
+              return (
+                <div
+                  key={i}
+                  style={{
+                    width: "32px",
+                    height: "32px",
+                    borderRadius: "50%",
+                    background: isRenewal
+                      ? "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)"
+                      : "#e5e7eb",
+                    color: isRenewal ? "white" : "#6b7280",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "0.75rem",
+                    fontWeight: "600",
+                    boxShadow: isRenewal
+                      ? "0 2px 8px rgba(139, 92, 246, 0.4)"
+                      : "none",
+                  }}
+                  title={
+                    isRenewal ? "Renewal triggered" : "Ignored (throttled)"
+                  }
+                >
+                  {clickNum}
+                </div>
+              );
+            })
+          )}
+        </div>
+        <div
+          style={{
+            marginTop: "0.75rem",
+            fontSize: "0.75rem",
+            color: "#9ca3af",
+            display: "flex",
+            gap: "1rem",
+          }}
+        >
+          <span>
+            <span
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                background: "#8b5cf6",
+                marginRight: "4px",
+              }}
+            />
+            Renewal
+          </span>
+          <span>
+            <span
+              style={{
+                display: "inline-block",
+                width: "10px",
+                height: "10px",
+                borderRadius: "50%",
+                background: "#e5e7eb",
+                marginRight: "4px",
+              }}
+            />
+            Ignored
+          </span>
+        </div>
+      </div>
+
+      {/* Info Box */}
+      <div
+        style={{
+          padding: "1rem",
+          background: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)",
+          borderRadius: "0.75rem",
+          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
+        }}
+      >
+        <p
+          style={{
+            margin: 0,
+            fontSize: "0.875rem",
+            color: "#5b21b6",
+            lineHeight: "1.6",
+          }}
+        >
+          💡 <strong>Real-world use case:</strong> Token renewal on user action.
+          Even if the user clicks rapidly, the token is renewed at most once
+          every 5 seconds. This prevents unnecessary API calls while ensuring
+          the token stays fresh during active use. Using{" "}
+          <code
+            style={{
+              background: "rgba(139, 92, 246, 0.2)",
+              padding: "2px 6px",
+              borderRadius: "4px",
+            }}
+          >
+            trailing: false
+          </code>{" "}
+          means only the first click triggers the renewal—subsequent clicks
+          during cooldown are completely ignored.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/**
  * Meta & Stories
  */
 const meta = {
@@ -1203,6 +1584,18 @@ export const MouseMovementBothDisabled: Story = {
       description: {
         story:
           "Both edges disabled - demonstrates what NOT to do. The throttled value never updates and stays at its initial value. This configuration completely disables throttling and is not useful in practice.",
+      },
+    },
+  },
+};
+
+export const ClickEventThrottle: Story = {
+  render: () => <ClickEventThrottleDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Demonstrates throttling click events for token renewal. Using `trailing: false` ensures only the first click triggers the action, and subsequent clicks during the cooldown period are ignored. This pattern is useful for preventing duplicate API calls on rapid button clicks.",
       },
     },
   },
