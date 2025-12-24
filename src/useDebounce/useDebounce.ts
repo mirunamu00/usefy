@@ -86,6 +86,7 @@ export function useDebounce<T>(
   const lastCallTimeRef = useRef<number | undefined>(undefined);
   const lastInvokeTimeRef = useRef<number>(0);
   const lastValueRef = useRef<T>(value);
+  const prevValueRef = useRef<T>(value); // Track previous value to detect actual changes
 
   // Store options in refs to access latest values in timer callbacks
   const waitRef = useRef(wait);
@@ -206,6 +207,12 @@ export function useDebounce<T>(
 
   // Main debounce effect - runs when value changes
   useEffect(() => {
+    // Skip if value hasn't actually changed (prevents initial render from consuming leading edge)
+    if (Object.is(prevValueRef.current, value)) {
+      return;
+    }
+    prevValueRef.current = value;
+
     const time = now();
     const isInvoking = shouldInvokeRef.current(time);
 
