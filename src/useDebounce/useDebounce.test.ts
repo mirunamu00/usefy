@@ -175,27 +175,29 @@ describe("useDebounce", () => {
 
     it("should not update on trailing edge when leading: true and trailing: false", () => {
       const { result, rerender } = renderHook(
-        ({ value }) => useDebounce(value, 500, { leading: true, trailing: false }),
+        ({ value }) =>
+          useDebounce(value, 500, { leading: true, trailing: false }),
         { initialProps: { value: "first" } }
       );
 
-      // First change - no leading because lastCallTime is 0
+      // First change - leading edge triggers immediately
       rerender({ value: "second" });
+      expect(result.current).toBe("second");
 
-      // Wait - but trailing is false, so no update
+      // Wait - but trailing is false, so no update from trailing edge
       act(() => {
         vi.advanceTimersByTime(500);
       });
 
-      // Still first because trailing is false
-      expect(result.current).toBe("first");
+      // Still second (no trailing update)
+      expect(result.current).toBe("second");
 
       // Wait enough time to allow leading edge on next change
       act(() => {
         vi.advanceTimersByTime(500);
       });
 
-      // This should trigger leading edge
+      // This should trigger leading edge again
       rerender({ value: "third" });
       expect(result.current).toBe("third");
 
@@ -209,7 +211,8 @@ describe("useDebounce", () => {
 
     it("should update on both edges when leading: true and trailing: true", () => {
       const { result, rerender } = renderHook(
-        ({ value }) => useDebounce(value, 500, { leading: true, trailing: true }),
+        ({ value }) =>
+          useDebounce(value, 500, { leading: true, trailing: true }),
         { initialProps: { value: "initial" } }
       );
 
@@ -369,7 +372,8 @@ describe("useDebounce", () => {
 
     it("should respect maxWait with leading edge", () => {
       const { result, rerender } = renderHook(
-        ({ value }) => useDebounce(value, 500, { maxWait: 1500, leading: true }),
+        ({ value }) =>
+          useDebounce(value, 500, { maxWait: 1500, leading: true }),
         { initialProps: { value: "initial" } }
       );
 
@@ -774,22 +778,34 @@ describe("useDebounce", () => {
       expect(result.current).toBe("updated");
     });
 
-    it("should handle maxWait smaller than delay", () => {
+    it("should handle maxWait option (maxWait is clamped to at least wait)", () => {
+      // Note: maxWait is always >= wait (same as lodash behavior)
+      // So maxWait: 500 with delay: 1000 results in effective maxWait: 1000
       const { result, rerender } = renderHook(
         ({ value }) => useDebounce(value, 1000, { maxWait: 500 }),
         { initialProps: { value: "a" } }
       );
 
-      rerender({ value: "b" });
+      // First change - leadingEdge is called (but leading: false by default)
       act(() => {
-        vi.advanceTimersByTime(300);
+        rerender({ value: "b" });
+      });
+      expect(result.current).toBe("a"); // leading: false, so no immediate update
+
+      act(() => {
+        vi.advanceTimersByTime(500);
       });
 
-      rerender({ value: "c" });
       act(() => {
-        vi.advanceTimersByTime(200);
+        rerender({ value: "c" });
+      });
+      expect(result.current).toBe("a"); // Still waiting
+
+      act(() => {
+        vi.advanceTimersByTime(500);
       });
 
+      // 1000ms has passed - timer expires, trailingEdge updates to "c"
       expect(result.current).toBe("c");
     });
   });

@@ -5,3 +5,4 @@ storybook-static
 package-lock.json
 CLAUDE.md
 .claude
+lodash.js

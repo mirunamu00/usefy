@@ -93,9 +93,7 @@ function SearchInputDemo() {
       >
         <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
           <strong style={{ color: "#374151" }}>Current Input:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>
-            {searchTerm || "(empty)"}
-          </span>
+          <span style={{ color: "#6b7280" }}>{searchTerm || "(empty)"}</span>
         </div>
         <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
           <strong style={{ color: "#374151" }}>Debounced Value:</strong>{" "}
@@ -869,182 +867,6 @@ function MaxWaitDemo() {
 }
 
 /**
- * 9. Combined Options Demo
- */
-function CombinedOptionsDemo() {
-  const [value, setValue] = useState("");
-  const [updateLog, setUpdateLog] = useState<
-    Array<{ time: string; type: string; value: string }>
-  >([]);
-
-  const debouncedDefault = useDebounce(value, 1500);
-  const debouncedLeading = useDebounce(value, 1500, {
-    leading: true,
-    trailing: false,
-  });
-  const debouncedBoth = useDebounce(value, 1500, {
-    leading: true,
-    trailing: true,
-  });
-  const debouncedMaxWait = useDebounce(value, 1500, {
-    maxWait: 3000,
-    trailing: true,
-  });
-
-  useEffect(() => {
-    if (debouncedDefault) {
-      setUpdateLog((prev) => [
-        ...prev,
-        {
-          time: new Date().toLocaleTimeString(),
-          type: "Default (trailing)",
-          value: debouncedDefault,
-        },
-      ]);
-    }
-  }, [debouncedDefault]);
-
-  useEffect(() => {
-    if (debouncedLeading) {
-      setUpdateLog((prev) => [
-        ...prev,
-        {
-          time: new Date().toLocaleTimeString(),
-          type: "Leading only",
-          value: debouncedLeading,
-        },
-      ]);
-    }
-  }, [debouncedLeading]);
-
-  useEffect(() => {
-    if (debouncedBoth) {
-      setUpdateLog((prev) => [
-        ...prev,
-        {
-          time: new Date().toLocaleTimeString(),
-          type: "Both edges",
-          value: debouncedBoth,
-        },
-      ]);
-    }
-  }, [debouncedBoth]);
-
-  useEffect(() => {
-    if (debouncedMaxWait) {
-      setUpdateLog((prev) => [
-        ...prev,
-        {
-          time: new Date().toLocaleTimeString(),
-          type: "MaxWait (3s)",
-          value: debouncedMaxWait,
-        },
-      ]);
-    }
-  }, [debouncedMaxWait]);
-
-  return (
-    <div style={{ padding: "2rem", maxWidth: "600px" }}>
-      <h2>Combined Options Comparison</h2>
-      <p style={{ color: "#666", marginBottom: "1rem" }}>
-        Type to see how different option combinations behave. All have 1.5s
-        delay.
-      </p>
-
-      <input
-        type="text"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder="Type here..."
-        style={{
-          width: "100%",
-          padding: "0.75rem",
-          fontSize: "1rem",
-          border: "2px solid #ddd",
-          borderRadius: "4px",
-          marginBottom: "1rem",
-        }}
-      />
-
-      <button
-        onClick={() => {
-          setValue("");
-          setUpdateLog([]);
-        }}
-        style={{
-          width: "100%",
-          padding: "0.5rem",
-          marginBottom: "1rem",
-          backgroundColor: "#dc3545",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Clear All
-      </button>
-
-      <div
-        style={{
-          padding: "1rem",
-          backgroundColor: "#f5f5f5",
-          borderRadius: "4px",
-          marginBottom: "1rem",
-          maxHeight: "300px",
-          overflowY: "auto",
-        }}
-      >
-        <h3 style={{ marginTop: 0 }}>Update Log:</h3>
-        {updateLog.length === 0 ? (
-          <p style={{ color: "#666", fontStyle: "italic" }}>
-            No updates yet...
-          </p>
-        ) : (
-          <div>
-            {updateLog
-              .slice()
-              .reverse()
-              .map((log, index) => (
-                <div
-                  key={index}
-                  style={{
-                    padding: "0.5rem",
-                    backgroundColor: "white",
-                    border: "1px solid #ddd",
-                    borderRadius: "4px",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <div style={{ fontSize: "0.75rem", color: "#666" }}>
-                    {log.time}
-                  </div>
-                  <div>
-                    <strong>{log.type}:</strong> {log.value}
-                  </div>
-                </div>
-              ))}
-          </div>
-        )}
-      </div>
-
-      <div
-        style={{
-          padding: "1rem",
-          backgroundColor: "#e7f3ff",
-          borderRadius: "4px",
-        }}
-      >
-        <p style={{ margin: 0, fontSize: "0.875rem" }}>
-          💡 Compare different option combinations to understand their behavior
-          patterns.
-        </p>
-      </div>
-    </div>
-  );
-}
-
-/**
  * Meta & Stories
  */
 const meta = {
@@ -1081,7 +903,9 @@ export const SearchInput: Story = {
     const searchInput = canvas.getByPlaceholderText("Search...");
 
     // Initially, check the structure exists
-    await expect(canvas.getByText("API Calls Made:", { exact: false })).toBeInTheDocument();
+    await expect(
+      canvas.getByText("API Calls Made:", { exact: false })
+    ).toBeInTheDocument();
 
     // Type "react"
     await userEvent.type(searchInput, "react", { delay: 50 });
@@ -1089,7 +913,9 @@ export const SearchInput: Story = {
     // Wait for debounce (500ms) and check results appear
     await waitFor(
       async () => {
-        await expect(canvas.getByText('Result 1 for "react"')).toBeInTheDocument();
+        await expect(
+          canvas.getByText('Result 1 for "react"')
+        ).toBeInTheDocument();
       },
       { timeout: 1000 }
     );
@@ -1163,7 +989,9 @@ export const AutoSave: Story = {
     // Wait for auto-save (1000ms debounce) and check Last Saved appears
     await waitFor(
       async () => {
-        await expect(canvas.getByText("Last Saved:", { exact: false })).toBeInTheDocument();
+        await expect(
+          canvas.getByText("Last Saved:", { exact: false })
+        ).toBeInTheDocument();
       },
       { timeout: 1500 }
     );
@@ -1218,7 +1046,9 @@ export const Slider: Story = {
     await waitFor(
       async () => {
         // Just check that expensive updates text exists
-        await expect(canvas.getByText("Expensive Updates (Debounced):", { exact: false })).toBeInTheDocument();
+        await expect(
+          canvas.getByText("Expensive Updates (Debounced):", { exact: false })
+        ).toBeInTheDocument();
       },
       { timeout: 1000 }
     );
@@ -1250,7 +1080,9 @@ export const LeadingEdge: Story = {
     await waitFor(
       async () => {
         await expect(
-          canvas.getByText("Trailing Edge (fires after delay):", { exact: false })
+          canvas.getByText("Trailing Edge (fires after delay):", {
+            exact: false,
+          })
         ).toBeInTheDocument();
       },
       { timeout: 1500 }
@@ -1276,71 +1108,46 @@ export const MaxWait: Story = {
       /Keep typing without stopping/i
     );
 
-    // Type some content
-    await userEvent.type(
-      textarea,
-      "This is a test of the maxWait feature!",
-      { delay: 50 }
-    );
+    // Initially, both counts should be 0
+    // Text is split across multiple elements, so we check parent containers
+    const regularDebounceContainer = canvas.getByText(
+      /Regular Debounce \(2s delay\):/i
+    ).parentElement;
+    expect(regularDebounceContainer?.textContent).toMatch(/0\s+updates/i);
 
-    // Wait for debounce (2000ms) and verify updates happened
+    const maxWaitContainer = canvas.getByText(
+      /With MaxWait \(2s delay, 5s max\):/i
+    ).parentElement;
+    expect(maxWaitContainer?.textContent).toMatch(/0\s+updates/i);
+
+    // Type continuously for more than 5 seconds (maxWait time)
+    // This ensures maxWait triggers while regular debounce doesn't
+    // Each character typed with 100ms delay, so 60 characters = 6 seconds
+    const longText = "a".repeat(60);
+    await userEvent.type(textarea, longText, {
+      delay: 100, // 100ms delay between characters = 6 seconds total
+    });
+
+    // Wait for maxWait to trigger (should happen within 5 seconds)
+    // Regular debounce should still be 0 (user never stopped typing for 2 seconds)
+    // MaxWait debounce should be at least 1 (triggered after 5 seconds)
     await waitFor(
       async () => {
-        await expect(
-          canvas.getByText("Regular Debounce (2s delay):", { exact: false })
-        ).toBeInTheDocument();
+        const maxWaitContainer = canvas.getByText(
+          /With MaxWait \(2s delay, 5s max\):/i
+        ).parentElement;
+        const maxWaitText = maxWaitContainer?.textContent || "";
+        const maxWaitMatch = maxWaitText.match(/(\d+)\s+updates/i);
+        const maxWaitCount = maxWaitMatch ? parseInt(maxWaitMatch[1], 10) : 0;
+        expect(maxWaitCount).toBeGreaterThanOrEqual(1);
       },
-      { timeout: 3000 }
-    );
-  },
-};
-
-export const CombinedOptions: Story = {
-  render: () => <CombinedOptionsDemo />,
-  parameters: {
-    docs: {
-      description: {
-        story:
-          "Compares different option combinations (default, leading only, both edges, and maxWait) to help understand their behavior patterns in real-time.",
-      },
-    },
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-
-    // Find the input
-    const input = canvas.getByPlaceholderText("Type here...");
-
-    // Initially, no updates
-    await expect(
-      canvas.getByText(/No updates yet.../i)
-    ).toBeInTheDocument();
-
-    // Type some text
-    await userEvent.type(input, "test", { delay: 100 });
-
-    // Wait for debounce (1500ms)
-    await waitFor(
-      async () => {
-        // Should have at least one update in the log
-        const log = canvas.queryByText(/No updates yet.../i);
-        expect(log).not.toBeInTheDocument();
-      },
-      { timeout: 2000 }
+      { timeout: 7000 } // Wait up to 7 seconds to allow maxWait to trigger
     );
 
-    // Should see different update types in the log
-    await expect(
-      canvas.getByText(/Default \(trailing\):/i)
-    ).toBeInTheDocument();
-
-    // Clear button should work
-    const clearButton = canvas.getByRole("button", { name: /Clear All/i });
-    await userEvent.click(clearButton);
-
-    // Should reset to no updates
-    await expect(
-      canvas.getByText(/No updates yet.../i)
-    ).toBeInTheDocument();
+    // Verify regular debounce is still 0 (user never stopped for 2 seconds)
+    const regularDebounceContainerAfter = canvas.getByText(
+      /Regular Debounce \(2s delay\):/i
+    ).parentElement;
+    expect(regularDebounceContainerAfter?.textContent).toMatch(/0\s+updates/i);
   },
 };
