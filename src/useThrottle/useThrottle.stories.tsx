@@ -17,9 +17,7 @@ function ScrollPositionDemo() {
 
   return (
     <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>
-        Scroll Position Throttling
-      </h2>
+      <h2 className={storyTheme.title}>Scroll Position Throttling</h2>
       <p className={storyTheme.subtitle}>
         Scroll to see throttling in action. Updates at most once per 100ms.
       </p>
@@ -31,9 +29,7 @@ function ScrollPositionDemo() {
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Throttled position:</strong>{" "}
-          <span className={storyTheme.statValue}>
-            {throttledScrollY}px
-          </span>
+          <span className={storyTheme.statValue}>{throttledScrollY}px</span>
         </div>
       </div>
 
@@ -81,9 +77,7 @@ function SearchInputDemo() {
 
   return (
     <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>
-        Search Input Throttling
-      </h2>
+      <h2 className={storyTheme.title}>Search Input Throttling</h2>
       <p className={storyTheme.subtitle}>
         Type to search. API calls are throttled by 300ms.
       </p>
@@ -99,7 +93,9 @@ function SearchInputDemo() {
       <div className={storyTheme.statBox + " mb-5"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current Input:</strong>{" "}
-          <span className={storyTheme.statTextSecondary}>{searchQuery || "(empty)"}</span>
+          <span className={storyTheme.statTextSecondary}>
+            {searchQuery || "(empty)"}
+          </span>
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Throttled Query:</strong>{" "}
@@ -109,9 +105,7 @@ function SearchInputDemo() {
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>API Calls Made:</strong>{" "}
-          <span className={storyTheme.statValue}>
-            {searchCount}
-          </span>
+          <span className={storyTheme.statValue}>{searchCount}</span>
         </div>
       </div>
 
@@ -133,9 +127,7 @@ function WindowResizeDemo() {
 
   return (
     <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>
-        Window Resize Throttling
-      </h2>
+      <h2 className={storyTheme.title}>Window Resize Throttling</h2>
       <p className={storyTheme.subtitle}>
         Drag the slider to simulate window resize. Throttled by 200ms.
       </p>
@@ -147,9 +139,7 @@ function WindowResizeDemo() {
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Throttled Width:</strong>{" "}
-          <span className={storyTheme.statValue}>
-            {throttledWidth}px
-          </span>
+          <span className={storyTheme.statValue}>{throttledWidth}px</span>
         </div>
       </div>
 
@@ -232,9 +222,7 @@ function MouseMovementDemo() {
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Throttled Updates:</strong>{" "}
-          <span className={storyTheme.statValue}>
-            {throttledUpdateCount}
-          </span>
+          <span className={storyTheme.statValue}>{throttledUpdateCount}</span>
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Reduction:</strong>{" "}
@@ -264,12 +252,12 @@ function MouseMovementDemo() {
         />
         <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/90 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
           <div className="mb-1">
-            <span className="text-red-500 font-bold">●</span> Raw
-            position ({mousePos.x}, {mousePos.y})
+            <span className="text-red-500 font-bold">●</span> Raw position (
+            {mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span className="text-indigo-500 font-bold">●</span>{" "}
-            Throttled ({throttledPos.x}, {throttledPos.y})
+            <span className="text-indigo-500 font-bold">●</span> Throttled (
+            {throttledPos.x}, {throttledPos.y})
           </div>
         </div>
       </div>
@@ -322,24 +310,14 @@ function MouseMovementLeadingOnlyDemo() {
       : 0;
 
   return (
-    <div
-      className={storyTheme.container}
-    >
-      <h2
-          className={storyTheme.title}
-      >
-        Mouse Movement - Leading Only
-      </h2>
-      <p
-        className={storyTheme.subtitle}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>Mouse Movement - Leading Only</h2>
+      <p className={storyTheme.subtitle}>
         Move your mouse. Only <strong>leading edge</strong> enabled (trailing:
         false).
       </p>
 
-      <div
-        className="p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
-      >
+      <div className="p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
@@ -352,9 +330,7 @@ function MouseMovementLeadingOnlyDemo() {
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Reduction:</strong>{" "}
-          <span className="text-green-700 font-bold">
-            {reduction}%
-          </span>
+          <span className="text-green-700 font-bold">{reduction}%</span>
         </div>
       </div>
 
@@ -380,12 +356,12 @@ function MouseMovementLeadingOnlyDemo() {
         />
         <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/95 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] border border-green-200">
           <div className="mb-1">
-            <span className="text-red-500 font-bold">●</span> Raw
-            position ({mousePos.x}, {mousePos.y})
+            <span className="text-red-500 font-bold">●</span> Raw position (
+            {mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span className="text-green-500 font-bold">●</span>{" "}
-            Throttled ({throttledPos.x}, {throttledPos.y})
+            <span className="text-green-500 font-bold">●</span> Throttled (
+            {throttledPos.x}, {throttledPos.y})
           </div>
         </div>
       </div>
@@ -444,24 +420,14 @@ function MouseMovementTrailingOnlyDemo() {
       : 0;
 
   return (
-    <div
-      className={storyTheme.container}
-    >
-      <h2
-          className={storyTheme.title}
-      >
-        Mouse Movement - Trailing Only
-      </h2>
-      <p
-        className={storyTheme.subtitle}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>Mouse Movement - Trailing Only</h2>
+      <p className={storyTheme.subtitle}>
         Move your mouse. Only <strong>trailing edge</strong> enabled (leading:
         false).
       </p>
 
-      <div
-        className="p-5 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
-      >
+      <div className="p-5 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
@@ -474,9 +440,7 @@ function MouseMovementTrailingOnlyDemo() {
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Reduction:</strong>{" "}
-          <span className="text-amber-700 font-bold">
-            {reduction}%
-          </span>
+          <span className="text-amber-700 font-bold">{reduction}%</span>
         </div>
       </div>
 
@@ -502,12 +466,12 @@ function MouseMovementTrailingOnlyDemo() {
         />
         <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/95 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] border border-yellow-200">
           <div className="mb-1">
-            <span className="text-red-500 font-bold">●</span> Raw
-            position ({mousePos.x}, {mousePos.y})
+            <span className="text-red-500 font-bold">●</span> Raw position (
+            {mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span className="text-amber-600 font-bold">●</span>{" "}
-            Throttled ({throttledPos.x}, {throttledPos.y})
+            <span className="text-amber-600 font-bold">●</span> Throttled (
+            {throttledPos.x}, {throttledPos.y})
           </div>
         </div>
       </div>
@@ -525,7 +489,7 @@ function MouseMovementTrailingOnlyDemo() {
 }
 
 /**
- * 4-3. Mouse Movement Demo - No Throttling (Both Disabled)
+ * 4-3. Mouse Movement Demo - Both Edges Disabled (maxWait still active)
  */
 function MouseMovementNoThrottleDemo() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
@@ -553,24 +517,14 @@ function MouseMovementNoThrottleDemo() {
   };
 
   return (
-    <div
-      className={storyTheme.container}
-    >
-      <h2
-          className={storyTheme.title}
-      >
-        Mouse Movement - Both Disabled
-      </h2>
-      <p
-        className={storyTheme.subtitle}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>Mouse Movement - Both Edges Disabled</h2>
+      <p className={storyTheme.subtitle}>
         Move your mouse. Both edges <strong>disabled</strong> (leading: false,
-        trailing: false).
+        trailing: false), but <strong>maxWait</strong> is still active.
       </p>
 
-      <div
-        className="p-5 bg-gradient-to-br from-red-50 to-red-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
-      >
+      <div className="p-5 bg-gradient-to-br from-red-50 to-red-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
@@ -583,8 +537,8 @@ function MouseMovementNoThrottleDemo() {
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Status:</strong>{" "}
-          <span className="text-red-600 font-bold">
-            No throttling active! 🚫
+          <span className="text-amber-600 font-bold">
+            maxWait only (no leading/trailing) ⚡
           </span>
         </div>
       </div>
@@ -600,7 +554,9 @@ function MouseMovementNoThrottleDemo() {
             top: `${throttledPos.y}px`,
           }}
           className={`w-6 h-6 bg-red-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_2px_8px_rgba(239,68,68,0.5)] ${
-            throttledPos.x === 0 && throttledPos.y === 0 ? "opacity-0" : "opacity-100"
+            throttledPos.x === 0 && throttledPos.y === 0
+              ? "opacity-0"
+              : "opacity-100"
           }`}
         />
         <div
@@ -613,30 +569,34 @@ function MouseMovementNoThrottleDemo() {
         />
         <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/95 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] border border-red-200">
           <div className="mb-1">
-            <span className="text-red-500 font-bold">●</span> Raw
-            position ({mousePos.x}, {mousePos.y})
+            <span className="text-red-500 font-bold">●</span> Raw position (
+            {mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span className="text-red-600 font-bold">●</span>{" "}
-            Throttled ({throttledPos.x}, {throttledPos.y})
+            <span className="text-red-600 font-bold">●</span> Throttled (
+            {throttledPos.x}, {throttledPos.y})
           </div>
         </div>
 
         {throttledPos.x === 0 && throttledPos.y === 0 && mousePos.x !== 0 && (
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-red-500 pointer-events-none text-center">
-            ⚠️
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-amber-500 pointer-events-none text-center">
+            ⏳
             <br />
-            <span className="text-base">No throttle dot visible!</span>
+            <span className="text-base">Waiting for maxWait...</span>
           </div>
         )}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-5 bg-red-50 border-red-200"}>
-        <p className={storyTheme.infoText + " text-red-900"}>
-          ⚠️ <strong>Both edges disabled:</strong> The throttle value{" "}
-          <strong>stays at initial value</strong> and never updates! This
-          configuration is <strong>not useful</strong> - it completely disables
-          throttling.
+      <div
+        className={storyTheme.infoBox + " mt-5 bg-amber-50 border-amber-200"}
+      >
+        <p className={storyTheme.infoText + " text-amber-900"}>
+          💡 <strong>Both edges disabled with maxWait:</strong> No immediate
+          update when you start (no leading), no final update when you stop (no
+          trailing). However, <strong>maxWait forces updates</strong> every
+          300ms while continuously moving. This creates a{" "}
+          <strong>"delayed throttle"</strong> pattern - updates happen during
+          movement but with initial delay.
         </p>
       </div>
     </div>
@@ -708,14 +668,8 @@ function ClickEventThrottleDemo() {
   const cooldownPercent = (cooldownRemaining / THROTTLE_INTERVAL) * 100;
 
   return (
-    <div
-      className={storyTheme.container}
-    >
-      <h2
-          className={storyTheme.title}
-      >
-        Click Event Throttling
-      </h2>
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>Click Event Throttling</h2>
       <p className={storyTheme.subtitle + " leading-relaxed"}>
         Simulates a <strong>token renewal</strong> scenario. Click the button to
         renew the token, but it can only be renewed once every{" "}
@@ -785,9 +739,7 @@ function ClickEventThrottleDemo() {
       </div>
 
       {/* Stats */}
-      <div
-        className={storyTheme.statBox + " mb-5"}
-      >
+      <div className={storyTheme.statBox + " mb-5"}>
         <div className={storyTheme.statLabel + " mb-3"}>
           <strong className={storyTheme.statText}>Total Clicks:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{clickCount}</span>
@@ -821,9 +773,7 @@ function ClickEventThrottleDemo() {
         </div>
         <div className="flex gap-2 flex-wrap">
           {clickCount === 0 ? (
-            <span className="text-gray-400 text-sm">
-              No clicks yet
-            </span>
+            <span className="text-gray-400 text-sm">No clicks yet</span>
           ) : (
             Array.from({ length: Math.min(clickCount, 10) }, (_, i) => {
               const clickNum = clickCount - Math.min(clickCount, 10) + i + 1;
@@ -913,7 +863,7 @@ export const ScrollPosition: Story = {
 
     // Find the scrollable container using Tailwind class
     const scrollContainer = canvasElement.querySelector(
-      '.overflow-y-scroll'
+      ".overflow-y-scroll"
     ) as HTMLElement;
     expect(scrollContainer).toBeInTheDocument();
 
@@ -1059,7 +1009,7 @@ export const MouseMovementBothEdges: Story = {
 
     // Find the mouse tracking area using Tailwind class
     const trackingArea = canvasElement.querySelector(
-      '.cursor-crosshair'
+      ".cursor-crosshair"
     ) as HTMLElement;
     expect(trackingArea).toBeInTheDocument();
   },
@@ -1127,7 +1077,7 @@ export const MouseMovementBothDisabled: Story = {
     docs: {
       description: {
         story:
-          "Both edges disabled - demonstrates what NOT to do. The throttled value never updates and stays at its initial value. This configuration completely disables throttling and is not useful in practice.",
+          "Both edges disabled but maxWait is still active. No immediate update on start (leading disabled), no final update on stop (trailing disabled). However, maxWait forces updates every 300ms during continuous movement. This creates a 'delayed throttle' pattern with no immediate feedback.",
       },
     },
   },
@@ -1144,7 +1094,7 @@ export const MouseMovementBothDisabled: Story = {
 
     // Check warning info box
     await expect(
-      canvas.getByText(/Both edges disabled:/i, { exact: false })
+      canvas.getByText(/Both edges disabled with maxWait:/i, { exact: false })
     ).toBeInTheDocument();
   },
 };
