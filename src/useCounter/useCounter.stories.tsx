@@ -7,136 +7,37 @@ function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
   const { count, increment, decrement, reset } = useCounter(initialValue);
 
   return (
-    <div
-      style={{
-        padding: "3rem",
-        textAlign: "center",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-        maxWidth: "500px",
-        margin: "0 auto",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.5rem",
-          fontWeight: "600",
-          color: "#1f2937",
-          marginBottom: "2rem",
-        }}
-      >
+    <div className="p-12 text-center font-sans max-w-[500px] mx-auto">
+      <h2 className="text-2xl font-semibold text-gray-800 mb-8">
         useCounter Hook Demo
       </h2>
-      <div
-        style={{
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          borderRadius: "1rem",
-          padding: "2rem",
-          marginBottom: "2rem",
-          boxShadow: "0 10px 25px rgba(102, 126, 234, 0.3)",
-        }}
-      >
+      <div className="bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl p-8 mb-8 shadow-[0_10px_25px_rgba(102,126,234,0.3)]">
         <p
           data-testid="count"
-          style={{
-            fontSize: "4rem",
-            fontWeight: "700",
-            color: "#ffffff",
-            margin: "0",
-            textShadow: "0 2px 10px rgba(0, 0, 0, 0.2)",
-          }}
+          className="text-6xl font-bold text-white m-0 drop-shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
         >
           {count}
         </p>
       </div>
-      <div
-        style={{
-          display: "flex",
-          gap: "0.75rem",
-          justifyContent: "center",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="flex gap-3 justify-center flex-wrap">
         <button
           data-testid="decrement-btn"
           onClick={decrement}
-          style={{
-            padding: "0.75rem 1.5rem",
-            fontSize: "1rem",
-            fontWeight: "600",
-            color: "#ffffff",
-            background: "linear-gradient(135deg, #f093fb 0%, #f5576c 100%)",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            boxShadow: "0 4px 12px rgba(245, 87, 108, 0.3)",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow =
-              "0 6px 16px rgba(245, 87, 108, 0.4)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow =
-              "0 4px 12px rgba(245, 87, 108, 0.3)";
-          }}
+          className="px-6 py-3 text-base font-semibold text-white bg-gradient-to-br from-[#f093fb] to-[#f5576c] border-none rounded-lg cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(245,87,108,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,87,108,0.4)]"
         >
           − Decrement
         </button>
         <button
           data-testid="reset-btn"
           onClick={reset}
-          style={{
-            padding: "0.75rem 1.5rem",
-            fontSize: "1rem",
-            fontWeight: "600",
-            color: "#374151",
-            background: "#f3f4f6",
-            border: "2px solid #e5e7eb",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.background = "#e5e7eb";
-            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.background = "#f3f4f6";
-            e.currentTarget.style.boxShadow = "0 2px 6px rgba(0, 0, 0, 0.1)";
-          }}
+          className="px-6 py-3 text-base font-semibold text-gray-700 bg-gray-100 border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 shadow-[0_2px_6px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:bg-gray-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
         >
           ↻ Reset
         </button>
         <button
           data-testid="increment-btn"
           onClick={increment}
-          style={{
-            padding: "0.75rem 1.5rem",
-            fontSize: "1rem",
-            fontWeight: "600",
-            color: "#ffffff",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            transition: "all 0.2s ease",
-            boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow =
-              "0 6px 16px rgba(102, 126, 234, 0.4)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow =
-              "0 4px 12px rgba(102, 126, 234, 0.3)";
-          }}
+          className="px-6 py-3 text-base font-semibold text-white bg-gradient-to-br from-[#667eea] to-[#764ba2] border-none rounded-lg cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(102,126,234,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(102,126,234,0.4)]"
         >
           + Increment
         </button>
