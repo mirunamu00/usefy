@@ -911,9 +911,9 @@ export const ScrollPosition: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Find the scrollable container
+    // Find the scrollable container using Tailwind class
     const scrollContainer = canvasElement.querySelector(
-      '[style*="overflow-y: scroll"]'
+      '.overflow-y-scroll'
     ) as HTMLElement;
     expect(scrollContainer).toBeInTheDocument();
 
@@ -1057,9 +1057,9 @@ export const MouseMovementBothEdges: Story = {
       canvas.getByText("Reduction:", { exact: false })
     ).toBeInTheDocument();
 
-    // Find the mouse tracking area
+    // Find the mouse tracking area using Tailwind class
     const trackingArea = canvasElement.querySelector(
-      '[style*="cursor: crosshair"]'
+      '.cursor-crosshair'
     ) as HTMLElement;
     expect(trackingArea).toBeInTheDocument();
   },
