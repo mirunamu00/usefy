@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import React, { useState, useEffect } from "react";
 import { useThrottle } from "./useThrottle";
 import { within, userEvent, expect, waitFor } from "storybook/test";
+import { storyTheme } from "../styles/storyTheme";
 
 /**
  * 1. Scroll Position Demo
@@ -15,57 +16,22 @@ function ScrollPositionDemo() {
   };
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>
         Scroll Position Throttling
       </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+      <p className={storyTheme.subtitle}>
         Scroll to see throttling in action. Updates at most once per 100ms.
       </p>
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Raw scroll position:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{scrollY}px</span>
+      <div className={storyTheme.statBox + " mb-5"}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Raw scroll position:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{scrollY}px</span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Throttled position:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Throttled position:</strong>{" "}
+          <span className={storyTheme.statValue}>
             {throttledScrollY}px
           </span>
         </div>
@@ -73,33 +39,18 @@ function ScrollPositionDemo() {
 
       <div
         onScroll={handleScroll}
-        style={{
-          height: "300px",
-          overflowY: "scroll",
-          border: "2px solid #e5e7eb",
-          borderRadius: "0.75rem",
-          padding: "1.25rem",
-          background: "white",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
+        className="h-[300px] overflow-y-scroll border-2 border-gray-200 rounded-xl p-5 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
       >
-        <div style={{ height: "2000px" }}>
-          <h3
-            style={{
-              marginTop: 0,
-              fontSize: "1.25rem",
-              fontWeight: "600",
-              color: "#374151",
-            }}
-          >
+        <div className="h-[2000px]">
+          <h3 className="mt-0 text-xl font-semibold text-gray-700">
             Scroll this content
           </h3>
-          <p style={{ color: "#6b7280", lineHeight: "1.6" }}>
+          <p className="text-gray-500 leading-relaxed">
             The throttled value updates at most once per interval, reducing the
             number of expensive operations triggered by rapid scroll events.
           </p>
           {Array.from({ length: 50 }, (_, i) => (
-            <p key={i} style={{ lineHeight: "1.6", color: "#6b7280" }}>
+            <p key={i} className="leading-relaxed text-gray-500">
               Line {i + 1}: Lorem ipsum dolor sit amet, consectetur adipiscing
               elit. Sed do eiusmod tempor incididunt ut labore et dolore magna
               aliqua.
@@ -129,32 +80,11 @@ function SearchInputDemo() {
   }, [throttledQuery]);
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>
         Search Input Throttling
       </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+      <p className={storyTheme.subtitle}>
         Type to search. API calls are throttled by 300ms.
       </p>
 
@@ -163,62 +93,29 @@ function SearchInputDemo() {
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         placeholder="Type to search..."
-        style={{
-          width: "100%",
-          padding: "0.875rem 1rem",
-          fontSize: "1rem",
-          border: "2px solid #e5e7eb",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          outline: "none",
-          transition: "all 0.2s ease",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = "#667eea";
-          e.currentTarget.style.boxShadow =
-            "0 0 0 3px rgba(102, 126, 234, 0.1)";
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = "#e5e7eb";
-          e.currentTarget.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.1)";
-        }}
+        className={storyTheme.input + " mb-5"}
       />
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Current Input:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{searchQuery || "(empty)"}</span>
+      <div className={storyTheme.statBox + " mb-5"}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Current Input:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{searchQuery || "(empty)"}</span>
         </div>
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Throttled Query:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Throttled Query:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>
             {throttledQuery || "(empty)"}
           </span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>API Calls Made:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>API Calls Made:</strong>{" "}
+          <span className={storyTheme.statValue}>
             {searchCount}
           </span>
         </div>
       </div>
 
-      <p style={{ color: "#6b7280", fontSize: "0.875rem", margin: 0 }}>
+      <p className="text-gray-500 text-sm m-0">
         💡 Try typing quickly. The throttled query (simulating API calls) only
         updates according to the interval setting, saving unnecessary network
         requests.
@@ -235,73 +132,29 @@ function WindowResizeDemo() {
   const throttledWidth = useThrottle(width, 200);
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>
         Window Resize Throttling
       </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+      <p className={storyTheme.subtitle}>
         Drag the slider to simulate window resize. Throttled by 200ms.
       </p>
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Raw Width:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{width}px</span>
+      <div className={storyTheme.statBox + " mb-5"}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Raw Width:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{width}px</span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Throttled Width:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Throttled Width:</strong>{" "}
+          <span className={storyTheme.statValue}>
             {throttledWidth}px
           </span>
         </div>
       </div>
 
-      <div style={{ marginBottom: "1.25rem" }}>
-        <label
-          htmlFor="width-slider"
-          style={{
-            display: "block",
-            marginBottom: "0.75rem",
-            fontWeight: "600",
-            color: "#374151",
-            fontSize: "0.95rem",
-          }}
-        >
+      <div className="mb-5">
+        <label htmlFor="width-slider" className={storyTheme.label + " mb-3"}>
           Adjust Width:
         </label>
         <input
@@ -311,36 +164,18 @@ function WindowResizeDemo() {
           max="600"
           value={width}
           onChange={(e) => setWidth(Number(e.target.value))}
-          style={{ width: "100%", height: "40px" }}
+          className="w-full h-10"
         />
       </div>
 
       <div
-        style={{
-          width: `${throttledWidth}px`,
-          height: "200px",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          borderRadius: "0.75rem",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "white",
-          fontSize: "2rem",
-          fontWeight: "bold",
-          transition: "width 0.1s ease-out",
-          boxShadow: "0 4px 16px rgba(102, 126, 234, 0.3)",
-        }}
+        style={{ width: `${throttledWidth}px` }}
+        className="h-[200px] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-3xl font-bold transition-all duration-100 ease-out shadow-[0_4px_16px_rgba(99,102,241,0.3)]"
       >
         {throttledWidth}px
       </div>
 
-      <p
-        style={{
-          marginTop: "1.25rem",
-          color: "#6b7280",
-          fontSize: "0.875rem",
-        }}
-      >
+      <p className="mt-5 text-gray-500 text-sm">
         💡 The throttled width only updates according to the interval,
         preventing expensive layout recalculations.
       </p>
@@ -381,144 +216,66 @@ function MouseMovementDemo() {
       : 0;
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>
         Mouse Movement - Default (Both Edges)
       </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+      <p className={storyTheme.subtitle}>
         Move your mouse in the area below. Throttled by 300ms with default
         settings (leading + trailing).
       </p>
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Raw Updates:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{rawUpdateCount}</span>
+      <div className={storyTheme.statBox + " mb-5"}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
         </div>
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Throttled Updates:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Throttled Updates:</strong>{" "}
+          <span className={storyTheme.statValue}>
             {throttledUpdateCount}
           </span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Reduction:</strong>{" "}
-          <span style={{ color: "#10b981", fontWeight: "700" }}>
-            {reduction}%
-          </span>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Reduction:</strong>{" "}
+          <span className="text-green-600 font-bold">{reduction}%</span>
         </div>
       </div>
 
       <div
         onMouseMove={handleMouseMove}
-        style={{
-          height: "300px",
-          border: "2px solid #e5e7eb",
-          borderRadius: "0.75rem",
-          background: "white",
-          position: "relative",
-          cursor: "crosshair",
-          overflow: "hidden",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
+        className="h-[300px] border-2 border-gray-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
       >
         <div
           style={{
             position: "absolute",
             left: `${throttledPos.x}px`,
             top: `${throttledPos.y}px`,
-            width: "24px",
-            height: "24px",
-            background: "#667eea",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            boxShadow: "0 2px 8px rgba(102, 126, 234, 0.5)",
           }}
+          className="w-6 h-6 bg-indigo-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_2px_8px_rgba(99,102,241,0.5)]"
         />
         <div
           style={{
             position: "absolute",
             left: `${mousePos.x}px`,
             top: `${mousePos.y}px`,
-            width: "8px",
-            height: "8px",
-            background: "#ff6b6b",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            opacity: 0.6,
           }}
+          className="w-2 h-2 bg-red-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-60"
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            fontSize: "0.875rem",
-            pointerEvents: "none",
-            background: "rgba(255, 255, 255, 0.9)",
-            padding: "0.75rem",
-            borderRadius: "0.5rem",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <div style={{ marginBottom: "0.25rem" }}>
-            <span style={{ color: "#ff6b6b", fontWeight: "700" }}>●</span> Raw
+        <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/90 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)]">
+          <div className="mb-1">
+            <span className="text-red-500 font-bold">●</span> Raw
             position ({mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span style={{ color: "#667eea", fontWeight: "700" }}>●</span>{" "}
+            <span className="text-indigo-500 font-bold">●</span>{" "}
             Throttled ({throttledPos.x}, {throttledPos.y})
           </div>
         </div>
       </div>
 
-      <div
-        style={{
-          marginTop: "1.25rem",
-          padding: "1rem",
-          background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <p style={{ margin: 0, fontSize: "0.875rem", color: "#78350f" }}>
+      <div className={storyTheme.infoBox + " mt-5"}>
+        <p className={storyTheme.infoText}>
           💡 <strong>Default behavior (both edges):</strong> Updates{" "}
           <strong>immediately</strong> when you start moving (leading edge),
           then throttles updates during movement, and updates one{" "}
@@ -566,63 +323,36 @@ function MouseMovementLeadingOnlyDemo() {
 
   return (
     <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
+      className={storyTheme.container}
     >
       <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
+          className={storyTheme.title}
       >
         Mouse Movement - Leading Only
       </h2>
       <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
+        className={storyTheme.subtitle}
       >
         Move your mouse. Only <strong>leading edge</strong> enabled (trailing:
         false).
       </p>
 
       <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
+        className="p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
       >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#065f46" }}>Raw Updates:</strong>{" "}
-          <span style={{ color: "#047857" }}>{rawUpdateCount}</span>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
         </div>
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#065f46" }}>Throttled Updates:</strong>{" "}
-          <span
-            style={{
-              color: "#10b981",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Throttled Updates:</strong>{" "}
+          <span className="text-green-600 font-bold text-[1.1rem]">
             {throttledUpdateCount}
           </span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#065f46" }}>Reduction:</strong>{" "}
-          <span style={{ color: "#059669", fontWeight: "700" }}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Reduction:</strong>{" "}
+          <span className="text-green-700 font-bold">
             {reduction}%
           </span>
         </div>
@@ -630,80 +360,40 @@ function MouseMovementLeadingOnlyDemo() {
 
       <div
         onMouseMove={handleMouseMove}
-        style={{
-          height: "300px",
-          border: "2px solid #a7f3d0",
-          borderRadius: "0.75rem",
-          background: "white",
-          position: "relative",
-          cursor: "crosshair",
-          overflow: "hidden",
-          boxShadow: "0 2px 8px rgba(16, 185, 129, 0.1)",
-        }}
+        className="h-[300px] border-2 border-green-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(16,185,129,0.1)]"
       >
         <div
           style={{
             position: "absolute",
             left: `${throttledPos.x}px`,
             top: `${throttledPos.y}px`,
-            width: "24px",
-            height: "24px",
-            background: "#10b981",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            boxShadow: "0 2px 8px rgba(16, 185, 129, 0.5)",
           }}
+          className="w-6 h-6 bg-green-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_2px_8px_rgba(16,185,129,0.5)]"
         />
         <div
           style={{
             position: "absolute",
             left: `${mousePos.x}px`,
             top: `${mousePos.y}px`,
-            width: "8px",
-            height: "8px",
-            background: "#ff6b6b",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            opacity: 0.6,
           }}
+          className="w-2 h-2 bg-red-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-60"
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            fontSize: "0.875rem",
-            pointerEvents: "none",
-            background: "rgba(255, 255, 255, 0.95)",
-            padding: "0.75rem",
-            borderRadius: "0.5rem",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #a7f3d0",
-          }}
-        >
-          <div style={{ marginBottom: "0.25rem" }}>
-            <span style={{ color: "#ff6b6b", fontWeight: "700" }}>●</span> Raw
+        <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/95 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] border border-green-200">
+          <div className="mb-1">
+            <span className="text-red-500 font-bold">●</span> Raw
             position ({mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span style={{ color: "#10b981", fontWeight: "700" }}>●</span>{" "}
+            <span className="text-green-500 font-bold">●</span>{" "}
             Throttled ({throttledPos.x}, {throttledPos.y})
           </div>
         </div>
       </div>
 
       <div
-        style={{
-          marginTop: "1.25rem",
-          padding: "1rem",
-          background: "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
+        className={storyTheme.infoBox + " mt-5 bg-green-50 border-green-200"}
       >
-        <p style={{ margin: 0, fontSize: "0.875rem", color: "#065f46" }}>
+        <p className={storyTheme.infoText + " text-green-900"}>
           💡 <strong>Leading edge only:</strong> Updates{" "}
           <strong>immediately</strong> when you start moving, then throttles. No
           final update when you stop! The green dot may{" "}
@@ -755,63 +445,36 @@ function MouseMovementTrailingOnlyDemo() {
 
   return (
     <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
+      className={storyTheme.container}
     >
       <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
+          className={storyTheme.title}
       >
         Mouse Movement - Trailing Only
       </h2>
       <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
+        className={storyTheme.subtitle}
       >
         Move your mouse. Only <strong>trailing edge</strong> enabled (leading:
         false).
       </p>
 
       <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
+        className="p-5 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
       >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#92400e" }}>Raw Updates:</strong>{" "}
-          <span style={{ color: "#b45309" }}>{rawUpdateCount}</span>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
         </div>
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#92400e" }}>Throttled Updates:</strong>{" "}
-          <span
-            style={{
-              color: "#f59e0b",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Throttled Updates:</strong>{" "}
+          <span className="text-amber-600 font-bold text-[1.1rem]">
             {throttledUpdateCount}
           </span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#92400e" }}>Reduction:</strong>{" "}
-          <span style={{ color: "#d97706", fontWeight: "700" }}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Reduction:</strong>{" "}
+          <span className="text-amber-700 font-bold">
             {reduction}%
           </span>
         </div>
@@ -819,80 +482,38 @@ function MouseMovementTrailingOnlyDemo() {
 
       <div
         onMouseMove={handleMouseMove}
-        style={{
-          height: "300px",
-          border: "2px solid #fde68a",
-          borderRadius: "0.75rem",
-          background: "white",
-          position: "relative",
-          cursor: "crosshair",
-          overflow: "hidden",
-          boxShadow: "0 2px 8px rgba(245, 158, 11, 0.1)",
-        }}
+        className="h-[300px] border-2 border-yellow-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(245,158,11,0.1)]"
       >
         <div
           style={{
             position: "absolute",
             left: `${throttledPos.x}px`,
             top: `${throttledPos.y}px`,
-            width: "24px",
-            height: "24px",
-            background: "#f59e0b",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            boxShadow: "0 2px 8px rgba(245, 158, 11, 0.5)",
           }}
+          className="w-6 h-6 bg-amber-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_2px_8px_rgba(245,158,11,0.5)]"
         />
         <div
           style={{
             position: "absolute",
             left: `${mousePos.x}px`,
             top: `${mousePos.y}px`,
-            width: "8px",
-            height: "8px",
-            background: "#ff6b6b",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            opacity: 0.6,
           }}
+          className="w-2 h-2 bg-red-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-60"
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            fontSize: "0.875rem",
-            pointerEvents: "none",
-            background: "rgba(255, 255, 255, 0.95)",
-            padding: "0.75rem",
-            borderRadius: "0.5rem",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #fde68a",
-          }}
-        >
-          <div style={{ marginBottom: "0.25rem" }}>
-            <span style={{ color: "#ff6b6b", fontWeight: "700" }}>●</span> Raw
+        <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/95 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] border border-yellow-200">
+          <div className="mb-1">
+            <span className="text-red-500 font-bold">●</span> Raw
             position ({mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span style={{ color: "#f59e0b", fontWeight: "700" }}>●</span>{" "}
+            <span className="text-amber-600 font-bold">●</span>{" "}
             Throttled ({throttledPos.x}, {throttledPos.y})
           </div>
         </div>
       </div>
 
-      <div
-        style={{
-          marginTop: "1.25rem",
-          padding: "1rem",
-          background: "linear-gradient(135deg, #fef3c7 0%, #fde68a 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <p style={{ margin: 0, fontSize: "0.875rem", color: "#92400e" }}>
+      <div className={storyTheme.infoBox + " mt-5"}>
+        <p className={storyTheme.infoText}>
           💡 <strong>Trailing edge only:</strong> No immediate update when you
           start moving. Updates occur during throttle intervals and{" "}
           <strong>catches up</strong> when you stop. The orange dot{" "}
@@ -933,63 +554,36 @@ function MouseMovementNoThrottleDemo() {
 
   return (
     <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
+      className={storyTheme.container}
     >
       <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
+          className={storyTheme.title}
       >
         Mouse Movement - Both Disabled
       </h2>
       <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
+        className={storyTheme.subtitle}
       >
         Move your mouse. Both edges <strong>disabled</strong> (leading: false,
         trailing: false).
       </p>
 
       <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
+        className="p-5 bg-gradient-to-br from-red-50 to-red-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
       >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#991b1b" }}>Raw Updates:</strong>{" "}
-          <span style={{ color: "#b91c1c" }}>{rawUpdateCount}</span>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
         </div>
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#991b1b" }}>Throttled Updates:</strong>{" "}
-          <span
-            style={{
-              color: "#ef4444",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Throttled Updates:</strong>{" "}
+          <span className="text-red-500 font-bold text-[1.1rem]">
             {throttledUpdateCount}
           </span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#991b1b" }}>Status:</strong>{" "}
-          <span style={{ color: "#dc2626", fontWeight: "700" }}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Status:</strong>{" "}
+          <span className="text-red-600 font-bold">
             No throttling active! 🚫
           </span>
         </div>
@@ -997,101 +591,48 @@ function MouseMovementNoThrottleDemo() {
 
       <div
         onMouseMove={handleMouseMove}
-        style={{
-          height: "300px",
-          border: "2px solid #fecaca",
-          borderRadius: "0.75rem",
-          background: "white",
-          position: "relative",
-          cursor: "crosshair",
-          overflow: "hidden",
-          boxShadow: "0 2px 8px rgba(239, 68, 68, 0.1)",
-        }}
+        className="h-[300px] border-2 border-red-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(239,68,68,0.1)]"
       >
         <div
           style={{
             position: "absolute",
             left: `${throttledPos.x}px`,
             top: `${throttledPos.y}px`,
-            width: "24px",
-            height: "24px",
-            background: "#ef4444",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            boxShadow: "0 2px 8px rgba(239, 68, 68, 0.5)",
-            opacity: throttledPos.x === 0 && throttledPos.y === 0 ? 0 : 1,
           }}
+          className={`w-6 h-6 bg-red-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none shadow-[0_2px_8px_rgba(239,68,68,0.5)] ${
+            throttledPos.x === 0 && throttledPos.y === 0 ? "opacity-0" : "opacity-100"
+          }`}
         />
         <div
           style={{
             position: "absolute",
             left: `${mousePos.x}px`,
             top: `${mousePos.y}px`,
-            width: "8px",
-            height: "8px",
-            background: "#ff6b6b",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            pointerEvents: "none",
-            opacity: 0.6,
           }}
+          className="w-2 h-2 bg-red-500 rounded-full -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-60"
         />
-        <div
-          style={{
-            position: "absolute",
-            top: "20px",
-            left: "20px",
-            fontSize: "0.875rem",
-            pointerEvents: "none",
-            background: "rgba(255, 255, 255, 0.95)",
-            padding: "0.75rem",
-            borderRadius: "0.5rem",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            border: "1px solid #fecaca",
-          }}
-        >
-          <div style={{ marginBottom: "0.25rem" }}>
-            <span style={{ color: "#ff6b6b", fontWeight: "700" }}>●</span> Raw
+        <div className="absolute top-5 left-5 text-sm pointer-events-none bg-white/95 p-3 rounded-lg shadow-[0_2px_8px_rgba(0,0,0,0.1)] border border-red-200">
+          <div className="mb-1">
+            <span className="text-red-500 font-bold">●</span> Raw
             position ({mousePos.x}, {mousePos.y})
           </div>
           <div>
-            <span style={{ color: "#ef4444", fontWeight: "700" }}>●</span>{" "}
+            <span className="text-red-600 font-bold">●</span>{" "}
             Throttled ({throttledPos.x}, {throttledPos.y})
           </div>
         </div>
 
         {throttledPos.x === 0 && throttledPos.y === 0 && mousePos.x !== 0 && (
-          <div
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              fontSize: "1.5rem",
-              fontWeight: "700",
-              color: "#ef4444",
-              pointerEvents: "none",
-              textAlign: "center",
-            }}
-          >
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-2xl font-bold text-red-500 pointer-events-none text-center">
             ⚠️
             <br />
-            <span style={{ fontSize: "1rem" }}>No throttle dot visible!</span>
+            <span className="text-base">No throttle dot visible!</span>
           </div>
         )}
       </div>
 
-      <div
-        style={{
-          marginTop: "1.25rem",
-          padding: "1rem",
-          background: "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <p style={{ margin: 0, fontSize: "0.875rem", color: "#991b1b" }}>
+      <div className={storyTheme.infoBox + " mt-5 bg-red-50 border-red-200"}>
+        <p className={storyTheme.infoText + " text-red-900"}>
           ⚠️ <strong>Both edges disabled:</strong> The throttle value{" "}
           <strong>stays at initial value</strong> and never updates! This
           configuration is <strong>not useful</strong> - it completely disables
@@ -1168,32 +709,14 @@ function ClickEventThrottleDemo() {
 
   return (
     <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
+      className={storyTheme.container}
     >
       <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
+          className={storyTheme.title}
       >
         Click Event Throttling
       </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-          lineHeight: "1.6",
-        }}
-      >
+      <p className={storyTheme.subtitle + " leading-relaxed"}>
         Simulates a <strong>token renewal</strong> scenario. Click the button to
         renew the token, but it can only be renewed once every{" "}
         <strong>5 seconds</strong>. Using <code>trailing: false</code> ensures
@@ -1202,59 +725,33 @@ function ClickEventThrottleDemo() {
 
       {/* Token Status Card */}
       <div
-        style={{
-          padding: "1.25rem",
-          background: tokenExpiry
-            ? "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
-            : "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-          transition: "background 0.3s ease",
-        }}
+        className={`p-5 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)] transition-all duration-300 ${
+          tokenExpiry
+            ? "bg-gradient-to-br from-green-50 to-green-100"
+            : "bg-gradient-to-br from-red-50 to-red-100"
+        }`}
       >
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "0.75rem",
-            marginBottom: "0.75rem",
-          }}
-        >
+        <div className="flex items-center gap-3 mb-3">
           <div
-            style={{
-              width: "12px",
-              height: "12px",
-              borderRadius: "50%",
-              background: tokenExpiry ? "#10b981" : "#ef4444",
-              boxShadow: tokenExpiry
-                ? "0 0 8px rgba(16, 185, 129, 0.5)"
-                : "0 0 8px rgba(239, 68, 68, 0.5)",
-            }}
+            className={`w-3 h-3 rounded-full ${
+              tokenExpiry
+                ? "bg-green-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]"
+                : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]"
+            }`}
           />
-          <strong style={{ color: tokenExpiry ? "#065f46" : "#991b1b" }}>
+          <strong className={tokenExpiry ? "text-green-900" : "text-red-900"}>
             Token Status: {tokenExpiry ? "Valid" : "Expired"}
           </strong>
         </div>
         {tokenCountdown !== null && (
-          <div style={{ fontSize: "0.875rem", color: "#065f46" }}>
+          <div className="text-sm text-green-900">
             Expires in: {Math.ceil(tokenCountdown / 1000)}s
-            <div
-              style={{
-                marginTop: "0.5rem",
-                height: "4px",
-                background: "rgba(16, 185, 129, 0.2)",
-                borderRadius: "2px",
-                overflow: "hidden",
-              }}
-            >
+            <div className="mt-2 h-1 bg-green-200 rounded-sm overflow-hidden">
               <div
                 style={{
-                  height: "100%",
                   width: `${(tokenCountdown / 30000) * 100}%`,
-                  background: "#10b981",
-                  transition: "width 0.1s linear",
                 }}
+                className="h-full bg-green-500 transition-all duration-100 ease-linear"
               />
             </div>
           </div>
@@ -1262,42 +759,23 @@ function ClickEventThrottleDemo() {
       </div>
 
       {/* Click Button */}
-      <div style={{ marginBottom: "1.25rem" }}>
+      <div className="mb-5">
         <button
           onClick={handleClick}
-          style={{
-            width: "100%",
-            padding: "1rem 2rem",
-            fontSize: "1.1rem",
-            fontWeight: "600",
-            color: "white",
-            background: isOnCooldown
-              ? "linear-gradient(135deg, #9ca3af 0%, #6b7280 100%)"
-              : "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)",
-            border: "none",
-            borderRadius: "0.75rem",
-            cursor: isOnCooldown ? "not-allowed" : "pointer",
-            transition: "all 0.2s ease",
-            boxShadow: isOnCooldown
-              ? "0 2px 8px rgba(0, 0, 0, 0.1)"
-              : "0 4px 16px rgba(139, 92, 246, 0.4)",
-            position: "relative",
-            overflow: "hidden",
-          }}
+          className={`w-full py-4 px-8 text-lg font-semibold text-white border-none rounded-xl transition-all duration-200 relative overflow-hidden ${
+            isOnCooldown
+              ? "bg-gradient-to-br from-gray-400 to-gray-500 cursor-not-allowed shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+              : "bg-gradient-to-br from-purple-500 to-purple-700 cursor-pointer shadow-[0_4px_16px_rgba(139,92,246,0.4)] hover:shadow-[0_6px_20px_rgba(139,92,246,0.5)]"
+          }`}
         >
           {isOnCooldown ? (
             <>
               Cooldown... ({Math.ceil(cooldownRemaining / 1000)}s)
               <div
                 style={{
-                  position: "absolute",
-                  bottom: 0,
-                  left: 0,
-                  height: "4px",
                   width: `${cooldownPercent}%`,
-                  background: "rgba(255, 255, 255, 0.5)",
-                  transition: "width 0.1s linear",
                 }}
+                className="absolute bottom-0 left-0 h-1 bg-white/50 transition-all duration-100 ease-linear"
               />
             </>
           ) : (
@@ -1308,40 +786,28 @@ function ClickEventThrottleDemo() {
 
       {/* Stats */}
       <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
+        className={storyTheme.statBox + " mb-5"}
       >
-        <div style={{ marginBottom: "0.75rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Total Clicks:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{clickCount}</span>
+        <div className={storyTheme.statLabel + " mb-3"}>
+          <strong className={storyTheme.statText}>Total Clicks:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>{clickCount}</span>
         </div>
-        <div style={{ marginBottom: "0.75rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Actual Renewals:</strong>{" "}
-          <span
-            style={{
-              color: "#8b5cf6",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className={storyTheme.statLabel + " mb-3"}>
+          <strong className={storyTheme.statText}>Actual Renewals:</strong>{" "}
+          <span className="text-purple-600 font-bold text-[1.1rem]">
             {renewalCount}
           </span>
         </div>
-        <div style={{ marginBottom: "0.75rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Ignored Clicks:</strong>{" "}
-          <span style={{ color: "#ef4444", fontWeight: "600" }}>
+        <div className={storyTheme.statLabel + " mb-3"}>
+          <strong className={storyTheme.statText}>Ignored Clicks:</strong>{" "}
+          <span className="text-red-500 font-semibold">
             {clickCount - renewalCount}
           </span>
         </div>
         {lastRenewalTime && (
-          <div style={{ fontSize: "0.95rem" }}>
-            <strong style={{ color: "#374151" }}>Last Renewal:</strong>{" "}
-            <span style={{ color: "#6b7280" }}>
+          <div className={storyTheme.statLabel}>
+            <strong className={storyTheme.statText}>Last Renewal:</strong>{" "}
+            <span className={storyTheme.statTextSecondary}>
               {lastRenewalTime.toLocaleTimeString()}
             </span>
           </div>
@@ -1349,28 +815,13 @@ function ClickEventThrottleDemo() {
       </div>
 
       {/* Click History Visualization */}
-      <div
-        style={{
-          padding: "1rem",
-          background: "white",
-          border: "2px solid #e5e7eb",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-        }}
-      >
-        <div
-          style={{
-            fontSize: "0.875rem",
-            fontWeight: "600",
-            color: "#374151",
-            marginBottom: "0.75rem",
-          }}
-        >
+      <div className="p-4 bg-white border-2 border-gray-200 rounded-xl mb-5">
+        <div className="text-sm font-semibold text-gray-700 mb-3">
           Click Timeline (recent 10):
         </div>
-        <div style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+        <div className="flex gap-2 flex-wrap">
           {clickCount === 0 ? (
-            <span style={{ color: "#9ca3af", fontSize: "0.875rem" }}>
+            <span className="text-gray-400 text-sm">
               No clicks yet
             </span>
           ) : (
@@ -1382,23 +833,11 @@ function ClickEventThrottleDemo() {
               return (
                 <div
                   key={i}
-                  style={{
-                    width: "32px",
-                    height: "32px",
-                    borderRadius: "50%",
-                    background: isRenewal
-                      ? "linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)"
-                      : "#e5e7eb",
-                    color: isRenewal ? "white" : "#6b7280",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "0.75rem",
-                    fontWeight: "600",
-                    boxShadow: isRenewal
-                      ? "0 2px 8px rgba(139, 92, 246, 0.4)"
-                      : "none",
-                  }}
+                  className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
+                    isRenewal
+                      ? "bg-gradient-to-br from-purple-500 to-purple-700 text-white shadow-[0_2px_8px_rgba(139,92,246,0.4)]"
+                      : "bg-gray-200 text-gray-500"
+                  }`}
                   title={
                     isRenewal ? "Renewal triggered" : "Ignored (throttled)"
                   }
@@ -1409,72 +848,26 @@ function ClickEventThrottleDemo() {
             })
           )}
         </div>
-        <div
-          style={{
-            marginTop: "0.75rem",
-            fontSize: "0.75rem",
-            color: "#9ca3af",
-            display: "flex",
-            gap: "1rem",
-          }}
-        >
-          <span>
-            <span
-              style={{
-                display: "inline-block",
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                background: "#8b5cf6",
-                marginRight: "4px",
-              }}
-            />
+        <div className="mt-3 text-xs text-gray-400 flex gap-4">
+          <span className="flex items-center">
+            <span className="inline-block w-2.5 h-2.5 rounded-full bg-purple-600 mr-1" />
             Renewal
           </span>
-          <span>
-            <span
-              style={{
-                display: "inline-block",
-                width: "10px",
-                height: "10px",
-                borderRadius: "50%",
-                background: "#e5e7eb",
-                marginRight: "4px",
-              }}
-            />
+          <span className="flex items-center">
+            <span className="inline-block w-2.5 h-2.5 rounded-full bg-gray-200 mr-1" />
             Ignored
           </span>
         </div>
       </div>
 
       {/* Info Box */}
-      <div
-        style={{
-          padding: "1rem",
-          background: "linear-gradient(135deg, #ede9fe 0%, #ddd6fe 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <p
-          style={{
-            margin: 0,
-            fontSize: "0.875rem",
-            color: "#5b21b6",
-            lineHeight: "1.6",
-          }}
-        >
+      <div className={storyTheme.cardInfo}>
+        <p className={storyTheme.infoText + " text-indigo-900 leading-relaxed"}>
           💡 <strong>Real-world use case:</strong> Token renewal on user action.
           Even if the user clicks rapidly, the token is renewed at most once
           every 5 seconds. This prevents unnecessary API calls while ensuring
           the token stays fresh during active use. Using{" "}
-          <code
-            style={{
-              background: "rgba(139, 92, 246, 0.2)",
-              padding: "2px 6px",
-              borderRadius: "4px",
-            }}
-          >
+          <code className="bg-indigo-100 px-1.5 py-0.5 rounded text-indigo-800">
             trailing: false
           </code>{" "}
           means only the first click triggers the renewal—subsequent clicks

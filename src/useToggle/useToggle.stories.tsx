@@ -2,91 +2,46 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useToggle } from "./useToggle";
 import { within, userEvent, expect } from "storybook/test";
+import { storyTheme } from "../styles/storyTheme";
 
 /**
  * Demo component for useToggle
  */
-function ToggleDemo({ initialValue = false }: { initialValue?: boolean }) {
+function ToggleDemo({
+  initialValue = false,
+  title = "useToggle Demo",
+}: {
+  initialValue?: boolean;
+  title?: string;
+}) {
   const { value, toggle, setTrue, setFalse, setValue } =
     useToggle(initialValue);
 
   return (
-    <div
-      style={{
-        padding: "3rem",
-        maxWidth: "500px",
-        margin: "0 auto",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          marginBottom: "2rem",
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          textAlign: "center",
-        }}
-      >
-        useToggle Demo
-      </h2>
+    <div className={storyTheme.containerCentered}>
+      <h2 className={storyTheme.title + " text-center mb-8"}>{title}</h2>
 
       {/* Current State Display */}
       <div
         data-testid="state-display"
         role="status"
         aria-live="polite"
-        style={{
-          padding: "2rem",
-          marginBottom: "2rem",
-          background: value
-            ? "linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
-            : "linear-gradient(135deg, #fee2e2 0%, #fecaca 100%)",
-          color: value ? "#065f46" : "#991b1b",
-          borderRadius: "1rem",
-          textAlign: "center",
-          fontSize: "2rem",
-          fontWeight: "700",
-          boxShadow: value
-            ? "0 10px 25px rgba(16, 185, 129, 0.3)"
-            : "0 10px 25px rgba(239, 68, 68, 0.3)",
-          transition: "all 0.3s ease",
-          textShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
-        }}
+        className={`p-8 mb-8 rounded-2xl text-center text-3xl font-bold transition-all duration-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
+          value
+            ? "bg-gradient-to-br from-green-50 to-green-100 text-green-800 shadow-[0_10px_25px_rgba(16,185,129,0.3)]"
+            : "bg-gradient-to-br from-red-50 to-red-100 text-red-800 shadow-[0_10px_25px_rgba(239,68,68,0.3)]"
+        }`}
       >
         State: {value ? "TRUE" : "FALSE"}
       </div>
 
       {/* Control Buttons */}
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+      <div className="flex flex-col gap-3">
         <button
           onClick={toggle}
           aria-label="Toggle the current state"
           type="button"
-          style={{
-            padding: "0.875rem 1.5rem",
-            fontSize: "1rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            borderRadius: "0.75rem",
-            border: "none",
-            background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            color: "white",
-            boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
-            transition: "all 0.2s ease",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow =
-              "0 6px 16px rgba(102, 126, 234, 0.4)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow =
-              "0 4px 12px rgba(102, 126, 234, 0.3)";
-          }}
+          className={storyTheme.buttonPrimary + " w-full"}
         >
           ⇄ Toggle
         </button>
@@ -95,28 +50,7 @@ function ToggleDemo({ initialValue = false }: { initialValue?: boolean }) {
           onClick={setTrue}
           aria-label="Set state to true"
           type="button"
-          style={{
-            padding: "0.875rem 1.5rem",
-            fontSize: "1rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            borderRadius: "0.75rem",
-            border: "none",
-            background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
-            color: "white",
-            boxShadow: "0 4px 12px rgba(16, 185, 129, 0.3)",
-            transition: "all 0.2s ease",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow =
-              "0 6px 16px rgba(16, 185, 129, 0.4)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow =
-              "0 4px 12px rgba(16, 185, 129, 0.3)";
-          }}
+          className="w-full py-3.5 px-6 text-base font-semibold text-white bg-gradient-to-br from-green-500 to-green-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(16,185,129,0.4)]"
         >
           ✓ Set True
         </button>
@@ -125,28 +59,7 @@ function ToggleDemo({ initialValue = false }: { initialValue?: boolean }) {
           onClick={setFalse}
           aria-label="Set state to false"
           type="button"
-          style={{
-            padding: "0.875rem 1.5rem",
-            fontSize: "1rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            borderRadius: "0.75rem",
-            border: "none",
-            background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            color: "white",
-            boxShadow: "0 4px 12px rgba(239, 68, 68, 0.3)",
-            transition: "all 0.2s ease",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.boxShadow =
-              "0 6px 16px rgba(239, 68, 68, 0.4)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.boxShadow =
-              "0 4px 12px rgba(239, 68, 68, 0.3)";
-          }}
+          className="w-full py-3.5 px-6 text-base font-semibold text-white bg-gradient-to-br from-red-500 to-red-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(239,68,68,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(239,68,68,0.4)]"
         >
           ✕ Set False
         </button>
@@ -155,28 +68,7 @@ function ToggleDemo({ initialValue = false }: { initialValue?: boolean }) {
           onClick={() => setValue(!value)}
           aria-label="Set state to opposite value"
           type="button"
-          style={{
-            padding: "0.875rem 1.5rem",
-            fontSize: "1rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            borderRadius: "0.75rem",
-            border: "2px solid #6b7280",
-            background: "#ffffff",
-            color: "#374151",
-            boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-            transition: "all 0.2s ease",
-          }}
-          onMouseOver={(e) => {
-            e.currentTarget.style.transform = "translateY(-2px)";
-            e.currentTarget.style.background = "#f9fafb";
-            e.currentTarget.style.boxShadow = "0 4px 12px rgba(0, 0, 0, 0.15)";
-          }}
-          onMouseOut={(e) => {
-            e.currentTarget.style.transform = "translateY(0)";
-            e.currentTarget.style.background = "#ffffff";
-            e.currentTarget.style.boxShadow = "0 2px 8px rgba(0, 0, 0, 0.1)";
-          }}
+          className="w-full py-3.5 px-6 text-base font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
         >
           ⟲ Set Value (opposite)
         </button>
@@ -207,6 +99,13 @@ const meta: Meta<typeof ToggleDemo> = {
         defaultValue: { summary: "false" },
       },
     },
+    title: {
+      control: "text",
+      description: "Title displayed in the demo",
+      table: {
+        type: { summary: "string" },
+      },
+    },
   },
 };
 
@@ -219,6 +118,7 @@ type Story = StoryObj<typeof ToggleDemo>;
 export const Default: Story = {
   args: {
     initialValue: false,
+    title: "Basic Toggle",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -264,6 +164,7 @@ export const Default: Story = {
 export const StartingTrue: Story = {
   args: {
     initialValue: true,
+    title: "Starting with True",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -287,6 +188,7 @@ export const StartingTrue: Story = {
 export const SetValueFunction: Story = {
   args: {
     initialValue: false,
+    title: "Set Value Function",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
@@ -318,6 +220,7 @@ export const SetValueFunction: Story = {
 export const IdempotentOperations: Story = {
   args: {
     initialValue: false,
+    title: "Idempotent Operations",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

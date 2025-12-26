@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
 import { useDebounceCallback } from "./useDebounceCallback";
 import { within, userEvent, expect, waitFor } from "storybook/test";
+import { storyTheme } from "../styles/storyTheme";
 
 /**
  * 1. Search Input Demo
@@ -25,32 +26,9 @@ function SearchInputDemo() {
   }, 500);
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
-        Search with Debounced Callback
-      </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>Search with Debounced Callback</h2>
+      <p className={storyTheme.subtitle}>
         Type to search. The search function is debounced by 500ms.
       </p>
 
@@ -62,141 +40,45 @@ function SearchInputDemo() {
           handleSearch(e.target.value);
         }}
         placeholder="Search..."
-        style={{
-          width: "100%",
-          padding: "0.875rem 1rem",
-          fontSize: "1rem",
-          border: "2px solid #e5e7eb",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          outline: "none",
-          transition: "all 0.2s ease",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-        }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = "#667eea";
-          e.currentTarget.style.boxShadow =
-            "0 0 0 3px rgba(102, 126, 234, 0.1)";
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = "#e5e7eb";
-          e.currentTarget.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.1)";
-        }}
+        className={storyTheme.input + " mb-5"}
       />
 
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem" }}>
+      <div className={storyTheme.buttonGroupFull}>
         <button
           onClick={handleSearch.cancel}
-          style={{
-            flex: 1,
-            padding: "0.75rem 1rem",
-            fontSize: "0.95rem",
-            backgroundColor: "#dc3545",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = "#c82333")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "#dc3545")
-          }
+          className={storyTheme.buttonDanger + " flex-1"}
         >
           Cancel
         </button>
         <button
           onClick={handleSearch.flush}
-          style={{
-            flex: 1,
-            padding: "0.75rem 1rem",
-            fontSize: "0.95rem",
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = "#218838")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "#28a745")
-          }
+          className={storyTheme.buttonSuccess + " flex-1"}
         >
           Search Now
         </button>
       </div>
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Current Input:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{searchTerm || "(empty)"}</span>
-        </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Search Calls:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
-            {searchCount}
+      <div className={storyTheme.statBox + " mb-5"}>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Current Input:</strong>{" "}
+          <span className={storyTheme.statTextSecondary}>
+            {searchTerm || "(empty)"}
           </span>
+        </div>
+        <div className={storyTheme.statLabel}>
+          <strong className={storyTheme.statText}>Search Calls:</strong>{" "}
+          <span className={storyTheme.statValue}>{searchCount}</span>
         </div>
       </div>
 
       {searchResults.length > 0 && (
         <div>
-          <h3
-            style={{
-              fontSize: "1.25rem",
-              fontWeight: "600",
-              color: "#374151",
-              marginBottom: "0.75rem",
-            }}
-          >
+          <h3 className="text-xl font-semibold text-gray-700 mb-3">
             Search Results:
           </h3>
-          <ul style={{ listStyle: "none", padding: 0 }}>
+          <ul className="list-none p-0">
             {searchResults.map((result, index) => (
-              <li
-                key={index}
-                style={{
-                  padding: "1rem",
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
-                  borderRadius: "0.5rem",
-                  marginBottom: "0.5rem",
-                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-                  transition: "all 0.2s ease",
-                  cursor: "pointer",
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.transform = "translateX(4px)";
-                  e.currentTarget.style.boxShadow =
-                    "0 4px 12px rgba(102, 126, 234, 0.15)";
-                  e.currentTarget.style.borderColor = "#667eea";
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.transform = "translateX(0)";
-                  e.currentTarget.style.boxShadow =
-                    "0 1px 3px rgba(0, 0, 0, 0.1)";
-                  e.currentTarget.style.borderColor = "#e5e7eb";
-                }}
-              >
+              <li key={index} className={storyTheme.listItem}>
                 {result}
               </li>
             ))}
@@ -227,45 +109,16 @@ function AutoSaveFormDemo() {
   };
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
-        Auto-save Form
-      </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+    <div className="p-8 max-w-[600px] font-sans">
+      <h2 className={storyTheme.title}>Auto-save Form</h2>
+      <p className="text-gray-500 mb-6 text-[0.95rem]">
         Form auto-saves 1 second after you stop typing.
       </p>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <div className="mb-4">
         <label
           htmlFor="name"
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            fontWeight: "600",
-            color: "#374151",
-            fontSize: "0.95rem",
-          }}
+          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
         >
           Name
         </label>
@@ -275,29 +128,14 @@ function AutoSaveFormDemo() {
           value={formData.name}
           onChange={(e) => updateField("name", e.target.value)}
           placeholder="Enter your name"
-          style={{
-            width: "100%",
-            padding: "0.875rem 1rem",
-            fontSize: "1rem",
-            border: "2px solid #e5e7eb",
-            borderRadius: "0.75rem",
-            outline: "none",
-            transition: "all 0.2s ease",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-          }}
+          className={storyTheme.input}
         />
       </div>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <div className="mb-4">
         <label
           htmlFor="email"
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            fontWeight: "600",
-            color: "#374151",
-            fontSize: "0.95rem",
-          }}
+          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
         >
           Email
         </label>
@@ -307,29 +145,14 @@ function AutoSaveFormDemo() {
           value={formData.email}
           onChange={(e) => updateField("email", e.target.value)}
           placeholder="Enter your email"
-          style={{
-            width: "100%",
-            padding: "0.875rem 1rem",
-            fontSize: "1rem",
-            border: "2px solid #e5e7eb",
-            borderRadius: "0.75rem",
-            outline: "none",
-            transition: "all 0.2s ease",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-          }}
+          className={storyTheme.input}
         />
       </div>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <div className="mb-4">
         <label
           htmlFor="bio"
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            fontWeight: "600",
-            color: "#374151",
-            fontSize: "0.95rem",
-          }}
+          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
         >
           Bio
         </label>
@@ -339,78 +162,34 @@ function AutoSaveFormDemo() {
           onChange={(e) => updateField("bio", e.target.value)}
           placeholder="Tell us about yourself"
           rows={4}
-          style={{
-            width: "100%",
-            padding: "0.875rem 1rem",
-            fontSize: "1rem",
-            border: "2px solid #e5e7eb",
-            borderRadius: "0.75rem",
-            outline: "none",
-            transition: "all 0.2s ease",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-            fontFamily: "inherit",
-            resize: "vertical",
-          }}
+          className={storyTheme.textarea}
         />
       </div>
 
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem" }}>
+      <div className="flex gap-2 mb-5">
         <button
           onClick={handleSave.cancel}
-          style={{
-            flex: 1,
-            padding: "0.75rem 1rem",
-            fontSize: "0.95rem",
-            backgroundColor: "#dc3545",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-          }}
+          className="flex-1 py-3 px-4 text-[0.95rem] bg-red-600 text-white border-none rounded-lg cursor-pointer hover:bg-red-700 transition-colors"
         >
           Cancel Save
         </button>
         <button
           onClick={handleSave.flush}
-          style={{
-            flex: 1,
-            padding: "0.75rem 1rem",
-            fontSize: "0.95rem",
-            backgroundColor: "#28a745",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-          }}
+          className="flex-1 py-3 px-4 text-[0.95rem] bg-green-600 text-white border-none rounded-lg cursor-pointer hover:bg-green-700 transition-colors"
         >
           Save Now
         </button>
       </div>
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Save Count:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
-            {saveCount}
-          </span>
+      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+        <div className="mb-2 text-[0.95rem]">
+          <strong className="text-gray-700">Save Count:</strong>{" "}
+          <span className={storyTheme.statValue}>{saveCount}</span>
         </div>
         {lastSaved && (
-          <div style={{ fontSize: "0.95rem" }}>
-            <strong style={{ color: "#374151" }}>Last Saved:</strong>{" "}
-            <span style={{ color: "#6b7280" }}>
+          <div className="text-[0.95rem]">
+            <strong className="text-gray-700">Last Saved:</strong>{" "}
+            <span className="text-gray-500">
               {lastSaved.toLocaleTimeString()}
             </span>
           </div>
@@ -436,32 +215,9 @@ function LeadingEdgeDemo() {
   );
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
-        Leading Edge Callback
-      </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+    <div className="p-8 max-w-[600px] font-sans">
+      <h2 className={storyTheme.title}>Leading Edge Callback</h2>
+      <p className="text-gray-500 mb-6 text-[0.95rem]">
         Click rapidly. The callback fires immediately on the first click, then
         waits 500ms before allowing another.
       </p>
@@ -471,52 +227,19 @@ function LeadingEdgeDemo() {
           setClickCount((prev) => prev + 1);
           handleClick();
         }}
-        style={{
-          width: "100%",
-          padding: "1.5rem 2rem",
-          fontSize: "1.25rem",
-          backgroundColor: "#667eea",
-          color: "white",
-          border: "none",
-          borderRadius: "0.75rem",
-          cursor: "pointer",
-          marginBottom: "1.25rem",
-          transition: "background-color 0.2s",
-          boxShadow: "0 4px 12px rgba(102, 126, 234, 0.3)",
-        }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "#5a67d8")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = "#667eea")
-        }
+        className={storyTheme.buttonFull + " mb-5"}
       >
         Click Me!
       </button>
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Total Clicks:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{clickCount}</span>
+      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+        <div className="mb-2 text-[0.95rem]">
+          <strong className="text-gray-700">Total Clicks:</strong>{" "}
+          <span className="text-gray-500">{clickCount}</span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Processed (Debounced):</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
-            {processedCount}
-          </span>
+        <div className="text-[0.95rem]">
+          <strong className="text-gray-700">Processed (Debounced):</strong>{" "}
+          <span className={storyTheme.statValue}>{processedCount}</span>
         </div>
       </div>
     </div>
@@ -539,32 +262,9 @@ function MaxWaitDemo() {
   );
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
-        MaxWait Option
-      </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+    <div className="p-8 max-w-[600px] font-sans">
+      <h2 className={storyTheme.title}>MaxWait Option</h2>
+      <p className="text-gray-500 mb-6 text-[0.95rem]">
         Keep typing continuously. The callback will fire at most every 5 seconds
         (maxWait), even if you don't stop typing.
       </p>
@@ -577,56 +277,22 @@ function MaxWaitDemo() {
         }}
         placeholder="Keep typing without stopping..."
         rows={6}
-        style={{
-          width: "100%",
-          padding: "0.875rem 1rem",
-          fontSize: "1rem",
-          border: "2px solid #e5e7eb",
-          borderRadius: "0.75rem",
-          marginBottom: "1.25rem",
-          outline: "none",
-          transition: "all 0.2s ease",
-          boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-          fontFamily: "monospace",
-          resize: "vertical",
-        }}
+        className="w-full py-3.5 px-4 text-base border-2 border-gray-200 rounded-xl mb-5 outline-none transition-all duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.1)] font-mono resize-y focus:border-[#667eea] focus:shadow-[0_0_0_3px_rgba(102,126,234,0.1)]"
       />
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Characters:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{input.length}</span>
+      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+        <div className="mb-2 text-[0.95rem]">
+          <strong className="text-gray-700">Characters:</strong>{" "}
+          <span className="text-gray-500">{input.length}</span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Callback Invocations:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
-            {updateCount}
-          </span>
+        <div className="text-[0.95rem]">
+          <strong className="text-gray-700">Callback Invocations:</strong>{" "}
+          <span className={storyTheme.statValue}>{updateCount}</span>
         </div>
       </div>
 
-      <div
-        style={{
-          marginTop: "1rem",
-          padding: "1rem",
-          backgroundColor: "#fff3cd",
-          borderRadius: "0.5rem",
-        }}
-      >
-        <p style={{ margin: 0, fontSize: "0.875rem", color: "#856404" }}>
+      <div className="mt-4 p-4 bg-yellow-100 rounded-lg">
+        <p className="m-0 text-sm text-yellow-800">
           💡 <strong>maxWait</strong> ensures the callback runs at least once
           every 5 seconds, preventing indefinite delays during continuous input.
         </p>
@@ -868,46 +534,17 @@ function CancelDemo() {
   }, 2000);
 
   return (
-    <div
-      style={{
-        padding: "2rem",
-        maxWidth: "600px",
-        fontFamily: "system-ui, -apple-system, sans-serif",
-      }}
-    >
-      <h2
-        style={{
-          fontSize: "1.75rem",
-          fontWeight: "700",
-          background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
-          marginBottom: "0.5rem",
-        }}
-      >
-        Cancel Pending Callback
-      </h2>
-      <p
-        style={{
-          color: "#6b7280",
-          marginBottom: "1.5rem",
-          fontSize: "0.95rem",
-        }}
-      >
+    <div className="p-8 max-w-[600px] font-sans">
+      <h2 className={storyTheme.title}>Cancel Pending Callback</h2>
+      <p className="text-gray-500 mb-6 text-[0.95rem]">
         Type and click cancel before 2 seconds to prevent submission. The cancel
         button clears any pending debounced callbacks.
       </p>
 
-      <div style={{ marginBottom: "1rem" }}>
+      <div className="mb-4">
         <label
           htmlFor="cancel-input"
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            fontWeight: "600",
-            color: "#374151",
-            fontSize: "0.95rem",
-          }}
+          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
         >
           Input Field
         </label>
@@ -920,53 +557,18 @@ function CancelDemo() {
             handleSubmit(e.target.value);
           }}
           placeholder="Type something..."
-          style={{
-            width: "100%",
-            padding: "0.875rem 1rem",
-            fontSize: "1rem",
-            border: "2px solid #e5e7eb",
-            borderRadius: "0.75rem",
-            outline: "none",
-            transition: "all 0.2s ease",
-            boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-          }}
-          onFocus={(e) => {
-            e.currentTarget.style.borderColor = "#667eea";
-            e.currentTarget.style.boxShadow =
-              "0 0 0 3px rgba(102, 126, 234, 0.1)";
-          }}
-          onBlur={(e) => {
-            e.currentTarget.style.borderColor = "#e5e7eb";
-            e.currentTarget.style.boxShadow = "0 1px 3px rgba(0, 0, 0, 0.1)";
-          }}
+          className={storyTheme.input}
         />
       </div>
 
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1.25rem" }}>
+      <div className="flex gap-2 mb-5">
         <button
           onClick={() => {
             handleSubmit.cancel();
             setCancelCount((prev) => prev + 1);
           }}
           aria-label="Cancel submission"
-          style={{
-            flex: 1,
-            padding: "0.75rem 1rem",
-            fontSize: "0.95rem",
-            backgroundColor: "#dc3545",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-            fontWeight: "600",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = "#c82333")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "#dc3545")
-          }
+          className="flex-1 py-3 px-4 text-[0.95rem] bg-red-600 text-white border-none rounded-lg cursor-pointer transition-colors duration-200 font-semibold hover:bg-red-700"
         >
           Cancel Pending
         </button>
@@ -977,80 +579,35 @@ function CancelDemo() {
             setCancelCount(0);
             setLastSubmitted("");
           }}
-          style={{
-            flex: 1,
-            padding: "0.75rem 1rem",
-            fontSize: "0.95rem",
-            backgroundColor: "#6c757d",
-            color: "white",
-            border: "none",
-            borderRadius: "0.5rem",
-            cursor: "pointer",
-            transition: "background-color 0.2s",
-            fontWeight: "600",
-          }}
-          onMouseEnter={(e) =>
-            (e.currentTarget.style.backgroundColor = "#5a6268")
-          }
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.backgroundColor = "#6c757d")
-          }
+          className="flex-1 py-3 px-4 text-[0.95rem] bg-gray-600 text-white border-none rounded-lg cursor-pointer transition-colors duration-200 font-semibold hover:bg-gray-700"
         >
           Reset
         </button>
       </div>
 
-      <div
-        style={{
-          padding: "1.25rem",
-          background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 8px rgba(0, 0, 0, 0.05)",
-        }}
-      >
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Current Input:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{input || "(empty)"}</span>
+      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+        <div className="mb-2 text-[0.95rem]">
+          <strong className="text-gray-700">Current Input:</strong>{" "}
+          <span className="text-gray-500">{input || "(empty)"}</span>
         </div>
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Last Submitted:</strong>{" "}
-          <span style={{ color: "#6b7280" }}>{lastSubmitted || "(none)"}</span>
+        <div className="mb-2 text-[0.95rem]">
+          <strong className="text-gray-700">Last Submitted:</strong>{" "}
+          <span className="text-gray-500">{lastSubmitted || "(none)"}</span>
         </div>
-        <div style={{ marginBottom: "0.5rem", fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Submit Count:</strong>{" "}
-          <span
-            style={{
-              color: "#667eea",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
-            {submitCount}
-          </span>
+        <div className="mb-2 text-[0.95rem]">
+          <strong className="text-gray-700">Submit Count:</strong>{" "}
+          <span className={storyTheme.statValue}>{submitCount}</span>
         </div>
-        <div style={{ fontSize: "0.95rem" }}>
-          <strong style={{ color: "#374151" }}>Cancel Count:</strong>{" "}
-          <span
-            style={{
-              color: "#dc3545",
-              fontWeight: "700",
-              fontSize: "1.1rem",
-            }}
-          >
+        <div className="text-[0.95rem]">
+          <strong className="text-gray-700">Cancel Count:</strong>{" "}
+          <span className="text-red-600 font-bold text-[1.1rem]">
             {cancelCount}
           </span>
         </div>
       </div>
 
-      <div
-        style={{
-          marginTop: "1rem",
-          padding: "1rem",
-          backgroundColor: "#fff3cd",
-          borderRadius: "0.5rem",
-        }}
-      >
-        <p style={{ margin: 0, fontSize: "0.875rem", color: "#856404" }}>
+      <div className="mt-4 p-4 bg-yellow-100 rounded-lg">
+        <p className="m-0 text-sm text-yellow-800">
           💡 Try typing something and clicking <strong>Cancel Pending</strong>{" "}
           within 2 seconds. The submission will be prevented!
         </p>

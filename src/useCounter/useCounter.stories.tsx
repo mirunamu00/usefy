@@ -2,16 +2,17 @@ import React from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useCounter } from "./useCounter";
 import { within, userEvent, expect } from "storybook/test";
+import { storyTheme } from "../styles/storyTheme";
 
 function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
   const { count, increment, decrement, reset } = useCounter(initialValue);
 
   return (
-    <div className="p-12 text-center font-sans max-w-[500px] mx-auto">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-8">
+    <div className={storyTheme.containerCentered}>
+      <h2 className={storyTheme.titleLarge}>
         useCounter Hook Demo
       </h2>
-      <div className="bg-gradient-to-br from-[#667eea] to-[#764ba2] rounded-2xl p-8 mb-8 shadow-[0_10px_25px_rgba(102,126,234,0.3)]">
+      <div className={storyTheme.gradientBox + " mb-8"}>
         <p
           data-testid="count"
           className="text-6xl font-bold text-white m-0 drop-shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
@@ -19,25 +20,25 @@ function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
           {count}
         </p>
       </div>
-      <div className="flex gap-3 justify-center flex-wrap">
+      <div className="flex gap-3 justify-center">
         <button
           data-testid="decrement-btn"
           onClick={decrement}
-          className="px-6 py-3 text-base font-semibold text-white bg-gradient-to-br from-[#f093fb] to-[#f5576c] border-none rounded-lg cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(245,87,108,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,87,108,0.4)]"
+          className={storyTheme.buttonSecondary}
         >
           − Decrement
         </button>
         <button
           data-testid="reset-btn"
           onClick={reset}
-          className="px-6 py-3 text-base font-semibold text-gray-700 bg-gray-100 border-2 border-gray-200 rounded-lg cursor-pointer transition-all duration-200 shadow-[0_2px_6px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:bg-gray-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+          className={storyTheme.buttonNeutral}
         >
           ↻ Reset
         </button>
         <button
           data-testid="increment-btn"
           onClick={increment}
-          className="px-6 py-3 text-base font-semibold text-white bg-gradient-to-br from-[#667eea] to-[#764ba2] border-none rounded-lg cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(102,126,234,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(102,126,234,0.4)]"
+          className={storyTheme.buttonPrimary}
         >
           + Increment
         </button>
