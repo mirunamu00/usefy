@@ -1,72 +1,76 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 
 /**
  * Options for useDebounceCallback hook
  */
 export interface UseDebounceCallbackOptions {
   /**
-   * Maximum time the debounced callback can be delayed
-   * If the debounced function is invoked repeatedly, it will be called
-   * at most once per maxWait milliseconds
+   * Maximum time the debounced function can be delayed
    * @default undefined (no maximum)
    */
   maxWait?: number;
   /**
-   * Whether to invoke the callback on the leading edge
-   * If true, the callback is invoked immediately on the first call,
-   * then subsequent calls within the delay period are debounced
+   * Whether to invoke on the leading edge
    * @default false
    */
   leading?: boolean;
   /**
-   * Whether to invoke the callback on the trailing edge
-   * If true, the callback is invoked after the delay period has elapsed
-   * since the last call
+   * Whether to invoke on the trailing edge
    * @default true
    */
   trailing?: boolean;
 }
 
 /**
- * Return type for useDebounceCallback hook
+ * Debounced function interface with control methods
  */
-export interface DebouncedFunction<T extends (...args: never[]) => any> {
+export interface DebouncedFunction<T extends (...args: any[]) => any> {
   /**
-   * The debounced function
+   * Call the debounced function
    */
-  (...args: Parameters<T>): void;
+  (...args: Parameters<T>): ReturnType<T> | undefined;
   /**
-   * Cancels any pending invocations
+   * Cancel any pending invocation
    */
   cancel: () => void;
   /**
-   * Immediately invokes any pending invocations
+   * Immediately invoke any pending invocation
    */
-  flush: () => void;
+  flush: () => ReturnType<T> | undefined;
+  /**
+   * Check if there is a pending invocation
+   */
+  pending: () => boolean;
 }
 
 /**
- * Creates a debounced version of a callback function that delays invoking the callback
- * until after a specified delay period has elapsed since the last time it was called.
+ * Creates a debounced version of the provided callback function.
+ * The debounced function delays invoking the callback until after `delay` milliseconds
+ * have elapsed since the last time the debounced function was invoked.
  *
  * @template T - The type of the callback function
- * @param callback - The callback function to debounce
+ * @param callback - The function to debounce
  * @param delay - The delay in milliseconds (default: 500ms)
  * @param options - Additional options for controlling debounce behavior
- * @returns A debounced function with cancel and flush methods
+ * @returns A debounced version of the callback with cancel, flush, and pending methods
  *
  * @example
  * ```tsx
- * function SearchInput() {
- *   const handleSearch = useDebounceCallback((term: string) => {
- *     console.log('Searching for:', term);
- *     api.search(term);
- *   }, 500);
+ * function SearchComponent() {
+ *   const [results, setResults] = useState([]);
+ *
+ *   const debouncedSearch = useDebounceCallback(
+ *     async (query: string) => {
+ *       const data = await searchAPI(query);
+ *       setResults(data);
+ *     },
+ *     500
+ *   );
  *
  *   return (
  *     <input
  *       type="text"
- *       onChange={(e) => handleSearch(e.target.value)}
+ *       onChange={(e) => debouncedSearch(e.target.value)}
  *       placeholder="Search..."
  *     />
  *   );
@@ -76,199 +80,240 @@ export interface DebouncedFunction<T extends (...args: never[]) => any> {
  * @example
  * ```tsx
  * // With leading edge invocation
- * const debouncedClick = useDebounceCallback(
- *   () => console.log('Clicked'),
- *   300,
- *   { leading: true }
- * );
- * ```
- *
- * @example
- * ```tsx
- * // With cancel and flush methods
- * function Form() {
- *   const debouncedSave = useDebounceCallback(
- *     (data: FormData) => api.save(data),
- *     1000
- *   );
- *
- *   return (
- *     <>
- *       <input onChange={(e) => debouncedSave({ value: e.target.value })} />
- *       <button onClick={debouncedSave.cancel}>Cancel Save</button>
- *       <button onClick={debouncedSave.flush}>Save Now</button>
- *     </>
- *   );
- * }
+ * const debouncedFn = useDebounceCallback(callback, 300, { leading: true });
  * ```
  *
  * @example
  * ```tsx
  * // With maximum wait time
- * const debouncedResize = useDebounceCallback(
- *   () => console.log('Window resized'),
- *   500,
- *   { maxWait: 2000 }
- * );
+ * const debouncedFn = useDebounceCallback(callback, 500, { maxWait: 2000 });
+ *
+ * // Cancel pending invocation
+ * debouncedFn.cancel();
+ *
+ * // Immediately invoke pending invocation
+ * debouncedFn.flush();
+ *
+ * // Check if there's a pending invocation
+ * if (debouncedFn.pending()) {
+ *   console.log('There is a pending call');
+ * }
  * ```
  */
-export function useDebounceCallback<T extends (...args: never[]) => any>(
+export function useDebounceCallback<T extends (...args: any[]) => any>(
   callback: T,
   delay: number = 500,
   options: UseDebounceCallbackOptions = {}
 ): DebouncedFunction<T> {
-  const { maxWait, leading = false, trailing = true } = options;
+  // Parse options
+  const wait = delay || 0;
+  const leading = options.leading ?? false;
+  const trailing = options.trailing !== undefined ? options.trailing : true;
+  const maxing = "maxWait" in options;
+  const maxWait = maxing ? Math.max(options.maxWait || 0, wait) : undefined;
 
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined
-  );
-  const maxWaitTimeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined
-  );
-  const lastInvokeTimeRef = useRef<number>(0);
-  const firstCallTimeRef = useRef<number>(0);
-  const lastArgsRef = useRef<Parameters<T> | undefined>(undefined);
+  // Refs for mutable state
   const callbackRef = useRef<T>(callback);
-  const leadingInvokedRef = useRef<boolean>(false);
+  const timerIdRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  const lastCallTimeRef = useRef<number | undefined>(undefined);
+  const lastInvokeTimeRef = useRef<number>(0);
+  const lastArgsRef = useRef<Parameters<T> | undefined>(undefined);
+  const resultRef = useRef<ReturnType<T> | undefined>(undefined);
 
-  // Update callback ref when callback changes
-  useEffect(() => {
-    callbackRef.current = callback;
-  }, [callback]);
+  // Store options in refs
+  const waitRef = useRef(wait);
+  const leadingRef = useRef(leading);
+  const trailingRef = useRef(trailing);
+  const maxingRef = useRef(maxing);
+  const maxWaitRef = useRef(maxWait);
 
-  const clearTimeouts = useCallback(() => {
-    if (timeoutRef.current !== undefined) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = undefined;
+  // Update callback ref on every render to always have the latest callback
+  callbackRef.current = callback;
+
+  // Update option refs when options change
+  waitRef.current = wait;
+  leadingRef.current = leading;
+  trailingRef.current = trailing;
+  maxingRef.current = maxing;
+  maxWaitRef.current = maxWait;
+
+  // Helper function to get current time
+  const now = useCallback(() => Date.now(), []);
+
+  // Helper function: shouldInvoke
+  const shouldInvoke = useCallback((time: number): boolean => {
+    const lastCallTime = lastCallTimeRef.current;
+    if (lastCallTime === undefined) {
+      return true; // First call
     }
-    if (maxWaitTimeoutRef.current !== undefined) {
-      clearTimeout(maxWaitTimeoutRef.current);
-      maxWaitTimeoutRef.current = undefined;
-    }
+
+    const timeSinceLastCall = time - lastCallTime;
+    const timeSinceLastInvoke = time - lastInvokeTimeRef.current;
+
+    return (
+      timeSinceLastCall >= waitRef.current ||
+      timeSinceLastCall < 0 || // System time went backwards
+      (maxingRef.current &&
+        timeSinceLastInvoke >= (maxWaitRef.current as number))
+    );
   }, []);
 
-  const invokeFunction = useCallback(() => {
+  // Helper function: invokeFunc
+  const invokeFunc = useCallback((time: number): ReturnType<T> | undefined => {
     const args = lastArgsRef.current;
-    if (args !== undefined) {
-      lastInvokeTimeRef.current = Date.now();
-      lastArgsRef.current = undefined;
-      firstCallTimeRef.current = 0;
-      leadingInvokedRef.current = false;
-
-      clearTimeouts();
-
-      // Invoke callback after clearing state to prevent issues if callback throws
-      callbackRef.current(...args);
-    }
-  }, [clearTimeouts]);
-
-  const cancel = useCallback(() => {
-    clearTimeouts();
     lastArgsRef.current = undefined;
-    firstCallTimeRef.current = 0;
-    leadingInvokedRef.current = false;
-  }, [clearTimeouts]);
+    lastInvokeTimeRef.current = time;
 
-  const flush = useCallback(() => {
-    if (lastArgsRef.current !== undefined) {
-      invokeFunction();
+    if (args !== undefined) {
+      resultRef.current = callbackRef.current(...args);
     }
-  }, [invokeFunction]);
+    return resultRef.current;
+  }, []);
 
-  const debouncedFunction = useCallback(
-    (...args: Parameters<T>) => {
-      const now = Date.now();
-      const isFirstCall = firstCallTimeRef.current === 0;
-      const timeSinceFirstCall = isFirstCall
-        ? 0
-        : now - firstCallTimeRef.current;
+  // Helper function: remainingWait
+  const remainingWait = useCallback((time: number): number => {
+    const lastCallTime = lastCallTimeRef.current;
+    if (lastCallTime === undefined) {
+      return waitRef.current;
+    }
 
-      // Store the latest arguments
-      lastArgsRef.current = args;
+    const timeSinceLastCall = time - lastCallTime;
+    const timeSinceLastInvoke = time - lastInvokeTimeRef.current;
+    const timeWaiting = waitRef.current - timeSinceLastCall;
 
-      // Clear existing timeouts
-      clearTimeouts();
+    return maxingRef.current
+      ? Math.min(
+          timeWaiting,
+          (maxWaitRef.current as number) - timeSinceLastInvoke
+        )
+      : timeWaiting;
+  }, []);
 
-      // Track first call time for maxWait
-      if (isFirstCall) {
-        firstCallTimeRef.current = now;
+  // Forward declare timerExpired for mutual recursion
+  const timerExpiredRef = useRef<() => void>(() => {});
+
+  // Helper function: trailingEdge
+  const trailingEdge = useCallback(
+    (time: number): ReturnType<T> | undefined => {
+      timerIdRef.current = undefined;
+
+      // Only invoke if trailing is true and we have args (meaning the function was called)
+      if (trailingRef.current && lastArgsRef.current !== undefined) {
+        return invokeFunc(time);
       }
-
-      // Check if maxWait has been exceeded
-      const maxWaitExceeded =
-        maxWait !== undefined && !isFirstCall && timeSinceFirstCall >= maxWait;
-
-      // Handle leading edge invocation - only on first call of a debounce cycle
-      const shouldInvokeLeading =
-        leading && isFirstCall && !leadingInvokedRef.current;
-
-      if (maxWaitExceeded) {
-        // MaxWait exceeded - invoke immediately
-        invokeFunction();
-        return;
-      }
-
-      if (shouldInvokeLeading) {
-        // Leading edge - invoke immediately
-        leadingInvokedRef.current = true;
-        lastInvokeTimeRef.current = now;
-        firstCallTimeRef.current = 0;
-
-        clearTimeouts();
-
-        // Invoke with current args but keep them for potential trailing call
-        const currentArgs = args;
-        lastArgsRef.current = trailing ? args : undefined;
-        callbackRef.current(...currentArgs);
-
-        // If trailing is enabled, set up timeout for trailing call
-        if (trailing) {
-          timeoutRef.current = setTimeout(() => {
-            timeoutRef.current = undefined;
-            invokeFunction();
-          }, delay);
-        } else {
-          lastArgsRef.current = undefined;
-          leadingInvokedRef.current = false;
-        }
-
-        return;
-      }
-
-      // Set up trailing timeout
-      if (trailing) {
-        timeoutRef.current = setTimeout(() => {
-          timeoutRef.current = undefined;
-          invokeFunction();
-        }, delay);
-      }
-
-      // Set up maxWait timeout
-      if (maxWait !== undefined && maxWait > 0) {
-        const timeUntilMaxWait = maxWait - timeSinceFirstCall;
-
-        if (timeUntilMaxWait > 0) {
-          maxWaitTimeoutRef.current = setTimeout(() => {
-            maxWaitTimeoutRef.current = undefined;
-            invokeFunction();
-          }, timeUntilMaxWait);
-        }
-      }
+      lastArgsRef.current = undefined;
+      return resultRef.current;
     },
-    [delay, maxWait, leading, trailing, invokeFunction, clearTimeouts]
+    [invokeFunc]
+  );
+
+  // Helper function: timerExpired
+  const timerExpired = useCallback((): void => {
+    const time = now();
+    if (shouldInvoke(time)) {
+      trailingEdge(time);
+    } else {
+      // Restart the timer
+      timerIdRef.current = setTimeout(
+        timerExpiredRef.current,
+        remainingWait(time)
+      );
+    }
+  }, [now, shouldInvoke, trailingEdge, remainingWait]);
+
+  // Update the ref after timerExpired is defined
+  timerExpiredRef.current = timerExpired;
+
+  // Helper function: leadingEdge
+  const leadingEdge = useCallback(
+    (time: number): ReturnType<T> | undefined => {
+      // Reset any `maxWait` timer
+      lastInvokeTimeRef.current = time;
+      // Start the timer for the trailing edge
+      timerIdRef.current = setTimeout(timerExpiredRef.current, waitRef.current);
+      // Invoke the leading edge
+      return leadingRef.current ? invokeFunc(time) : resultRef.current;
+    },
+    [invokeFunc]
+  );
+
+  // Cancel function
+  const cancel = useCallback((): void => {
+    if (timerIdRef.current !== undefined) {
+      clearTimeout(timerIdRef.current);
+    }
+    lastInvokeTimeRef.current = 0;
+    lastArgsRef.current = undefined;
+    lastCallTimeRef.current = undefined;
+    timerIdRef.current = undefined;
+  }, []);
+
+  // Flush function
+  const flush = useCallback((): ReturnType<T> | undefined => {
+    if (timerIdRef.current === undefined) {
+      return resultRef.current;
+    }
+    return trailingEdge(now());
+  }, [now, trailingEdge]);
+
+  // Pending function
+  const pending = useCallback((): boolean => {
+    return timerIdRef.current !== undefined;
+  }, []);
+
+  // Main debounced function
+  const debounced = useCallback(
+    (...args: Parameters<T>): ReturnType<T> | undefined => {
+      const time = now();
+      const isInvoking = shouldInvoke(time);
+
+      lastArgsRef.current = args;
+      lastCallTimeRef.current = time;
+
+      if (isInvoking) {
+        if (timerIdRef.current === undefined) {
+          return leadingEdge(time);
+        }
+        if (maxingRef.current) {
+          // Handle invocations in a tight loop
+          clearTimeout(timerIdRef.current);
+          timerIdRef.current = setTimeout(
+            timerExpiredRef.current,
+            waitRef.current
+          );
+          return invokeFunc(time);
+        }
+      }
+      if (timerIdRef.current === undefined) {
+        timerIdRef.current = setTimeout(
+          timerExpiredRef.current,
+          waitRef.current
+        );
+      }
+      return resultRef.current;
+    },
+    [now, shouldInvoke, leadingEdge, invokeFunc]
   );
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      cancel();
+      if (timerIdRef.current !== undefined) {
+        clearTimeout(timerIdRef.current);
+      }
     };
-  }, [cancel]);
+  }, []);
 
-  // Attach cancel and flush methods to the debounced function
-  const result = debouncedFunction as DebouncedFunction<T>;
-  result.cancel = cancel;
-  result.flush = flush;
+  // Create the debounced function with attached methods
+  const debouncedWithMethods = useMemo(() => {
+    const fn = debounced as DebouncedFunction<T>;
+    fn.cancel = cancel;
+    fn.flush = flush;
+    fn.pending = pending;
+    return fn;
+  }, [debounced, cancel, flush, pending]);
 
-  return result;
+  return debouncedWithMethods;
 }

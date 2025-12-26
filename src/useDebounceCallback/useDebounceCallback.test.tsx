@@ -33,6 +33,13 @@ describe("useDebounceCallback", () => {
       expect(typeof result.current.flush).toBe("function");
     });
 
+    it("should have pending method", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      expect(typeof result.current.pending).toBe("function");
+    });
+
     it("should use default delay of 500ms when not provided", () => {
       const callback = vi.fn();
       const { result } = renderHook(() => useDebounceCallback(callback));
@@ -121,9 +128,7 @@ describe("useDebounceCallback", () => {
 
     it("should pass arguments to the callback", () => {
       const callback = vi.fn();
-      const { result } = renderHook(() =>
-        useDebounceCallback(callback, 500)
-      );
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
 
       act(() => {
         result.current("arg1", "arg2", 123);
@@ -138,9 +143,7 @@ describe("useDebounceCallback", () => {
 
     it("should use the latest arguments when debouncing", () => {
       const callback = vi.fn();
-      const { result } = renderHook(() =>
-        useDebounceCallback(callback, 500)
-      );
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
 
       act(() => {
         result.current("first");
@@ -529,6 +532,145 @@ describe("useDebounceCallback", () => {
     });
   });
 
+  describe("pending method", () => {
+    it("should return false when there is no pending invocation", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      expect(result.current.pending()).toBe(false);
+    });
+
+    it("should return true when there is a pending invocation", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      act(() => {
+        result.current("test");
+      });
+
+      expect(result.current.pending()).toBe(true);
+    });
+
+    it("should return false after the pending invocation is executed", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      act(() => {
+        result.current("test");
+      });
+
+      expect(result.current.pending()).toBe(true);
+
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      expect(result.current.pending()).toBe(false);
+    });
+
+    it("should return false after cancel", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      act(() => {
+        result.current("test");
+      });
+
+      expect(result.current.pending()).toBe(true);
+
+      act(() => {
+        result.current.cancel();
+      });
+
+      expect(result.current.pending()).toBe(false);
+    });
+
+    it("should return false after flush", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      act(() => {
+        result.current("test");
+      });
+
+      expect(result.current.pending()).toBe(true);
+
+      act(() => {
+        result.current.flush();
+      });
+
+      expect(result.current.pending()).toBe(false);
+    });
+  });
+
+  describe("return value", () => {
+    it("should return undefined before first invocation", () => {
+      const callback = vi.fn(() => "result");
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      let returnValue: string | undefined;
+      act(() => {
+        returnValue = result.current();
+      });
+
+      expect(returnValue).toBeUndefined();
+    });
+
+    it("should return callback result on leading edge invocation", () => {
+      const callback = vi.fn(() => "result");
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { leading: true })
+      );
+
+      let returnValue: string | undefined;
+      act(() => {
+        returnValue = result.current();
+      });
+
+      expect(returnValue).toBe("result");
+    });
+
+    it("should return last result from flush", () => {
+      const callback = vi.fn(() => "flushed-result");
+      const { result } = renderHook(() => useDebounceCallback(callback, 500));
+
+      act(() => {
+        result.current();
+      });
+
+      let flushResult: string | undefined;
+      act(() => {
+        flushResult = result.current.flush();
+      });
+
+      expect(flushResult).toBe("flushed-result");
+    });
+
+    it("should return last result when no pending invocation on flush", () => {
+      const callback = vi.fn(() => "result");
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { leading: true })
+      );
+
+      act(() => {
+        result.current();
+      });
+
+      // Wait for trailing edge
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      // Flush with no pending invocation should return last result
+      let flushResult: string | undefined;
+      act(() => {
+        flushResult = result.current.flush();
+      });
+
+      expect(flushResult).toBe("result");
+    });
+  });
+
   describe("callback reference updates", () => {
     it("should use the latest callback function", () => {
       const firstCallback = vi.fn();
@@ -556,7 +698,7 @@ describe("useDebounceCallback", () => {
   });
 
   describe("function reference stability", () => {
-    it("should maintain stable function reference when delay and options don't change", () => {
+    it("should maintain stable function reference across rerenders", () => {
       const callback = vi.fn();
       const { result, rerender } = renderHook(() =>
         useDebounceCallback(callback, 500, { leading: true })
@@ -569,7 +711,7 @@ describe("useDebounceCallback", () => {
       expect(result.current).toBe(firstReference);
     });
 
-    it("should create new function reference when delay changes", () => {
+    it("should maintain stable function reference when delay changes", () => {
       const callback = vi.fn();
       const { result, rerender } = renderHook(
         ({ delay }) => useDebounceCallback(callback, delay),
@@ -580,10 +722,37 @@ describe("useDebounceCallback", () => {
 
       rerender({ delay: 1000 });
 
-      expect(result.current).not.toBe(firstReference);
+      // Function reference stays stable, but uses updated delay via ref
+      expect(result.current).toBe(firstReference);
     });
 
-    it("should create new function reference when options change", () => {
+    it("should use updated delay after delay changes", () => {
+      const callback = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ delay }) => useDebounceCallback(callback, delay),
+        { initialProps: { delay: 500 } }
+      );
+
+      rerender({ delay: 1000 });
+
+      act(() => {
+        result.current("test");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      expect(callback).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it("should maintain stable function reference when options change", () => {
       const callback = vi.fn();
       const { result, rerender } = renderHook(
         ({ leading }) => useDebounceCallback(callback, 500, { leading }),
@@ -594,7 +763,25 @@ describe("useDebounceCallback", () => {
 
       rerender({ leading: true });
 
-      expect(result.current).not.toBe(firstReference);
+      // Function reference stays stable, but uses updated options via ref
+      expect(result.current).toBe(firstReference);
+    });
+
+    it("should use updated options after options change", () => {
+      const callback = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ leading }) => useDebounceCallback(callback, 500, { leading }),
+        { initialProps: { leading: false } }
+      );
+
+      rerender({ leading: true });
+
+      act(() => {
+        result.current("test");
+      });
+
+      // With leading: true, should invoke immediately
+      expect(callback).toHaveBeenCalledTimes(1);
     });
 
     it("should maintain stable cancel method reference", () => {
@@ -621,6 +808,19 @@ describe("useDebounceCallback", () => {
       rerender();
 
       expect(result.current.flush).toBe(firstFlush);
+    });
+
+    it("should maintain stable pending method reference", () => {
+      const callback = vi.fn();
+      const { result, rerender } = renderHook(() =>
+        useDebounceCallback(callback, 500)
+      );
+
+      const firstPending = result.current.pending;
+
+      rerender();
+
+      expect(result.current.pending).toBe(firstPending);
     });
   });
 
@@ -676,6 +876,162 @@ describe("useDebounceCallback", () => {
       });
 
       expect(callback).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("edge cases", () => {
+    it("should handle delay of 0", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() => useDebounceCallback(callback, 0));
+
+      act(() => {
+        result.current("test");
+      });
+
+      // Even with delay of 0, callback should be called asynchronously
+      expect(callback).not.toHaveBeenCalled();
+
+      act(() => {
+        vi.advanceTimersByTime(0);
+      });
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("test");
+    });
+
+    it("should allow new leading edge call after delay has passed", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { leading: true, trailing: false })
+      );
+
+      // First leading call
+      act(() => {
+        result.current("first");
+      });
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("first");
+
+      // Wait for delay to pass
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      // New leading call should be allowed
+      act(() => {
+        result.current("second");
+      });
+
+      expect(callback).toHaveBeenCalledTimes(2);
+      expect(callback).toHaveBeenLastCalledWith("second");
+    });
+
+    it("should handle rapid calls with leading: true and trailing: true", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { leading: true, trailing: true })
+      );
+
+      // First call - triggers leading
+      act(() => {
+        result.current("first");
+      });
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("first");
+
+      // Rapid calls during debounce period
+      act(() => {
+        vi.advanceTimersByTime(100);
+        result.current("second");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(100);
+        result.current("third");
+      });
+
+      // Still only leading call
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      // Wait for trailing edge
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      // Trailing call with last argument
+      expect(callback).toHaveBeenCalledTimes(2);
+      expect(callback).toHaveBeenLastCalledWith("third");
+    });
+
+    it("should handle maxWait with leading: true", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { maxWait: 1000, leading: true })
+      );
+
+      // First call - triggers leading
+      act(() => {
+        result.current("first");
+      });
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("first");
+
+      // Keep calling before delay elapses
+      act(() => {
+        vi.advanceTimersByTime(400);
+        result.current("second");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(400);
+        result.current("third");
+      });
+
+      // At 800ms, only leading call so far
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      // At 1000ms, maxWait triggers
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+
+      expect(callback).toHaveBeenCalledTimes(2);
+      expect(callback).toHaveBeenLastCalledWith("third");
+    });
+
+    it("should not invoke callback when both leading and trailing are false", () => {
+      const callback = vi.fn();
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { leading: false, trailing: false })
+      );
+
+      act(() => {
+        result.current("test");
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      expect(callback).not.toHaveBeenCalled();
+    });
+
+    it("should handle callback that returns undefined", () => {
+      const callback = vi.fn(() => undefined);
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { leading: true })
+      );
+
+      let returnValue: undefined;
+      act(() => {
+        returnValue = result.current();
+      });
+
+      expect(returnValue).toBeUndefined();
+      expect(callback).toHaveBeenCalledTimes(1);
     });
   });
 });
