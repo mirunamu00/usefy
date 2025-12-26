@@ -10,3 +10,9 @@ export type {
   UseLocalStorageReturn,
   InitialValue,
 } from "./useLocalStorage/useLocalStorage";
+export { useSessionStorage } from "./useSessionStorage/useSessionStorage";
+export type {
+  UseSessionStorageOptions,
+  UseSessionStorageReturn,
+  InitialValue as SessionInitialValue,
+} from "./useSessionStorage/useSessionStorage";
