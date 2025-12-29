@@ -1,5 +1,20 @@
 # @usefy/usefy
 
+## 0.0.7
+
+### Patch Changes
+
+- Updated dependencies [f109dfc]
+  - @usefy/use-copy-to-clipboard@0.0.7
+  - @usefy/use-counter@0.0.7
+  - @usefy/use-debounce@0.0.7
+  - @usefy/use-debounce-callback@0.0.7
+  - @usefy/use-local-storage@0.0.7
+  - @usefy/use-session-storage@0.0.7
+  - @usefy/use-throttle@0.0.7
+  - @usefy/use-throttle-callback@0.0.7
+  - @usefy/use-toggle@0.0.7
+
 ## 0.0.6
 
 ### Patch Changes
