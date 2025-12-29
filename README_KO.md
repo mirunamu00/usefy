@@ -384,49 +384,6 @@ return (
 
 ---
 
-### 12. useBoolean
-
-**목적**: boolean 상태 관리 (useToggle의 대안 API)
-
-**주요 기능**:
-
-- 명확한 메서드명
-- 객체 형태로 반환
-- 가독성 높은 API
-- useToggle과 유사하지만 API 다름
-
-**API**:
-
-```typescript
-const { value, setValue, setTrue, setFalse, toggle } = useBoolean(initialValue);
-```
-
-**사용 예시**:
-
-```typescript
-const loading = useBoolean(false);
-
-const fetchData = async () => {
-  loading.setTrue();
-  try {
-    await api.getData();
-  } finally {
-    loading.setFalse();
-  }
-};
-
-return loading.value ? <Spinner /> : <Data />;
-```
-
-**구현 포인트**:
-
-- useState 기반
-- 명확한 메서드명
-- 객체 구조 반환
-- 메모이제이션
-
----
-
 ### 13. useClickAnyWhere
 
 **목적**: 문서 전체의 클릭 이벤트 감지

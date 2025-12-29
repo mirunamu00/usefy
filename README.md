@@ -384,49 +384,6 @@ return (
 
 ---
 
-### 12. useBoolean
-
-**Purpose**: Boolean state management (alternative API to useToggle)
-
-**Key Features**:
-
-- Clear method names
-- Returns as object
-- High readability API
-- Similar to useToggle but different API
-
-**API**:
-
-```typescript
-const { value, setValue, setTrue, setFalse, toggle } = useBoolean(initialValue);
-```
-
-**Usage Example**:
-
-```typescript
-const loading = useBoolean(false);
-
-const fetchData = async () => {
-  loading.setTrue();
-  try {
-    await api.getData();
-  } finally {
-    loading.setFalse();
-  }
-};
-
-return loading.value ? <Spinner /> : <Data />;
-```
-
-**Implementation Points**:
-
-- Based on useState
-- Clear method names
-- Return object structure
-- Memoization
-
----
-
 ### 13. useClickAnyWhere
 
 **Purpose**: Detect document-wide click events
