@@ -1,5 +1,11 @@
 # @usefy/use-debounce-callback
 
+## 0.0.4
+
+### Patch Changes
+
+- Improve TypeScript module resolution with explicit exports types and typesVersions
+
 ## 0.0.3
 
 ## 0.0.2

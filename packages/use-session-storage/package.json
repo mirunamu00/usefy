@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-session-storage",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A React hook for persisting state in sessionStorage",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
@@ -19,7 +19,9 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./dist/*"]
+      "*": [
+        "./dist/*"
+      ]
     }
   },
   "files": [
