@@ -1,5 +1,9 @@
 import { useCallback, useState } from "react";
 
+/**
+ * A simple counter hook
+ * @param initialValue - Initial counter value (default: 0)
+ */
 export function useCounter(initialValue: number = 0) {
   const [count, setCount] = useState(initialValue);
 
