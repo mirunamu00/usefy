@@ -27,7 +27,8 @@ export interface UseToggleReturn {
 }
 
 /**
- * A hook for managing boolean state with helpful utilities
+ * A hook for managing boolean state with helpful utilities.
+ * Provides toggle, setTrue, setFalse, and setValue functions.
  *
  * @param initialValue - Initial boolean value (default: false)
  * @returns Object containing the current value and control functions

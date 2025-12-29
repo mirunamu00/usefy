@@ -23,7 +23,7 @@ export interface UseDebounceOptions {
 
 /**
  * Debounces a value by delaying updates until after a specified delay period has elapsed
- * since the last time the value changed.
+ * since the last time the value changed. Useful for search inputs and API calls.
  *
  * @template T - The type of the value to debounce
  * @param value - The value to debounce

@@ -19,6 +19,7 @@ export interface UseThrottleOptions {
 /**
  * Throttles a value by limiting updates to at most once per specified interval.
  * This is implemented using useDebounce with maxWait set to the interval.
+ * Useful for scroll events and resize handlers.
  *
  * @template T - The type of the value to throttle
  * @param value - The value to throttle
