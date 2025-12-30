@@ -397,26 +397,6 @@ Explore other hooks in the **@usefy** collection:
 
 ---
 
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](https://github.com/geon0529/usefy/blob/master/CONTRIBUTING.md) for details.
-
-```bash
-# Clone the repository
-git clone https://github.com/geon0529/usefy.git
-
-# Install dependencies
-pnpm install
-
-# Run tests
-pnpm test
-
-# Build
-pnpm build
-```
-
----
-
 ## License
 
 MIT © [mirunamu](https://github.com/geon0529)

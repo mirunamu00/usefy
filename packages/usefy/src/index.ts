@@ -56,3 +56,14 @@ export {
   type UseSessionStorageReturn,
   type InitialValue as SessionStorageInitialValue,
 } from "@usefy/use-session-storage";
+
+// useOnClickOutside
+export {
+  useOnClickOutside,
+  type UseOnClickOutsideOptions,
+  type OnClickOutsideHandler,
+  type ClickOutsideEvent,
+  type RefTarget,
+  type MouseEventType,
+  type TouchEventType,
+} from "@usefy/use-on-click-outside";

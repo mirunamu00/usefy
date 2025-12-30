@@ -17,6 +17,7 @@
     "@usefy/use-debounce": "workspace:*",
     "@usefy/use-debounce-callback": "workspace:*",
     "@usefy/use-local-storage": "workspace:*",
+    "@usefy/use-on-click-outside": "workspace:*",
     "@usefy/use-session-storage": "workspace:*",
     "@usefy/use-throttle": "workspace:*",
     "@usefy/use-throttle-callback": "workspace:*",
