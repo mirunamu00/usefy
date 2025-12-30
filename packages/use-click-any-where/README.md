@@ -1,3 +1,4 @@
+<!-- test -->
 <p align="center">
   <img src="https://raw.githubusercontent.com/geon0529/usefy/master/assets/logo.png" alt="usefy logo" width="120" />
 </p>
@@ -83,7 +84,7 @@ This package requires React 18 or 19:
 ## Quick Start
 
 ```tsx
-import { useClickAnyWhere } from '@usefy/use-click-any-where';
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
 
 function ClickTracker() {
   const [lastClick, setLastClick] = useState({ x: 0, y: 0 });
@@ -110,18 +111,18 @@ A hook that listens for document-wide click events.
 
 #### Parameters
 
-| Parameter | Type | Description |
-|-----------|------|-------------|
+| Parameter | Type                          | Description                                      |
+| --------- | ----------------------------- | ------------------------------------------------ |
 | `handler` | `(event: MouseEvent) => void` | Callback function called on every document click |
-| `options` | `UseClickAnyWhereOptions` | Configuration options |
+| `options` | `UseClickAnyWhereOptions`     | Configuration options                            |
 
 #### Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `enabled` | `boolean` | `true` | Whether the event listener is active |
-| `capture` | `boolean` | `false` | Use event capture phase instead of bubble |
-| `passive` | `boolean` | `true` | Use passive event listener for performance |
+| Option    | Type      | Default | Description                                |
+| --------- | --------- | ------- | ------------------------------------------ |
+| `enabled` | `boolean` | `true`  | Whether the event listener is active       |
+| `capture` | `boolean` | `false` | Use event capture phase instead of bubble  |
+| `passive` | `boolean` | `true`  | Use passive event listener for performance |
 
 #### Returns
 
@@ -134,8 +135,8 @@ A hook that listens for document-wide click events.
 ### Close Dropdown on Outside Click
 
 ```tsx
-import { useClickAnyWhere } from '@usefy/use-click-any-where';
-import { useRef, useState } from 'react';
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
+import { useRef, useState } from "react";
 
 function Dropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -144,7 +145,10 @@ function Dropdown() {
   useClickAnyWhere(
     (event) => {
       // Close if clicked outside the dropdown
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     },
@@ -153,9 +157,7 @@ function Dropdown() {
 
   return (
     <div ref={dropdownRef}>
-      <button onClick={() => setIsOpen(!isOpen)}>
-        Toggle Menu
-      </button>
+      <button onClick={() => setIsOpen(!isOpen)}>Toggle Menu</button>
       {isOpen && (
         <ul className="dropdown-menu">
           <li>Option 1</li>
@@ -171,15 +173,18 @@ function Dropdown() {
 ### Modal with Click Outside to Close
 
 ```tsx
-import { useClickAnyWhere } from '@usefy/use-click-any-where';
-import { useRef } from 'react';
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
+import { useRef } from "react";
 
 function Modal({ isOpen, onClose, children }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useClickAnyWhere(
     (event) => {
-      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
         onClose();
       }
     },
@@ -201,17 +206,14 @@ function Modal({ isOpen, onClose, children }: ModalProps) {
 ### Context Menu
 
 ```tsx
-import { useClickAnyWhere } from '@usefy/use-click-any-where';
-import { useState } from 'react';
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
+import { useState } from "react";
 
 function ContextMenu() {
   const [menu, setMenu] = useState<{ x: number; y: number } | null>(null);
 
   // Close menu on any click
-  useClickAnyWhere(
-    () => setMenu(null),
-    { enabled: menu !== null }
-  );
+  useClickAnyWhere(() => setMenu(null), { enabled: menu !== null });
 
   const handleContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -224,7 +226,7 @@ function ContextMenu() {
       {menu && (
         <div
           className="context-menu"
-          style={{ position: 'fixed', left: menu.x, top: menu.y }}
+          style={{ position: "fixed", left: menu.x, top: menu.y }}
         >
           <button>Cut</button>
           <button>Copy</button>
@@ -239,11 +241,13 @@ function ContextMenu() {
 ### Click Coordinate Logger
 
 ```tsx
-import { useClickAnyWhere } from '@usefy/use-click-any-where';
-import { useState } from 'react';
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
+import { useState } from "react";
 
 function ClickLogger() {
-  const [clicks, setClicks] = useState<Array<{ x: number; y: number; time: Date }>>([]);
+  const [clicks, setClicks] = useState<
+    Array<{ x: number; y: number; time: Date }>
+  >([]);
 
   useClickAnyWhere((event) => {
     setClicks((prev) => [
@@ -270,13 +274,13 @@ function ClickLogger() {
 ### With Capture Phase
 
 ```tsx
-import { useClickAnyWhere } from '@usefy/use-click-any-where';
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
 
 function CapturePhaseHandler() {
   // Handle click before it reaches any element
   useClickAnyWhere(
     (event) => {
-      console.log('Click captured (before bubble):', event.target);
+      console.log("Click captured (before bubble):", event.target);
     },
     { capture: true }
   );
@@ -288,8 +292,8 @@ function CapturePhaseHandler() {
 ### Tooltip Dismissal
 
 ```tsx
-import { useClickAnyWhere } from '@usefy/use-click-any-where';
-import { useState, useRef } from 'react';
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
+import { useState, useRef } from "react";
 
 function TooltipTrigger({ content }: { content: string }) {
   const [showTooltip, setShowTooltip] = useState(false);
@@ -297,7 +301,10 @@ function TooltipTrigger({ content }: { content: string }) {
 
   useClickAnyWhere(
     (event) => {
-      if (triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
+      if (
+        triggerRef.current &&
+        !triggerRef.current.contains(event.target as Node)
+      ) {
         setShowTooltip(false);
       }
     },
@@ -306,15 +313,10 @@ function TooltipTrigger({ content }: { content: string }) {
 
   return (
     <div className="tooltip-container">
-      <button
-        ref={triggerRef}
-        onClick={() => setShowTooltip(!showTooltip)}
-      >
+      <button ref={triggerRef} onClick={() => setShowTooltip(!showTooltip)}>
         Show Info
       </button>
-      {showTooltip && (
-        <div className="tooltip">{content}</div>
-      )}
+      {showTooltip && <div className="tooltip">{content}</div>}
     </div>
   );
 }
@@ -331,11 +333,11 @@ import {
   useClickAnyWhere,
   type UseClickAnyWhereOptions,
   type ClickAnyWhereHandler,
-} from '@usefy/use-click-any-where';
+} from "@usefy/use-click-any-where";
 
 // Handler type
 const handleClick: ClickAnyWhereHandler = (event) => {
-  console.log('Clicked at:', event.clientX, event.clientY);
+  console.log("Clicked at:", event.clientX, event.clientY);
 };
 
 // Options type
@@ -356,18 +358,18 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Basic Functionality | 4 | 100% |
-| Enabled Option | 4 | 100% |
-| Capture Option | 3 | 100% |
-| Passive Option | 2 | 100% |
-| Cleanup | 2 | 100% |
-| Handler Stability | 2 | 100% |
-| Multiple Instances | 2 | 100% |
-| Options Changes | 2 | 100% |
-| Edge Cases | 2 | 100% |
-| **Total** | **23** | **92.3%** |
+| Category            | Tests  | Coverage  |
+| ------------------- | ------ | --------- |
+| Basic Functionality | 4      | 100%      |
+| Enabled Option      | 4      | 100%      |
+| Capture Option      | 3      | 100%      |
+| Passive Option      | 2      | 100%      |
+| Cleanup             | 2      | 100%      |
+| Handler Stability   | 2      | 100%      |
+| Multiple Instances  | 2      | 100%      |
+| Options Changes     | 2      | 100%      |
+| Edge Cases          | 2      | 100%      |
+| **Total**           | **23** | **92.3%** |
 
 ### Test Categories
 
@@ -418,14 +420,14 @@ pnpm test --coverage
 
 Explore other hooks in the **@usefy** collection:
 
-| Package | Description |
-|---------|-------------|
-| [@usefy/use-toggle](https://www.npmjs.com/package/@usefy/use-toggle) | Boolean state management |
-| [@usefy/use-counter](https://www.npmjs.com/package/@usefy/use-counter) | Counter state management |
-| [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use-debounce) | Value debouncing |
-| [@usefy/use-debounce-callback](https://www.npmjs.com/package/@usefy/use-debounce-callback) | Debounced callbacks |
-| [@usefy/use-throttle](https://www.npmjs.com/package/@usefy/use-throttle) | Value throttling |
-| [@usefy/use-throttle-callback](https://www.npmjs.com/package/@usefy/use-throttle-callback) | Throttled callbacks |
+| Package                                                                                    | Description              |
+| ------------------------------------------------------------------------------------------ | ------------------------ |
+| [@usefy/use-toggle](https://www.npmjs.com/package/@usefy/use-toggle)                       | Boolean state management |
+| [@usefy/use-counter](https://www.npmjs.com/package/@usefy/use-counter)                     | Counter state management |
+| [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use-debounce)                   | Value debouncing         |
+| [@usefy/use-debounce-callback](https://www.npmjs.com/package/@usefy/use-debounce-callback) | Debounced callbacks      |
+| [@usefy/use-throttle](https://www.npmjs.com/package/@usefy/use-throttle)                   | Value throttling         |
+| [@usefy/use-throttle-callback](https://www.npmjs.com/package/@usefy/use-throttle-callback) | Throttled callbacks      |
 
 ---
 
