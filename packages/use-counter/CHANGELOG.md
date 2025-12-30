@@ -1,5 +1,11 @@
 # @usefy/use-counter
 
+## 0.0.10
+
+### Patch Changes
+
+- 6e70220: update README.md
+
 ## 0.0.9
 
 ### Patch Changes
