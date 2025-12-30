@@ -47,7 +47,7 @@
 - **🚀 Zero Dependencies** — Pure React implementation with no external dependencies
 - **📦 Tree Shakeable** — Import only the hooks you need to optimize bundle size
 - **🔷 TypeScript First** — Complete type safety with full autocomplete support
-- **⚡ SSR Compatible** — Works seamlessly with Next.js, Remix, and other SSR frameworks
+- **⚡ SSR Safe** — Works with Next.js, Remix, and other SSR frameworks without crashing
 - **🧪 Well Tested** — High test coverage ensures reliability and stability
 - **📖 Well Documented** — Detailed documentation with practical examples
 
@@ -389,6 +389,23 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 | Safari  | 13.1+            |
 | Edge    | 79+              |
 | IE 11   | Fallback support |
+
+---
+
+## SSR Compatibility
+
+All hooks are SSR-safe and will not throw errors on the server.
+
+| Hook                                         | SSR Behavior                                     |
+| -------------------------------------------- | ------------------------------------------------ |
+| `useToggle`, `useCounter`                    | ✅ Fully compatible (pure React state)           |
+| `useDebounce`, `useThrottle`                 | ✅ Fully compatible (uses `setTimeout`)          |
+| `useDebounceCallback`, `useThrottleCallback` | ✅ Fully compatible                              |
+| `useLocalStorage`, `useSessionStorage`       | ✅ Safe — returns `initialValue` on server       |
+| `useClickAnyWhere`                           | ✅ Safe — event listener only attached on client |
+| `useCopyToClipboard`                         | ✅ Safe — copy function only works on client     |
+
+> **Note**: `useLocalStorage` and `useSessionStorage` include proper `typeof window` checks and will gracefully fall back to `initialValue` during server-side rendering.
 
 ---
 
