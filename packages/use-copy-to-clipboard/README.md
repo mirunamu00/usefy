@@ -390,19 +390,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Initialization | 3 | 100% |
-| Copy Functionality | 5 | 100% |
-| Copy Failure | 3 | 100% |
-| Timeout/Auto-Reset | 4 | 100% |
-| Callbacks | 4 | 100% |
-| Function Stability | 3 | 100% |
-| Cleanup | 2 | 100% |
-| Multiple Instances | 2 | 100% |
-| Fallback Behavior | 2 | 100% |
-| Edge Cases | 4 | 100% |
-| **Total** | **32** | **87.87%** |
+| Category | Coverage |
+|----------|----------|
+| Statements | 87.87% (58/66) |
+| Branches | 79.16% (19/24) |
+| Functions | 85.71% (6/7) |
+| Lines | 87.87% (58/66) |
 
 ### Test Categories
 

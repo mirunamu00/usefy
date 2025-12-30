@@ -357,18 +357,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category            | Tests  | Coverage  |
-| ------------------- | ------ | --------- |
-| Basic Functionality | 4      | 100%      |
-| Enabled Option      | 4      | 100%      |
-| Capture Option      | 3      | 100%      |
-| Passive Option      | 2      | 100%      |
-| Cleanup             | 2      | 100%      |
-| Handler Stability   | 2      | 100%      |
-| Multiple Instances  | 2      | 100%      |
-| Options Changes     | 2      | 100%      |
-| Edge Cases          | 2      | 100%      |
-| **Total**           | **23** | **92.3%** |
+| Category | Coverage |
+|----------|----------|
+| Statements | 92.3% (12/13) |
+| Branches | 87.5% (7/8) |
+| Functions | 100% (4/4) |
+| Lines | 92.3% (12/13) |
 
 ### Test Categories
 

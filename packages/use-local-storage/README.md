@@ -437,20 +437,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Initialization | 7 | 100% |
-| setValue | 5 | 100% |
-| removeValue | 2 | 100% |
-| Type Preservation | 5 | 100% |
-| Custom Serialization | 2 | 100% |
-| Cross-Tab Sync | 5 | 100% |
-| Key Changes | 2 | 100% |
-| Function Stability | 3 | 100% |
-| Multiple Instances | 2 | 100% |
-| Edge Cases | 6 | 100% |
-| Cleanup | 1 | 100% |
-| **Total** | **40** | **95.08%** |
+| Category | Coverage |
+|----------|----------|
+| Statements | 95.16% (59/62) |
+| Branches | 85.71% (24/28) |
+| Functions | 100% (9/9) |
+| Lines | 95.08% (58/61) |
 
 ### Test Categories
 

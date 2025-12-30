@@ -375,19 +375,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Initialization | 4 | 100% |
-| Basic Debouncing | 6 | 100% |
-| Leading Edge | 5 | 100% |
-| Trailing Edge | 3 | 100% |
-| maxWait Option | 4 | 100% |
-| cancel Method | 4 | 100% |
-| flush Method | 4 | 100% |
-| pending Method | 4 | 100% |
-| Callback Updates | 3 | 100% |
-| Cleanup | 2 | 100% |
-| **Total** | **39** | **94.05%** |
+| Category | Coverage |
+|----------|----------|
+| Statements | 94.11% (96/102) |
+| Branches | 82.6% (38/46) |
+| Functions | 93.75% (15/16) |
+| Lines | 94.05% (95/101) |
 
 ### Test Categories
 

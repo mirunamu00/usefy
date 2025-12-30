@@ -294,15 +294,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Initialization | 5 | 100% |
-| Increment | 4 | 100% |
-| Decrement | 4 | 100% |
-| Reset | 5 | 100% |
-| Complex Scenarios | 7 | 100% |
-| Function References | 1 | 100% |
-| **Total** | **26** | **100%** |
+| Category | Coverage |
+|----------|----------|
+| Statements | 100% (10/10) |
+| Branches | 100% (1/1) |
+| Functions | 100% (6/6) |
+| Lines | 100% (8/8) |
 
 ### Test Categories
 

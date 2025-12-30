@@ -305,18 +305,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Initialization | 4 | 100% |
-| Toggle | 5 | 100% |
-| setTrue | 5 | 100% |
-| setFalse | 5 | 100% |
-| setValue | 6 | 100% |
-| Complex Scenarios | 8 | 100% |
-| Function References | 5 | 100% |
-| Edge Cases | 6 | 100% |
-| Type Safety | 2 | 100% |
-| **Total** | **46** | **100%** |
+| Category | Coverage |
+|----------|----------|
+| Statements | 100% (11/11) |
+| Branches | 100% (1/1) |
+| Functions | 100% (6/6) |
+| Lines | 100% (10/10) |
 
 ### Test Categories
 

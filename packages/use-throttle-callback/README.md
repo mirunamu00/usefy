@@ -395,16 +395,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Initialization | 3 | 100% |
-| Basic Throttling | 4 | 100% |
-| Leading Edge | 3 | 100% |
-| Trailing Edge | 2 | 100% |
-| Control Methods | 4 | 100% |
-| Callback Updates | 2 | 100% |
-| Cleanup | 2 | 100% |
-| **Total** | **20** | **100%** |
+| Category | Coverage |
+|----------|----------|
+| Statements | 100% (2/2) |
+| Branches | 100% (4/4) |
+| Functions | 100% (1/1) |
+| Lines | 100% (2/2) |
 
 ### Running Tests
 

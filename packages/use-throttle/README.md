@@ -51,11 +51,11 @@
 
 ### Throttle vs Debounce
 
-| Feature | Throttle | Debounce |
-|---------|----------|----------|
-| First update | Immediate (leading: true) | After delay |
-| During rapid changes | Regular intervals | Waits for pause |
-| Best for | Scroll, resize, mouse move | Search input, form validation |
+| Feature              | Throttle                   | Debounce                      |
+| -------------------- | -------------------------- | ----------------------------- |
+| First update         | Immediate (leading: true)  | After delay                   |
+| During rapid changes | Regular intervals          | Waits for pause               |
+| Best for             | Scroll, resize, mouse move | Search input, form validation |
 
 ---
 
@@ -93,7 +93,7 @@ This package uses [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use
 ## Quick Start
 
 ```tsx
-import { useThrottle } from '@usefy/use-throttle';
+import { useThrottle } from "@usefy/use-throttle";
 
 function ScrollTracker() {
   const [scrollY, setScrollY] = useState(0);
@@ -101,8 +101,8 @@ function ScrollTracker() {
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return <div>Scroll position: {throttledScrollY}px</div>;
@@ -119,24 +119,24 @@ A hook that returns a throttled version of the provided value, limiting updates 
 
 #### Parameters
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| `value` | `T` | — | The value to throttle |
-| `delay` | `number` | `500` | The throttle interval in milliseconds |
-| `options` | `UseThrottleOptions` | `{}` | Additional configuration options |
+| Parameter | Type                 | Default | Description                           |
+| --------- | -------------------- | ------- | ------------------------------------- |
+| `value`   | `T`                  | —       | The value to throttle                 |
+| `delay`   | `number`             | `500`   | The throttle interval in milliseconds |
+| `options` | `UseThrottleOptions` | `{}`    | Additional configuration options      |
 
 #### Options
 
-| Option | Type | Default | Description |
-|--------|------|---------|-------------|
-| `leading` | `boolean` | `true` | Update on the leading edge (first change) |
-| `trailing` | `boolean` | `true` | Update on the trailing edge (after interval) |
+| Option     | Type      | Default | Description                                  |
+| ---------- | --------- | ------- | -------------------------------------------- |
+| `leading`  | `boolean` | `true`  | Update on the leading edge (first change)    |
+| `trailing` | `boolean` | `true`  | Update on the trailing edge (after interval) |
 
 #### Returns
 
-| Type | Description |
-|------|-------------|
-| `T` | The throttled value |
+| Type | Description         |
+| ---- | ------------------- |
+| `T`  | The throttled value |
 
 ---
 
@@ -145,7 +145,7 @@ A hook that returns a throttled version of the provided value, limiting updates 
 ### Scroll Position Tracking
 
 ```tsx
-import { useThrottle } from '@usefy/use-throttle';
+import { useThrottle } from "@usefy/use-throttle";
 
 function ScrollProgress() {
   const [scrollY, setScrollY] = useState(0);
@@ -153,25 +153,24 @@ function ScrollProgress() {
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const progress = Math.min(
-    (throttledScrollY / (document.body.scrollHeight - window.innerHeight)) * 100,
+    (throttledScrollY / (document.body.scrollHeight - window.innerHeight)) *
+      100,
     100
   );
 
-  return (
-    <div className="progress-bar" style={{ width: `${progress}%` }} />
-  );
+  return <div className="progress-bar" style={{ width: `${progress}%` }} />;
 }
 ```
 
 ### Mouse Position Tracker
 
 ```tsx
-import { useThrottle } from '@usefy/use-throttle';
+import { useThrottle } from "@usefy/use-throttle";
 
 function MouseTracker() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
@@ -181,14 +180,17 @@ function MouseTracker() {
     const handleMouseMove = (e: MouseEvent) => {
       setPosition({ x: e.clientX, y: e.clientY });
     };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
   return (
-    <div className="cursor-follower" style={{
-      transform: `translate(${throttledPosition.x}px, ${throttledPosition.y}px)`
-    }} />
+    <div
+      className="cursor-follower"
+      style={{
+        transform: `translate(${throttledPosition.x}px, ${throttledPosition.y}px)`,
+      }}
+    />
   );
 }
 ```
@@ -196,7 +198,7 @@ function MouseTracker() {
 ### Window Resize Handler
 
 ```tsx
-import { useThrottle } from '@usefy/use-throttle';
+import { useThrottle } from "@usefy/use-throttle";
 
 function ResponsiveLayout() {
   const [windowSize, setWindowSize] = useState({
@@ -212,11 +214,11 @@ function ResponsiveLayout() {
         height: window.innerHeight,
       });
     };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const layout = throttledSize.width >= 768 ? 'desktop' : 'mobile';
+  const layout = throttledSize.width >= 768 ? "desktop" : "mobile";
 
   return (
     <div className={`layout-${layout}`}>
@@ -229,7 +231,7 @@ function ResponsiveLayout() {
 ### Input Value with Frequent Updates
 
 ```tsx
-import { useThrottle } from '@usefy/use-throttle';
+import { useThrottle } from "@usefy/use-throttle";
 
 function RangeSlider() {
   const [value, setValue] = useState(50);
@@ -258,7 +260,7 @@ function RangeSlider() {
 ### Leading Edge Only
 
 ```tsx
-import { useThrottle } from '@usefy/use-throttle';
+import { useThrottle } from "@usefy/use-throttle";
 
 function InstantFeedback() {
   const [clicks, setClicks] = useState(0);
@@ -270,7 +272,7 @@ function InstantFeedback() {
   });
 
   return (
-    <button onClick={() => setClicks(c => c + 1)}>
+    <button onClick={() => setClicks((c) => c + 1)}>
       Clicks: {throttledClicks}
     </button>
   );
@@ -280,10 +282,10 @@ function InstantFeedback() {
 ### Trailing Edge Only
 
 ```tsx
-import { useThrottle } from '@usefy/use-throttle';
+import { useThrottle } from "@usefy/use-throttle";
 
 function DelayedUpdate() {
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
 
   // Only update after the interval passes
   const throttledValue = useThrottle(value, 300, {
@@ -307,11 +309,11 @@ function DelayedUpdate() {
 This hook is written in TypeScript with full generic support.
 
 ```tsx
-import { useThrottle, type UseThrottleOptions } from '@usefy/use-throttle';
+import { useThrottle, type UseThrottleOptions } from "@usefy/use-throttle";
 
 // Generic type inference
-const throttledString = useThrottle('hello', 300); // string
-const throttledNumber = useThrottle(42, 300);      // number
+const throttledString = useThrottle("hello", 300); // string
+const throttledNumber = useThrottle(42, 300); // number
 const throttledObject = useThrottle({ x: 1 }, 300); // { x: number }
 
 // Options type
@@ -329,20 +331,12 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category | Tests | Coverage |
-|----------|-------|----------|
-| Initialization | 6 | 100% |
-| Basic Throttling | 4 | 100% |
-| Leading Edge | 3 | 100% |
-| Trailing Edge | 2 | 100% |
-| maxWait Behavior | 2 | 100% |
-| Complex Scenarios | 5 | 100% |
-| Option Changes | 3 | 100% |
-| Cleanup | 1 | 100% |
-| Edge Cases | 5 | 100% |
-| Type Safety | 5 | 100% |
-| Multiple Instances | 2 | 100% |
-| **Total** | **38** | **100%** |
+| Category   | Coverage   |
+| ---------- | ---------- |
+| Statements | 100% (2/2) |
+| Branches   | 100% (4/4) |
+| Functions  | 100% (1/1) |
+| Lines      | 100% (2/2) |
 
 ### Test Categories
 
@@ -392,14 +386,14 @@ pnpm test --coverage
 
 Explore other hooks in the **@usefy** collection:
 
-| Package | Description |
-|---------|-------------|
+| Package                                                                                    | Description                           |
+| ------------------------------------------------------------------------------------------ | ------------------------------------- |
 | [@usefy/use-throttle-callback](https://www.npmjs.com/package/@usefy/use-throttle-callback) | Throttled callbacks with cancel/flush |
-| [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use-debounce) | Value debouncing |
-| [@usefy/use-debounce-callback](https://www.npmjs.com/package/@usefy/use-debounce-callback) | Debounced callbacks |
-| [@usefy/use-toggle](https://www.npmjs.com/package/@usefy/use-toggle) | Boolean state management |
-| [@usefy/use-counter](https://www.npmjs.com/package/@usefy/use-counter) | Counter state management |
-| [@usefy/use-click-any-where](https://www.npmjs.com/package/@usefy/use-click-any-where) | Global click detection |
+| [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use-debounce)                   | Value debouncing                      |
+| [@usefy/use-debounce-callback](https://www.npmjs.com/package/@usefy/use-debounce-callback) | Debounced callbacks                   |
+| [@usefy/use-toggle](https://www.npmjs.com/package/@usefy/use-toggle)                       | Boolean state management              |
+| [@usefy/use-counter](https://www.npmjs.com/package/@usefy/use-counter)                     | Counter state management              |
+| [@usefy/use-click-any-where](https://www.npmjs.com/package/@usefy/use-click-any-where)     | Global click detection                |
 
 ---
 
