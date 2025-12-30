@@ -367,7 +367,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 | Multiple Instances | 2 | 100% |
 | Options Changes | 2 | 100% |
 | Edge Cases | 2 | 100% |
-| **Total** | **23** | **100%** |
+| **Total** | **23** | **92.3%** |
 
 ### Test Categories
 

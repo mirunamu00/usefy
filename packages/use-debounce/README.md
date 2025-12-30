@@ -356,7 +356,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 | Type Preservation | 5 | 100% |
 | Cleanup | 2 | 100% |
 | Edge Cases | 6 | 100% |
-| **Total** | **41** | **100%** |
+| **Total** | **41** | **93.02%** |
 
 ### Test Categories
 

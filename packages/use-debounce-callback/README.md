@@ -387,7 +387,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 | pending Method | 4 | 100% |
 | Callback Updates | 3 | 100% |
 | Cleanup | 2 | 100% |
-| **Total** | **39** | **100%** |
+| **Total** | **39** | **94.05%** |
 
 ### Test Categories
 

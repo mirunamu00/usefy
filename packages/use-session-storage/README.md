@@ -472,7 +472,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 | Function Stability | 3 | 100% |
 | Multiple Instances | 1 | 100% |
 | Edge Cases | 6 | 100% |
-| **Total** | **32** | **100%** |
+| **Total** | **32** | **93.75%** |
 
 ### Test Categories
 

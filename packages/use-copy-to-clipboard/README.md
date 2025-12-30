@@ -402,7 +402,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 | Multiple Instances | 2 | 100% |
 | Fallback Behavior | 2 | 100% |
 | Edge Cases | 4 | 100% |
-| **Total** | **32** | **100%** |
+| **Total** | **32** | **87.87%** |
 
 ### Test Categories
 

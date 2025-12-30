@@ -450,7 +450,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 | Multiple Instances | 2 | 100% |
 | Edge Cases | 6 | 100% |
 | Cleanup | 1 | 100% |
-| **Total** | **40** | **100%** |
+| **Total** | **40** | **95.08%** |
 
 ### Test Categories
 
