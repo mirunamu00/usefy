@@ -1,5 +1,11 @@
 # @usefy/use-session-storage
 
+## 0.0.15
+
+### Patch Changes
+
+- e03ef9b: update README.md
+
 ## 0.0.14
 
 ## 0.0.13

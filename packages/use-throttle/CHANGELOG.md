@@ -1,5 +1,13 @@
 # @usefy/use-throttle
 
+## 0.0.15
+
+### Patch Changes
+
+- e03ef9b: update README.md
+- Updated dependencies [e03ef9b]
+  - @usefy/use-debounce@0.0.15
+
 ## 0.0.14
 
 ### Patch Changes
