@@ -1,4 +1,3 @@
-<!-- test -->
 <p align="center">
   <img src="https://raw.githubusercontent.com/geon0529/usefy/master/assets/logo.png" alt="usefy logo" width="120" />
 </p>
