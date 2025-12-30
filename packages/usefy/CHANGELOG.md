@@ -1,5 +1,21 @@
 # @usefy/usefy
 
+## 0.0.13
+
+### Patch Changes
+
+- 8ee0b64: update README.md
+  - @usefy/use-click-any-where@0.0.13
+  - @usefy/use-copy-to-clipboard@0.0.13
+  - @usefy/use-counter@0.0.13
+  - @usefy/use-debounce@0.0.13
+  - @usefy/use-debounce-callback@0.0.13
+  - @usefy/use-local-storage@0.0.13
+  - @usefy/use-session-storage@0.0.13
+  - @usefy/use-throttle@0.0.13
+  - @usefy/use-throttle-callback@0.0.13
+  - @usefy/use-toggle@0.0.13
+
 ## 0.0.12
 
 ### Patch Changes
