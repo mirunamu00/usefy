@@ -1,5 +1,7 @@
 # @usefy/use-local-storage
 
+## 0.0.16
+
 ## 0.0.15
 
 ### Patch Changes
