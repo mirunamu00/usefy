@@ -112,6 +112,8 @@ All packages require React 18 or 19:
 | [@usefy/use-session-storage](https://www.npmjs.com/package/@usefy/use-session-storage)     | sessionStorage persistence for tab lifetime             | [![npm](https://img.shields.io/npm/v/@usefy/use-session-storage.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-session-storage)     | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen?style=flat-square)   |
 | [@usefy/use-click-any-where](https://www.npmjs.com/package/@usefy/use-click-any-where)     | Document-wide click event detection                     | [![npm](https://img.shields.io/npm/v/@usefy/use-click-any-where.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-click-any-where)     | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square)   |
 | [@usefy/use-copy-to-clipboard](https://www.npmjs.com/package/@usefy/use-copy-to-clipboard) | Clipboard copy with fallback support                    | [![npm](https://img.shields.io/npm/v/@usefy/use-copy-to-clipboard.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-copy-to-clipboard) | ![88%](https://img.shields.io/badge/coverage-88%25-brightgreen?style=flat-square)   |
+| [@usefy/use-event-listener](https://www.npmjs.com/package/@usefy/use-event-listener)       | DOM event listener with auto cleanup                    | [![npm](https://img.shields.io/npm/v/@usefy/use-event-listener.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-event-listener)       | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square)   |
+| [@usefy/use-on-click-outside](https://www.npmjs.com/package/@usefy/use-on-click-outside)   | Outside click detection for modals/dropdowns            | [![npm](https://img.shields.io/npm/v/@usefy/use-on-click-outside.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-on-click-outside)   | ![97%](https://img.shields.io/badge/coverage-97%25-brightgreen?style=flat-square)   |
 
 ---
 
@@ -126,6 +128,8 @@ import {
   useDebounce,
   useLocalStorage,
   useCopyToClipboard,
+  useEventListener,
+  useOnClickOutside,
 } from "@usefy/usefy";
 
 function App() {
@@ -325,6 +329,65 @@ Data persists during tab lifetime, isolated per tab.
 ### 🖱️ Events
 
 <details>
+<summary><strong>useEventListener</strong> — DOM event listener with auto cleanup</summary>
+
+```tsx
+// Window resize event (default target)
+useEventListener("resize", (e) => {
+  console.log("Window resized:", window.innerWidth);
+});
+
+// Document keydown event
+useEventListener(
+  "keydown",
+  (e) => {
+    if (e.key === "Escape") closeModal();
+  },
+  document
+);
+
+// Element with ref
+const buttonRef = useRef<HTMLButtonElement>(null);
+useEventListener("click", handleClick, buttonRef);
+
+// With options
+useEventListener("scroll", handleScroll, window, {
+  passive: true,
+  capture: false,
+  enabled: isTracking,
+});
+```
+
+Supports window, document, HTMLElement, and RefObject targets with full TypeScript type inference.
+
+</details>
+
+<details>
+<summary><strong>useOnClickOutside</strong> — Outside click detection</summary>
+
+```tsx
+// Basic usage - close modal on outside click
+const modalRef = useRef<HTMLDivElement>(null);
+useOnClickOutside(modalRef, () => onClose(), { enabled: isOpen });
+
+// Multiple refs - button and dropdown menu
+const buttonRef = useRef<HTMLButtonElement>(null);
+const menuRef = useRef<HTMLDivElement>(null);
+useOnClickOutside([buttonRef, menuRef], () => setIsOpen(false), {
+  enabled: isOpen,
+});
+
+// With exclude refs
+useOnClickOutside(modalRef, onClose, {
+  excludeRefs: [toastRef], // Clicks on toast won't close modal
+});
+```
+
+Perfect for modals, dropdowns, popovers, tooltips, and context menus with mouse + touch support.
+
+</details>
+
+<details>
 <summary><strong>useClickAnyWhere</strong> — Global click detection</summary>
 
 ```tsx
@@ -377,6 +440,8 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 | use-click-any-where   | 92%        | 88%      | 100%      | 92%   |
 | use-debounce          | 91%        | 90%      | 67%       | 93%   |
 | use-copy-to-clipboard | 88%        | 79%      | 86%       | 88%   |
+| use-event-listener    | 96%        | 91%      | 100%      | 96%   |
+| use-on-click-outside  | 97%        | 93%      | 100%      | 97%   |
 
 ---
 
