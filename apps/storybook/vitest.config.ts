@@ -14,9 +14,16 @@ export default defineConfig({
     browser: {
       enabled: true,
       headless: true,
-      provider: "playwright" as any,
-      instances: [{ browser: "chromium" }],
-    },
+      provider: "playwright",
+      instances: [
+        {
+          browser: "chromium",
+          context: {
+            permissions: ["clipboard-read", "clipboard-write"],
+          },
+        },
+      ],
+    } as any,
     setupFiles: [".storybook/vitest.setup.ts"],
     include: ["src/**/*.stories.tsx"],
   },
