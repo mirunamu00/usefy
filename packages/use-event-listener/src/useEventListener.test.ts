@@ -569,4 +569,624 @@ describe("useEventListener", () => {
       expect(handler).toHaveBeenCalledTimes(2);
     });
   });
+
+  describe("touch events", () => {
+    it("should handle touchstart event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("touchstart", handler, element));
+
+      const touchEvent = new TouchEvent("touchstart", {
+        bubbles: true,
+        touches: [],
+      });
+      element.dispatchEvent(touchEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(handler).toHaveBeenCalledWith(touchEvent);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle touchmove event with passive option", () => {
+      const element = document.createElement("div");
+      const elementAddSpy = vi.spyOn(element, "addEventListener");
+      const handler = vi.fn();
+
+      renderHook(() =>
+        useEventListener("touchmove", handler, element, { passive: true })
+      );
+
+      expect(elementAddSpy).toHaveBeenCalledWith(
+        "touchmove",
+        expect.any(Function),
+        expect.objectContaining({ passive: true })
+      );
+    });
+
+    it("should handle touchend event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("touchend", handler, element));
+
+      element.dispatchEvent(new TouchEvent("touchend", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+  });
+
+  describe("pointer events", () => {
+    it("should handle pointerdown event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("pointerdown", handler, element));
+
+      const pointerEvent = new PointerEvent("pointerdown", {
+        bubbles: true,
+        pointerId: 1,
+        pointerType: "mouse",
+      });
+      element.dispatchEvent(pointerEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(handler).toHaveBeenCalledWith(pointerEvent);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle pointermove event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("pointermove", handler, element));
+
+      element.dispatchEvent(
+        new PointerEvent("pointermove", { bubbles: true, pointerType: "mouse" })
+      );
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle pointerup event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("pointerup", handler, element));
+
+      element.dispatchEvent(
+        new PointerEvent("pointerup", { bubbles: true, pointerType: "touch" })
+      );
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+  });
+
+  describe("drag events", () => {
+    it("should handle dragstart event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("dragstart", handler, element));
+
+      // jsdom doesn't support DragEvent, use Event as fallback
+      const dragEvent = new Event("dragstart", { bubbles: true });
+      element.dispatchEvent(dragEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(handler).toHaveBeenCalledWith(dragEvent);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle dragover event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("dragover", handler, element));
+
+      element.dispatchEvent(new Event("dragover", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle drop event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("drop", handler, element));
+
+      element.dispatchEvent(new Event("drop", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle dragend event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("dragend", handler, element));
+
+      element.dispatchEvent(new Event("dragend", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+  });
+
+  describe("form events", () => {
+    it("should handle input event", () => {
+      const element = document.createElement("input");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("input", handler, element));
+
+      const inputEvent = new InputEvent("input", { bubbles: true });
+      element.dispatchEvent(inputEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(handler).toHaveBeenCalledWith(inputEvent);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle change event", () => {
+      const element = document.createElement("input");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("change", handler, element));
+
+      element.dispatchEvent(new Event("change", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle submit event", () => {
+      const form = document.createElement("form");
+      document.body.appendChild(form);
+      const handler = vi.fn((e: Event) => e.preventDefault());
+
+      renderHook(() => useEventListener("submit", handler, form));
+
+      form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(form);
+    });
+  });
+
+  describe("clipboard events", () => {
+    it("should handle copy event", () => {
+      const handler = vi.fn();
+      const documentAddSpy = vi.spyOn(document, "addEventListener");
+
+      renderHook(() => useEventListener("copy", handler, document));
+
+      expect(documentAddSpy).toHaveBeenCalledWith(
+        "copy",
+        expect.any(Function),
+        expect.any(Object)
+      );
+
+      // jsdom doesn't support ClipboardEvent, use Event as fallback
+      document.dispatchEvent(new Event("copy", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle paste event", () => {
+      const element = document.createElement("input");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("paste", handler, element));
+
+      element.dispatchEvent(new Event("paste", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle cut event", () => {
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("cut", handler, document));
+
+      document.dispatchEvent(new Event("cut", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("visibility and focus events", () => {
+    it("should handle visibilitychange event", () => {
+      const handler = vi.fn();
+      const documentAddSpy = vi.spyOn(document, "addEventListener");
+
+      renderHook(() => useEventListener("visibilitychange", handler, document));
+
+      expect(documentAddSpy).toHaveBeenCalledWith(
+        "visibilitychange",
+        expect.any(Function),
+        expect.any(Object)
+      );
+    });
+
+    it("should handle blur event on element", () => {
+      const element = document.createElement("input");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("blur", handler, element));
+
+      element.dispatchEvent(new FocusEvent("blur"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle focusin event (bubbles)", () => {
+      const element = document.createElement("div");
+      const input = document.createElement("input");
+      element.appendChild(input);
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("focusin", handler, element));
+
+      input.dispatchEvent(new FocusEvent("focusin", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle focusout event (bubbles)", () => {
+      const element = document.createElement("div");
+      const input = document.createElement("input");
+      element.appendChild(input);
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("focusout", handler, element));
+
+      input.dispatchEvent(new FocusEvent("focusout", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+  });
+
+  describe("mouse events - advanced", () => {
+    it("should handle dblclick event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("dblclick", handler, element));
+
+      element.dispatchEvent(new MouseEvent("dblclick", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle contextmenu event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn((e: Event) => e.preventDefault());
+
+      renderHook(() => useEventListener("contextmenu", handler, element));
+
+      element.dispatchEvent(
+        new MouseEvent("contextmenu", { bubbles: true, cancelable: true })
+      );
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle mouseenter event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("mouseenter", handler, element));
+
+      element.dispatchEvent(new MouseEvent("mouseenter"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle mouseleave event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("mouseleave", handler, element));
+
+      element.dispatchEvent(new MouseEvent("mouseleave"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle wheel event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() =>
+        useEventListener("wheel", handler, element, { passive: true })
+      );
+
+      element.dispatchEvent(
+        new WheelEvent("wheel", { bubbles: true, deltaY: 100 })
+      );
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+  });
+
+  describe("window events", () => {
+    it("should handle beforeunload event", () => {
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("beforeunload", handler));
+
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        "beforeunload",
+        expect.any(Function),
+        expect.any(Object)
+      );
+    });
+
+    it("should handle hashchange event", () => {
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("hashchange", handler));
+
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle popstate event", () => {
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("popstate", handler));
+
+      window.dispatchEvent(new PopStateEvent("popstate"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle storage event", () => {
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("storage", handler));
+
+      window.dispatchEvent(new StorageEvent("storage"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("animation and transition events", () => {
+    it("should handle animationstart event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("animationstart", handler, element));
+
+      // jsdom doesn't support AnimationEvent, use Event as fallback
+      element.dispatchEvent(new Event("animationstart", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle animationend event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("animationend", handler, element));
+
+      element.dispatchEvent(new Event("animationend", { bubbles: true }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle transitionstart event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("transitionstart", handler, element));
+
+      element.dispatchEvent(
+        new TransitionEvent("transitionstart", { propertyName: "opacity" })
+      );
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle transitionend event", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("transitionend", handler, element));
+
+      element.dispatchEvent(
+        new TransitionEvent("transitionend", { propertyName: "opacity" })
+      );
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+  });
+
+  describe("custom events", () => {
+    it("should handle custom events", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("myCustomEvent", handler, element));
+
+      const customEvent = new CustomEvent("myCustomEvent", {
+        bubbles: true,
+        detail: { foo: "bar" },
+      });
+      element.dispatchEvent(customEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(handler).toHaveBeenCalledWith(customEvent);
+
+      document.body.removeChild(element);
+    });
+
+    it("should handle custom events on document", () => {
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("app:initialized", handler, document));
+
+      const customEvent = new CustomEvent("app:initialized", {
+        detail: { version: "1.0.0" },
+      });
+      document.dispatchEvent(customEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("media events", () => {
+    it("should handle play event on video element", () => {
+      const video = document.createElement("video");
+      document.body.appendChild(video);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("play", handler, video));
+
+      video.dispatchEvent(new Event("play"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(video);
+    });
+
+    it("should handle pause event on audio element", () => {
+      const audio = document.createElement("audio");
+      document.body.appendChild(audio);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("pause", handler, audio));
+
+      audio.dispatchEvent(new Event("pause"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(audio);
+    });
+
+    it("should handle ended event", () => {
+      const video = document.createElement("video");
+      document.body.appendChild(video);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("ended", handler, video));
+
+      video.dispatchEvent(new Event("ended"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(video);
+    });
+
+    it("should handle loadeddata event", () => {
+      const video = document.createElement("video");
+      document.body.appendChild(video);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("loadeddata", handler, video));
+
+      video.dispatchEvent(new Event("loadeddata"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(video);
+    });
+  });
+
+  describe("error events", () => {
+    it("should handle error event on window", () => {
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("error", handler));
+
+      window.dispatchEvent(new ErrorEvent("error", { message: "Test error" }));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle error event on image element", () => {
+      const img = document.createElement("img");
+      document.body.appendChild(img);
+      const handler = vi.fn();
+
+      renderHook(() => useEventListener("error", handler, img));
+
+      img.dispatchEvent(new Event("error"));
+
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(img);
+    });
+  });
 });
