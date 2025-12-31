@@ -1,7 +1,7 @@
 {
-  "name": "@usefy/usefy",
-  "version": "0.0.15",
-  "description": "A collection of useful React hooks",
+  "name": "@usefy/use-event-listener",
+  "version": "0.0.1",
+  "description": "A React hook for adding event listeners to DOM elements with automatic cleanup",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
@@ -19,31 +19,25 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist"
-  },
-  "dependencies": {
-    "@usefy/use-click-any-where": "workspace:*",
-    "@usefy/use-copy-to-clipboard": "workspace:*",
-    "@usefy/use-counter": "workspace:*",
-    "@usefy/use-toggle": "workspace:*",
-    "@usefy/use-debounce": "workspace:*",
-    "@usefy/use-debounce-callback": "workspace:*",
-    "@usefy/use-throttle": "workspace:*",
-    "@usefy/use-throttle-callback": "workspace:*",
-    "@usefy/use-local-storage": "workspace:*",
-    "@usefy/use-session-storage": "workspace:*",
-    "@usefy/use-on-click-outside": "workspace:*",
-    "@usefy/use-event-listener": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^19.0.0",
+    "jsdom": "^27.3.0",
+    "react": "^19.0.0",
     "rimraf": "^6.0.1",
     "tsup": "^8.0.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.16"
   },
   "publishConfig": {
     "access": "public"
@@ -51,13 +45,17 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/geon0529/usefy.git",
-    "directory": "packages/usefy"
+    "directory": "packages/use-event-listener"
   },
   "license": "MIT",
   "keywords": [
     "react",
     "hooks",
-    "custom-hooks",
-    "usefy"
+    "event-listener",
+    "addEventListener",
+    "window",
+    "document",
+    "dom",
+    "useEventListener"
   ]
 }
