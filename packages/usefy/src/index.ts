@@ -67,3 +67,10 @@ export {
   type MouseEventType,
   type TouchEventType,
 } from "@usefy/use-on-click-outside";
+
+// useEventListener
+export {
+  useEventListener,
+  type UseEventListenerOptions,
+  type EventTargetType,
+} from "@usefy/use-event-listener";
