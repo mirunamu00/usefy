@@ -114,6 +114,7 @@ All packages require React 18 or 19:
 | [@usefy/use-copy-to-clipboard](https://www.npmjs.com/package/@usefy/use-copy-to-clipboard) | Clipboard copy with fallback support                    | [![npm](https://img.shields.io/npm/v/@usefy/use-copy-to-clipboard.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-copy-to-clipboard) | ![88%](https://img.shields.io/badge/coverage-88%25-brightgreen?style=flat-square)   |
 | [@usefy/use-event-listener](https://www.npmjs.com/package/@usefy/use-event-listener)       | DOM event listener with auto cleanup                    | [![npm](https://img.shields.io/npm/v/@usefy/use-event-listener.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-event-listener)       | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square)   |
 | [@usefy/use-on-click-outside](https://www.npmjs.com/package/@usefy/use-on-click-outside)   | Outside click detection for modals/dropdowns            | [![npm](https://img.shields.io/npm/v/@usefy/use-on-click-outside.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-on-click-outside)   | ![97%](https://img.shields.io/badge/coverage-97%25-brightgreen?style=flat-square)   |
+| [@usefy/use-timer](https://www.npmjs.com/package/@usefy/use-timer)                         | Countdown timer with drift compensation and formats     | [![npm](https://img.shields.io/npm/v/@usefy/use-timer.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-timer)                         | ![84%](https://img.shields.io/badge/coverage-84%25-brightgreen?style=flat-square)   |
 
 ---
 
@@ -297,6 +298,36 @@ const throttledFn = useThrottleCallback(callback, 100);
 
 </details>
 
+<details>
+<summary><strong>useTimer</strong> — Countdown timer with accurate timing</summary>
+
+```tsx
+import { useTimer, ms } from "@usefy/use-timer";
+
+const timer = useTimer(ms.minutes(5), {
+  format: "MM:SS",
+  autoStart: false,
+  loop: false,
+  onComplete: () => console.log("Time's up!"),
+});
+
+// Controls
+timer.start();
+timer.pause();
+timer.reset();
+timer.addTime(ms.seconds(10));
+timer.subtractTime(ms.seconds(5));
+
+// State
+timer.formattedTime; // "05:00"
+timer.progress; // 0-100
+timer.isRunning; // boolean
+```
+
+Perfect for countdown timers, Pomodoro apps, kitchen timers, and time-based UIs with smart render optimization.
+
+</details>
+
 ### 💾 Storage
 
 <details>
@@ -442,6 +473,7 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 | use-copy-to-clipboard | 88%        | 79%      | 86%       | 88%   |
 | use-event-listener    | 96%        | 91%      | 100%      | 96%   |
 | use-on-click-outside  | 97%        | 93%      | 100%      | 97%   |
+| use-timer             | 84%        | 73%      | 94%       | 84%   |
 
 ---
 

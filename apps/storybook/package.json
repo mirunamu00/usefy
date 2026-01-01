@@ -22,7 +22,8 @@
     "@usefy/use-session-storage": "workspace:*",
     "@usefy/use-throttle": "workspace:*",
     "@usefy/use-throttle-callback": "workspace:*",
-    "@usefy/use-toggle": "workspace:*"
+    "@usefy/use-toggle": "workspace:*",
+    "@usefy/use-timer": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-docs": "^8.6.14",

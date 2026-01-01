@@ -507,25 +507,6 @@ pnpm test --coverage
 
 ---
 
-## Related Packages
-
-Explore other hooks in the **@usefy** collection:
-
-| Package                                                                                    | Description                          |
-| ------------------------------------------------------------------------------------------ | ------------------------------------ |
-| [@usefy/use-click-any-where](https://www.npmjs.com/package/@usefy/use-click-any-where)     | Document-wide click detection        |
-| [@usefy/use-toggle](https://www.npmjs.com/package/@usefy/use-toggle)                       | Boolean state management             |
-| [@usefy/use-counter](https://www.npmjs.com/package/@usefy/use-counter)                     | Counter state management             |
-| [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use-debounce)                   | Value debouncing                     |
-| [@usefy/use-debounce-callback](https://www.npmjs.com/package/@usefy/use-debounce-callback) | Debounced callbacks                  |
-| [@usefy/use-throttle](https://www.npmjs.com/package/@usefy/use-throttle)                   | Value throttling                     |
-| [@usefy/use-throttle-callback](https://www.npmjs.com/package/@usefy/use-throttle-callback) | Throttled callbacks                  |
-| [@usefy/use-local-storage](https://www.npmjs.com/package/@usefy/use-local-storage)         | localStorage state synchronization   |
-| [@usefy/use-session-storage](https://www.npmjs.com/package/@usefy/use-session-storage)     | sessionStorage state synchronization |
-| [@usefy/use-copy-to-clipboard](https://www.npmjs.com/package/@usefy/use-copy-to-clipboard) | Clipboard operations                 |
-
----
-
 ## License
 
 MIT © [mirunamu](https://github.com/geon0529)

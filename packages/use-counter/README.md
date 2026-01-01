@@ -383,21 +383,6 @@ pnpm test --coverage
 
 ---
 
-## Related Packages
-
-Explore other hooks in the **@usefy** collection:
-
-| Package                                                                                    | Description              |
-| ------------------------------------------------------------------------------------------ | ------------------------ |
-| [@usefy/use-toggle](https://www.npmjs.com/package/@usefy/use-toggle)                       | Boolean state management |
-| [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use-debounce)                   | Value debouncing         |
-| [@usefy/use-debounce-callback](https://www.npmjs.com/package/@usefy/use-debounce-callback) | Debounced callbacks      |
-| [@usefy/use-throttle](https://www.npmjs.com/package/@usefy/use-throttle)                   | Value throttling         |
-| [@usefy/use-throttle-callback](https://www.npmjs.com/package/@usefy/use-throttle-callback) | Throttled callbacks      |
-| [@usefy/use-click-any-where](https://www.npmjs.com/package/@usefy/use-click-any-where)     | Global click detection   |
-
----
-
 ## License
 
 MIT © [mirunamu](https://github.com/geon0529)
