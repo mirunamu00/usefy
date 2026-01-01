@@ -74,3 +74,12 @@ export {
   type UseEventListenerOptions,
   type EventTargetType,
 } from "@usefy/use-event-listener";
+
+// useTimer
+export {
+  useTimer,
+  type TimeUnit,
+  type TimeFormat,
+  type UseTimerOptions,
+  type UseTimerReturn,
+} from "@usefy/use-timer";
