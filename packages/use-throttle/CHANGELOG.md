@@ -1,5 +1,13 @@
 # @usefy/use-throttle
 
+## 0.0.19
+
+### Patch Changes
+
+- cc15dd3: update README.md
+- Updated dependencies [cc15dd3]
+  - @usefy/use-debounce@0.0.19
+
 ## 0.0.18
 
 ### Patch Changes
