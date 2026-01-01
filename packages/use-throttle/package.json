@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-throttle",
-  "version": "0.0.18",
+  "version": "0.0.19",
   "description": "A React hook for throttling values",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

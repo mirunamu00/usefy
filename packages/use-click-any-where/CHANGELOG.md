@@ -1,5 +1,11 @@
 # @usefy/use-click-any-where
 
+## 0.0.19
+
+### Patch Changes
+
+- cc15dd3: update README.md
+
 ## 0.0.18
 
 ### Patch Changes
