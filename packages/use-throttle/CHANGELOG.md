@@ -1,5 +1,13 @@
 # @usefy/use-throttle
 
+## 0.0.21
+
+### Patch Changes
+
+- e4ee257: update README.md
+- Updated dependencies [e4ee257]
+  - @usefy/use-debounce@0.0.21
+
 ## 0.0.20
 
 ### Patch Changes

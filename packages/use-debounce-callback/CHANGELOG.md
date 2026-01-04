@@ -1,5 +1,11 @@
 # @usefy/use-debounce-callback
 
+## 0.0.21
+
+### Patch Changes
+
+- e4ee257: update README.md
+
 ## 0.0.20
 
 ## 0.0.19

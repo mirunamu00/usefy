@@ -1,5 +1,12 @@
 # @usefy/use-session-storage
 
+## 0.0.21
+
+### Patch Changes
+
+- 85acb01: feat: refactor useLocalStorage and useSessionStorage to use useSyncExternalStore for automatic same-tab component synchronization
+- e4ee257: update README.md
+
 ## 0.0.20
 
 ## 0.0.19
