@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-copy-to-clipboard",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "description": "A React hook for copying text to clipboard with fallback support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
