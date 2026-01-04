@@ -30,6 +30,12 @@
   <a href="#features">Features</a>
 </p>
 
+<p align="center">
+  <a href="https://geon0529.github.io/usefy/" target="_blank" rel="noopener noreferrer">
+    <strong>📚 View Storybook Demo</strong>
+  </a>
+</p>
+
 ---
 
 > ⚠️ **Pre-release Notice**: This project is currently in version `0.x.x` (alpha/beta stage). APIs may change between minor versions. While fully functional and tested, please use with caution in production environments.
@@ -51,8 +57,6 @@
 - **🧪 Well Tested** — High test coverage ensures reliability and stability
 - **📖 Well Documented** — Detailed documentation with practical examples
 - **🎨 Interactive Demos** — Try all hooks in action with our Storybook playground
-
-📚 <a href="https://geon0529.github.io/usefy/" target="_blank" rel="noopener noreferrer"><strong>View Storybook Demo</strong></a> — Explore all hooks with live examples
 
 ---
 
@@ -103,8 +107,8 @@ All packages require React 18 or 19:
 
 ### 📦 Available Hooks
 
-| Hook                                                                                       | Description                                             | npm                                                                                                                                                                | Coverage                                                                            |
-| ------------------------------------------------------------------------------------------ | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| Hook                                                                                                                                            | Description                                             | npm                                                                                                                                                                                                                                             | Coverage                                                                            |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | <a href="https://www.npmjs.com/package/@usefy/use-toggle" target="_blank" rel="noopener noreferrer">@usefy/use-toggle</a>                       | Boolean state management with toggle, setTrue, setFalse | <a href="https://www.npmjs.com/package/@usefy/use-toggle" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-toggle.svg?style=flat-square&color=007acc" alt="npm version" /></a>                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-counter" target="_blank" rel="noopener noreferrer">@usefy/use-counter</a>                     | Counter state with increment, decrement, reset          | <a href="https://www.npmjs.com/package/@usefy/use-counter" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-counter.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-debounce" target="_blank" rel="noopener noreferrer">@usefy/use-debounce</a>                   | Value debouncing with leading/trailing edge             | <a href="https://www.npmjs.com/package/@usefy/use-debounce" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-debounce.svg?style=flat-square&color=007acc" alt="npm version" /></a>                   | ![91%](https://img.shields.io/badge/coverage-91%25-brightgreen?style=flat-square)   |

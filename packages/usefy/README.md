@@ -30,6 +30,12 @@
   <a href="#features">Features</a>
 </p>
 
+<p align="center">
+  <a href="https://geon0529.github.io/usefy/" target="_blank" rel="noopener noreferrer">
+    <strong>📚 View Storybook Demo</strong>
+  </a>
+</p>
+
 ---
 
 > ⚠️ **Pre-release Notice**: This project is currently in version `0.x.x` (alpha/beta stage). APIs may change between minor versions. While fully functional and tested, please use with caution in production environments.
@@ -51,8 +57,6 @@
 - **🧪 Well Tested** — High test coverage ensures reliability and stability
 - **📖 Well Documented** — Detailed documentation with practical examples
 - **🎨 Interactive Demos** — Try all hooks in action with our Storybook playground
-
-📚 <a href="https://geon0529.github.io/usefy/" target="_blank" rel="noopener noreferrer"><strong>View Storybook Demo</strong></a> — Explore all hooks with live examples
 
 ---
 
