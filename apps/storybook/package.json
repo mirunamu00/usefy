@@ -24,7 +24,8 @@
     "@usefy/use-throttle-callback": "workspace:*",
     "@usefy/use-toggle": "workspace:*",
     "@usefy/use-timer": "workspace:*",
-    "@usefy/use-unmount": "workspace:*"
+    "@usefy/use-unmount": "workspace:*",
+    "@usefy/use-init": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-docs": "^8.6.14",
