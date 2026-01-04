@@ -1,5 +1,27 @@
 # @usefy/usefy
 
+## 0.0.25
+
+### Patch Changes
+
+- c908a3b: update README.md
+- Updated dependencies [c908a3b]
+  - @usefy/use-init@0.0.25
+  - @usefy/use-click-any-where@0.0.25
+  - @usefy/use-copy-to-clipboard@0.0.25
+  - @usefy/use-counter@0.0.25
+  - @usefy/use-debounce@0.0.25
+  - @usefy/use-debounce-callback@0.0.25
+  - @usefy/use-event-listener@0.0.25
+  - @usefy/use-local-storage@0.0.25
+  - @usefy/use-on-click-outside@0.0.25
+  - @usefy/use-session-storage@0.0.25
+  - @usefy/use-throttle@0.0.25
+  - @usefy/use-throttle-callback@0.0.25
+  - @usefy/use-timer@0.0.25
+  - @usefy/use-toggle@0.0.25
+  - @usefy/use-unmount@0.0.25
+
 ## 0.0.24
 
 ### Patch Changes

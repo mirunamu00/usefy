@@ -1,5 +1,7 @@
 # @usefy/use-click-any-where
 
+## 0.0.25
+
 ## 0.0.24
 
 ## 0.0.23
