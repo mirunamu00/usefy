@@ -86,3 +86,10 @@ export {
 
 // useUnmount
 export { useUnmount, type UseUnmountOptions } from "@usefy/use-unmount";
+
+// useInit
+export {
+  useInit,
+  type UseInitOptions,
+  type UseInitResult,
+} from "@usefy/use-init";
