@@ -1,5 +1,11 @@
 # @usefy/use-on-click-outside
 
+## 0.0.22
+
+### Patch Changes
+
+- b92d737: update README.md
+
 ## 0.0.21
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-local-storage",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A React hook for persisting state in localStorage with automatic synchronization",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

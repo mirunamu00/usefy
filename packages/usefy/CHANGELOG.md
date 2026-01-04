@@ -1,5 +1,27 @@
 # @usefy/usefy
 
+## 0.0.22
+
+### Patch Changes
+
+- b92d737: update README.md
+- Updated dependencies [b92d737]
+- Updated dependencies [4fb2093]
+  - @usefy/use-click-any-where@0.0.22
+  - @usefy/use-copy-to-clipboard@0.0.22
+  - @usefy/use-counter@0.0.22
+  - @usefy/use-debounce@0.0.22
+  - @usefy/use-debounce-callback@0.0.22
+  - @usefy/use-event-listener@0.0.22
+  - @usefy/use-local-storage@0.0.22
+  - @usefy/use-on-click-outside@0.0.22
+  - @usefy/use-session-storage@0.0.22
+  - @usefy/use-throttle@0.0.22
+  - @usefy/use-throttle-callback@0.0.22
+  - @usefy/use-timer@0.0.22
+  - @usefy/use-toggle@0.0.22
+  - @usefy/use-unmount@0.0.22
+
 ## 0.0.21
 
 ### Patch Changes

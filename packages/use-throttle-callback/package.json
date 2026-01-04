@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-throttle-callback",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "description": "A React hook for throttling callback functions",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
