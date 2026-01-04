@@ -1,4 +1,4 @@
-name: Coverage Report
+name: Deploy Pages
 
 on:
   push:
@@ -19,8 +19,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  coverage:
-    name: Generate Coverage Report
+  deploy:
+    name: Build and Deploy Pages
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
@@ -43,12 +43,18 @@ jobs:
       - name: Build Packages
         run: pnpm build
 
+      - name: Build Storybook
+        run: pnpm build-storybook
+
       - name: Run Tests with Coverage
         run: pnpm test:coverage
 
-      - name: Prepare Coverage for Pages
+      - name: Prepare Pages
         run: |
           mkdir -p pages
+          # Copy storybook to root
+          cp -r apps/storybook/storybook-static/* pages/
+          # Copy coverage to /coverage path
           cp -r coverage pages/coverage
 
       - name: Setup Pages
@@ -56,7 +62,7 @@ jobs:
         with:
           enablement: true
 
-      - name: Upload Coverage Report
+      - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: pages
