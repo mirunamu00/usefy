@@ -35,7 +35,8 @@
     "@usefy/use-session-storage": "workspace:*",
     "@usefy/use-on-click-outside": "workspace:*",
     "@usefy/use-event-listener": "workspace:*",
-    "@usefy/use-timer": "workspace:*"
+    "@usefy/use-timer": "workspace:*",
+    "@usefy/use-unmount": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"

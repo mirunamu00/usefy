@@ -57,7 +57,7 @@ function TimerDemo({
             timer.isFinished ? "text-gray-500" : "text-white"
           }`}
         >
-          {timer.formattedTime}
+          {timer.time}
         </div>
 
         {/* Status Badge */}
@@ -96,39 +96,6 @@ function TimerDemo({
         </div>
       </div>
 
-      {/* Time Components */}
-      <div className="grid grid-cols-4 gap-2 mb-6">
-        <div className={storyTheme.statBox + " p-3"}>
-          <div className="text-xs text-gray-500 uppercase tracking-wide">
-            Hours
-          </div>
-          <div className="text-lg font-bold text-indigo-600">{timer.hours}</div>
-        </div>
-        <div className={storyTheme.statBox + " p-3"}>
-          <div className="text-xs text-gray-500 uppercase tracking-wide">
-            Min
-          </div>
-          <div className="text-lg font-bold text-indigo-600">
-            {timer.minutes}
-          </div>
-        </div>
-        <div className={storyTheme.statBox + " p-3"}>
-          <div className="text-xs text-gray-500 uppercase tracking-wide">
-            Sec
-          </div>
-          <div className="text-lg font-bold text-indigo-600">
-            {timer.seconds}
-          </div>
-        </div>
-        <div className={storyTheme.statBox + " p-3"}>
-          <div className="text-xs text-gray-500 uppercase tracking-wide">
-            Ms
-          </div>
-          <div className="text-lg font-bold text-indigo-600">
-            {timer.milliseconds}
-          </div>
-        </div>
-      </div>
 
       {/* Control Buttons */}
       <div className="flex flex-col gap-3">
@@ -251,7 +218,7 @@ function KitchenTimerDemo() {
             timer.isFinished ? "text-white" : "text-white"
           }`}
         >
-          {timer.isFinished ? "Done!" : timer.formattedTime}
+          {timer.isFinished ? "Done!" : timer.time}
         </div>
       </div>
 

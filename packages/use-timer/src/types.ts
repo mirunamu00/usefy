@@ -90,19 +90,10 @@ export interface UseTimerOptions {
 export interface UseTimerReturn {
   // ============ State ============
   /**
-   * Remaining time in milliseconds
-   */
-  time: number;
-
-  /**
-   * Initial time in milliseconds
-   */
-  initialTime: number;
-
-  /**
    * Formatted time string based on format option
+   * @example "05:30", "01:30:00"
    */
-  formattedTime: string;
+  time: string;
 
   /**
    * Progress percentage (0-100)
@@ -135,27 +126,6 @@ export interface UseTimerReturn {
    * Whether the timer is idle (never started or after reset)
    */
   isIdle: boolean;
-
-  // ============ Decomposed Time ============
-  /**
-   * Hours component (0+)
-   */
-  hours: number;
-
-  /**
-   * Minutes component (0-59)
-   */
-  minutes: number;
-
-  /**
-   * Seconds component (0-59)
-   */
-  seconds: number;
-
-  /**
-   * Milliseconds component (0-999)
-   */
-  milliseconds: number;
 
   // ============ Controls ============
   /**

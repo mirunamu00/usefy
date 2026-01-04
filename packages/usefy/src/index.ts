@@ -83,3 +83,6 @@ export {
   type UseTimerOptions,
   type UseTimerReturn,
 } from "@usefy/use-timer";
+
+// useUnmount
+export { useUnmount, type UseUnmountOptions } from "@usefy/use-unmount";

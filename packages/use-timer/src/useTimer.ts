@@ -5,7 +5,6 @@ import type {
   UseTimerOptions,
   UseTimerReturn,
 } from "./types";
-import { decompose } from "./utils/timeUtils";
 import { formatTime } from "./utils/formatUtils";
 
 /**
@@ -46,7 +45,7 @@ export const ms = {
  *
  *   return (
  *     <div>
- *       <p>{timer.formattedTime}</p>
+ *       <p>{timer.time}</p>
  *       <button onClick={timer.toggle}>
  *         {timer.isRunning ? "Pause" : "Start"}
  *       </button>
@@ -199,9 +198,6 @@ export function useTimer(
   const isFinished = status === "finished";
   const isIdle = status === "idle";
 
-  // Current time value (read from ref)
-  const time = timeRef.current;
-
   // Progress: 0 at start, 100 at completion
   const progress = useMemo(() => {
     if (initialTimeRef.current === 0) return 100;
@@ -209,15 +205,13 @@ export function useTimer(
       100,
       Math.max(
         0,
-        ((initialTimeRef.current - time) / initialTimeRef.current) * 100
+        ((initialTimeRef.current - timeRef.current) / initialTimeRef.current) *
+          100
       )
     );
-    // formattedTime is the trigger for re-render, time is derived from ref
+    // formattedTime is the trigger for re-render
   }, [formattedTime]);
 
-  // Decomposed time (recalculated on re-render)
-  const decomposedTime = useMemo(() => decompose(time), [formattedTime]);
-  const { hours, minutes, seconds, milliseconds } = decomposedTime;
 
   // ============ Clear Timer ============
   const clearTimer = useCallback(() => {
@@ -448,7 +442,7 @@ export function useTimer(
       // Timer was cleared for loop completion, restart it
       startTimerLoop();
     }
-  }, [status, loop, time, startTimerLoop]);
+  }, [status, loop, formattedTime, startTimerLoop]);
 
   // Visibility API: compensate for time drift when tab is inactive
   useEffect(() => {
@@ -501,9 +495,7 @@ export function useTimer(
   // ============ Return ============
   return {
     // State
-    time,
-    initialTime: initialTimeRef.current,
-    formattedTime,
+    time: formattedTime,
     progress,
     status,
 
@@ -512,12 +504,6 @@ export function useTimer(
     isPaused,
     isFinished,
     isIdle,
-
-    // Decomposed time
-    hours,
-    minutes,
-    seconds,
-    milliseconds,
 
     // Controls
     start,
