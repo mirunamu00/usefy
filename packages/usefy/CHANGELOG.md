@@ -1,5 +1,26 @@
 # @usefy/usefy
 
+## 0.0.24
+
+### Patch Changes
+
+- Updated dependencies [6a255f0]
+  - @usefy/use-init@0.0.24
+  - @usefy/use-click-any-where@0.0.24
+  - @usefy/use-copy-to-clipboard@0.0.24
+  - @usefy/use-counter@0.0.24
+  - @usefy/use-debounce@0.0.24
+  - @usefy/use-debounce-callback@0.0.24
+  - @usefy/use-event-listener@0.0.24
+  - @usefy/use-local-storage@0.0.24
+  - @usefy/use-on-click-outside@0.0.24
+  - @usefy/use-session-storage@0.0.24
+  - @usefy/use-throttle@0.0.24
+  - @usefy/use-throttle-callback@0.0.24
+  - @usefy/use-timer@0.0.24
+  - @usefy/use-toggle@0.0.24
+  - @usefy/use-unmount@0.0.24
+
 ## 0.0.23
 
 ### Patch Changes
