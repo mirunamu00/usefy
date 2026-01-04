@@ -111,17 +111,18 @@ All packages require React 18 or 19:
 | ----------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
 | <a href="https://www.npmjs.com/package/@usefy/use-toggle" target="_blank" rel="noopener noreferrer">@usefy/use-toggle</a>                       | Boolean state management with toggle, setTrue, setFalse | <a href="https://www.npmjs.com/package/@usefy/use-toggle" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-toggle.svg?style=flat-square&color=007acc" alt="npm version" /></a>                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-counter" target="_blank" rel="noopener noreferrer">@usefy/use-counter</a>                     | Counter state with increment, decrement, reset          | <a href="https://www.npmjs.com/package/@usefy/use-counter" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-counter.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
-| <a href="https://www.npmjs.com/package/@usefy/use-debounce" target="_blank" rel="noopener noreferrer">@usefy/use-debounce</a>                   | Value debouncing with leading/trailing edge             | <a href="https://www.npmjs.com/package/@usefy/use-debounce" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-debounce.svg?style=flat-square&color=007acc" alt="npm version" /></a>                   | ![91%](https://img.shields.io/badge/coverage-91%25-brightgreen?style=flat-square)   |
-| <a href="https://www.npmjs.com/package/@usefy/use-debounce-callback" target="_blank" rel="noopener noreferrer">@usefy/use-debounce-callback</a> | Debounced callbacks with cancel/flush/pending           | <a href="https://www.npmjs.com/package/@usefy/use-debounce-callback" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-debounce-callback.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-debounce" target="_blank" rel="noopener noreferrer">@usefy/use-debounce</a>                   | Value debouncing with leading/trailing edge             | <a href="https://www.npmjs.com/package/@usefy/use-debounce" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-debounce.svg?style=flat-square&color=007acc" alt="npm version" /></a>                   | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-debounce-callback" target="_blank" rel="noopener noreferrer">@usefy/use-debounce-callback</a> | Debounced callbacks with cancel/flush/pending           | <a href="https://www.npmjs.com/package/@usefy/use-debounce-callback" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-debounce-callback.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![93%](https://img.shields.io/badge/coverage-93%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-throttle" target="_blank" rel="noopener noreferrer">@usefy/use-throttle</a>                   | Value throttling for rate-limiting updates              | <a href="https://www.npmjs.com/package/@usefy/use-throttle" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-throttle.svg?style=flat-square&color=007acc" alt="npm version" /></a>                   | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-throttle-callback" target="_blank" rel="noopener noreferrer">@usefy/use-throttle-callback</a> | Throttled callbacks with cancel/flush/pending           | <a href="https://www.npmjs.com/package/@usefy/use-throttle-callback" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-throttle-callback.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-local-storage" target="_blank" rel="noopener noreferrer">@usefy/use-local-storage</a>         | localStorage persistence with cross-tab sync            | <a href="https://www.npmjs.com/package/@usefy/use-local-storage" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-local-storage.svg?style=flat-square&color=007acc" alt="npm version" /></a>         | ![95%](https://img.shields.io/badge/coverage-95%25-brightgreen?style=flat-square)   |
-| <a href="https://www.npmjs.com/package/@usefy/use-session-storage" target="_blank" rel="noopener noreferrer">@usefy/use-session-storage</a>     | sessionStorage persistence for tab lifetime             | <a href="https://www.npmjs.com/package/@usefy/use-session-storage" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-session-storage.svg?style=flat-square&color=007acc" alt="npm version" /></a>     | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-session-storage" target="_blank" rel="noopener noreferrer">@usefy/use-session-storage</a>     | sessionStorage persistence for tab lifetime             | <a href="https://www.npmjs.com/package/@usefy/use-session-storage" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-session-storage.svg?style=flat-square&color=007acc" alt="npm version" /></a>     | ![95%](https://img.shields.io/badge/coverage-95%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-click-any-where" target="_blank" rel="noopener noreferrer">@usefy/use-click-any-where</a>     | Document-wide click event detection                     | <a href="https://www.npmjs.com/package/@usefy/use-click-any-where" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-click-any-where.svg?style=flat-square&color=007acc" alt="npm version" /></a>     | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-copy-to-clipboard" target="_blank" rel="noopener noreferrer">@usefy/use-copy-to-clipboard</a> | Clipboard copy with fallback support                    | <a href="https://www.npmjs.com/package/@usefy/use-copy-to-clipboard" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-copy-to-clipboard.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![88%](https://img.shields.io/badge/coverage-88%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-event-listener" target="_blank" rel="noopener noreferrer">@usefy/use-event-listener</a>       | DOM event listener with auto cleanup                    | <a href="https://www.npmjs.com/package/@usefy/use-event-listener" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-event-listener.svg?style=flat-square&color=007acc" alt="npm version" /></a>       | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square)   |
-| <a href="https://www.npmjs.com/package/@usefy/use-on-click-outside" target="_blank" rel="noopener noreferrer">@usefy/use-on-click-outside</a>   | Outside click detection for modals/dropdowns            | <a href="https://www.npmjs.com/package/@usefy/use-on-click-outside" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-on-click-outside.svg?style=flat-square&color=007acc" alt="npm version" /></a>   | ![97%](https://img.shields.io/badge/coverage-97%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-on-click-outside" target="_blank" rel="noopener noreferrer">@usefy/use-on-click-outside</a>   | Outside click detection for modals/dropdowns            | <a href="https://www.npmjs.com/package/@usefy/use-on-click-outside" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-on-click-outside.svg?style=flat-square&color=007acc" alt="npm version" /></a>   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-unmount" target="_blank" rel="noopener noreferrer">@usefy/use-unmount</a>                     | Execute callback on component unmount                   | <a href="https://www.npmjs.com/package/@usefy/use-unmount" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-unmount.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-init" target="_blank" rel="noopener noreferrer">@usefy/use-init</a>                           | One-time initialization with async, retry, timeout      | <a href="https://www.npmjs.com/package/@usefy/use-init" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-init.svg?style=flat-square&color=007acc" alt="npm version" /></a>                           | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-timer" target="_blank" rel="noopener noreferrer">@usefy/use-timer</a>                         | Countdown timer with drift compensation and formats     | <a href="https://www.npmjs.com/package/@usefy/use-timer" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-timer.svg?style=flat-square&color=007acc" alt="npm version" /></a>                         | ![84%](https://img.shields.io/badge/coverage-84%25-brightgreen?style=flat-square)   |
 
 ---
@@ -140,6 +141,7 @@ import {
   useEventListener,
   useOnClickOutside,
   useUnmount,
+  useInit,
 } from "@usefy/usefy";
 
 function App() {
@@ -493,6 +495,46 @@ Perfect for saving data, sending analytics, and cleaning up resources on compone
 
 </details>
 
+<details>
+<summary><strong>useInit</strong> — One-time initialization with async support, retry, timeout, and conditional execution</summary>
+
+```tsx
+// Basic async initialization
+const { isInitialized, isInitializing, error } = useInit(async () => {
+  await loadConfiguration();
+});
+
+// With retry and timeout
+const { error, reinitialize } = useInit(
+  async () => {
+    await connectToServer();
+  },
+  {
+    retry: 3,
+    retryDelay: 1000,
+    timeout: 5000,
+  }
+);
+
+// Conditional initialization
+useInit(
+  () => {
+    initializeFeature();
+  },
+  { when: isEnabled }
+);
+
+// With cleanup function
+useInit(() => {
+  const subscription = eventBus.subscribe();
+  return () => subscription.unsubscribe();
+});
+```
+
+Perfect for initializing services, loading configuration, setting up subscriptions, and any one-time setup tasks with robust error handling.
+
+</details>
+
 ---
 
 ## Test Coverage
@@ -503,22 +545,23 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 
 > 💡 To generate coverage report locally, run `pnpm test:coverage`. The report will be available at `coverage/index.html`.
 
-| Package               | Statements | Branches | Functions | Lines |
-| --------------------- | ---------- | -------- | --------- | ----- |
-| use-toggle            | 100%       | 100%     | 100%      | 100%  |
-| use-counter           | 100%       | 100%     | 100%      | 100%  |
-| use-throttle          | 100%       | 100%     | 100%      | 100%  |
-| use-throttle-callback | 100%       | 100%     | 100%      | 100%  |
-| use-local-storage     | 95%        | 86%      | 93%       | 95%   |
-| use-session-storage   | 94%        | 82%      | 93%       | 94%   |
-| use-debounce-callback | 94%        | 83%      | 94%       | 94%   |
-| use-click-any-where   | 92%        | 88%      | 100%      | 92%   |
-| use-debounce          | 91%        | 90%      | 67%       | 93%   |
-| use-copy-to-clipboard | 88%        | 79%      | 86%       | 88%   |
-| use-event-listener    | 96%        | 91%      | 100%      | 96%   |
-| use-on-click-outside  | 97%        | 93%      | 100%      | 97%   |
-| use-unmount           | 100%       | 100%     | 100%      | 100%  |
-| use-timer             | 84%        | 73%      | 94%       | 84%   |
+| Package               | Statements | Branches | Functions | Lines  |
+| --------------------- | ---------- | -------- | --------- | ------ |
+| use-toggle            | 100%       | 100%     | 100%      | 100%   |
+| use-counter           | 100%       | 100%     | 100%      | 100%   |
+| use-throttle          | 100%       | 100%     | 100%      | 100%   |
+| use-throttle-callback | 100%       | 100%     | 100%      | 100%   |
+| use-on-click-outside  | 97.61%     | 93.93%   | 100%      | 97.61% |
+| use-event-listener    | 96.29%     | 91.66%   | 100%      | 96.29% |
+| use-init              | 96.1%      | 88.63%   | 100%      | 96%    |
+| use-local-storage     | 95.18%     | 86.84%   | 93.75%    | 95.12% |
+| use-session-storage   | 94.66%     | 82.75%   | 93.33%    | 94.59% |
+| use-debounce-callback | 93.2%      | 76%      | 93.75%    | 93.13% |
+| use-click-any-where   | 92.3%      | 87.5%    | 100%      | 92.3%  |
+| use-debounce          | 90%        | 82.6%    | 66.66%    | 91.95% |
+| use-copy-to-clipboard | 87.87%     | 79.16%   | 85.71%    | 87.87% |
+| use-unmount           | 100%       | 100%     | 100%      | 100%   |
+| use-timer             | 83.8%      | 72.63%   | 93.93%    | 84.13% |
 
 ---
 
