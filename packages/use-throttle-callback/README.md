@@ -395,12 +395,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category   | Coverage   |
-| ---------- | ---------- |
-| Statements | 100% (2/2) |
-| Branches   | 100% (4/4) |
-| Functions  | 100% (1/1) |
-| Lines      | 100% (2/2) |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-throttle-callback/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Running Tests
 

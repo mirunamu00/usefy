@@ -372,12 +372,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category   | Coverage        |
-| ---------- | --------------- |
-| Statements | 94.11% (96/102) |
-| Branches   | 82.6% (38/46)   |
-| Functions  | 93.75% (15/16)  |
-| Lines      | 94.05% (95/101) |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-debounce-callback/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
 

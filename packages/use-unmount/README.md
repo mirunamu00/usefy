@@ -144,12 +144,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category   | Coverage     |
-| ---------- | ------------ |
-| Statements | 100% (10/10) |
-| Branches   | 100% (4/4)   |
-| Functions  | 100% (3/3)   |
-| Lines      | 100% (10/10) |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-unmount/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
 

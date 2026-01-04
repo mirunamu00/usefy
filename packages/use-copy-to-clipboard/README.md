@@ -389,12 +389,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category   | Coverage       |
-| ---------- | -------------- |
-| Statements | 87.87% (58/66) |
-| Branches   | 79.16% (19/24) |
-| Functions  | 85.71% (6/7)   |
-| Lines      | 87.87% (58/66) |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-copy-to-clipboard/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
 

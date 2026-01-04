@@ -298,12 +298,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category   | Coverage     |
-| ---------- | ------------ |
-| Statements | 100% (10/10) |
-| Branches   | 100% (1/1)   |
-| Functions  | 100% (6/6)   |
-| Lines      | 100% (8/8)   |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-counter/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
 

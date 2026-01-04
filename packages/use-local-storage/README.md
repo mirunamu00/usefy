@@ -475,12 +475,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category   | Coverage       |
-| ---------- | -------------- |
-| Statements | 95.18% (79/83) |
-| Branches   | 86.84% (33/38) |
-| Functions  | 93.75% (15/16) |
-| Lines      | 95.12% (78/82) |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-local-storage/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
 

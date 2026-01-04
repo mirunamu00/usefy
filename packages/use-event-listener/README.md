@@ -396,12 +396,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| Category   | Coverage |
-| ---------- | -------- |
-| Statements | 96.29%   |
-| Branches   | 91.66%   |
-| Functions  | 100%     |
-| Lines      | 96.29%   |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-event-listener/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
 

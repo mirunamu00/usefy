@@ -450,11 +450,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-| File             | Statements | Branches | Functions | Lines  |
-| ---------------- | ---------- | -------- | --------- | ------ |
-| `useTimer.ts`    | 84.11%     | 72.63%   | 94.11%    | 84.36% |
-| `formatUtils.ts` | 100%       | 100%     | 100%      | 100%   |
-| `timeUtils.ts`   | 100%       | 100%     | 100%      | 100%   |
+📊 <a href="https://geon0529.github.io/usefy/coverage/use-timer/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Files
 
