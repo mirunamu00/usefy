@@ -114,6 +114,7 @@ All packages require React 18 or 19:
 | [@usefy/use-copy-to-clipboard](https://www.npmjs.com/package/@usefy/use-copy-to-clipboard) | Clipboard copy with fallback support                    | [![npm](https://img.shields.io/npm/v/@usefy/use-copy-to-clipboard.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-copy-to-clipboard) | ![88%](https://img.shields.io/badge/coverage-88%25-brightgreen?style=flat-square)   |
 | [@usefy/use-event-listener](https://www.npmjs.com/package/@usefy/use-event-listener)       | DOM event listener with auto cleanup                    | [![npm](https://img.shields.io/npm/v/@usefy/use-event-listener.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-event-listener)       | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square)   |
 | [@usefy/use-on-click-outside](https://www.npmjs.com/package/@usefy/use-on-click-outside)   | Outside click detection for modals/dropdowns            | [![npm](https://img.shields.io/npm/v/@usefy/use-on-click-outside.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-on-click-outside)   | ![97%](https://img.shields.io/badge/coverage-97%25-brightgreen?style=flat-square)   |
+| [@usefy/use-unmount](https://www.npmjs.com/package/@usefy/use-unmount)                     | Execute callback on component unmount                   | [![npm](https://img.shields.io/npm/v/@usefy/use-unmount.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-unmount)                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | [@usefy/use-timer](https://www.npmjs.com/package/@usefy/use-timer)                         | Countdown timer with drift compensation and formats     | [![npm](https://img.shields.io/npm/v/@usefy/use-timer.svg?style=flat-square&color=007acc)](https://www.npmjs.com/package/@usefy/use-timer)                         | ![84%](https://img.shields.io/badge/coverage-84%25-brightgreen?style=flat-square)   |
 
 ---
@@ -131,6 +132,7 @@ import {
   useCopyToClipboard,
   useEventListener,
   useOnClickOutside,
+  useUnmount,
 } from "@usefy/usefy";
 
 function App() {
@@ -453,11 +455,46 @@ Modern Clipboard API with automatic fallback for older browsers.
 
 </details>
 
+### 🔄 Lifecycle
+
+<details>
+<summary><strong>useUnmount</strong> — Execute callback on component unmount</summary>
+
+```tsx
+// Basic usage
+useUnmount(() => {
+  console.log("Component unmounted");
+});
+
+// With latest state access
+const [formData, setFormData] = useState({});
+useUnmount(() => {
+  // Always accesses latest formData value
+  saveToLocalStorage(formData);
+});
+
+// Conditional cleanup
+useUnmount(
+  () => {
+    sendAnalyticsEvent("component_unmounted");
+  },
+  { enabled: trackingEnabled }
+);
+```
+
+Perfect for saving data, sending analytics, and cleaning up resources on component removal.
+
+</details>
+
 ---
 
 ## Test Coverage
 
 All packages are comprehensively tested using Vitest to ensure reliability and stability.
+
+📊 **[View Detailed Coverage Report](https://geon0529.github.io/usefy/coverage/)** (GitHub Pages)
+
+> 💡 To generate coverage report locally, run `pnpm test:coverage`. The report will be available at `coverage/index.html`.
 
 | Package               | Statements | Branches | Functions | Lines |
 | --------------------- | ---------- | -------- | --------- | ----- |
@@ -473,6 +510,7 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 | use-copy-to-clipboard | 88%        | 79%      | 86%       | 88%   |
 | use-event-listener    | 96%        | 91%      | 100%      | 96%   |
 | use-on-click-outside  | 97%        | 93%      | 100%      | 97%   |
+| use-unmount           | 100%       | 100%     | 100%      | 100%  |
 | use-timer             | 84%        | 73%      | 94%       | 84%   |
 
 ---
