@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-event-listener",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "description": "A React hook for adding event listeners to DOM elements with automatic cleanup",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

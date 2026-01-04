@@ -1,5 +1,11 @@
 # @usefy/use-timer
 
+## 0.0.21
+
+### Patch Changes
+
+- e4ee257: update README.md
+
 ## 0.0.20
 
 ### Patch Changes

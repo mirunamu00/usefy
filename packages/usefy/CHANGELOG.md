@@ -1,5 +1,28 @@
 # @usefy/usefy
 
+## 0.0.21
+
+### Patch Changes
+
+- 85acb01: feat: refactor useLocalStorage and useSessionStorage to use useSyncExternalStore for automatic same-tab component synchronization
+- e4ee257: update README.md
+- Updated dependencies [85acb01]
+- Updated dependencies [e4ee257]
+  - @usefy/use-local-storage@0.0.21
+  - @usefy/use-session-storage@0.0.21
+  - @usefy/use-click-any-where@0.0.21
+  - @usefy/use-copy-to-clipboard@0.0.21
+  - @usefy/use-counter@0.0.21
+  - @usefy/use-debounce@0.0.21
+  - @usefy/use-debounce-callback@0.0.21
+  - @usefy/use-event-listener@0.0.21
+  - @usefy/use-on-click-outside@0.0.21
+  - @usefy/use-throttle@0.0.21
+  - @usefy/use-throttle-callback@0.0.21
+  - @usefy/use-timer@0.0.21
+  - @usefy/use-toggle@0.0.21
+  - @usefy/use-unmount@0.0.21
+
 ## 0.0.20
 
 ### Patch Changes
