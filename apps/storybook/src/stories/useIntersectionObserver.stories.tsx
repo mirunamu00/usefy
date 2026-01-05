@@ -2390,14 +2390,15 @@ const { ref } = useIntersectionObserver({
 
     // 1. Verify initial rootMargin is 0px (default button selected)
     const defaultButton = canvas.getByTestId("margin-0");
-    await expect(defaultButton).toHaveClass("bg-indigo-600");
+    await expect(defaultButton).toHaveClass("from-indigo-500");
 
     // 2. Click +50px button and verify it's selected
     const expandButton = canvas.getByTestId("margin-50");
     await user.click(expandButton);
 
     await waitFor(async () => {
-      await expect(expandButton).toHaveClass("bg-indigo-600");
+      await expect(expandButton).toHaveClass("from-indigo-500");
+      await expect(defaultButton).not.toHaveClass("from-indigo-500");
     });
 
     // 3. Click -50px button and verify it's selected
@@ -2405,7 +2406,8 @@ const { ref } = useIntersectionObserver({
     await user.click(shrinkButton);
 
     await waitFor(async () => {
-      await expect(shrinkButton).toHaveClass("bg-indigo-600");
+      await expect(shrinkButton).toHaveClass("from-indigo-500");
+      await expect(expandButton).not.toHaveClass("from-indigo-500");
     });
   },
 };
