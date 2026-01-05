@@ -330,7 +330,7 @@ timer.addTime(ms.seconds(10));
 timer.subtractTime(ms.seconds(5));
 
 // State
-timer.formattedTime; // "05:00"
+timer.time; // "05:00"
 timer.progress; // 0-100
 timer.isRunning; // boolean
 ```

@@ -97,7 +97,7 @@ function Timer() {
 
   return (
     <div>
-      <p>{timer.formattedTime}</p>
+      <p>{timer.time}</p>
       <button onClick={timer.toggle}>
         {timer.isRunning ? "Pause" : "Start"}
       </button>
@@ -151,30 +151,24 @@ A hook that manages countdown timer state with comprehensive controls.
 
 #### Returns `UseTimerReturn`
 
-| Property        | Type                   | Description                                             |
-| --------------- | ---------------------- | ------------------------------------------------------- |
-| `time`          | `number`               | Current remaining time in milliseconds                  |
-| `initialTime`   | `number`               | Initial time value                                      |
-| `formattedTime` | `string`               | Formatted time string                                   |
-| `progress`      | `number`               | Progress percentage (0-100)                             |
-| `status`        | `TimerStatus`          | Current status: `idle`, `running`, `paused`, `finished` |
-| `isRunning`     | `boolean`              | Whether timer is running                                |
-| `isPaused`      | `boolean`              | Whether timer is paused                                 |
-| `isFinished`    | `boolean`              | Whether timer has finished                              |
-| `isIdle`        | `boolean`              | Whether timer is idle                                   |
-| `hours`         | `number`               | Decomposed hours component                              |
-| `minutes`       | `number`               | Decomposed minutes component                            |
-| `seconds`       | `number`               | Decomposed seconds component                            |
-| `milliseconds`  | `number`               | Decomposed milliseconds component                       |
-| `start`         | `() => void`           | Start the timer                                         |
-| `pause`         | `() => void`           | Pause the timer                                         |
-| `stop`          | `() => void`           | Stop timer (keep current time)                          |
-| `reset`         | `() => void`           | Reset to initial time                                   |
-| `restart`       | `() => void`           | Reset and immediately start                             |
-| `toggle`        | `() => void`           | Toggle between start/pause                              |
-| `addTime`       | `(ms: number) => void` | Add time to the timer                                   |
-| `subtractTime`  | `(ms: number) => void` | Subtract time from the timer                            |
-| `setTime`       | `(ms: number) => void` | Set timer to a specific value                           |
+| Property       | Type                   | Description                                             |
+| -------------- | ---------------------- | ------------------------------------------------------- |
+| `time`         | `string`               | Formatted time string (e.g., "05:30")                   |
+| `progress`     | `number`               | Progress percentage (0-100)                             |
+| `status`       | `TimerStatus`          | Current status: `idle`, `running`, `paused`, `finished` |
+| `isRunning`    | `boolean`              | Whether timer is running                                |
+| `isPaused`     | `boolean`              | Whether timer is paused                                 |
+| `isFinished`   | `boolean`              | Whether timer has finished                              |
+| `isIdle`       | `boolean`              | Whether timer is idle                                   |
+| `start`        | `() => void`           | Start the timer                                         |
+| `pause`        | `() => void`           | Pause the timer                                         |
+| `stop`         | `() => void`           | Stop timer (keep current time)                          |
+| `reset`        | `() => void`           | Reset to initial time                                   |
+| `restart`      | `() => void`           | Reset and immediately start                             |
+| `toggle`       | `() => void`           | Toggle between start/pause                              |
+| `addTime`      | `(ms: number) => void` | Add time to the timer                                   |
+| `subtractTime` | `(ms: number) => void` | Subtract time from the timer                            |
+| `setTime`      | `(ms: number) => void` | Set timer to a specific value                           |
 
 ### `ms` Helper Object
 
@@ -208,7 +202,7 @@ function CountdownTimer() {
 
   return (
     <div>
-      <div className="time-display">{timer.formattedTime}</div>
+      <div className="time-display">{timer.time}</div>
       <div className="controls">
         <button onClick={timer.toggle}>
           {timer.isRunning ? "⏸ Pause" : "▶ Start"}
@@ -233,7 +227,7 @@ function PrecisionTimer() {
 
   return (
     <div>
-      <div className="precision-display">{timer.formattedTime}</div>
+      <div className="precision-display">{timer.time}</div>
       <button onClick={timer.toggle}>
         {timer.isRunning ? "Pause" : "Start"}
       </button>
@@ -254,7 +248,7 @@ function AutoStartTimer() {
     onComplete: () => console.log("Completed!"),
   });
 
-  return <div>{timer.formattedTime}</div>;
+  return <div>{timer.time}</div>;
 }
 ```
 
@@ -272,7 +266,7 @@ function LoopingTimer() {
 
   return (
     <div>
-      <p>{timer.formattedTime}</p>
+      <p>{timer.time}</p>
       <button onClick={timer.toggle}>
         {timer.isRunning ? "Pause" : "Start"}
       </button>
@@ -291,7 +285,7 @@ function ManipulableTimer() {
 
   return (
     <div>
-      <p>{timer.formattedTime}</p>
+      <p>{timer.time}</p>
       <div className="controls">
         <button onClick={timer.toggle}>
           {timer.isRunning ? "Pause" : "Start"}
@@ -315,7 +309,7 @@ function TimerWithProgress() {
 
   return (
     <div>
-      <p>{timer.formattedTime}</p>
+      <p>{timer.time}</p>
       <div className="progress-bar">
         <div
           className="progress-fill"
@@ -347,7 +341,7 @@ function CustomFormattedTimer() {
 
   return (
     <div>
-      <p>{timer.formattedTime}</p> {/* "2h 30m 0s" */}
+      <p>{timer.time}</p> {/* "2h 30m 0s" */}
       <button onClick={timer.toggle}>
         {timer.isRunning ? "Pause" : "Start"}
       </button>
@@ -378,7 +372,7 @@ function KitchenTimer() {
           </button>
         ))}
       </div>
-      <p>{timer.formattedTime}</p>
+      <p>{timer.time}</p>
       <button onClick={timer.toggle}>
         {timer.isRunning ? "Pause" : "Start"}
       </button>
