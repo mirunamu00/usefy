@@ -1,5 +1,11 @@
 # @usefy/use-timer
 
+## 0.0.27
+
+### Patch Changes
+
+- ac08714: update README.md
+
 ## 0.0.26
 
 ### Patch Changes

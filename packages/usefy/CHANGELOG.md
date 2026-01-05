@@ -1,5 +1,27 @@
 # @usefy/usefy
 
+## 0.0.27
+
+### Patch Changes
+
+- ac08714: update README.md
+- Updated dependencies [ac08714]
+  - @usefy/use-timer@0.0.27
+  - @usefy/use-click-any-where@0.0.27
+  - @usefy/use-copy-to-clipboard@0.0.27
+  - @usefy/use-counter@0.0.27
+  - @usefy/use-debounce@0.0.27
+  - @usefy/use-debounce-callback@0.0.27
+  - @usefy/use-event-listener@0.0.27
+  - @usefy/use-init@0.0.27
+  - @usefy/use-local-storage@0.0.27
+  - @usefy/use-on-click-outside@0.0.27
+  - @usefy/use-session-storage@0.0.27
+  - @usefy/use-throttle@0.0.27
+  - @usefy/use-throttle-callback@0.0.27
+  - @usefy/use-toggle@0.0.27
+  - @usefy/use-unmount@0.0.27
+
 ## 0.0.26
 
 ### Patch Changes
