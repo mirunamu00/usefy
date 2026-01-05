@@ -126,6 +126,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-timer" target="_blank" rel="noopener noreferrer">@usefy/use-timer</a>                                 | Countdown timer with drift compensation and formats     | <a href="https://www.npmjs.com/package/@usefy/use-timer" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-timer.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                 | ![84%](https://img.shields.io/badge/coverage-84%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-geolocation" target="_blank" rel="noopener noreferrer">@usefy/use-geolocation</a>                     | Device geolocation with real-time tracking and distance | <a href="https://www.npmjs.com/package/@usefy/use-geolocation" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-geolocation.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![90%](https://img.shields.io/badge/coverage-90%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-intersection-observer" target="_blank" rel="noopener noreferrer">@usefy/use-intersection-observer</a> | Element visibility detection with Intersection Observer | <a href="https://www.npmjs.com/package/@usefy/use-intersection-observer" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-intersection-observer.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer">@usefy/use-signal</a>                                   | Event-driven communication between components           | <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-signal.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square)   |
 
 ---
 
@@ -143,6 +144,7 @@ import {
   useEventListener,
   useOnClickOutside,
   useIntersectionObserver,
+  useSignal,
   useUnmount,
   useInit,
 } from "@usefy/usefy";
@@ -379,6 +381,71 @@ const [value, setValue, removeValue] = useSessionStorage("key", initialValue);
 ```
 
 Data persists during tab lifetime, isolated per tab.
+
+</details>
+
+### 📡 Communication
+
+<details>
+<summary><strong>useSignal</strong> — Event-driven communication between components</summary>
+
+```tsx
+import { useSignal } from "@usefy/use-signal";
+
+// Emitter component
+function RefreshButton() {
+  const { emit, info } = useSignal("dashboard-refresh");
+  
+  return (
+    <button onClick={() => emit()}>
+      Refresh All ({info.subscriberCount} widgets)
+    </button>
+  );
+}
+
+// Subscriber component
+function DataWidget() {
+  const { signal } = useSignal("dashboard-refresh");
+  
+  useEffect(() => {
+    fetchData(); // Refetch when signal changes
+  }, [signal]);
+  
+  return <div>Widget Content</div>;
+}
+
+// With typed data payload
+interface NotificationData {
+  type: "success" | "error";
+  message: string;
+}
+
+function NotificationEmitter() {
+  const { emit } = useSignal<NotificationData>("notification");
+  
+  return (
+    <button onClick={() => emit({ type: "success", message: "Done!" })}>
+      Notify
+    </button>
+  );
+}
+
+function NotificationReceiver() {
+  const { signal, info } = useSignal<NotificationData>("notification");
+  
+  useEffect(() => {
+    if (signal > 0 && info.data) {
+      toast[info.data.type](info.data.message);
+    }
+  }, [signal]);
+  
+  return null;
+}
+```
+
+**Perfect for:** Dashboard refresh, form reset, cache invalidation, multi-step flows, and event broadcasting.
+
+> ⚠️ **Note:** `useSignal` is NOT a global state management solution. It's designed for lightweight event-driven communication. For complex state management, use Context, Zustand, Jotai, or Recoil.
 
 </details>
 
@@ -683,6 +750,7 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 | use-timer                 | 83.8%      | 72.63%   | 93.93%    | 84.13% |
 | use-geolocation           | 90%        | 85%      | 95%       | 90%    |
 | use-intersection-observer | 94%        | 85%      | 95%       | 93.93% |
+| use-signal                | 98.61%     | 90.9%    | 96.42%    | 98.59% |
 
 ---
 

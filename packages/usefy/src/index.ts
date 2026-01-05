@@ -18,6 +18,14 @@ export {
 // useCounter
 export { useCounter } from "@usefy/use-counter";
 
+// useSignal
+export {
+  useSignal,
+  type UseSignalReturn,
+  type SignalOptions,
+  type SignalInfo,
+} from "@usefy/use-signal";
+
 // useToggle
 export { useToggle, type UseToggleReturn } from "@usefy/use-toggle";
 

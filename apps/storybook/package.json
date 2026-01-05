@@ -27,7 +27,8 @@
     "@usefy/use-unmount": "workspace:*",
     "@usefy/use-init": "workspace:*",
     "@usefy/use-geolocation": "workspace:*",
-    "@usefy/use-intersection-observer": "workspace:*"
+    "@usefy/use-intersection-observer": "workspace:*",
+    "@usefy/use-signal": "workspace:*"
   },
   "devDependencies": {
     "@storybook/addon-docs": "^8.6.14",

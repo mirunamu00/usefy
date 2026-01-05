@@ -26,6 +26,7 @@
     "@usefy/use-click-any-where": "workspace:*",
     "@usefy/use-copy-to-clipboard": "workspace:*",
     "@usefy/use-counter": "workspace:*",
+    "@usefy/use-signal": "workspace:*",
     "@usefy/use-toggle": "workspace:*",
     "@usefy/use-debounce": "workspace:*",
     "@usefy/use-debounce-callback": "workspace:*",
