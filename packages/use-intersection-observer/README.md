@@ -415,13 +415,24 @@ function DelayedObserver() {
 
 ## Performance Optimization
 
-The hook is optimized to **only trigger re-renders when meaningful visibility values change**, not on every intersection callback. This means:
+The Intersection Observer API fires callbacks when threshold boundaries are crossed or when `isIntersecting` changes (e.g., during user scroll interactions). When a callback fires:
 
-- ✅ Re-renders when `isIntersecting` changes (element enters/exits view)
-- ✅ Re-renders when `intersectionRatio` changes (visibility percentage changes)
-- ❌ Does NOT re-render when only `time` changes (time updates on every intersection callback, but doesn't trigger re-renders alone)
+- The `entry` object is updated with new values including `time` (timestamp of the intersection event)
+- `setEntry()` is called → **re-render occurs**
 
-When an intersection occurs, the `time` property is updated with a new timestamp, but the hook compares `isIntersecting` and `intersectionRatio` to determine if a re-render is needed. This prevents unnecessary re-renders during scrolling while maintaining accurate visibility detection.
+The hook includes a safeguard: it compares the previous `isIntersecting` and `intersectionRatio` values with the new ones before calling `setEntry()`. This prevents redundant re-renders in edge cases where the observer might report the same state multiple times.
+
+```tsx
+// Inside the hook's callback:
+const hasChanged =
+  !prevEntry ||
+  prevEntry.isIntersecting !== nativeEntry.isIntersecting ||
+  prevEntry.intersectionRatio !== nativeEntry.intersectionRatio;
+
+if (hasChanged) {
+  setEntry(intersectionEntry); // Re-render triggered
+}
+```
 
 ---
 
