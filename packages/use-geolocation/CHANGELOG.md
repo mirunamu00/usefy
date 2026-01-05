@@ -1,5 +1,11 @@
 # @usefy/use-geolocation
 
+## 0.0.29
+
+### Patch Changes
+
+- 07dd97e: update README.md
+
 ## 0.0.28
 
 ### Patch Changes

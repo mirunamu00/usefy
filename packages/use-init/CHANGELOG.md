@@ -1,5 +1,11 @@
 # @usefy/use-init
 
+## 0.0.29
+
+### Patch Changes
+
+- 07dd97e: update README.md
+
 ## 0.0.28
 
 ## 0.0.27
