@@ -107,3 +107,15 @@ export {
   type UseGeolocationOptions,
   type UseGeolocationReturn,
 } from "@usefy/use-geolocation";
+
+// useIntersectionObserver
+export {
+  useIntersectionObserver,
+  isIntersectionObserverSupported,
+  toIntersectionEntry,
+  createInitialEntry,
+  type UseIntersectionObserverOptions,
+  type UseIntersectionObserverReturn,
+  type IntersectionEntry,
+  type OnChangeCallback,
+} from "@usefy/use-intersection-observer";

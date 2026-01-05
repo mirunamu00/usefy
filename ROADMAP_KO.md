@@ -761,54 +761,6 @@ return (
 
 ---
 
-### 22. useCountdown
-
-**목적**: 카운트다운 타이머 관리
-
-**주요 기능**:
-
-- 초 단위 카운트다운
-- start, stop, reset 함수
-- 자동 시작 옵션
-- 완료 콜백
-- 일시정지/재개 기능
-
-**API**:
-
-```typescript
-const [count, { start, stop, reset }] = useCountdown({
-  seconds: 60,
-  interval: 1000,
-  onComplete: () => {},
-});
-```
-
-**사용 예시**:
-
-```typescript
-const [count, { start, reset }] = useCountdown({
-  seconds: 60,
-  onComplete: () => alert("시간 종료!"),
-});
-
-return (
-  <div>
-    <p>남은 시간: {count}초</p>
-    <button onClick={start}>시작</button>
-    <button onClick={reset}>리셋</button>
-  </div>
-);
-```
-
-**구현 포인트**:
-
-- useInterval 활용
-- 상태 관리
-- 완료 감지
-- 남은 시간 계산
-
----
-
 ### 23. useIsClient
 
 **목적**: 클라이언트 사이드인지 확인 (SSR 체크)
