@@ -1365,14 +1365,6 @@ function EntryDetailsDemo() {
     threshold: [0, 0.25, 0.5, 0.75, 1.0],
   });
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const [lastUpdateTime, setLastUpdateTime] = useState<number | null>(null);
-
-  // Track when entry updates (for demonstration)
-  useEffect(() => {
-    if (entry) {
-      setLastUpdateTime(Date.now());
-    }
-  }, [entry?.time]);
 
   // Scroll to top on mount to ensure target is out of view initially
   useEffect(() => {
@@ -1495,35 +1487,6 @@ function EntryDetailsDemo() {
                 : "N/A"}
             </span>
           </div>
-        </div>
-
-        <div
-          style={{
-            marginTop: "16px",
-            padding: "12px",
-            background: "#f3f4f6",
-            borderRadius: "8px",
-            fontSize: "0.8rem",
-          }}
-        >
-          <strong style={{ color: "#374151" }}>ℹ️ About entry.time:</strong>
-          <p style={{ margin: "8px 0 0", color: "#6b7280" }}>
-            <code>time</code> is a DOMHighResTimeStamp (ms since page load).
-            Re-renders only occur when <code>isIntersecting</code> or{" "}
-            <code>intersectionRatio</code> changes — <code>time</code> changes
-            alone do not trigger re-renders.
-          </p>
-          {lastUpdateTime && (
-            <p
-              style={{
-                margin: "4px 0 0",
-                color: "#9ca3af",
-                fontSize: "0.75rem",
-              }}
-            >
-              Last update: {new Date(lastUpdateTime).toLocaleTimeString()}
-            </p>
-          )}
         </div>
       </div>
     </div>

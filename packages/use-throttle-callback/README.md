@@ -403,19 +403,6 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-throttle-callback/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
-### Running Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run tests in watch mode
-pnpm test:watch
-
-# Run tests with coverage report
-pnpm test --coverage
-```
-
 ---
 
 ## License

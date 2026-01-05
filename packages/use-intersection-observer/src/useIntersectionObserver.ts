@@ -313,10 +313,6 @@ export function useIntersectionObserver(
     }
   }, [triggerOnce]);
 
-  useEffect(() => {
-    console.log("entry", entry);
-  }, [entry]);
-
   // ============ SSR Return ============
   if (!isSupported) {
     return {

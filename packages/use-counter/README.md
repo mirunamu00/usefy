@@ -363,19 +363,6 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 </details>
 
-### Running Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run tests in watch mode
-pnpm test:watch
-
-# Run tests with coverage report
-pnpm test --coverage
-```
-
 ### Testing Stack
 
 - **[Vitest](https://vitest.dev/)** — Fast, modern test runner

@@ -226,19 +226,16 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 </details>
 
-### Running Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run tests in watch mode
-pnpm test:watch
-
-# Run tests with coverage report
-pnpm test --coverage
-```
+---
 
 ## License
 
-MIT
+MIT © [mirunamu](https://github.com/mirunamu00)
+
+This package is part of the [usefy](https://github.com/mirunamu00/usefy) monorepo.
+
+---
+
+<p align="center">
+  <sub>Built with care by the usefy team</sub>
+</p>

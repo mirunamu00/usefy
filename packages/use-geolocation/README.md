@@ -119,47 +119,47 @@ A hook that manages geolocation state with real-time tracking and utility functi
 
 #### Parameters
 
-| Parameter | Type                      | Description                   |
-| --------- | ------------------------- | ----------------------------- |
-| `options`  | `UseGeolocationOptions`  | Optional configuration object |
+| Parameter | Type                    | Description                   |
+| --------- | ----------------------- | ----------------------------- |
+| `options` | `UseGeolocationOptions` | Optional configuration object |
 
 #### Options
 
-| Option              | Type                                    | Default   | Description                                                      |
-| ------------------- | --------------------------------------- | --------- | ----------------------------------------------------------------- |
-| `enableHighAccuracy` | `boolean`                            | `false`   | Enable high accuracy mode (uses GPS, consumes more battery)      |
-| `maximumAge`       | `number`                               | `0`       | Maximum age of cached position in milliseconds                   |
-| `timeout`          | `number`                               | `30000`   | Timeout in milliseconds for position request                    |
-| `watch`            | `boolean`                              | `false`   | Start watching position immediately on mount                     |
-| `immediate`         | `boolean`                              | `true`    | Get initial position immediately on mount                        |
-| `onSuccess`        | `(position: GeoPosition) => void`      | —         | Callback when position is successfully retrieved                |
-| `onError`           | `(error: GeolocationError) => void`    | —         | Callback when an error occurs                                    |
-| `onPositionChange`  | `(position: GeoPosition) => void`      | —         | Callback when position changes (during watch mode)               |
-| `onPermissionChange` | `(state: PermissionState) => void`    | —         | Callback when permission state changes                          |
+| Option               | Type                                | Default | Description                                                 |
+| -------------------- | ----------------------------------- | ------- | ----------------------------------------------------------- |
+| `enableHighAccuracy` | `boolean`                           | `false` | Enable high accuracy mode (uses GPS, consumes more battery) |
+| `maximumAge`         | `number`                            | `0`     | Maximum age of cached position in milliseconds              |
+| `timeout`            | `number`                            | `30000` | Timeout in milliseconds for position request                |
+| `watch`              | `boolean`                           | `false` | Start watching position immediately on mount                |
+| `immediate`          | `boolean`                           | `true`  | Get initial position immediately on mount                   |
+| `onSuccess`          | `(position: GeoPosition) => void`   | —       | Callback when position is successfully retrieved            |
+| `onError`            | `(error: GeolocationError) => void` | —       | Callback when an error occurs                               |
+| `onPositionChange`   | `(position: GeoPosition) => void`   | —       | Callback when position changes (during watch mode)          |
+| `onPermissionChange` | `(state: PermissionState) => void`  | —       | Callback when permission state changes                      |
 
 #### Returns `UseGeolocationReturn`
 
-| Property            | Type                                    | Description                                                      |
-| ------------------- | --------------------------------------- | ---------------------------------------------------------------- |
-| `position`          | `GeoPosition \| null`                  | Current position data (null if not yet retrieved)                |
-| `loading`           | `boolean`                               | Loading state (true while fetching position)                     |
-| `error`             | `GeolocationError \| null`              | Error object (null if no error)                                 |
-| `permission`        | `PermissionState`                      | Current permission state (`prompt`, `granted`, `denied`, `unavailable`) |
-| `isSupported`       | `boolean`                               | Whether geolocation is supported in this environment            |
-| `getCurrentPosition` | `() => void`                           | Manually get current position (one-time request)               |
-| `watchPosition`      | `() => void`                            | Start watching position for real-time updates                   |
-| `clearWatch`        | `() => void`                            | Stop watching position                                           |
-| `distanceFrom`      | `(lat: number, lon: number) => number \| null` | Calculate distance from current position to target coordinates in meters |
-| `bearingTo`         | `(lat: number, lon: number) => number \| null` | Calculate bearing/direction from current position to target coordinates (0-360 degrees) |
+| Property             | Type                                           | Description                                                                             |
+| -------------------- | ---------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `position`           | `GeoPosition \| null`                          | Current position data (null if not yet retrieved)                                       |
+| `loading`            | `boolean`                                      | Loading state (true while fetching position)                                            |
+| `error`              | `GeolocationError \| null`                     | Error object (null if no error)                                                         |
+| `permission`         | `PermissionState`                              | Current permission state (`prompt`, `granted`, `denied`, `unavailable`)                 |
+| `isSupported`        | `boolean`                                      | Whether geolocation is supported in this environment                                    |
+| `getCurrentPosition` | `() => void`                                   | Manually get current position (one-time request)                                        |
+| `watchPosition`      | `() => void`                                   | Start watching position for real-time updates                                           |
+| `clearWatch`         | `() => void`                                   | Stop watching position                                                                  |
+| `distanceFrom`       | `(lat: number, lon: number) => number \| null` | Calculate distance from current position to target coordinates in meters                |
+| `bearingTo`          | `(lat: number, lon: number) => number \| null` | Calculate bearing/direction from current position to target coordinates (0-360 degrees) |
 
 #### Error Codes
 
-| Code                  | Description                                    |
-| --------------------- | ---------------------------------------------- |
-| `PERMISSION_DENIED`   | User denied geolocation permission            |
-| `POSITION_UNAVAILABLE` | Position information unavailable              |
-| `TIMEOUT`             | Position request timed out                     |
-| `NOT_SUPPORTED`       | Geolocation is not supported in this environment |
+| Code                   | Description                                      |
+| ---------------------- | ------------------------------------------------ |
+| `PERMISSION_DENIED`    | User denied geolocation permission               |
+| `POSITION_UNAVAILABLE` | Position information unavailable                 |
+| `TIMEOUT`              | Position request timed out                       |
+| `NOT_SUPPORTED`        | Geolocation is not supported in this environment |
 
 ---
 
@@ -209,7 +209,7 @@ function ManualLocation() {
       </button>
       <button onClick={watchPosition}>Start Tracking</button>
       <button onClick={clearWatch}>Stop Tracking</button>
-      
+
       {position && (
         <p>
           {position.coords.latitude}, {position.coords.longitude}
@@ -254,9 +254,9 @@ function LiveTracking() {
       <button onClick={handleStop} disabled={!isTracking}>
         Stop Tracking
       </button>
-      
+
       {isTracking && <p>🔴 Live tracking active</p>}
-      
+
       {position && (
         <p>
           {position.coords.latitude.toFixed(6)},{" "}
@@ -278,15 +278,13 @@ function DistanceToDestination() {
 
   // New York City coordinates
   const nyLat = 40.7128;
-  const nyLon = -74.0060;
+  const nyLon = -74.006;
 
   const distance = distanceFrom(nyLat, nyLon);
 
   return (
     <div>
-      {distance && (
-        <p>Distance to NYC: {(distance / 1000).toFixed(2)} km</p>
-      )}
+      {distance && <p>Distance to NYC: {(distance / 1000).toFixed(2)} km</p>}
     </div>
   );
 }
@@ -345,11 +343,7 @@ function HighAccuracyLocation() {
 
   return (
     <div>
-      {position && (
-        <p>
-          High accuracy: {position.coords.accuracy.toFixed(1)}m
-        </p>
-      )}
+      {position && <p>High accuracy: {position.coords.accuracy.toFixed(1)}m</p>}
     </div>
   );
 }
@@ -388,7 +382,7 @@ function RobustLocation() {
     immediate: false,
     onError: (err) => {
       console.error("Geolocation error:", err.code, err.message);
-      
+
       if (err.code === "PERMISSION_DENIED") {
         alert("Please allow location access");
       } else if (err.code === "TIMEOUT") {
@@ -400,14 +394,14 @@ function RobustLocation() {
   return (
     <div>
       <button onClick={getCurrentPosition}>Get Location</button>
-      
+
       {error && (
         <div className="error">
           <p>Error: {error.code}</p>
           <p>{error.message}</p>
         </div>
       )}
-      
+
       {position && (
         <p>
           {position.coords.latitude}, {position.coords.longitude}
@@ -433,7 +427,7 @@ function AutoTracking() {
     <div>
       <p>Auto-tracking is active</p>
       <button onClick={clearWatch}>Stop</button>
-      
+
       {position && (
         <p>
           {position.coords.latitude.toFixed(6)},{" "}
@@ -601,19 +595,6 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 </details>
 
-### Running Tests
-
-```bash
-# Run all tests
-pnpm test
-
-# Run tests in watch mode
-pnpm test:watch
-
-# Run tests with coverage report
-pnpm test --coverage
-```
-
 ---
 
 ## Browser Compatibility
@@ -642,4 +623,3 @@ This package is part of the [usefy](https://github.com/mirunamu00/usefy) monorep
 <p align="center">
   <sub>Built with care by the usefy team</sub>
 </p>
-
