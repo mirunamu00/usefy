@@ -1,5 +1,28 @@
 # @usefy/usefy
 
+## 0.0.30
+
+### Patch Changes
+
+- 09c2151: update READEME.md
+  - @usefy/use-click-any-where@0.0.30
+  - @usefy/use-copy-to-clipboard@0.0.30
+  - @usefy/use-counter@0.0.30
+  - @usefy/use-debounce@0.0.30
+  - @usefy/use-debounce-callback@0.0.30
+  - @usefy/use-event-listener@0.0.30
+  - @usefy/use-geolocation@0.0.30
+  - @usefy/use-init@0.0.30
+  - @usefy/use-intersection-observer@0.0.30
+  - @usefy/use-local-storage@0.0.30
+  - @usefy/use-on-click-outside@0.0.30
+  - @usefy/use-session-storage@0.0.30
+  - @usefy/use-throttle@0.0.30
+  - @usefy/use-throttle-callback@0.0.30
+  - @usefy/use-timer@0.0.30
+  - @usefy/use-toggle@0.0.30
+  - @usefy/use-unmount@0.0.30
+
 ## 0.0.29
 
 ### Patch Changes
