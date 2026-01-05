@@ -116,39 +116,39 @@ A hook that observes element visibility using the Intersection Observer API.
 
 #### Options
 
-| Option                  | Type                                                  | Default | Description                                              |
-| ----------------------- | ----------------------------------------------------- | ------- | -------------------------------------------------------- |
-| `threshold`             | `number \| number[]`                                  | `0`     | Threshold(s) at which callback is triggered (0.0 to 1.0) |
-| `root`                  | `Element \| Document \| null`                         | `null`  | Root element for intersection (null = viewport)          |
-| `rootMargin`            | `string`                                              | `"0px"` | Margin around root (CSS margin syntax)                   |
-| `triggerOnce`           | `boolean`                                             | `false` | Stop observing after first intersection                  |
-| `enabled`               | `boolean`                                             | `true`  | Enable/disable the observer dynamically                  |
-| `initialIsIntersecting` | `boolean`                                             | `false` | Initial intersection state (useful for SSR/SSG)          |
-| `onChange`              | `(entry: IntersectionEntry, inView: boolean) => void` | —       | Callback when intersection state changes                 |
-| `delay`                 | `number`                                              | `0`     | Delay in milliseconds before creating observer           |
+| Option                  | Type                                                  | Default | Description                                                                                         |
+| ----------------------- | ----------------------------------------------------- | ------- | --------------------------------------------------------------------------------------------------- |
+| `threshold`             | `number \| number[]`                                  | `0`     | Visibility ratio(s) that trigger updates (0.0 to 1.0). Updates occur when crossing these boundaries |
+| `root`                  | `Element \| Document \| null`                         | `null`  | Root element for intersection (null = viewport)                                                     |
+| `rootMargin`            | `string`                                              | `"0px"` | Margin around root (CSS margin syntax). Positive expands, negative shrinks detection area           |
+| `triggerOnce`           | `boolean`                                             | `false` | Stop observing after element first becomes visible                                                  |
+| `enabled`               | `boolean`                                             | `true`  | Enable/disable observer. When false, observer disconnects and stops all updates                     |
+| `initialIsIntersecting` | `boolean`                                             | `false` | Initial intersection state before first observation (useful for SSR/SSG)                            |
+| `onChange`              | `(entry: IntersectionEntry, inView: boolean) => void` | —       | Callback fired when isIntersecting or intersectionRatio changes                                     |
+| `delay`                 | `number`                                              | `0`     | Delay in milliseconds before creating the observer (not individual events)                          |
 
 #### Returns `UseIntersectionObserverReturn`
 
-| Property | Type                              | Description                                        |
-| -------- | --------------------------------- | -------------------------------------------------- |
-| `entry`  | `IntersectionEntry \| null`       | Intersection entry data (null if not yet observed) |
-| `inView` | `boolean`                         | Whether the element is currently in view           |
-| `ref`    | `(node: Element \| null) => void` | Ref callback to attach to target element           |
+| Property | Type                              | Description                                                                    |
+| -------- | --------------------------------- | ------------------------------------------------------------------------------ |
+| `entry`  | `IntersectionEntry \| null`       | Intersection entry data (null if not yet observed). Updates trigger re-renders |
+| `inView` | `boolean`                         | Whether the element is currently intersecting (convenience derived from entry) |
+| `ref`    | `(node: Element \| null) => void` | Callback ref to attach to the target element you want to observe               |
 
 #### `IntersectionEntry`
 
 Extended intersection entry with convenience properties:
 
-| Property             | Type                        | Description                              |
-| -------------------- | --------------------------- | ---------------------------------------- |
-| `entry`              | `IntersectionObserverEntry` | Original native entry                    |
-| `isIntersecting`     | `boolean`                   | Whether target is intersecting with root |
-| `intersectionRatio`  | `number`                    | Ratio of target visible (0.0 to 1.0)     |
-| `target`             | `Element`                   | The observed element                     |
-| `boundingClientRect` | `DOMRectReadOnly`           | Bounding rectangle of target element     |
-| `intersectionRect`   | `DOMRectReadOnly`           | Visible portion of target element        |
-| `rootBounds`         | `DOMRectReadOnly \| null`   | Bounding rectangle of root element       |
-| `time`               | `number`                    | Timestamp when intersection was recorded |
+| Property             | Type                        | Description                                                      |
+| -------------------- | --------------------------- | ---------------------------------------------------------------- |
+| `entry`              | `IntersectionObserverEntry` | Original native IntersectionObserverEntry from the browser API   |
+| `isIntersecting`     | `boolean`                   | Whether target is intersecting with root                         |
+| `intersectionRatio`  | `number`                    | Ratio of target visible (0.0 to 1.0)                             |
+| `target`             | `Element`                   | The observed DOM element                                         |
+| `boundingClientRect` | `DOMRectReadOnly`           | Target element's bounding box relative to viewport               |
+| `intersectionRect`   | `DOMRectReadOnly`           | Visible portion's bounding box (intersection of target and root) |
+| `rootBounds`         | `DOMRectReadOnly \| null`   | Root element's bounding box (null if root is the viewport)       |
+| `time`               | `number`                    | DOMHighResTimeStamp when intersection was recorded               |
 
 ---
 
@@ -176,9 +176,9 @@ function LazyImage({ src, alt }: { src: string; alt: string }) {
   const [loaded, setLoaded] = useState(false);
 
   const { ref, inView } = useIntersectionObserver({
-    triggerOnce: true,
-    threshold: 0.1,
-    rootMargin: "50px", // Preload 50px ahead
+    triggerOnce: true, // Stop observing after first detection
+    threshold: 0.1, // Trigger when 10% visible
+    rootMargin: "50px", // Start loading 50px before entering viewport
   });
 
   return (
@@ -209,8 +209,8 @@ function InfiniteList() {
   const [loading, setLoading] = useState(false);
 
   const { ref, inView } = useIntersectionObserver({
-    threshold: 1.0,
-    rootMargin: "100px", // Preload 100px ahead
+    threshold: 1.0, // Trigger when sentinel is fully visible
+    rootMargin: "100px", // Start loading 100px before sentinel enters viewport
   });
 
   useEffect(() => {
@@ -228,7 +228,7 @@ function InfiniteList() {
       {items.map((item) => (
         <Item key={item.id} {...item} />
       ))}
-      {/* Sentinel Element */}
+      {/* Sentinel Element - triggers loading when visible */}
       <div ref={ref}>{loading && <Spinner />}</div>
     </div>
   );
@@ -242,8 +242,8 @@ import { useIntersectionObserver } from "@usefy/use-intersection-observer";
 
 function AnimatedCard({ children }: { children: React.ReactNode }) {
   const { ref, inView } = useIntersectionObserver({
-    triggerOnce: true,
-    threshold: 0.3,
+    triggerOnce: true, // Animate only once
+    threshold: 0.3, // Trigger when 30% visible
   });
 
   return (
@@ -270,12 +270,13 @@ import { useIntersectionObserver } from "@usefy/use-intersection-observer";
 function ProgressTracker() {
   const [progress, setProgress] = useState(0);
 
-  // 101 thresholds (0%, 1%, 2%, ... 100%)
+  // 101 thresholds (0%, 1%, 2%, ... 100%) for fine-grained tracking
   const thresholds = Array.from({ length: 101 }, (_, i) => i / 100);
 
   const { ref } = useIntersectionObserver({
     threshold: thresholds,
     onChange: (entry) => {
+      // Update progress when crossing any threshold boundary
       setProgress(Math.round(entry.intersectionRatio * 100));
     },
   });
@@ -350,6 +351,7 @@ function Section({ id, onVisible }: { id: string; onVisible: () => void }) {
   const { ref } = useIntersectionObserver({
     threshold: 0.6, // Activate when 60% visible
     onChange: (_, inView) => {
+      // Called when section enters or exits the 60% visibility threshold
       if (inView) onVisible();
     },
   });
@@ -372,7 +374,7 @@ function ConditionalObserver() {
   const [isLoading, setIsLoading] = useState(true);
 
   const { ref, inView } = useIntersectionObserver({
-    enabled: !isLoading, // Disable while loading
+    enabled: !isLoading, // Observer is disconnected when disabled
   });
 
   return <div ref={ref}>{inView ? "Observing" : "Not observing"}</div>;
@@ -385,12 +387,13 @@ function ConditionalObserver() {
 import { useIntersectionObserver } from "@usefy/use-intersection-observer";
 
 function SSRComponent() {
-  // Assume above-the-fold content is initially visible
+  // Set initial state for server-side rendering
   const { ref, inView } = useIntersectionObserver({
-    initialIsIntersecting: true,
+    initialIsIntersecting: true, // Assume visible during SSR
   });
 
-  // On SSR, inView will be true on first render
+  // During SSR/first render, inView will be true
+  // After hydration, actual intersection state takes over
   return <div ref={ref}>{inView ? "Initially visible" : "Not visible"}</div>;
 }
 ```
@@ -401,12 +404,13 @@ function SSRComponent() {
 import { useIntersectionObserver } from "@usefy/use-intersection-observer";
 
 function DelayedObserver() {
-  // Delay observer creation by 500ms
-  // Useful for preventing premature observations during fast scrolling
   const { ref, inView } = useIntersectionObserver({
-    delay: 500,
+    delay: 500, // Wait 500ms before creating the observer
   });
 
+  // Observer is NOT created until 500ms after component mount
+  // This delays the CREATION of the observer, not individual intersection events
+  // Useful for preventing premature observations during page load or fast scrolling
   return <div ref={ref}>{inView ? "Observing" : "Not observing"}</div>;
 }
 ```
