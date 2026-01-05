@@ -1367,10 +1367,11 @@ function BothEdgesExample() {
       name: /Click \(Both Edges\)/i,
     });
 
-    // Helper to get processed count
+    // Helper to get processed count - use exact match to avoid "Last Processed:"
     const getProcessedCount = () => {
-      const text = canvas.getByText("Processed:", { exact: false });
-      const parent = text.closest("div");
+      const labels = canvas.getAllByText(/^Processed:$/);
+      const label = labels[0];
+      const parent = label.closest("div");
       const match = parent?.textContent?.match(/Processed:\s*(\d+)/);
       return match ? parseInt(match[1], 10) : 0;
     };
