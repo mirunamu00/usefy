@@ -1,5 +1,11 @@
 # @usefy/use-throttle
 
+## 0.0.31
+
+### Patch Changes
+
+- @usefy/use-debounce@0.0.31
+
 ## 0.0.30
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-debounce",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "A React hook for value debouncing with leading/trailing edge and maxWait options",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

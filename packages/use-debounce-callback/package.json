@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-debounce-callback",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "A React hook for debouncing callback functions",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
