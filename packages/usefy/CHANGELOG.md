@@ -1,5 +1,43 @@
 # @usefy/usefy
 
+## 0.0.34
+
+### Patch Changes
+
+- dafb0af: ### Features
+
+  - **Improved `requestGC` function**: Now attempts to call `globalThis.gc()` directly when available (Chrome with `--expose-gc` flag or Node.js), falling back to memory pressure hint if not available. Added descriptive console logging in dev mode.
+
+  ### Documentation
+
+  - Added `requestGC` to API Reference table in README
+  - Added "Garbage Collection Request" section with usage example and platform-specific commands for enabling direct GC in Chrome (Windows/macOS/Linux)
+
+  ### Bug Fixes
+
+  - **Fixed RadialBarChart gauge accumulation bug in Storybook**: The mini gauge in the Usage card was incorrectly filling to 100% over time. Added `PolarAngleAxis` with `domain={[0, 100]}` to properly constrain the value range, ensuring the gauge accurately reflects the actual usage percentage.
+
+- Updated dependencies [dafb0af]
+  - @usefy/use-memory-monitor@0.0.34
+  - @usefy/use-click-any-where@0.0.34
+  - @usefy/use-copy-to-clipboard@0.0.34
+  - @usefy/use-counter@0.0.34
+  - @usefy/use-debounce@0.0.34
+  - @usefy/use-debounce-callback@0.0.34
+  - @usefy/use-event-listener@0.0.34
+  - @usefy/use-geolocation@0.0.34
+  - @usefy/use-init@0.0.34
+  - @usefy/use-intersection-observer@0.0.34
+  - @usefy/use-local-storage@0.0.34
+  - @usefy/use-on-click-outside@0.0.34
+  - @usefy/use-session-storage@0.0.34
+  - @usefy/use-signal@0.0.34
+  - @usefy/use-throttle@0.0.34
+  - @usefy/use-throttle-callback@0.0.34
+  - @usefy/use-timer@0.0.34
+  - @usefy/use-toggle@0.0.34
+  - @usefy/use-unmount@0.0.34
+
 ## 0.0.33
 
 ### Patch Changes

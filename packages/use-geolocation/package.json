@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-geolocation",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "description": "A React hook for accessing geolocation with real-time tracking and distance calculation",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
