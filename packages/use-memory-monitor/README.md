@@ -21,6 +21,7 @@
   <a href="https://github.com/mirunamu00/usefy/blob/master/LICENSE">
     <img src="https://img.shields.io/npm/l/@usefy/use-memory-monitor.svg?style=flat-square&color=007acc" alt="license" />
   </a>
+  <img src="https://img.shields.io/badge/coverage-90%25-brightgreen?style=flat-square" alt="coverage" />
 </p>
 
 <p align="center">
@@ -578,16 +579,11 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-📊 **175 tests passed** covering:
-- Memory monitoring functionality
-- Leak detection algorithms
-- Snapshot management
-- Browser support detection
-- Circular buffer operations
-- Formatting utilities
-- SSR compatibility
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-memory-monitor/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
+
+**225 tests passed** covering:
 
 - **Initialization & Lifecycle**: Mount, unmount, start/stop behavior
 - **Memory Tracking**: Polling, history, trend analysis
@@ -596,6 +592,8 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 - **Snapshots**: Create, compare, clear operations
 - **Browser Detection**: API availability, fallback strategies
 - **Edge Cases**: SSR, unsupported browsers, invalid inputs
+- **Store Management**: State updates, subscribers, batch operations
+- **Memory APIs**: Performance.memory, DOM nodes, event listeners
 
 ---
 

@@ -127,6 +127,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-geolocation" target="_blank" rel="noopener noreferrer">@usefy/use-geolocation</a>                     | Device geolocation with real-time tracking and distance | <a href="https://www.npmjs.com/package/@usefy/use-geolocation" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-geolocation.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![90%](https://img.shields.io/badge/coverage-90%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-intersection-observer" target="_blank" rel="noopener noreferrer">@usefy/use-intersection-observer</a> | Element visibility detection with Intersection Observer | <a href="https://www.npmjs.com/package/@usefy/use-intersection-observer" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-intersection-observer.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer">@usefy/use-signal</a>                                   | Event-driven communication between components           | <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-signal.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-memory-monitor" target="_blank" rel="noopener noreferrer">@usefy/use-memory-monitor</a>                   | Real-time browser memory monitoring with leak detection | <a href="https://www.npmjs.com/package/@usefy/use-memory-monitor" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-memory-monitor.svg?style=flat-square&color=007acc" alt="npm version" /></a>                   | ![90%](https://img.shields.io/badge/coverage-90%25-brightgreen?style=flat-square)   |
 
 ---
 
@@ -748,9 +749,10 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 | use-copy-to-clipboard     | 87.87%     | 79.16%   | 85.71%    | 87.87% |
 | use-unmount               | 100%       | 100%     | 100%      | 100%   |
 | use-timer                 | 83.8%      | 72.63%   | 93.93%    | 84.13% |
-| use-geolocation           | 90%        | 85%      | 95%       | 90%    |
+| use-geolocation           | 93.89%     | 93.47%   | 100%      | 93.75% |
 | use-intersection-observer | 94%        | 85%      | 95%       | 93.93% |
 | use-signal                | 98.61%     | 90.9%    | 96.42%    | 98.59% |
+| use-memory-monitor        | 89.05%     | 71.64%   | 87.87%    | 92.27% |
 
 ---
 
