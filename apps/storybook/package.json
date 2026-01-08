@@ -28,7 +28,8 @@
     "@usefy/use-throttle-callback": "workspace:*",
     "@usefy/use-timer": "workspace:*",
     "@usefy/use-toggle": "workspace:*",
-    "@usefy/use-unmount": "workspace:*"
+    "@usefy/use-unmount": "workspace:*",
+    "@usefy/use-memory-monitor": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

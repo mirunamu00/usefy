@@ -127,3 +127,29 @@ export {
   type IntersectionEntry,
   type OnChangeCallback,
 } from "@usefy/use-intersection-observer";
+
+// useMemoryMonitor
+export {
+  useMemoryMonitor,
+  formatBytes,
+  detectSupport,
+  CircularBuffer,
+  linearRegression,
+  calculateTrend,
+  analyzeLeakProbability,
+  type UseMemoryMonitorOptions,
+  type UseMemoryMonitorReturn,
+  type MemoryInfo,
+  type MemorySnapshot,
+  type SnapshotDiff,
+  type LeakAnalysis,
+  type UnsupportedInfo,
+  type SupportLevel,
+  type AvailableMetric,
+  type Severity,
+  type Trend,
+  type FallbackStrategy,
+  type LeakSensitivity,
+  type FormattedMemory,
+  type BrowserSupport,
+} from "@usefy/use-memory-monitor";
