@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-toggle",
-  "version": "0.0.32",
+  "version": "0.0.33",
   "description": "A React hook for boolean state management",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

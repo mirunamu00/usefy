@@ -1,5 +1,31 @@
 # @usefy/usefy
 
+## 0.0.33
+
+### Patch Changes
+
+- 950197f: update README.md
+- Updated dependencies [950197f]
+  - @usefy/use-memory-monitor@0.0.33
+  - @usefy/use-click-any-where@0.0.33
+  - @usefy/use-copy-to-clipboard@0.0.33
+  - @usefy/use-counter@0.0.33
+  - @usefy/use-debounce@0.0.33
+  - @usefy/use-debounce-callback@0.0.33
+  - @usefy/use-event-listener@0.0.33
+  - @usefy/use-geolocation@0.0.33
+  - @usefy/use-init@0.0.33
+  - @usefy/use-intersection-observer@0.0.33
+  - @usefy/use-local-storage@0.0.33
+  - @usefy/use-on-click-outside@0.0.33
+  - @usefy/use-session-storage@0.0.33
+  - @usefy/use-signal@0.0.33
+  - @usefy/use-throttle@0.0.33
+  - @usefy/use-throttle-callback@0.0.33
+  - @usefy/use-timer@0.0.33
+  - @usefy/use-toggle@0.0.33
+  - @usefy/use-unmount@0.0.33
+
 ## 0.0.32
 
 ### Patch Changes
