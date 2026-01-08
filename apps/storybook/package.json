@@ -21,6 +21,7 @@
     "@usefy/use-init": "workspace:*",
     "@usefy/use-intersection-observer": "workspace:*",
     "@usefy/use-local-storage": "workspace:*",
+    "@usefy/use-memory-monitor": "workspace:*",
     "@usefy/use-on-click-outside": "workspace:*",
     "@usefy/use-session-storage": "workspace:*",
     "@usefy/use-signal": "workspace:*",
@@ -29,7 +30,7 @@
     "@usefy/use-timer": "workspace:*",
     "@usefy/use-toggle": "workspace:*",
     "@usefy/use-unmount": "workspace:*",
-    "@usefy/use-memory-monitor": "workspace:*"
+    "recharts": "^3.6.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",

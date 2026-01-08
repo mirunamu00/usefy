@@ -428,10 +428,24 @@ export function useMemoryMonitor(
   const requestGC = useCallback(() => {
     if (isServer()) return;
 
-    // Try to trigger GC through memory pressure
-    // This is a hint only and may not work in all browsers
+    // Try to call gc() if available (Chrome with --expose-gc flag, or Node.js)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (typeof (globalThis as any).gc === "function") {
+      try {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (globalThis as any).gc();
+        if (devMode && logToConsole) {
+          console.log("[useMemoryMonitor] GC triggered successfully");
+        }
+        return;
+      } catch {
+        // gc() exists but failed, continue to fallback
+      }
+    }
+
+    // Fallback: memory pressure hint (not guaranteed to work)
+    // This creates temporary memory pressure that may encourage GC
     try {
-      // Create and immediately release large array to suggest GC
       const pressure = new Array(1000000).fill(0);
       pressure.length = 0;
     } catch {
@@ -439,7 +453,7 @@ export function useMemoryMonitor(
     }
 
     if (devMode && logToConsole) {
-      console.log("[useMemoryMonitor] GC hint requested");
+      console.log("[useMemoryMonitor] GC hint requested (gc() not available)");
     }
   }, [devMode, logToConsole]);
 

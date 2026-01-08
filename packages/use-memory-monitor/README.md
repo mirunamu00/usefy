@@ -229,6 +229,7 @@ A hook that monitors browser memory usage in real-time with leak detection and t
 | `clearSnapshots`       | `() => void`                         | Clear all snapshots                          |
 | `getAllSnapshots`      | `() => MemorySnapshot[]`             | Get all snapshots                            |
 | `clearHistory`         | `() => void`                         | Clear history buffer                         |
+| `requestGC`            | `() => void`                         | Request garbage collection (hint only)       |
 | `getLeakAnalysis`      | `() => LeakAnalysis \| null`         | Get current leak analysis                    |
 | `getBrowserSupport`    | `() => BrowserSupport`               | Get browser support information              |
 | `getUnsupportedInfo`   | `() => UnsupportedInfo`              | Get info about why monitoring is unsupported |
@@ -522,6 +523,45 @@ function SupportDetection() {
     </div>
   );
 }
+```
+
+### Garbage Collection Request
+
+The `requestGC` function provides a way to request garbage collection. Note that this is a **hint only** and is not guaranteed to trigger GC in all environments.
+
+```tsx
+import { useMemoryMonitor } from "@usefy/use-memory-monitor";
+
+function GCExample() {
+  const { requestGC, formatted } = useMemoryMonitor({
+    devMode: true,
+    logToConsole: true, // Enable logging to see GC status
+  });
+
+  return (
+    <div>
+      <p>Heap Used: {formatted.heapUsed}</p>
+      <button onClick={requestGC}>Request GC</button>
+    </div>
+  );
+}
+```
+
+**How it works:**
+- If `globalThis.gc()` is available (Chrome with `--expose-gc` flag or Node.js with `--expose-gc`), it will directly trigger garbage collection
+- Otherwise, it creates temporary memory pressure as a hint to the JS engine
+- With `devMode` and `logToConsole` enabled, you'll see console logs indicating whether GC was triggered or just hinted
+
+**To enable direct GC in Chrome:**
+```bash
+# Windows
+chrome.exe --js-flags="--expose-gc"
+
+# macOS
+/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --js-flags="--expose-gc"
+
+# Linux
+google-chrome --js-flags="--expose-gc"
 ```
 
 ---

@@ -1,8 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 import { within, userEvent, expect, waitFor } from "@storybook/test";
 import { storyTheme } from "../styles/storyTheme";
+import {
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  BarChart,
+  Bar,
+  Legend,
+  RadialBarChart,
+  RadialBar,
+  PolarAngleAxis,
+} from "recharts";
 
 /**
  * Demo component for basic useMemoryMonitor usage
@@ -820,5 +838,682 @@ function ManualMonitor() {
     await waitFor(() => {
       expect(canvas.getByTestId("stop-button")).toBeInTheDocument();
     });
+  },
+};
+
+// Chart color constants
+const CHART_COLORS = {
+  primary: "#6366f1", // indigo-500
+  secondary: "#a855f7", // purple-500
+  success: "#22c55e", // green-500
+  warning: "#f59e0b", // amber-500
+  danger: "#ef4444", // red-500
+  gray: "#9ca3af", // gray-400
+  lightGray: "#e5e7eb", // gray-200
+};
+
+const SEVERITY_COLORS = {
+  normal: CHART_COLORS.success,
+  warning: CHART_COLORS.warning,
+  critical: CHART_COLORS.danger,
+};
+
+const PIE_COLORS = [CHART_COLORS.primary, CHART_COLORS.secondary, CHART_COLORS.lightGray];
+
+/**
+ * Comprehensive Overview Dashboard with all metrics visualized
+ */
+function OverviewDashboard() {
+  const {
+    memory,
+    heapUsed,
+    heapTotal,
+    heapLimit,
+    usagePercentage,
+    domNodes,
+    eventListeners,
+    isSupported,
+    isMonitoring,
+    isLeakDetected,
+    severity,
+    supportLevel,
+    availableMetrics,
+    history,
+    trend,
+    leakProbability,
+    start,
+    stop,
+    takeSnapshot,
+    clearHistory,
+    requestGC,
+    formatted,
+  } = useMemoryMonitor({
+    interval: 500,
+    autoStart: true,
+    enableHistory: true,
+    historySize: 50,
+    trackDOMNodes: true,
+    trackEventListeners: true,
+    leakDetection: {
+      enabled: true,
+      sensitivity: "medium",
+    },
+  });
+
+  const [showRawData, setShowRawData] = useState(false);
+
+  // Transform history for area chart
+  const chartData = useMemo(() => {
+    return history.map((item, index) => ({
+      index,
+      time: new Date(item.timestamp).toLocaleTimeString("en-US", {
+        hour12: false,
+        minute: "2-digit",
+        second: "2-digit",
+      }),
+      heapUsed: Math.round((item.heapUsed || 0) / 1024 / 1024),
+      heapTotal: Math.round((item.heapTotal || 0) / 1024 / 1024),
+    }));
+  }, [history]);
+
+  // Memory distribution for pie chart
+  const distributionData = useMemo(() => {
+    if (!heapUsed || !heapTotal || !heapLimit) return [];
+    return [
+      { name: "Used", value: heapUsed },
+      { name: "Available", value: heapTotal - heapUsed },
+      { name: "Reserved", value: heapLimit - heapTotal },
+    ];
+  }, [heapUsed, heapTotal, heapLimit]);
+
+  // DOM metrics for bar chart
+  const domMetricsData = useMemo(() => {
+    return [
+      { name: "DOM Nodes", value: domNodes || 0, fill: CHART_COLORS.primary },
+      { name: "Event Listeners", value: eventListeners || 0, fill: CHART_COLORS.secondary },
+    ];
+  }, [domNodes, eventListeners]);
+
+  // Gauge data for radial chart
+  const gaugeData = useMemo(() => {
+    return [
+      {
+        name: "Usage",
+        value: usagePercentage || 0,
+        fill: SEVERITY_COLORS[severity],
+      },
+    ];
+  }, [usagePercentage, severity]);
+
+  const severityColor = SEVERITY_COLORS[severity];
+
+  return (
+    <div className="p-8 max-w-[1400px] mx-auto font-sans bg-slate-50 min-h-screen text-slate-900">
+      {/* Header */}
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-6">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+            Memory Monitor Overview
+          </h1>
+          <p className="text-slate-500 mt-2 text-lg">
+            Real-time browser memory monitoring dashboard
+          </p>
+        </div>
+        <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              isMonitoring
+                ? "bg-green-100 text-green-700"
+                : "bg-gray-100 text-gray-600"
+            }`}
+          >
+            {isMonitoring ? "● Live" : "○ Paused"}
+          </span>
+          <button
+            onClick={isMonitoring ? stop : start}
+            className={`px-4 py-2 rounded-lg font-medium transition-all ${
+              isMonitoring
+                ? "bg-red-500 hover:bg-red-600 text-white"
+                : "bg-indigo-500 hover:bg-indigo-600 text-white"
+            }`}
+            data-testid="overview-toggle"
+          >
+            {isMonitoring ? "Stop" : "Start"}
+          </button>
+          <button
+            onClick={requestGC}
+            className="px-4 py-2 rounded-lg font-medium bg-gray-200 hover:bg-gray-300 text-gray-700 transition-all"
+            title="Request garbage collection hint"
+          >
+            GC
+          </button>
+        </div>
+      </div>
+
+      {/* Support Warning */}
+      {!isSupported && (
+        <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
+          <p className="text-amber-800 font-medium">
+            ⚠️ Limited browser support detected. Support level: {supportLevel}
+          </p>
+          <p className="text-amber-600 text-sm mt-1">
+            Available metrics: {availableMetrics.join(", ") || "None"}
+          </p>
+        </div>
+      )}
+
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {/* Heap Used Card */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+          <div className="flex justify-between items-start mb-2">
+            <p className="text-slate-500 text-sm font-medium">Heap Used</p>
+            <div className="p-2 bg-indigo-50 rounded-lg">
+              <div className="w-4 h-4 bg-indigo-500 rounded-full opacity-20" />
+            </div>
+          </div>
+          <p className="text-3xl font-bold text-slate-800">
+            {formatted.heapUsed}
+          </p>
+          <p className="text-slate-400 text-xs mt-1 font-medium">of {formatted.heapLimit} allocated</p>
+        </div>
+
+        {/* Usage Percentage Card with mini gauge */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+          <p className="text-slate-500 text-sm font-medium mb-2">Usage</p>
+          <div className="flex items-center gap-3">
+            <p className="text-3xl font-bold" style={{ color: severityColor }}>
+              {usagePercentage?.toFixed(1) || "0"}%
+            </p>
+            <div className="w-12 h-12">
+              <ResponsiveContainer width="100%" height="100%">
+                <RadialBarChart
+                  innerRadius="60%"
+                  outerRadius="100%"
+                  data={gaugeData}
+                  startAngle={90}
+                  endAngle={-270}
+                >
+                  <PolarAngleAxis
+                    type="number"
+                    domain={[0, 100]}
+                    angleAxisId={0}
+                    tick={false}
+                  />
+                  <RadialBar
+                    dataKey="value"
+                    cornerRadius={10}
+                    background={{ fill: CHART_COLORS.lightGray }}
+                    angleAxisId={0}
+                  />
+                </RadialBarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+          <p className="text-slate-400 text-xs mt-1 capitalize font-medium">Status: {severity}</p>
+        </div>
+
+        {/* Trend Card */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+          <p className="text-slate-500 text-sm font-medium mb-2">Trend</p>
+          <div className="flex items-center gap-2">
+            <span
+              className={`text-3xl font-bold ${
+                trend === "increasing"
+                  ? "text-red-500"
+                  : trend === "decreasing"
+                  ? "text-green-500"
+                  : "text-gray-400"
+              }`}
+            >
+              {trend === "increasing" ? "↗" : trend === "decreasing" ? "↘" : "→"}
+            </span>
+            <p className="text-lg font-semibold text-slate-700 capitalize">
+              {trend}
+            </p>
+          </div>
+          <p className="text-slate-400 text-xs mt-1 font-medium">
+            Based on {history.length} samples
+          </p>
+        </div>
+
+        {/* Leak Detection Card */}
+        <div
+          className={`rounded-2xl p-5 shadow-sm border hover:shadow-md transition-shadow ${
+            isLeakDetected
+              ? "bg-red-50 border-red-200"
+              : "bg-white border-slate-200"
+          }`}
+        >
+          <p className="text-slate-500 text-sm font-medium mb-2">Leak Detection</p>
+          <div className="flex items-center gap-2">
+            <span className="text-3xl">
+              {isLeakDetected ? "⚠️" : "✅"}
+            </span>
+            <p
+              className={`text-lg font-bold ${
+                isLeakDetected ? "text-red-600" : "text-green-600"
+              }`}
+            >
+              {isLeakDetected ? "Detected" : "None"}
+            </p>
+          </div>
+          <p className="text-slate-400 text-xs mt-1 font-medium">
+            Probability: {leakProbability.toFixed(0)}%
+          </p>
+        </div>
+      </div>
+
+      {/* Main Chart - Memory History */}
+      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-lg font-bold text-slate-800">
+          Memory History (Real-time)
+          </h2>
+          <div className="flex gap-2">
+            <div className="flex items-center gap-1 text-xs text-slate-500">
+              <div className="w-3 h-3 rounded-full bg-indigo-500"></div> Used
+            </div>
+            <div className="flex items-center gap-1 text-xs text-slate-500">
+              <div className="w-3 h-3 rounded-full bg-purple-400 opacity-40"></div> Total
+            </div>
+          </div>
+        </div>
+        <div className="h-[300px]" data-testid="memory-chart">
+          {chartData.length > 0 ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="heapUsedGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={CHART_COLORS.primary} stopOpacity={0.8} />
+                    <stop offset="95%" stopColor={CHART_COLORS.primary} stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="heapTotalGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor={CHART_COLORS.secondary} stopOpacity={0.4} />
+                    <stop offset="95%" stopColor={CHART_COLORS.secondary} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis
+                  dataKey="time"
+                  tick={{ fontSize: 11, fill: "#9ca3af" }}
+                  tickLine={false}
+                  axisLine={{ stroke: "#e5e7eb" }}
+                />
+                <YAxis
+                  tick={{ fontSize: 11, fill: "#9ca3af" }}
+                  tickLine={false}
+                  axisLine={{ stroke: "#e5e7eb" }}
+                  tickFormatter={(value) => `${value} MB`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "white",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "8px",
+                    boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+                  }}
+                  formatter={(value) => [`${value} MB`]}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="heapTotal"
+                  stroke={CHART_COLORS.secondary}
+                  fillOpacity={1}
+                  fill="url(#heapTotalGradient)"
+                  name="Heap Total"
+                />
+                <Area
+                  type="monotone"
+                  dataKey="heapUsed"
+                  stroke={CHART_COLORS.primary}
+                  fillOpacity={1}
+                  fill="url(#heapUsedGradient)"
+                  name="Heap Used"
+                />
+                <Legend />
+              </AreaChart>
+            </ResponsiveContainer>
+          ) : (
+            <div className="h-full flex items-center justify-center text-gray-400">
+              Collecting data...
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Secondary Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Memory Breakdown - Shows both metrics meaningfully */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
+          <h2 className="text-lg font-bold text-slate-800 mb-6">
+            Memory Breakdown
+          </h2>
+          <div className="flex flex-col gap-8" data-testid="distribution-chart">
+            {/* Heap Utilization (heapUsed / heapTotal) - usually higher percentage */}
+            <div>
+              <div className="flex justify-between items-baseline mb-2">
+                <span className="text-sm font-medium text-slate-600">Heap Utilization</span>
+                <span className="text-xl font-bold text-indigo-600">
+                  {heapUsed && heapTotal ? ((heapUsed / heapTotal) * 100).toFixed(1) : "0"}%
+                </span>
+              </div>
+              <div className="relative h-4 bg-slate-100 rounded-full overflow-hidden">
+                <div
+                  className="absolute top-0 left-0 h-full rounded-full transition-all duration-500 bg-gradient-to-r from-indigo-400 to-indigo-600"
+                  style={{
+                    width: `${heapUsed && heapTotal ? Math.max((heapUsed / heapTotal) * 100, 2) : 0}%`,
+                  }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
+                <span>{formatted.heapUsed} used</span>
+                <span>{formatted.heapTotal} allocated</span>
+              </div>
+            </div>
+
+            {/* Limit Usage (heapUsed / heapLimit) - your 2% case */}
+            <div>
+              <div className="flex justify-between items-baseline mb-2">
+                <span className="text-sm font-medium text-slate-600">Limit Usage</span>
+                <span className="text-xl font-bold" style={{ color: severityColor }}>
+                  {usagePercentage?.toFixed(1) || "0"}%
+                </span>
+              </div>
+              <div className="relative h-4 bg-slate-100 rounded-full overflow-hidden">
+                {/* Threshold markers */}
+                <div className="absolute top-0 bottom-0 w-0.5 bg-amber-400 z-10" style={{ left: "70%" }} />
+                <div className="absolute top-0 bottom-0 w-0.5 bg-red-400 z-10" style={{ left: "90%" }} />
+                {/* Progress fill - minimum width for visibility */}
+                <div
+                  className="absolute top-0 left-0 h-full rounded-full transition-all duration-500"
+                  style={{
+                    width: `${Math.max(usagePercentage || 0, 1)}%`,
+                    minWidth: "12px",
+                    backgroundColor: severityColor,
+                  }}
+                />
+              </div>
+              <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
+                <span>{formatted.heapUsed} used</span>
+                <span>{formatted.heapLimit} limit</span>
+              </div>
+            </div>
+
+            {/* Memory values grid */}
+            <div className="grid grid-cols-3 gap-3 mt-auto">
+              <div className="text-center p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                <div className="text-xs text-indigo-600/70 mb-1 font-medium uppercase tracking-wider">Used</div>
+                <div className="font-bold text-indigo-600">{formatted.heapUsed}</div>
+              </div>
+              <div className="text-center p-4 bg-purple-50 rounded-xl border border-purple-100">
+                <div className="text-xs text-purple-600/70 mb-1 font-medium uppercase tracking-wider">Allocated</div>
+                <div className="font-bold text-purple-600">{formatted.heapTotal}</div>
+              </div>
+              <div className="text-center p-4 bg-slate-100 rounded-xl border border-slate-200">
+                <div className="text-xs text-slate-500 mb-1 font-medium uppercase tracking-wider">Limit</div>
+                <div className="font-bold text-slate-600">{formatted.heapLimit}</div>
+              </div>
+            </div>
+
+            {/* Severity badge */}
+            <div className="flex justify-center">
+              <span
+                className={`px-3 py-1 rounded-full text-sm font-medium ${
+                  severity === "critical"
+                    ? "bg-red-100 text-red-700"
+                    : severity === "warning"
+                    ? "bg-amber-100 text-amber-700"
+                    : "bg-green-100 text-green-700"
+                }`}
+              >
+                Status: {severity === "critical" ? "Critical" : severity === "warning" ? "Warning" : "Normal"}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* DOM & Event Listeners Bar Chart */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
+          <h2 className="text-lg font-bold text-slate-800 mb-6">
+            DOM & Event Metrics
+          </h2>
+          <div className="h-[300px]" data-testid="dom-chart">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={domMetricsData} layout="vertical">
+                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <XAxis type="number" tick={{ fontSize: 11, fill: "#9ca3af" }} />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  tick={{ fontSize: 12, fill: "#6b7280" }}
+                  width={120}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "white",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Bar dataKey="value" radius={[0, 4, 4, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Status & Info Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        {/* Support Info */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+          <h3 className="font-bold text-slate-800 mb-3">Browser Support</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-500">Support Level</span>
+              <span
+                className={`font-medium ${
+                  supportLevel === "full"
+                    ? "text-green-600"
+                    : supportLevel === "partial"
+                    ? "text-amber-600"
+                    : "text-red-600"
+                }`}
+              >
+                {supportLevel}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Available Metrics</span>
+              <span className="font-medium text-gray-700">
+                {availableMetrics.length}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Heap Details */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+          <h3 className="font-bold text-slate-800 mb-3">Heap Details</h3>
+          <div className="space-y-2 text-sm">
+            <div className="flex justify-between">
+              <span className="text-gray-500">Total</span>
+              <span className="font-medium text-gray-700">
+                {formatted.heapTotal}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-500">Limit</span>
+              <span className="font-medium text-gray-700">
+                {formatted.heapLimit}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+          <h3 className="font-bold text-slate-800 mb-3">Actions</h3>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => takeSnapshot(`snap-${Date.now()}`)}
+              className="px-3 py-1.5 text-sm bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
+            >
+              📷 Snapshot
+            </button>
+            <button
+              onClick={clearHistory}
+              className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              🗑️ Clear
+            </button>
+            <button
+              onClick={() => setShowRawData(!showRawData)}
+              className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              {showRawData ? "Hide" : "Show"} Raw
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Raw Data Section */}
+      {showRawData && memory && (
+        <div className="bg-slate-800 rounded-xl p-6 shadow-sm">
+          <h3 className="font-semibold text-slate-200 mb-3">Raw Memory Data</h3>
+          <pre className="text-sm text-slate-300 overflow-x-auto">
+            {JSON.stringify(
+              {
+                memory,
+                usagePercentage,
+                domNodes,
+                eventListeners,
+                severity,
+                trend,
+                leakProbability,
+                supportLevel,
+                availableMetrics,
+              },
+              null,
+              2
+            )}
+          </pre>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Comprehensive overview dashboard with all metrics visualized using charts
+ */
+export const Overview: Story = {
+  render: () => <OverviewDashboard />,
+  parameters: {
+    layout: "fullscreen",
+    docs: {
+      description: {
+        story:
+          "A comprehensive dashboard showing all available memory metrics using interactive charts. " +
+          "Features real-time memory history (Area Chart), memory distribution (Pie Chart), " +
+          "DOM/Event metrics (Bar Chart), and status indicators.",
+      },
+      source: {
+        code: `import { useMemoryMonitor } from "@usefy/use-memory-monitor";
+import { AreaChart, PieChart, BarChart } from "recharts";
+
+function MemoryDashboard() {
+  const {
+    memory,
+    heapUsed,
+    heapTotal,
+    heapLimit,
+    usagePercentage,
+    domNodes,
+    eventListeners,
+    isSupported,
+    isMonitoring,
+    isLeakDetected,
+    severity,
+    supportLevel,
+    availableMetrics,
+    history,
+    trend,
+    leakProbability,
+    start,
+    stop,
+    formatted,
+  } = useMemoryMonitor({
+    interval: 500,
+    autoStart: true,
+    enableHistory: true,
+    historySize: 50,
+    trackDOMNodes: true,
+    trackEventListeners: true,
+    leakDetection: { enabled: true, sensitivity: "medium" },
+  });
+
+  // Transform history for charts
+  const chartData = history.map((item) => ({
+    time: new Date(item.timestamp).toLocaleTimeString(),
+    heapUsed: item.heapUsed / 1024 / 1024,
+    heapTotal: item.heapTotal / 1024 / 1024,
+  }));
+
+  return (
+    <div>
+      {/* Summary Cards */}
+      <div className="grid grid-cols-4 gap-4">
+        <Card title="Heap Used" value={formatted.heapUsed} />
+        <Card title="Usage" value={\`\${usagePercentage?.toFixed(1)}%\`} />
+        <Card title="Trend" value={trend} />
+        <Card title="Leak" value={isLeakDetected ? "Detected" : "None"} />
+      </div>
+
+      {/* Memory History Chart */}
+      <AreaChart data={chartData}>
+        <Area dataKey="heapUsed" fill="indigo" />
+        <Area dataKey="heapTotal" fill="purple" opacity={0.3} />
+      </AreaChart>
+
+      {/* Memory Distribution */}
+      <PieChart>
+        <Pie data={[
+          { name: "Used", value: heapUsed },
+          { name: "Free", value: heapTotal - heapUsed },
+        ]} />
+      </PieChart>
+
+      {/* DOM Metrics */}
+      <BarChart data={[
+        { name: "DOM Nodes", value: domNodes },
+        { name: "Listeners", value: eventListeners },
+      ]}>
+        <Bar dataKey="value" />
+      </BarChart>
+    </div>
+  );
+}`,
+        language: "tsx",
+        type: "code",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Wait for charts to render
+    await waitFor(
+      () => {
+        expect(canvas.getByTestId("memory-chart")).toBeInTheDocument();
+        expect(canvas.getByTestId("distribution-chart")).toBeInTheDocument();
+        expect(canvas.getByTestId("dom-chart")).toBeInTheDocument();
+      },
+      { timeout: 5000 }
+    );
+
+    // Toggle monitoring
+    const toggleButton = canvas.getByTestId("overview-toggle");
+    expect(toggleButton).toBeInTheDocument();
   },
 };
