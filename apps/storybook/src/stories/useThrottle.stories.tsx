@@ -16,13 +16,13 @@ function ScrollPositionDemo() {
   };
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Scroll Position Throttling</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-2xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Scroll Throttling</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Scroll to see throttling in action. Updates at most once per 100ms.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 grid grid-cols-2 gap-4"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw scroll position:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{scrollY}px</span>
@@ -35,7 +35,7 @@ function ScrollPositionDemo() {
 
       <div
         onScroll={handleScroll}
-        className="h-[300px] overflow-y-scroll border-2 border-gray-200 rounded-xl p-5 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
+        className="h-[300px] overflow-y-scroll border border-slate-200 rounded-2xl p-6 bg-slate-50 shadow-inner"
       >
         <div className="h-[2000px]">
           <h3 className="mt-0 text-xl font-semibold text-gray-700">
@@ -76,9 +76,9 @@ function SearchInputDemo() {
   }, [throttledQuery]);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Search Input Throttling</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Search Throttling</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Type to search. API calls are throttled by 300ms.
       </p>
 
@@ -86,11 +86,11 @@ function SearchInputDemo() {
         type="text"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="Type to search..."
-        className={storyTheme.input + " mb-5"}
+        placeholder="Type rapidly..."
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
       />
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current Input:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>
@@ -109,7 +109,7 @@ function SearchInputDemo() {
         </div>
       </div>
 
-      <p className="text-gray-500 text-sm m-0">
+      <p className="text-slate-500 text-sm m-0 bg-slate-50 p-4 rounded-xl border border-slate-100">
         💡 Try typing quickly. The throttled query (simulating API calls) only
         updates according to the interval setting, saving unnecessary network
         requests.
@@ -126,13 +126,13 @@ function WindowResizeDemo() {
   const throttledWidth = useThrottle(width, 200);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Window Resize Throttling</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Resize Throttling</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Drag the slider to simulate window resize. Throttled by 200ms.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Width:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{width}px</span>
@@ -154,18 +154,18 @@ function WindowResizeDemo() {
           max="600"
           value={width}
           onChange={(e) => setWidth(Number(e.target.value))}
-          className="w-full h-10"
+          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
         />
       </div>
 
       <div
         style={{ width: `${throttledWidth}px` }}
-        className="h-[200px] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl flex items-center justify-center text-white text-3xl font-bold transition-all duration-100 ease-out shadow-[0_4px_16px_rgba(99,102,241,0.3)]"
+        className="h-[200px] bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold transition-all duration-100 ease-out shadow-xl"
       >
         {throttledWidth}px
       </div>
 
-      <p className="mt-5 text-gray-500 text-sm">
+      <p className="mt-6 text-slate-500 text-sm text-center">
         💡 The throttled width only updates according to the interval,
         preventing expensive layout recalculations.
       </p>
@@ -206,16 +206,16 @@ function MouseMovementDemo() {
       : 0;
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>
+    <div className={storyTheme.container + " max-w-2xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>
         Mouse Movement - Default (Both Edges)
       </h2>
-      <p className={storyTheme.subtitle}>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Move your mouse in the area below. Throttled by 300ms with default
         settings (leading + trailing).
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 grid grid-cols-3 gap-4"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
@@ -232,7 +232,7 @@ function MouseMovementDemo() {
 
       <div
         onMouseMove={handleMouseMove}
-        className="h-[300px] border-2 border-gray-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(0,0,0,0.05)]"
+        className="h-[300px] border border-slate-200 rounded-2xl bg-slate-50 relative cursor-crosshair overflow-hidden shadow-inner"
       >
         <div
           style={{
@@ -262,7 +262,7 @@ function MouseMovementDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-5"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-indigo-50 border border-indigo-100 rounded-2xl p-5"}>
         <p className={storyTheme.infoText}>
           💡 <strong>Default behavior (both edges):</strong> Updates{" "}
           <strong>immediately</strong> when you start moving (leading edge),
@@ -310,14 +310,14 @@ function MouseMovementLeadingOnlyDemo() {
       : 0;
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Mouse Movement - Leading Only</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-2xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Mouse Movement - Leading Only</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Move your mouse. Only <strong>leading edge</strong> enabled (trailing:
         false).
       </p>
 
-      <div className="p-5 bg-gradient-to-br from-green-50 to-green-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="p-6 bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-2xl mb-6 shadow-sm border border-emerald-100 grid grid-cols-3 gap-4">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
@@ -336,7 +336,7 @@ function MouseMovementLeadingOnlyDemo() {
 
       <div
         onMouseMove={handleMouseMove}
-        className="h-[300px] border-2 border-green-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(16,185,129,0.1)]"
+        className="h-[300px] border border-emerald-200 rounded-2xl bg-white relative cursor-crosshair overflow-hidden shadow-inner"
       >
         <div
           style={{
@@ -367,7 +367,7 @@ function MouseMovementLeadingOnlyDemo() {
       </div>
 
       <div
-        className={storyTheme.infoBox + " mt-5 bg-green-50 border-green-200"}
+        className={storyTheme.infoBox + " mt-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-5"}
       >
         <p className={storyTheme.infoText + " text-green-900"}>
           💡 <strong>Leading edge only:</strong> Updates{" "}
@@ -420,14 +420,14 @@ function MouseMovementTrailingOnlyDemo() {
       : 0;
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Mouse Movement - Trailing Only</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-2xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Mouse Movement - Trailing Only</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Move your mouse. Only <strong>trailing edge</strong> enabled (leading:
         false).
       </p>
 
-      <div className="p-5 bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="p-6 bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl mb-6 shadow-sm border border-amber-100 grid grid-cols-3 gap-4">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
@@ -446,7 +446,7 @@ function MouseMovementTrailingOnlyDemo() {
 
       <div
         onMouseMove={handleMouseMove}
-        className="h-[300px] border-2 border-yellow-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(245,158,11,0.1)]"
+        className="h-[300px] border border-amber-200 rounded-2xl bg-white relative cursor-crosshair overflow-hidden shadow-inner"
       >
         <div
           style={{
@@ -476,7 +476,7 @@ function MouseMovementTrailingOnlyDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-5"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-amber-50 border border-amber-200 rounded-2xl p-5"}>
         <p className={storyTheme.infoText}>
           💡 <strong>Trailing edge only:</strong> No immediate update when you
           start moving. Updates occur during throttle intervals and{" "}
@@ -517,14 +517,14 @@ function MouseMovementNoThrottleDemo() {
   };
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Mouse Movement - Both Disabled</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-2xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Mouse Movement - Disabled</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Move your mouse. Both edges <strong>disabled</strong> (leading: false,
         trailing: false).
       </p>
 
-      <div className="p-5 bg-gradient-to-br from-red-50 to-red-100 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="p-6 bg-gradient-to-br from-rose-50 to-rose-100 rounded-2xl mb-6 shadow-sm border border-rose-100 grid grid-cols-3 gap-4">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Raw Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{rawUpdateCount}</span>
@@ -545,7 +545,7 @@ function MouseMovementNoThrottleDemo() {
 
       <div
         onMouseMove={handleMouseMove}
-        className="h-[300px] border-2 border-red-200 rounded-xl bg-white relative cursor-crosshair overflow-hidden shadow-[0_2px_8px_rgba(239,68,68,0.1)]"
+        className="h-[300px] border border-rose-200 rounded-2xl bg-white relative cursor-crosshair overflow-hidden shadow-inner"
       >
         <div
           style={{
@@ -587,7 +587,7 @@ function MouseMovementNoThrottleDemo() {
         )}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-5 bg-red-50 border-red-200"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-rose-50 border border-rose-200 rounded-2xl p-5"}>
         <p className={storyTheme.infoText + " text-red-900"}>
           ⚠️ <strong>Both edges disabled:</strong> The throttle value{" "}
           <strong>stays at initial value</strong> and never updates! This
@@ -664,9 +664,9 @@ function ClickEventThrottleDemo() {
   const cooldownPercent = (cooldownRemaining / THROTTLE_INTERVAL) * 100;
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Click Event Throttling</h2>
-      <p className={storyTheme.subtitle + " leading-relaxed"}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Click Throttling</h2>
+      <p className={storyTheme.subtitle + " leading-relaxed text-slate-500 mb-8"}>
         Simulates a <strong>token renewal</strong> scenario. Click the button to
         renew the token, but it can only be renewed once every{" "}
         <strong>5 seconds</strong>. Using <code>trailing: false</code> ensures
@@ -675,7 +675,7 @@ function ClickEventThrottleDemo() {
 
       {/* Token Status Card */}
       <div
-        className={`p-5 rounded-xl mb-5 shadow-[0_2px_8px_rgba(0,0,0,0.05)] transition-all duration-300 ${
+        className={`p-6 rounded-2xl mb-6 shadow-sm border transition-all duration-300 ${
           tokenExpiry
             ? "bg-gradient-to-br from-green-50 to-green-100"
             : "bg-gradient-to-br from-red-50 to-red-100"
@@ -709,12 +709,12 @@ function ClickEventThrottleDemo() {
       </div>
 
       {/* Click Button */}
-      <div className="mb-5">
+      <div className="mb-6">
         <button
           onClick={handleClick}
-          className={`w-full py-4 px-8 text-lg font-semibold text-white border-none rounded-xl transition-all duration-200 relative overflow-hidden ${
+          className={`w-full py-4 px-8 text-lg font-bold text-white border-none rounded-2xl transition-all duration-200 relative overflow-hidden active:scale-[0.98] ${
             isOnCooldown
-              ? "bg-gradient-to-br from-gray-400 to-gray-500 cursor-not-allowed shadow-[0_2px_8px_rgba(0,0,0,0.1)]"
+              ? "bg-slate-400 cursor-not-allowed shadow-none"
               : "bg-gradient-to-br from-purple-500 to-purple-700 cursor-pointer shadow-[0_4px_16px_rgba(139,92,246,0.4)] hover:shadow-[0_6px_20px_rgba(139,92,246,0.5)]"
           }`}
         >
@@ -735,7 +735,7 @@ function ClickEventThrottleDemo() {
       </div>
 
       {/* Stats */}
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel + " mb-3"}>
           <strong className={storyTheme.statText}>Total Clicks:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{clickCount}</span>
@@ -763,7 +763,7 @@ function ClickEventThrottleDemo() {
       </div>
 
       {/* Click History Visualization */}
-      <div className="p-4 bg-white border-2 border-gray-200 rounded-xl mb-5">
+      <div className="p-5 bg-white border border-slate-200 rounded-2xl mb-6 shadow-sm">
         <div className="text-sm font-semibold text-gray-700 mb-3">
           Click Timeline (recent 10):
         </div>
@@ -807,7 +807,7 @@ function ClickEventThrottleDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.cardInfo}>
+      <div className={storyTheme.cardInfo + " bg-indigo-50 border border-indigo-100 rounded-2xl p-5"}>
         <p className={storyTheme.infoText + " text-indigo-900 leading-relaxed"}>
           💡 <strong>Real-world use case:</strong> Token renewal on user action.
           Even if the user clicks rapidly, the token is renewed at most once
@@ -981,7 +981,7 @@ function SearchInputExample() {
     const canvas = within(canvasElement);
 
     // Find the search input
-    const searchInput = canvas.getByPlaceholderText("Type to search...");
+    const searchInput = canvas.getByPlaceholderText("Type rapidly...");
 
     // Initially, API calls should be 0
     await expect(

@@ -28,11 +28,11 @@ function LocalStorageDemo({
       </p>
 
       {/* Current Value Display */}
-      <div className={storyTheme.card + " mb-6"}>
-        <label className={storyTheme.label}>Stored Value:</label>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <label className={storyTheme.statLabel + " mb-2"}>Stored Value:</label>
         <div
           data-testid="stored-value"
-          className="text-lg font-mono bg-white p-3 rounded-lg border border-gray-200"
+          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-800"
         >
           {value}
         </div>
@@ -46,7 +46,7 @@ function LocalStorageDemo({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter new value..."
-          className={storyTheme.input}
+          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
           data-testid="value-input"
         />
       </div>
@@ -73,8 +73,8 @@ function LocalStorageDemo({
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Storage Key: <code className="font-mono">{storageKey}</code>
         </p>
       </div>
@@ -109,10 +109,10 @@ function ObjectStorageDemo() {
       </p>
 
       {/* Settings Display */}
-      <div className={storyTheme.cardInfo + " mb-6"}>
-        <h3 className="font-semibold text-gray-800 mb-4">Current Settings:</h3>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <h3 className="font-semibold text-slate-800 mb-4">Current Settings:</h3>
         <pre
-          className="font-mono text-sm bg-white/50 p-4 rounded-lg overflow-auto"
+          className="font-mono text-sm bg-slate-50 p-4 rounded-xl border border-slate-200 overflow-auto text-slate-700"
           data-testid="settings-display"
         >
           {JSON.stringify(settings, null, 2)}
@@ -210,9 +210,9 @@ function CounterDemo() {
       </p>
 
       {/* Counter Display */}
-      <div className={storyTheme.gradientBox + " mb-8"}>
+      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-3xl shadow-2xl text-center"}>
         <div
-          className="text-6xl font-bold text-white text-center"
+          className="text-8xl font-black text-white m-0 drop-shadow-sm"
           data-testid="counter-value"
         >
           {count}
@@ -223,21 +223,21 @@ function CounterDemo() {
       <div className="flex gap-3 justify-center flex-wrap">
         <button
           onClick={() => setCount((c) => c - 1)}
-          className={storyTheme.buttonSecondary}
+          className={storyTheme.buttonSecondary + " flex-1 py-3 rounded-xl font-bold"}
           data-testid="decrement"
         >
           - Decrement
         </button>
         <button
           onClick={() => setCount((c) => c + 1)}
-          className={storyTheme.buttonPrimary}
+          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-xl font-bold shadow-lg"}
           data-testid="increment"
         >
           + Increment
         </button>
         <button
           onClick={resetCount}
-          className={storyTheme.buttonNeutral}
+          className={storyTheme.buttonNeutral + " px-6 py-3 rounded-xl font-bold"}
           data-testid="reset-counter"
         >
           Reset
@@ -274,7 +274,7 @@ function MultipleKeysDemo() {
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="John"
-            className={storyTheme.input}
+            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
             data-testid="first-name-input"
           />
         </div>
@@ -285,7 +285,7 @@ function MultipleKeysDemo() {
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Doe"
-            className={storyTheme.input}
+            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
             data-testid="last-name-input"
           />
         </div>
@@ -296,15 +296,15 @@ function MultipleKeysDemo() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="john@example.com"
-            className={storyTheme.input}
+            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
             data-testid="email-input"
           />
         </div>
       </div>
 
       {/* Summary Card */}
-      <div className={storyTheme.cardInfo}>
-        <h3 className="font-semibold text-gray-800 mb-2">Saved Profile:</h3>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <h3 className="font-semibold text-slate-800 mb-4">Saved Profile:</h3>
         <p data-testid="full-name">
           <span className={storyTheme.statLabel}>Name:</span>{" "}
           <span className={storyTheme.statValue}>{fullName}</span>
@@ -338,16 +338,16 @@ function CrossTabSyncDemo() {
       </p>
 
       {/* Message Display */}
-      <div className={storyTheme.card + " mb-6"}>
-        <label className={storyTheme.label}>Current Message:</label>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <label className={storyTheme.statLabel + " mb-2"}>Current Message:</label>
         <div
-          className="text-lg font-mono bg-white p-4 rounded-lg border border-gray-200 min-h-[60px]"
+          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 min-h-[60px] text-slate-800"
           data-testid="sync-message"
         >
           {message || "(empty)"}
         </div>
         {lastUpdate && (
-          <p className="text-sm text-gray-500 mt-2">
+          <p className="text-sm text-slate-500 mt-3 text-right italic">
             Last local update: {lastUpdate}
           </p>
         )}
@@ -371,8 +371,8 @@ function CrossTabSyncDemo() {
       </div>
 
       {/* Instructions */}
-      <div className={storyTheme.infoBox}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           <strong>How to test:</strong>
           <br />
           1. Open this page in another browser tab
@@ -400,7 +400,7 @@ function ComponentSyncDemo() {
       </p>
 
       {/* Two synchronized components side by side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <SyncedComponent name="Component A" color="blue" />
         <SyncedComponent name="Component B" color="green" />
       </div>
@@ -411,8 +411,8 @@ function ComponentSyncDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           <strong>How it works:</strong>
           <br />
           All three components use{" "}
@@ -459,7 +459,7 @@ function SyncedComponent({ name, color }: { name: string; color: string }) {
 
   return (
     <div
-      className={`p-4 rounded-xl border-2 ${
+      className={`p-8 rounded-2xl border-2 ${
         borderColors[color as keyof typeof borderColors]
       } ${bgColors[color as keyof typeof bgColors]}`}
       data-testid={`sync-component-${name.toLowerCase().replace(" ", "-")}`}
@@ -475,10 +475,10 @@ function SyncedComponent({ name, color }: { name: string; color: string }) {
       </div>
 
       {/* Controls */}
-      <div className="flex gap-2 justify-center">
+      <div className="flex gap-2 justify-center flex-wrap">
         <button
           onClick={() => setCount((c) => c - 1)}
-          className={`px-3 py-2 rounded-lg text-white font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-white font-semibold transition-colors ${
             colorClasses[color as keyof typeof colorClasses]
           }`}
           data-testid={`sync-decrement-${name.toLowerCase().replace(" ", "-")}`}
@@ -487,7 +487,7 @@ function SyncedComponent({ name, color }: { name: string; color: string }) {
         </button>
         <button
           onClick={() => setCount((c) => c + 1)}
-          className={`px-3 py-2 rounded-lg text-white font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-white font-semibold transition-colors ${
             colorClasses[color as keyof typeof colorClasses]
           }`}
           data-testid={`sync-increment-${name.toLowerCase().replace(" ", "-")}`}
@@ -496,7 +496,7 @@ function SyncedComponent({ name, color }: { name: string; color: string }) {
         </button>
         <button
           onClick={() => setCount((c) => c + 10)}
-          className={`px-3 py-2 rounded-lg text-white font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-white font-semibold transition-colors ${
             colorClasses[color as keyof typeof colorClasses]
           }`}
           data-testid={`sync-add10-${name.toLowerCase().replace(" ", "-")}`}
@@ -551,10 +551,10 @@ function ErrorHandlingDemo() {
       </p>
 
       {/* Current Value */}
-      <div className={storyTheme.card + " mb-6"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <label className={storyTheme.label}>Current Value:</label>
         <div
-          className="font-mono bg-white p-3 rounded-lg border border-gray-200 truncate"
+          className="font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 truncate text-slate-800"
           data-testid="error-demo-value"
         >
           {value.length > 100 ? `${value.slice(0, 100)}...` : value}
@@ -580,17 +580,17 @@ function ErrorHandlingDemo() {
       </div>
 
       {/* Error Log */}
-      <div className={storyTheme.card}>
-        <label className={storyTheme.label}>Error Log:</label>
+      <div className={storyTheme.card + " bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
+        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">🚨 Error Log:</h3>
         <div
-          className="font-mono text-sm bg-red-50 p-3 rounded-lg border border-red-200 min-h-[100px] max-h-[200px] overflow-auto"
+          className="font-mono text-sm bg-red-900/20 p-4 rounded-lg border-l-4 border-red-500 min-h-[100px] max-h-[200px] overflow-auto"
           data-testid="error-log"
         >
           {errorLog.length === 0 ? (
-            <span className="text-gray-400">No errors yet</span>
+            <span className="text-slate-500 italic">No errors yet</span>
           ) : (
             errorLog.map((log, i) => (
-              <div key={i} className="text-red-600">
+              <div key={i} className="text-red-400">
                 {log}
               </div>
             ))
@@ -647,7 +647,7 @@ function CustomSerializerDemo() {
       </p>
 
       {/* Date Storage Example */}
-      <div className={storyTheme.card + " mb-6"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <h3 className="font-semibold text-gray-800 mb-4">
           📅 Date Object Storage
         </h3>
@@ -658,7 +658,7 @@ function CustomSerializerDemo() {
         <div className="mb-4">
           <label className={storyTheme.label}>Last Visit Date:</label>
           <div
-            className="font-mono bg-white p-3 rounded-lg border border-gray-200 mb-3"
+            className="font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 mb-3"
             data-testid="last-visit-display"
           >
             <div className="text-lg font-semibold mb-1">
@@ -687,7 +687,7 @@ function CustomSerializerDemo() {
       </div>
 
       {/* Custom Array Storage Example */}
-      <div className={storyTheme.card}>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <h3 className="font-semibold text-gray-800 mb-4">
           🎨 Custom Array Storage (Comma-separated)
         </h3>
@@ -703,7 +703,7 @@ function CustomSerializerDemo() {
               value={colorInput}
               onChange={(e) => setColorInput(e.target.value)}
               placeholder="Enter color name..."
-              className={storyTheme.input}
+              className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300"}
               data-testid="color-input"
               onKeyPress={(e) => {
                 if (e.key === "Enter") addColor();
@@ -719,7 +719,7 @@ function CustomSerializerDemo() {
           </div>
 
           <div
-            className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-white rounded-lg border border-gray-200"
+            className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-slate-50 rounded-xl border border-slate-200"
             data-testid="colors-list"
           >
             {favoriteColors.length === 0 ? (
@@ -756,8 +756,8 @@ function CustomSerializerDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           <strong>How it works:</strong>
           <br />• <code>serializer</code>: Function that converts values to
           strings when storing in localStorage
@@ -804,7 +804,7 @@ function SyncTabsOptionDemo() {
       {/* Comparison Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Sync Enabled */}
-        <div className={storyTheme.card + " border-2 border-green-300"}>
+        <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border-2 border-green-300"}>
           <div className="flex items-center gap-2 mb-3">
             <span className="text-2xl">✅</span>
             <h3 className="font-semibold text-gray-800">
@@ -818,7 +818,7 @@ function SyncTabsOptionDemo() {
           <div className="mb-4">
             <label className={storyTheme.label}>Value:</label>
             <div
-              className="font-mono bg-white p-3 rounded-lg border border-gray-200 text-lg"
+              className="font-mono bg-slate-50 p-3 rounded-lg border border-slate-200 text-lg"
               data-testid="synced-value"
             >
               {syncedValue}
@@ -851,7 +851,7 @@ function SyncTabsOptionDemo() {
         </div>
 
         {/* Sync Disabled */}
-        <div className={storyTheme.card + " border-2 border-orange-300"}>
+        <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border-2 border-orange-300"}>
           <div className="flex items-center gap-2 mb-3">
             <span className="text-2xl">❌</span>
             <h3 className="font-semibold text-gray-800">syncTabs: false</h3>
@@ -863,7 +863,7 @@ function SyncTabsOptionDemo() {
           <div className="mb-4">
             <label className={storyTheme.label}>Value:</label>
             <div
-              className="font-mono bg-white p-3 rounded-lg border border-gray-200 text-lg"
+              className="font-mono bg-slate-50 p-3 rounded-lg border border-slate-200 text-lg"
               data-testid="non-synced-value"
             >
               {nonSyncedValue}
@@ -1006,10 +1006,15 @@ function LocalStorageExample() {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Check initial value is displayed
-    await expect(canvas.getByTestId("stored-value")).toHaveTextContent(
-      "Hello, World!"
-    );
+    // First, reset to initial state by clicking remove button
+    await userEvent.click(canvas.getByTestId("remove-button"));
+
+    // Wait for component to show initial value after removal
+    await waitFor(() => {
+      expect(canvas.getByTestId("stored-value")).toHaveTextContent(
+        "Hello, World!"
+      );
+    });
 
     // Type new value
     const input = canvas.getByTestId("value-input");
@@ -1097,9 +1102,14 @@ function SettingsComponent() {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    // Check initial settings
+    // First, reset to initial state by clicking reset button
+    await userEvent.click(canvas.getByTestId("reset-settings"));
+
+    // Wait for component to show initial values after reset
     const settingsDisplay = canvas.getByTestId("settings-display");
-    await expect(settingsDisplay).toHaveTextContent('"theme": "light"');
+    await waitFor(() => {
+      expect(settingsDisplay).toHaveTextContent('"theme": "light"');
+    });
     await expect(settingsDisplay).toHaveTextContent('"notifications": true');
 
     // Change theme to dark
@@ -1610,11 +1620,22 @@ function CustomSerializerExample() {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
+    // Clear localStorage to ensure clean state
+    localStorage.removeItem("last-visit-date");
+    localStorage.removeItem("favorite-colors");
+
     // Update visit date
     await userEvent.click(canvas.getByTestId("update-visit-date"));
     await waitFor(() => {
       const display = canvas.getByTestId("last-visit-display");
       expect(display).toBeInTheDocument();
+    });
+
+    // First clear any existing colors
+    const clearBtn = canvas.getByTestId("clear-colors");
+    await userEvent.click(clearBtn);
+    await waitFor(() => {
+      expect(canvas.getByTestId("colors-list")).toHaveTextContent("No colors added yet");
     });
 
     // Add colors
@@ -1631,12 +1652,13 @@ function CustomSerializerExample() {
       expect(canvas.getByTestId("colors-list")).toHaveTextContent("Blue");
     });
 
-    // Remove a color
+    // Remove the first color (Red)
     await userEvent.click(canvas.getByTestId("remove-color-0"));
     await waitFor(() => {
       const colorsList = canvas.getByTestId("colors-list");
-      expect(colorsList).not.toHaveTextContent("Red");
+      // After removing Red, only Blue should remain
       expect(colorsList).toHaveTextContent("Blue");
+      expect(colorsList).not.toHaveTextContent("Red×");
     });
   },
 };

@@ -19,7 +19,7 @@ function UnmountChild({
   });
 
   return (
-    <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl text-white text-center">
+    <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl text-white text-center shadow-lg">
       <p className="font-semibold">{label}</p>
       <p className="text-sm text-white/80 mt-1">
         Will call onUnmount when removed
@@ -51,7 +51,7 @@ function BasicDemo() {
         {isVisible ? (
           <UnmountChild onUnmount={handleUnmount} label="Mounted Component" />
         ) : (
-          <div className="p-4 bg-gray-100 rounded-xl text-gray-400 text-center border-2 border-dashed border-gray-300">
+          <div className="p-4 bg-slate-50 rounded-xl text-slate-400 text-center border-2 border-dashed border-slate-200">
             <p>Component Unmounted</p>
           </div>
         )}
@@ -69,12 +69,12 @@ function BasicDemo() {
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mt-6 w-80 mx-auto"}>
+      <div className={storyTheme.statBox + " mt-6 w-80 mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className="grid grid-cols-2 gap-4 text-center">
           <div>
             <p className={storyTheme.statTextSecondary}>Unmount Count</p>
             <p
-              className="text-2xl font-bold text-gray-800"
+              className="text-2xl font-bold text-slate-800"
               data-testid="unmount-count"
             >
               {unmountCount}
@@ -83,7 +83,7 @@ function BasicDemo() {
           <div>
             <p className={storyTheme.statTextSecondary}>Last Unmount</p>
             <p
-              className="text-lg font-semibold text-gray-800"
+              className="text-lg font-semibold text-slate-800"
               data-testid="last-unmount-time"
             >
               {lastUnmountTime || "-"}
@@ -92,8 +92,8 @@ function BasicDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Click the button to toggle the component. The unmount callback is
           called when the component is removed.
         </p>
@@ -117,7 +117,7 @@ function FormChild({
   });
 
   return (
-    <div className="p-4 bg-white rounded-xl border border-gray-200 space-y-3">
+    <div className="p-4 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3">
       <input
         type="text"
         placeholder="Name"
@@ -125,7 +125,7 @@ function FormChild({
         onChange={(e) =>
           setFormData((prev) => ({ ...prev, name: e.target.value }))
         }
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
+        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
         data-testid="name-input"
       />
       <input
@@ -135,10 +135,10 @@ function FormChild({
         onChange={(e) =>
           setFormData((prev) => ({ ...prev, email: e.target.value }))
         }
-        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
+        className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
         data-testid="email-input"
       />
-      <p className="text-sm text-gray-500 text-center">
+      <p className="text-sm text-slate-500 text-center">
         Data will be saved on unmount
       </p>
     </div>
@@ -173,8 +173,8 @@ function ClosureFreshnessDemo() {
         {isEditing ? (
           <FormChild onUnmount={handleUnmount} />
         ) : (
-          <div className="p-4 bg-gray-100 rounded-xl text-center border-2 border-dashed border-gray-300">
-            <p className="text-gray-400">Form Closed</p>
+          <div className="p-4 bg-slate-50 rounded-xl text-center border-2 border-dashed border-slate-200">
+            <p className="text-slate-400">Form Closed</p>
           </div>
         )}
       </div>
@@ -192,18 +192,18 @@ function ClosureFreshnessDemo() {
       </div>
 
       {savedData && (
-        <div className={storyTheme.statBox + " mt-6 w-80 mx-auto"}>
+        <div className={storyTheme.statBox + " mt-6 w-80 mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
           <p className={storyTheme.statLabel + " mb-3"}>Saved Data:</p>
           <div className="space-y-2 text-sm">
             <p>
               <span className={storyTheme.statTextSecondary}>Name: </span>
-              <span className="text-gray-800" data-testid="saved-name">
+              <span className="text-slate-800" data-testid="saved-name">
                 {savedData.name || "(empty)"}
               </span>
             </p>
             <p>
               <span className={storyTheme.statTextSecondary}>Email: </span>
-              <span className="text-gray-800" data-testid="saved-email">
+              <span className="text-slate-800" data-testid="saved-email">
                 {savedData.email || "(empty)"}
               </span>
             </p>
@@ -211,8 +211,8 @@ function ClosureFreshnessDemo() {
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Type in the form, then close it. The unmount callback captures the
           latest values.
         </p>
@@ -242,8 +242,8 @@ function ConditionalChild({
     <div
       className={`p-4 rounded-xl text-center ${
         enabled
-          ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-          : "bg-gray-200 text-gray-600"
+          ? "bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-md"
+          : "bg-slate-100 text-slate-500 border border-slate-200"
       }`}
     >
       <p className="font-semibold">
@@ -251,7 +251,7 @@ function ConditionalChild({
       </p>
       <p
         className={`text-sm mt-1 ${
-          enabled ? "text-white/80" : "text-gray-500"
+          enabled ? "text-white/80" : "text-slate-400"
         }`}
       >
         {enabled
@@ -298,7 +298,7 @@ function ConditionalCleanupDemo() {
             enabled={cleanupEnabled}
           />
         ) : (
-          <div className="p-4 bg-gray-100 rounded-xl text-gray-400 text-center border-2 border-dashed border-gray-300">
+          <div className="p-4 bg-slate-50 rounded-xl text-slate-400 text-center border-2 border-dashed border-slate-200">
             <p>Component Unmounted</p>
           </div>
         )}
@@ -327,13 +327,13 @@ function ConditionalCleanupDemo() {
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mb-4 w-80 mx-auto"}>
+      <div className={storyTheme.statBox + " mb-4 w-80 mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className="grid grid-cols-2 gap-4 text-center">
           <div>
             <p className={storyTheme.statTextSecondary}>Cleanup Status</p>
             <p
               className={`text-lg font-semibold ${
-                cleanupEnabled ? "text-green-600" : "text-gray-400"
+                cleanupEnabled ? "text-green-600" : "text-slate-400"
               }`}
               data-testid="cleanup-status"
             >
@@ -343,7 +343,7 @@ function ConditionalCleanupDemo() {
           <div>
             <p className={storyTheme.statTextSecondary}>Unmount Calls</p>
             <p
-              className="text-2xl font-bold text-gray-800"
+              className="text-2xl font-bold text-slate-800"
               data-testid="conditional-unmount-count"
             >
               {unmountCount}
@@ -353,7 +353,7 @@ function ConditionalCleanupDemo() {
       </div>
 
       {history.length > 0 && (
-        <div className={storyTheme.statBox + " w-80 mx-auto"}>
+        <div className={storyTheme.statBox + " w-80 mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
           <p className={storyTheme.statLabel + " mb-3"}>Unmount History:</p>
           <div className="space-y-2">
             {history.map(({ enabled, time, id }) => (
@@ -361,18 +361,18 @@ function ConditionalCleanupDemo() {
                 key={id}
                 className="flex justify-between items-center text-sm"
               >
-                <span className={enabled ? "text-green-600" : "text-gray-400"}>
+                <span className={enabled ? "text-green-600" : "text-slate-400"}>
                   {enabled ? "Executed" : "Skipped"}
                 </span>
-                <span className="text-gray-400">{time}</span>
+                <span className="text-slate-400">{time}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Toggle cleanup on/off, then unmount to see conditional behavior.
         </p>
       </div>
@@ -395,7 +395,7 @@ function InstanceChild({
   });
 
   return (
-    <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg text-white text-center">
+    <div className="p-3 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-lg text-white text-center shadow-sm">
       <p className="font-semibold">Instance #{id}</p>
     </div>
   );
@@ -455,7 +455,7 @@ function MultipleInstancesDemo() {
               </div>
             ))
           ) : (
-            <div className="p-4 bg-gray-100 rounded-xl text-gray-400 text-center border-2 border-dashed border-gray-300">
+            <div className="p-4 bg-slate-50 rounded-xl text-slate-400 text-center border-2 border-dashed border-slate-200">
               <p>No instances</p>
             </div>
           )}
@@ -481,7 +481,7 @@ function MultipleInstancesDemo() {
       </div>
 
       {unmountLog.length > 0 && (
-        <div className={storyTheme.statBox + " w-80 mx-auto"}>
+        <div className={storyTheme.statBox + " w-80 mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
           <p className={storyTheme.statLabel + " mb-3"}>
             Unmount Log ({unmountLog.length}):
           </p>
@@ -494,15 +494,15 @@ function MultipleInstancesDemo() {
                 <span className="text-indigo-600 font-medium">
                   Instance #{id}
                 </span>
-                <span className="text-gray-400">{time}</span>
+                <span className="text-slate-400">{time}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Each instance has its own independent unmount callback.
         </p>
       </div>
@@ -550,7 +550,7 @@ function AnalyticsTrackingDemo() {
               className={`flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
                 activeSection === section
                   ? "bg-indigo-500 text-white"
-                  : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
               }`}
               data-testid={`section-${section.toLowerCase()}`}
             >
@@ -571,7 +571,7 @@ function AnalyticsTrackingDemo() {
       </div>
 
       {events.length > 0 && (
-        <div className={storyTheme.statBox + " w-80 mx-auto"}>
+        <div className={storyTheme.statBox + " w-80 mx-auto bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
           <p className={storyTheme.statLabel + " mb-3"}>Analytics Events:</p>
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {events.map(({ section, event, time, id }) => (
@@ -581,7 +581,7 @@ function AnalyticsTrackingDemo() {
               >
                 <div>
                   <span className="text-indigo-600 font-medium">{section}</span>
-                  <span className="text-gray-400 mx-2">•</span>
+                  <span className="text-slate-400 mx-2">•</span>
                   <span
                     className={
                       event === "view_start"
@@ -592,15 +592,15 @@ function AnalyticsTrackingDemo() {
                     {event}
                   </span>
                 </div>
-                <span className="text-gray-400">{time}</span>
+                <span className="text-slate-400">{time}</span>
               </div>
             ))}
           </div>
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 w-80 mx-auto bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Click sections to navigate. Unmount tracks when you leave each
           section.
         </p>
@@ -619,7 +619,7 @@ function SectionView({
   useUnmount(onUnmount);
 
   return (
-    <div className="p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl text-white text-center">
+    <div className="p-6 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl text-white text-center shadow-lg">
       <p className="text-2xl font-bold mb-2">{section}</p>
       <p className="text-white/80">Currently viewing this section</p>
     </div>

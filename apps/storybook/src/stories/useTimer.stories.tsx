@@ -44,10 +44,10 @@ function TimerDemo({
       {/* Timer Display */}
       <div
         data-testid="timer-display"
-        className={`p-8 mb-6 rounded-2xl text-center transition-all duration-300 ${
+        className={`p-10 mb-8 rounded-3xl text-center transition-all duration-300 shadow-2xl ${
           timer.isFinished
-            ? "bg-gradient-to-br from-gray-100 to-gray-200"
-            : "bg-gradient-to-br from-slate-900 to-slate-800"
+            ? "bg-gradient-to-br from-slate-100 to-slate-200 border border-slate-200"
+            : "bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-800"
         }`}
       >
         <div
@@ -60,7 +60,7 @@ function TimerDemo({
         </div>
 
         {/* Status Badge */}
-        <div className="mt-4 flex justify-center gap-2">
+        <div className="mt-6 flex justify-center gap-2">
           <span
             data-testid="status-badge"
             className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${
@@ -79,14 +79,14 @@ function TimerDemo({
       </div>
 
       {/* Progress Bar */}
-      <div className="mb-6">
-        <div className="flex justify-between text-sm text-gray-500 mb-1">
-          <span>Progress</span>
-          <span data-testid="progress-value">
+      <div className={storyTheme.statBox + " mb-8 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <div className="flex justify-between text-sm text-slate-600 mb-3 font-medium">
+          <span className="uppercase tracking-wider text-xs">Progress</span>
+          <span data-testid="progress-value" className="font-bold text-slate-800">
             {Math.round(timer.progress)}%
           </span>
         </div>
-        <div className="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div className="h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-100">
           <div
             data-testid="progress-bar"
             className={`h-full bg-gradient-to-r ${progressColor} transition-all duration-100 rounded-full`}
@@ -104,7 +104,7 @@ function TimerDemo({
               disabled={timer.isFinished}
               aria-label="Start timer"
               type="button"
-              className={`flex-1 py-3.5 px-6 text-base font-semibold text-white bg-gradient-to-br from-green-500 to-emerald-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(16,185,129,0.4)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0`}
+              className={`flex-1 py-4 px-6 text-base font-bold text-white bg-gradient-to-br from-green-500 to-emerald-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0`}
             >
               ▶ Start
             </button>
@@ -113,7 +113,7 @@ function TimerDemo({
               onClick={timer.pause}
               aria-label="Pause timer"
               type="button"
-              className={`flex-1 py-3.5 px-6 text-base font-semibold text-white bg-gradient-to-br from-amber-500 to-orange-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(245,158,11,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(245,158,11,0.4)]`}
+              className={`flex-1 py-4 px-6 text-base font-bold text-white bg-gradient-to-br from-amber-500 to-orange-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl`}
             >
               ⏸ Pause
             </button>
@@ -183,7 +183,7 @@ function KitchenTimerDemo() {
       <p className={storyTheme.subtitle}>Set your cooking timer</p>
 
       {/* Preset Buttons */}
-      <div className="flex flex-wrap gap-2 justify-center mb-6">
+      <div className="flex flex-wrap gap-2 justify-center mb-8 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
         {presets.map((min) => (
           <button
             key={min}
@@ -192,10 +192,10 @@ function KitchenTimerDemo() {
               timer.setTime(ms.minutes(min));
             }}
             type="button"
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
               presetMinutes === min
-                ? "bg-indigo-500 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-indigo-600 text-white shadow-md"
+                : "bg-slate-50 text-slate-600 hover:bg-slate-100"
             }`}
           >
             {min}m
@@ -205,10 +205,10 @@ function KitchenTimerDemo() {
 
       {/* Timer Display */}
       <div
-        className={`p-12 mb-6 rounded-full aspect-square max-w-[280px] mx-auto flex items-center justify-center ${
+        className={`p-12 mb-8 rounded-full aspect-square max-w-[280px] mx-auto flex items-center justify-center shadow-2xl border-4 ${
           timer.isFinished
-            ? "bg-gradient-to-br from-green-400 to-emerald-500 animate-pulse"
-            : "bg-gradient-to-br from-slate-800 to-slate-900"
+            ? "bg-gradient-to-br from-green-400 to-emerald-500 animate-pulse border-green-300"
+            : "bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700"
         }`}
       >
         <div

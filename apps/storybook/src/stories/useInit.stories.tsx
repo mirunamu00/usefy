@@ -18,13 +18,13 @@ function BasicSyncDemo() {
   });
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Basic Sync Initialization</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Basic Sync Initialization</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         The callback runs once when the component mounts.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Status:</strong>{" "}
           <span
@@ -46,8 +46,8 @@ function BasicSyncDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.card}>
-        <h3 className="text-lg font-semibold text-gray-700 mb-3">
+      <div className={storyTheme.card + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
           Initialization Logs:
         </h3>
         {logs.length === 0 ? (
@@ -79,13 +79,13 @@ function AsyncInitDemo() {
   });
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Async Initialization</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Async Initialization</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Shows loading state during async initialization.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>isInitializing:</strong>{" "}
           <span
@@ -113,13 +113,13 @@ function AsyncInitDemo() {
       </div>
 
       {isInitializing && (
-        <div className={storyTheme.cardInfo + " text-center"}>
-          <p className="text-indigo-600 font-semibold m-0">Loading data...</p>
+        <div className={storyTheme.cardInfo + " text-center bg-slate-50 p-8 rounded-2xl"}>
+          <p className="text-indigo-600 font-semibold m-0 animate-pulse">Loading data...</p>
         </div>
       )}
 
       {isInitialized && data && (
-        <div className={storyTheme.messageSuccess}>
+        <div className={storyTheme.messageSuccess + " bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-emerald-800"}>
           <p className="m-0">{data.message}</p>
         </div>
       )}
@@ -142,21 +142,21 @@ function ConditionalInitDemo() {
   );
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Conditional Initialization</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Conditional Initialization</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Initialization only runs when the condition is true. Toggle to enable.
       </p>
 
       <button
         data-testid="toggle-btn"
         onClick={() => setIsEnabled((prev) => !prev)}
-        className={isEnabled ? storyTheme.buttonSuccess : storyTheme.buttonDanger}
+        className={(isEnabled ? storyTheme.buttonSuccess : storyTheme.buttonDanger) + " w-full py-3 rounded-xl font-bold shadow-lg mb-6"}
       >
         {isEnabled ? "Enabled" : "Disabled"}
       </button>
 
-      <div className={storyTheme.statBox + " mt-5"}>
+      <div className={storyTheme.statBox + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>when:</strong>{" "}
           <span data-testid="when-value" className={storyTheme.statValue}>
@@ -183,8 +183,8 @@ function ConditionalInitDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-5"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           The initialization will run when you enable the toggle. It won't run
           again on subsequent toggles since it has already been initialized.
         </p>
@@ -218,14 +218,14 @@ function RetryDemo() {
   };
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Retry on Failure</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Retry on Failure</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Automatically retries initialization on failure. This demo fails the
         first 2 attempts then succeeds.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Attempt:</strong>{" "}
           <span data-testid="attempt-count" className={storyTheme.statValue}>
@@ -256,23 +256,23 @@ function RetryDemo() {
       </div>
 
       {isInitialized && (
-        <div className={storyTheme.messageSuccess + " mb-5"}>
+        <div className={storyTheme.messageSuccess + " mb-6 bg-emerald-50 border border-emerald-200 rounded-2xl p-5 text-emerald-800"}>
           Initialization succeeded after {attemptCount} attempts!
         </div>
       )}
 
-      <div className={storyTheme.buttonGroup}>
+      <div className={storyTheme.buttonGroup + " flex gap-3"}>
         <button
           data-testid="reset-btn"
           onClick={handleReset}
-          className={storyTheme.buttonNeutral}
+          className={storyTheme.buttonNeutral + " flex-1 py-3 rounded-xl font-bold"}
         >
           Reset
         </button>
         <button
           data-testid="reinit-btn"
           onClick={reinitialize}
-          className={storyTheme.buttonPrimary}
+          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-xl font-bold shadow-lg"}
         >
           Reinitialize
         </button>
@@ -289,14 +289,14 @@ function TimeoutDemo() {
   const [key, setKey] = useState(0);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Timeout</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Timeout</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Set a timeout for initialization. If it takes too long, an error is
         thrown.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Operation Duration:</strong>{" "}
           <span className={storyTheme.statValue}>{duration}ms</span>
@@ -307,7 +307,7 @@ function TimeoutDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.buttonGroupFull}>
+      <div className={storyTheme.buttonGroupFull + " flex gap-3 mb-6"}>
         <button
           data-testid="fast-btn"
           onClick={() => {
@@ -344,7 +344,7 @@ function TimeoutChild({ duration }: { duration: number }) {
   );
 
   return (
-    <div className={storyTheme.card}>
+    <div className={storyTheme.card + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
       <div className={storyTheme.statLabel}>
         <strong className={storyTheme.statText}>isInitializing:</strong>{" "}
         <span data-testid="is-initializing" className={storyTheme.statValue}>
@@ -368,13 +368,13 @@ function TimeoutChild({ duration }: { duration: number }) {
       </div>
 
       {isInitialized && (
-        <div className={storyTheme.messageSuccess + " mt-3"}>
+        <div className={storyTheme.messageSuccess + " mt-4 bg-emerald-100 text-emerald-800 p-3 rounded-xl"}>
           Completed within timeout!
         </div>
       )}
 
       {error && (
-        <div className={storyTheme.messageError + " mt-3"}>
+        <div className={storyTheme.messageError + " mt-4 bg-rose-100 text-rose-800 p-3 rounded-xl"}>
           Operation timed out!
         </div>
       )}
@@ -395,13 +395,13 @@ function ReinitializeDemo() {
   });
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Manual Reinitialize</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Manual Reinitialize</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Use the reinitialize function to manually trigger initialization again.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Init Count:</strong>{" "}
           <span data-testid="init-count" className={storyTheme.statValue}>
@@ -434,7 +434,7 @@ function ReinitializeDemo() {
       <button
         data-testid="reinit-btn"
         onClick={reinitialize}
-        className={storyTheme.buttonPrimary}
+        className={storyTheme.buttonPrimary + " w-full py-3 rounded-xl font-bold shadow-lg"}
       >
         Reinitialize
       </button>
@@ -457,29 +457,29 @@ function CleanupDemo() {
   };
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Cleanup Function</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Cleanup Function</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         The cleanup function is called when the component unmounts.
       </p>
 
       <button
         data-testid="toggle-mount-btn"
         onClick={() => setMounted((prev) => !prev)}
-        className={mounted ? storyTheme.buttonDanger : storyTheme.buttonSuccess}
+        className={(mounted ? storyTheme.buttonDanger : storyTheme.buttonSuccess) + " w-full py-3 rounded-xl font-bold shadow-lg mb-6"}
       >
         {mounted ? "Unmount Component" : "Mount Component"}
       </button>
 
-      <div className={storyTheme.card + " mt-5"}>
+      <div className={storyTheme.card + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100 min-h-[80px] flex items-center justify-center"}>
         {mounted && <CleanupChild addLog={addLog} />}
         {!mounted && (
           <p className="text-gray-500 italic m-0">Component is unmounted</p>
         )}
       </div>
 
-      <div className={storyTheme.statBox + " mt-5"}>
-        <h3 className="text-lg font-semibold text-gray-700 mb-3">Logs:</h3>
+      <div className={storyTheme.statBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">Logs:</h3>
         {logs.length === 0 ? (
           <p className="text-gray-500 italic m-0">No logs yet...</p>
         ) : (
@@ -510,7 +510,7 @@ function CleanupChild({ addLog }: { addLog: (message: string) => void }) {
   });
 
   return (
-    <div className={storyTheme.messageSuccess}>
+    <div className={storyTheme.messageSuccess + " bg-emerald-50 text-emerald-800 p-3 rounded-xl border border-emerald-200"}>
       <p className="m-0">Component is mounted and initialized</p>
     </div>
   );

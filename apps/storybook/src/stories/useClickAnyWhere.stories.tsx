@@ -18,23 +18,27 @@ function ClickCounterDemo({ enabled = true }: { enabled?: boolean }) {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         useClickAnyWhere Demo
       </h2>
 
-      <div className={storyTheme.gradientBox + " text-center mb-6"}>
-        <p className="text-white/80 text-sm mb-2">Total Clicks</p>
-        <p className="text-6xl font-bold text-white" data-testid="click-count">
+      <div className={storyTheme.gradientBox + " text-center mb-8 p-10 rounded-3xl shadow-2xl transform transition-all hover:scale-[1.02] duration-300"}>
+        <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-4">Total Clicks</p>
+        <p className="text-8xl font-black text-white drop-shadow-sm" data-testid="click-count">
           {clickCount}
         </p>
       </div>
 
-      <div className={storyTheme.statBox}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Status: </span>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex items-center justify-between"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Listener Status</span>
           <span
-            className={enabled ? "text-green-600" : "text-red-500"}
+            className={`px-4 py-1.5 rounded-full text-sm font-bold tracking-wide ${
+              enabled 
+                ? "bg-emerald-100 text-emerald-700 border border-emerald-200" 
+                : "bg-rose-100 text-rose-700 border border-rose-200"
+            }`}
             data-testid="enabled-status"
           >
             {enabled ? "Listening" : "Disabled"}
@@ -42,9 +46,9 @@ function ClickCounterDemo({ enabled = true }: { enabled?: boolean }) {
         </p>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
-          Click anywhere on the page to increment the counter.
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center flex items-center justify-center gap-2"}>
+          <span className="text-xl">👆</span> Click anywhere on the page to increment the counter.
         </p>
       </div>
     </div>
@@ -72,38 +76,41 @@ function ClickPositionDemo() {
   });
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Click Position Tracker
       </h2>
 
-      <div className={storyTheme.gradientBox + " text-center mb-6"}>
+      <div className={storyTheme.gradientBox + " text-center mb-8 p-8 rounded-3xl shadow-xl min-h-[160px] flex flex-col justify-center items-center"}>
         {position ? (
           <>
-            <p className="text-white/80 text-sm mb-2">Last Click Position</p>
-            <p className="text-3xl font-bold text-white" data-testid="position">
+            <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-3">Last Click Position</p>
+            <p className="text-4xl font-black text-white font-mono tracking-tight" data-testid="position">
               ({position.x}, {position.y})
             </p>
           </>
         ) : (
-          <p className="text-white/80 text-lg" data-testid="no-click-message">
+          <p className="text-white/80 text-lg font-medium animate-pulse" data-testid="no-click-message">
             Click anywhere to see position
           </p>
         )}
       </div>
 
       {clickHistory.length > 0 && (
-        <div className={storyTheme.statBox}>
-          <p className={storyTheme.statLabel + " mb-3"}>Recent Clicks:</p>
+        <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+          <p className={storyTheme.statLabel + " mb-4 text-slate-400 text-xs font-bold uppercase tracking-wider"}>Recent Clicks History</p>
           <div className="space-y-2">
             {clickHistory.map((click, index) => (
               <div
                 key={click.id}
-                className={`text-sm ${
-                  index === 0 ? "text-indigo-600 font-medium" : "text-gray-500"
+                className={`flex justify-between items-center p-3 rounded-xl transition-all ${
+                  index === 0 
+                    ? "bg-indigo-50 text-indigo-700 border border-indigo-100 shadow-sm transform scale-[1.02]" 
+                    : "text-slate-500 hover:bg-slate-50"
                 }`}
               >
-                ({click.x}, {click.y})
+                <span className="text-xs font-medium opacity-70">#{clickHistory.length - index}</span>
+                <span className="font-mono font-semibold text-sm">({click.x}, {click.y})</span>
               </div>
             ))}
           </div>
@@ -128,8 +135,8 @@ function ConditionalDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Conditional Activation
       </h2>
 
@@ -139,42 +146,46 @@ function ConditionalDemo() {
           setIsActive((prev) => !prev);
         }}
         data-testid="toggle-button"
-        className={`w-full py-4 px-6 text-lg font-semibold border-none rounded-xl cursor-pointer transition-all duration-300 mb-6 ${
+        className={`w-full py-5 px-6 text-lg font-bold border-none rounded-2xl cursor-pointer transition-all duration-300 mb-8 flex items-center justify-between group shadow-lg hover:shadow-xl active:scale-[0.98] ${
           isActive
-            ? "bg-gradient-to-br from-green-500 to-green-600 text-white shadow-[0_6px_20px_rgba(16,185,129,0.4)]"
-            : "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-[0_6px_20px_rgba(239,68,68,0.4)]"
+            ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-emerald-500/30"
+            : "bg-gradient-to-r from-rose-500 to-pink-600 text-white shadow-rose-500/30"
         }`}
       >
-        {isActive ? "Active - Click to Disable" : "Disabled - Click to Enable"}
+        <span className="flex flex-col items-start">
+            <span className="text-xs opacity-80 uppercase tracking-wider font-medium">Current State</span>
+            <span>{isActive ? "Active Listener" : "Disabled Listener"}</span>
+        </span>
+        <span className={`px-3 py-1 rounded-lg text-sm font-semibold bg-white/20 group-hover:bg-white/30 transition-colors`}>
+            {isActive ? "Click to Disable" : "Click to Enable"}
+        </span>
       </button>
 
-      <div className={storyTheme.statBox}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>
-            Clicks Detected:{" "}
-          </span>
+      <div className={storyTheme.statBox + " grid grid-cols-2 gap-4"}>
+        <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center">
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Clicks Detected</p>
+            <span
+                className="text-3xl font-black text-slate-800"
+                data-testid="conditional-count"
+            >
+                {clickCount}
+            </span>
+        </div>
+        <div className="bg-white p-5 rounded-2xl shadow-sm border border-slate-100 flex flex-col items-center justify-center">
+            <p className="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">Status</p>
           <span
-            className={storyTheme.statValue}
-            data-testid="conditional-count"
-          >
-            {clickCount}
-          </span>
-        </p>
-        <p className={storyTheme.statLabel + " mt-2"}>
-          <span className={storyTheme.statTextSecondary}>Listener: </span>
-          <span
-            className={isActive ? "text-green-600" : "text-red-500"}
+            className={`text-lg font-bold ${isActive ? "text-emerald-600" : "text-rose-500"}`}
             data-testid="listener-status"
           >
             {isActive ? "Active" : "Inactive"}
           </span>
-        </p>
+        </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-8 bg-amber-50 border border-amber-100 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-amber-800 text-sm leading-relaxed text-center"}>
+          <span className="font-bold block mb-1">💡 How it works</span>
           Toggle the button to enable/disable click detection.
-          <br />
           Clicks are only counted when the listener is active.
         </p>
       </div>

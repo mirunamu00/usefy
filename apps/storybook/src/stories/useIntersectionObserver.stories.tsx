@@ -26,15 +26,15 @@ function BasicUsageDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Basic Usage</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Basic Usage</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Scroll down to see the element enter and exit the viewport.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
-        <div className={storyTheme.statLabel}>
-          <strong className={storyTheme.statText}>inView:</strong>{" "}
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 grid grid-cols-2 gap-4"}>
+        <div className="flex flex-col items-center justify-center p-3 bg-slate-50 rounded-xl">
+          <strong className="text-slate-500 text-xs uppercase tracking-wider mb-1">inView</strong>
           <span
             data-testid="in-view"
             className={
@@ -44,9 +44,9 @@ function BasicUsageDemo() {
             {inView ? "true ✓" : "false ✗"}
           </span>
         </div>
-        <div className={storyTheme.statLabel}>
-          <strong className={storyTheme.statText}>intersectionRatio:</strong>{" "}
-          <span data-testid="ratio" className={storyTheme.statValue}>
+        <div className="flex flex-col items-center justify-center p-3 bg-slate-50 rounded-xl">
+          <strong className="text-slate-500 text-xs uppercase tracking-wider mb-1">Ratio</strong>
+          <span data-testid="ratio" className="text-slate-900 font-mono font-bold text-lg">
             {entry ? `${Math.round(entry.intersectionRatio * 100)}%` : "N/A"}
           </span>
         </div>
@@ -58,16 +58,18 @@ function BasicUsageDemo() {
         style={{
           height: "300px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         <div
           style={{
             height: "350px",
-            background: "#f3f4f6",
-            borderRadius: "8px",
+            background: "white",
+            border: "1px dashed #cbd5e1",
+            borderRadius: "1rem",
             marginBottom: "16px",
             display: "flex",
             alignItems: "center",
@@ -85,7 +87,7 @@ function BasicUsageDemo() {
             background: inView
               ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
               : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -104,8 +106,9 @@ function BasicUsageDemo() {
         <div
           style={{
             height: "200px",
-            background: "#f3f4f6",
-            borderRadius: "8px",
+            background: "white",
+            border: "1px dashed #cbd5e1",
+            borderRadius: "1rem",
             marginTop: "16px",
             display: "flex",
             alignItems: "center",
@@ -140,9 +143,9 @@ function ThresholdDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Threshold</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Threshold</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Set multiple threshold values to track element visibility ratio in
         detail.
         <br />
@@ -151,7 +154,7 @@ function ThresholdDemo() {
         </code>
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current Visibility:</strong>{" "}
           <span data-testid="visibility" className={storyTheme.statValue}>
@@ -211,9 +214,10 @@ function ThresholdDemo() {
         style={{
           height: "250px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         <div style={{ height: "300px" }} />
@@ -226,7 +230,7 @@ function ThresholdDemo() {
             background: `linear-gradient(135deg, 
               hsl(${260 + currentThreshold * 50}, 80%, 50%) 0%, 
               hsl(${280 + currentThreshold * 50}, 80%, 60%) 100%)`,
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -251,9 +255,9 @@ function RootMarginDemo() {
   const [key, setKey] = useState(0);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Root Margin</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Root Margin</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         rootMargin adjusts the detection boundary around the scroll container.
         <br />
         <strong>+50px</strong> = detect 50px earlier (preload),{" "}
@@ -333,7 +337,7 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between items-center"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>rootMargin:</strong>{" "}
           <span className={storyTheme.statValue}>{rootMargin}</span>
@@ -356,11 +360,11 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
         style={{
           height: "300px",
           overflowY: "auto",
-          border: "3px solid #9ca3af",
-          borderRadius: "12px",
+          border: "4px solid #cbd5e1",
+          borderRadius: "1.5rem",
           padding: "0",
           position: "relative",
-          background: "#fafafa",
+          background: "#f8fafc",
         }}
       >
         <div
@@ -432,8 +436,8 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-4"}>
-        <div className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <div className={storyTheme.infoText + " text-slate-600"}>
           <p style={{ margin: 0 }}>
             💡 <strong>Understanding rootMargin:</strong>
           </p>
@@ -474,9 +478,9 @@ function TriggerOnceDemo() {
   const [key, setKey] = useState(0);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Trigger Once</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Trigger Once</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         When triggerOnce is true, the element stops being observed after
         entering view once.
         <br />
@@ -548,7 +552,7 @@ function TriggerOnceChild({
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-2"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>triggerOnce:</strong>{" "}
           <span
@@ -583,9 +587,10 @@ function TriggerOnceChild({
         style={{
           height: "200px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         <div
@@ -607,7 +612,7 @@ function TriggerOnceChild({
             background: inView
               ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
               : "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -643,9 +648,9 @@ function EnabledDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Enabled</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Enabled</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Dynamically enable/disable the observer with the enabled option.
       </p>
 
@@ -659,7 +664,7 @@ function EnabledDemo() {
           : "⏸️ Paused (click to enable)"}
       </button>
 
-      <div className={storyTheme.statBox + " mt-5 mb-5"}>
+      <div className={storyTheme.statBox + " mt-6 mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>enabled:</strong>{" "}
           <span data-testid="enabled-value" className={storyTheme.statValue}>
@@ -685,9 +690,10 @@ function EnabledDemo() {
         style={{
           height: "200px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
           opacity: enabled ? 1 : 0.5,
           transition: "opacity 0.3s ease",
         }}
@@ -704,7 +710,7 @@ function EnabledDemo() {
               : inView
               ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
               : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -732,9 +738,9 @@ function InitialIsIntersectingDemo() {
   const [key, setKey] = useState(0);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Initial Is Intersecting</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Initial Is Intersecting</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Set the initial intersection state for SSR/SSG environments.
         <br />
         Useful when you need to display above-the-fold content immediately.
@@ -797,7 +803,7 @@ function InitialIsIntersectingChild({
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-2"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>
             initialIsIntersecting:
@@ -833,7 +839,7 @@ function InitialIsIntersectingChild({
           background: inView
             ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
             : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-          borderRadius: "12px",
+          borderRadius: "1.5rem",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -845,8 +851,8 @@ function InitialIsIntersectingChild({
         {inView ? "👁️ In View" : "❌ Not In View"}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-4"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           💡 When initialIsIntersecting is true, it displays "In View"
           immediately on first render. This is useful for controlling initial
           state in server-side rendering.
@@ -885,16 +891,16 @@ function OnChangeDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>OnChange Callback</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>OnChange Callback</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Get notified whenever the intersection state changes via the onChange
         callback.
         <br />
         Useful for sending analytics events or state synchronization.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current State:</strong>{" "}
           <span
@@ -914,9 +920,10 @@ function OnChangeDemo() {
         style={{
           height: "180px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         <div style={{ height: "200px" }} />
@@ -929,7 +936,7 @@ function OnChangeDemo() {
             background: inView
               ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
               : "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -945,8 +952,8 @@ function OnChangeDemo() {
       </div>
 
       {/* Event Log */}
-      <div className={storyTheme.card + " mt-5"}>
-        <h3 className="text-lg font-semibold text-gray-700 mb-3">
+      <div className={storyTheme.card + " mt-6 bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
+        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
           📋 Event Logs
         </h3>
         {logs.length === 0 ? (
@@ -957,11 +964,11 @@ function OnChangeDemo() {
               <li
                 key={index}
                 data-testid={`log-${index}`}
-                className={`font-mono text-sm mb-1 p-2 rounded ${
+                className={`font-mono text-xs mb-1 p-2 rounded border-l-4 ${
                   log.inView
-                    ? "bg-green-50 text-green-700"
-                    : "bg-red-50 text-red-700"
-                }`}
+                    ? "border-green-500 bg-green-900/20 text-green-400"
+                    : "border-red-500 bg-red-900/20 text-red-400"
+                } flex justify-between`}
               >
                 [{log.time}] inView: {log.inView ? "true" : "false"}, ratio:{" "}
                 {log.ratio}%
@@ -980,9 +987,9 @@ function DelayDemo() {
   const [key, setKey] = useState(0);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Delay</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Delay</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         The <code>delay</code> option delays the{" "}
         <strong>creation of the IntersectionObserver</strong>, not individual
         intersection events.
@@ -992,7 +999,7 @@ function DelayDemo() {
       </p>
 
       <div
-        className={storyTheme.infoBox}
+        className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}
         style={{ marginBottom: "16px", fontSize: "0.85rem" }}
       >
         <strong>💡 How delay works:</strong>
@@ -1106,7 +1113,7 @@ function DelayChild({ delay }: { delay: number }) {
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>delay:</strong>{" "}
           <span data-testid="delay-value" className={storyTheme.statValue}>
@@ -1176,7 +1183,7 @@ function DelayChild({ delay }: { delay: number }) {
             : inView
             ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
             : "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
-          borderRadius: "12px",
+          borderRadius: "1.5rem",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -1226,9 +1233,9 @@ function CustomRootDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Custom Root Container</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Custom Root Container</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Use a custom scroll container instead of the browser viewport with the
         root option.
       </p>
@@ -1264,7 +1271,7 @@ function CustomRootDemo() {
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>root:</strong>{" "}
           <span data-testid="root-type" className={storyTheme.statValue}>
@@ -1290,8 +1297,8 @@ function CustomRootDemo() {
         style={{
           height: "200px",
           overflowY: "auto",
-          border: useCustomRoot ? "3px solid #6366f1" : "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: useCustomRoot ? "4px solid #818cf8" : "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
           transition: "border-color 0.3s ease",
         }}
@@ -1299,13 +1306,13 @@ function CustomRootDemo() {
         <div
           style={{
             height: "250px",
-            background: "#f3f4f6",
-            borderRadius: "8px",
+            background: "white",
+            borderRadius: "1rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             marginBottom: "16px",
-            border: "2px dashed #d1d5db",
+            border: "1px dashed #cbd5e1",
           }}
         >
           ⬇️ Scroll down to see target element
@@ -1319,7 +1326,7 @@ function CustomRootDemo() {
             background: inView
               ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
               : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1334,13 +1341,13 @@ function CustomRootDemo() {
         <div
           style={{
             height: "200px",
-            background: "#f3f4f6",
-            borderRadius: "8px",
+            background: "white",
+            borderRadius: "1rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
             marginTop: "16px",
-            border: "2px dashed #d1d5db",
+            border: "1px dashed #cbd5e1",
           }}
         >
           ⬆️ Scroll up
@@ -1348,8 +1355,8 @@ function CustomRootDemo() {
       </div>
 
       {useCustomRoot && (
-        <div className={storyTheme.infoBox + " mt-4"}>
-          <p className={storyTheme.infoText}>
+        <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+          <p className={storyTheme.infoText + " text-slate-600"}>
             💡 The purple border indicates the current root container.
             Intersection is detected only when scrolling within this container.
           </p>
@@ -1374,9 +1381,9 @@ function EntryDetailsDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Entry Details</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Entry Details</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         View all detailed information provided by the entry object.
       </p>
 
@@ -1385,9 +1392,10 @@ function EntryDetailsDemo() {
         style={{
           height: "200px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
           marginBottom: "20px",
         }}
       >
@@ -1401,7 +1409,7 @@ function EntryDetailsDemo() {
             background: inView
               ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
               : "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1419,8 +1427,8 @@ function EntryDetailsDemo() {
         <div style={{ height: "120px" }} />
       </div>
 
-      <div className={storyTheme.card}>
-        <h3 className="text-lg font-semibold text-gray-700 mb-4">
+      <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
           📊 Entry Properties
         </h3>
 
@@ -1460,7 +1468,7 @@ function EntryDetailsDemo() {
             <strong className={storyTheme.statText}>boundingClientRect:</strong>{" "}
             <span
               data-testid="bounding-rect"
-              className="text-xs font-mono text-gray-600"
+              className="text-xs font-mono text-gray-600 break-all"
             >
               {entry
                 ? `{top: ${Math.round(
@@ -1478,7 +1486,7 @@ function EntryDetailsDemo() {
             <strong className={storyTheme.statText}>intersectionRect:</strong>{" "}
             <span
               data-testid="intersection-rect"
-              className="text-xs font-mono text-gray-600"
+              className="text-xs font-mono text-gray-600 break-all"
             >
               {entry
                 ? `{width: ${Math.round(
@@ -1534,9 +1542,9 @@ function LazyLoadingDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>🖼️ Lazy Loading Images</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>🖼️ Lazy Loading Images</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Images load only when they enter the viewport.
         <br />
         <code className="bg-gray-100 px-2 py-1 rounded text-sm">
@@ -1550,9 +1558,10 @@ function LazyLoadingDemo() {
         style={{
           height: "400px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         {images.map((image) => (
@@ -1578,7 +1587,7 @@ function LazyImage({ src, alt }: { src: string; alt: string }) {
       style={{
         minHeight: "200px",
         marginBottom: "16px",
-        borderRadius: "12px",
+        borderRadius: "1.5rem",
         overflow: "hidden",
         background: loaded
           ? "transparent"
@@ -1675,9 +1684,9 @@ function InfiniteScrollDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>♾️ Infinite Scroll</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>♾️ Infinite Scroll</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Automatically loads more items when the sentinel element becomes
         visible.
         <br />
@@ -1687,7 +1696,7 @@ function InfiniteScrollDemo() {
         preloads ahead of time.
       </p>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Loaded Items:</strong>{" "}
           <span data-testid="item-count" className={storyTheme.statValue}>
@@ -1711,9 +1720,10 @@ function InfiniteScrollDemo() {
         style={{
           height: "300px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         {items.map((item) => (
@@ -1722,8 +1732,9 @@ function InfiniteScrollDemo() {
             style={{
               padding: "16px",
               marginBottom: "8px",
-              background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-              borderRadius: "8px",
+              background: "white",
+              border: "1px solid #e2e8f0",
+              borderRadius: "1rem",
               display: "flex",
               alignItems: "center",
               gap: "12px",
@@ -1803,9 +1814,9 @@ function ScrollAnimationDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>✨ Scroll Animations</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>✨ Scroll Animations</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Trigger animations when elements enter the viewport.
         <br />
         Check out various animation effects.
@@ -1816,9 +1827,10 @@ function ScrollAnimationDemo() {
         style={{
           height: "400px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "24px",
+          background: "#f8fafc",
         }}
       >
         <div
@@ -1914,8 +1926,9 @@ function AnimatedCard({
       style={{
         padding: "20px",
         marginBottom: "16px",
-        background: "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
-        borderRadius: "12px",
+        background: "white",
+        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
+        borderRadius: "1.5rem",
         ...getAnimationStyles(),
       }}
     >
@@ -1945,9 +1958,9 @@ function ScrollProgressDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>📊 Scroll Progress Tracking</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>📊 Scroll Progress Tracking</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Track scroll progress using multiple thresholds.
         <br />
         Useful for reading progress indicators, video autoplay, etc.
@@ -1979,7 +1992,7 @@ function ScrollProgressDemo() {
         />
       </div>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Progress:</strong>{" "}
           <span
@@ -1997,9 +2010,10 @@ function ScrollProgressDemo() {
         style={{
           height: "300px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         <div style={{ height: "300px" }} />
@@ -2012,7 +2026,7 @@ function ScrollProgressDemo() {
             background: `linear-gradient(180deg, 
               hsl(260, 80%, ${50 + progress * 0.3}%) 0%, 
               hsl(${260 + progress}, 80%, 60%) 100%)`,
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -2049,9 +2063,9 @@ function SectionNavigationDemo() {
   }, []);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>🧭 Section Navigation</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>🧭 Section Navigation</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Automatically detect the visible section and highlight the navigation.
       </p>
 
@@ -2064,7 +2078,7 @@ function SectionNavigationDemo() {
           gap: "8px",
           padding: "12px",
           background: "white",
-          borderRadius: "12px",
+          borderRadius: "1rem",
           boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
           marginBottom: "20px",
           zIndex: 10,
@@ -2099,9 +2113,10 @@ function SectionNavigationDemo() {
         style={{
           height: "300px",
           overflowY: "auto",
-          border: "2px dashed #e5e7eb",
-          borderRadius: "12px",
+          border: "1px solid #e2e8f0",
+          borderRadius: "1.5rem",
           padding: "16px",
+          background: "#f8fafc",
         }}
       >
         {sections.map((section, index) => (
@@ -2149,7 +2164,7 @@ function SectionItem({
         height: "200px",
         marginBottom: "16px",
         background: `linear-gradient(135deg, ${colors[index][0]} 0%, ${colors[index][1]} 100%)`,
-        borderRadius: "12px",
+        borderRadius: "1.5rem",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",

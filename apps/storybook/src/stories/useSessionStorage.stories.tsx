@@ -28,11 +28,11 @@ function SessionStorageDemo({
       </p>
 
       {/* Current Value Display */}
-      <div className={storyTheme.card + " mb-6"}>
-        <label className={storyTheme.label}>Stored Value:</label>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <label className={storyTheme.statLabel + " mb-2"}>Stored Value:</label>
         <div
           data-testid="stored-value"
-          className="text-lg font-mono bg-white p-3 rounded-lg border border-gray-200"
+          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-800"
         >
           {value}
         </div>
@@ -46,7 +46,7 @@ function SessionStorageDemo({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter new value..."
-          className={storyTheme.input}
+          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
           data-testid="value-input"
         />
       </div>
@@ -73,8 +73,8 @@ function SessionStorageDemo({
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Storage Key: <code className="font-mono">{storageKey}</code>
         </p>
       </div>
@@ -110,12 +110,12 @@ function FormPersistenceDemo() {
       </p>
 
       {/* Progress Indicator */}
-      <div className={storyTheme.cardInfo + " mb-6"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className="flex justify-between items-center">
-          <span className={storyTheme.statLabel}>Current Step:</span>
-          <span className={storyTheme.statValue}>{formData.step} / 3</span>
+          <span className={storyTheme.statText}>Current Step:</span>
+          <span className={storyTheme.statValue + " font-bold"}>{formData.step} / 3</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+        <div className="w-full bg-slate-200 rounded-full h-2.5 mt-2">
           <div
             className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${(formData.step / 3) * 100}%` }}
@@ -135,7 +135,7 @@ function FormPersistenceDemo() {
               setFormData((prev) => ({ ...prev, name: e.target.value }))
             }
             placeholder="Your name"
-            className={storyTheme.input}
+            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
             data-testid="name-input"
           />
         </div>
@@ -148,7 +148,7 @@ function FormPersistenceDemo() {
               setFormData((prev) => ({ ...prev, email: e.target.value }))
             }
             placeholder="your@email.com"
-            className={storyTheme.input}
+            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
             data-testid="email-input"
           />
         </div>
@@ -194,10 +194,10 @@ function FormPersistenceDemo() {
       </button>
 
       {/* Current Data Display */}
-      <div className={storyTheme.card + " mt-6"}>
-        <label className={storyTheme.label}>Session Data:</label>
+      <div className={storyTheme.card + " mt-6 bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
+        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">📦 Session Data:</h3>
         <pre
-          className="font-mono text-sm bg-white/50 p-3 rounded-lg overflow-auto"
+          className="font-mono text-sm bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 overflow-auto text-slate-300"
           data-testid="form-data"
         >
           {JSON.stringify(formData, null, 2)}
@@ -221,9 +221,9 @@ function CounterDemo() {
       </p>
 
       {/* Counter Display */}
-      <div className={storyTheme.gradientBox + " mb-8"}>
+      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-3xl shadow-2xl text-center"}>
         <div
-          className="text-6xl font-bold text-white text-center"
+          className="text-8xl font-black text-white m-0 drop-shadow-sm"
           data-testid="counter-value"
         >
           {count}
@@ -234,21 +234,21 @@ function CounterDemo() {
       <div className="flex gap-3 justify-center flex-wrap">
         <button
           onClick={() => setCount((c) => c - 1)}
-          className={storyTheme.buttonSecondary}
+          className={storyTheme.buttonSecondary + " flex-1 py-3 rounded-xl font-bold"}
           data-testid="decrement"
         >
           - Decrement
         </button>
         <button
           onClick={() => setCount((c) => c + 1)}
-          className={storyTheme.buttonPrimary}
+          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-xl font-bold shadow-lg"}
           data-testid="increment"
         >
           + Increment
         </button>
         <button
           onClick={resetCount}
-          className={storyTheme.buttonNeutral}
+          className={storyTheme.buttonNeutral + " px-6 py-3 rounded-xl font-bold"}
           data-testid="reset-counter"
         >
           Reset
@@ -278,9 +278,9 @@ function SessionBehaviorDemo() {
       </p>
 
       {/* View Count */}
-      <div className={storyTheme.cardInfo + " mb-6"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className="text-center">
-          <div className={storyTheme.statLabel}>Story Views This Session</div>
+          <div className={storyTheme.statText}>Story Views This Session</div>
           <div
             className="text-4xl font-bold text-indigo-600 mt-2"
             data-testid="view-count"
@@ -291,8 +291,8 @@ function SessionBehaviorDemo() {
       </div>
 
       {/* Comparison Table */}
-      <div className={storyTheme.card}>
-        <h3 className="font-semibold text-gray-800 mb-4">
+      <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <h3 className="font-semibold text-slate-800 mb-4">
           localStorage vs sessionStorage
         </h3>
         <table className="w-full text-sm">
@@ -329,8 +329,8 @@ function SessionBehaviorDemo() {
       </div>
 
       {/* Tips */}
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           <strong>Tip:</strong> Use sessionStorage for temporary data that
           should be cleared when the user closes the tab, like form drafts or
           multi-step wizard progress.
@@ -356,9 +356,9 @@ function TabIsolationDemo() {
       </p>
 
       {/* Tab ID Display */}
-      <div className={storyTheme.cardInfo + " mb-6"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <div className="text-center">
-          <div className={storyTheme.statLabel}>This Tab's ID</div>
+          <div className={storyTheme.statText}>This Tab's ID</div>
           <div
             className="text-2xl font-mono font-bold text-indigo-600 mt-2"
             data-testid="tab-id"
@@ -369,10 +369,10 @@ function TabIsolationDemo() {
       </div>
 
       {/* Message Display */}
-      <div className={storyTheme.card + " mb-6"}>
-        <label className={storyTheme.label}>Session Message:</label>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+        <label className={storyTheme.statLabel + " mb-2"}>Session Message:</label>
         <div
-          className="text-lg font-mono bg-white p-4 rounded-lg border border-gray-200 min-h-[60px]"
+          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 min-h-[60px] text-slate-800"
           data-testid="tab-message"
         >
           {message || "(empty)"}
@@ -399,16 +399,16 @@ function TabIsolationDemo() {
       </div>
 
       {/* Warning Box */}
-      <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6">
-        <p className="text-amber-800 text-sm">
+      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6">
+        <p className="text-amber-800 text-sm leading-relaxed">
           <strong>⚠️ Important:</strong> Each browser tab has its own separate
           sessionStorage. Changes made here will NOT appear in other tabs!
         </p>
       </div>
 
       {/* Instructions */}
-      <div className={storyTheme.infoBox}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           <strong>How to verify:</strong>
           <br />
           1. Open this page in another browser tab
@@ -442,7 +442,7 @@ function ComponentSyncDemo() {
       </p>
 
       {/* Two synchronized components side by side */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
         <SyncedSessionComponent name="Component A" color="teal" />
         <SyncedSessionComponent name="Component B" color="orange" />
       </div>
@@ -453,8 +453,8 @@ function ComponentSyncDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           <strong>How it works:</strong>
           <br />
           All three components use{" "}
@@ -510,14 +510,14 @@ function SyncedSessionComponent({
 
   return (
     <div
-      className={`p-4 rounded-xl border-2 ${
+      className={`p-8 rounded-2xl border-2 ${
         borderColors[color as keyof typeof borderColors]
       } ${bgColors[color as keyof typeof bgColors]}`}
       data-testid={`session-sync-component-${name
         .toLowerCase()
         .replace(" ", "-")}`}
     >
-      <h3 className="font-semibold text-gray-800 mb-3 text-center">{name}</h3>
+      <h3 className="font-semibold text-slate-800 mb-4 text-center">{name}</h3>
 
       {/* Count Display */}
       <div
@@ -530,10 +530,10 @@ function SyncedSessionComponent({
       </div>
 
       {/* Controls */}
-      <div className="flex gap-2 justify-center">
+      <div className="flex gap-2 justify-center flex-wrap">
         <button
           onClick={() => setCount((c) => c - 1)}
-          className={`px-3 py-2 rounded-lg text-white font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-white font-semibold transition-colors ${
             colorClasses[color as keyof typeof colorClasses]
           }`}
           data-testid={`session-sync-decrement-${name
@@ -544,7 +544,7 @@ function SyncedSessionComponent({
         </button>
         <button
           onClick={() => setCount((c) => c + 1)}
-          className={`px-3 py-2 rounded-lg text-white font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-white font-semibold transition-colors ${
             colorClasses[color as keyof typeof colorClasses]
           }`}
           data-testid={`session-sync-increment-${name
@@ -555,7 +555,7 @@ function SyncedSessionComponent({
         </button>
         <button
           onClick={() => setCount((c) => c + 10)}
-          className={`px-3 py-2 rounded-lg text-white font-medium transition-colors ${
+          className={`px-4 py-2 rounded-lg text-white font-semibold transition-colors ${
             colorClasses[color as keyof typeof colorClasses]
           }`}
           data-testid={`session-sync-add10-${name
@@ -566,7 +566,7 @@ function SyncedSessionComponent({
         </button>
         <button
           onClick={resetCount}
-          className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium transition-colors"
+          className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold transition-colors"
           data-testid={`session-sync-reset-${name
             .toLowerCase()
             .replace(" ", "-")}`}
@@ -776,6 +776,13 @@ function FormPersistenceExample() {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+
+    // First, reset form to initial state
+    await userEvent.click(canvas.getByTestId("clear-form"));
+    await waitFor(() => {
+      expect(canvas.getByTestId("form-data")).toHaveTextContent('"step": 1');
+      expect(canvas.getByTestId("form-data")).toHaveTextContent('"name": ""');
+    });
 
     // Fill in form
     await userEvent.type(canvas.getByTestId("name-input"), "John Doe");

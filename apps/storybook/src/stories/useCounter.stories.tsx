@@ -8,12 +8,12 @@ function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
   const { count, increment, decrement, reset } = useCounter(initialValue);
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.titleLarge}>useCounter Hook Demo</h2>
-      <div className={storyTheme.gradientBox + " mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.titleLarge + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>useCounter Hook Demo</h2>
+      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-3xl shadow-2xl text-center"}>
         <p
           data-testid="count"
-          className="text-6xl font-bold text-white m-0 drop-shadow-[0_2px_10px_rgba(0,0,0,0.2)]"
+          className="text-8xl font-black text-white m-0 drop-shadow-sm"
         >
           {count}
         </p>
@@ -22,21 +22,21 @@ function CounterDemo({ initialValue = 0 }: { initialValue?: number }) {
         <button
           data-testid="decrement-btn"
           onClick={decrement}
-          className={storyTheme.buttonSecondary}
+          className={storyTheme.buttonSecondary + " flex-1 py-3 rounded-xl font-bold"}
         >
           - Decrement
         </button>
         <button
           data-testid="reset-btn"
           onClick={reset}
-          className={storyTheme.buttonNeutral}
+          className={storyTheme.buttonNeutral + " px-6 py-3 rounded-xl font-bold"}
         >
           Reset
         </button>
         <button
           data-testid="increment-btn"
           onClick={increment}
-          className={storyTheme.buttonPrimary}
+          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-xl font-bold shadow-lg"}
         >
           + Increment
         </button>

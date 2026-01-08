@@ -26,9 +26,9 @@ function SearchInputDemo() {
   }, 500);
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Search with Debounced Callback</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Debounced Callback</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Type to search. The search function is debounced by 500ms.
       </p>
 
@@ -40,25 +40,25 @@ function SearchInputDemo() {
           handleSearch(e.target.value);
         }}
         placeholder="Search..."
-        className={storyTheme.input + " mb-5 truncate"}
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
       />
 
-      <div className={storyTheme.buttonGroupFull}>
+      <div className={storyTheme.buttonGroupFull + " flex gap-3 mb-6"}>
         <button
           onClick={handleSearch.cancel}
-          className={storyTheme.buttonDanger + " flex-1"}
+          className={storyTheme.buttonDanger + " flex-1 py-3 rounded-xl font-bold bg-rose-100 text-rose-700 hover:bg-rose-200 transition-colors"}
         >
           Cancel
         </button>
         <button
           onClick={handleSearch.flush}
-          className={storyTheme.buttonSuccess + " flex-1"}
+          className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-xl font-bold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"}
         >
           Search Now
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mb-5"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className={storyTheme.statLabel + " overflow-hidden"}>
           <strong className={storyTheme.statText}>Current Input:</strong>{" "}
           <span
@@ -77,15 +77,15 @@ function SearchInputDemo() {
 
       {searchResults.length > 0 && (
         <div>
-          <h3 className="text-xl font-semibold text-gray-700 mb-3">
+          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
             Search Results:
           </h3>
-          <ul className="list-none p-0">
+          <ul className="list-none p-0 space-y-2">
             {searchResults.map((result, index) => (
               <li
                 key={index}
                 className={
-                  storyTheme.listItem + " break-words overflow-wrap-anywhere"
+                  storyTheme.listItem + " break-words overflow-wrap-anywhere p-3 bg-slate-50 rounded-xl border border-slate-100 text-slate-700"
                 }
               >
                 {result}
@@ -118,8 +118,8 @@ function AutoSaveFormDemo() {
   };
 
   return (
-    <div className="p-8 max-w-[600px] font-sans">
-      <h2 className={storyTheme.title}>Auto-save Form</h2>
+    <div className="p-8 max-w-[600px] mx-auto font-sans">
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Auto-save Form</h2>
       <p className="text-gray-500 mb-6 text-[0.95rem]">
         Form auto-saves 1 second after you stop typing.
       </p>
@@ -137,7 +137,7 @@ function AutoSaveFormDemo() {
           value={formData.name}
           onChange={(e) => updateField("name", e.target.value)}
           placeholder="Enter your name"
-          className={storyTheme.input + " truncate"}
+          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300"}
         />
       </div>
 
@@ -154,7 +154,7 @@ function AutoSaveFormDemo() {
           value={formData.email}
           onChange={(e) => updateField("email", e.target.value)}
           placeholder="Enter your email"
-          className={storyTheme.input + " truncate"}
+          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300"}
         />
       </div>
 

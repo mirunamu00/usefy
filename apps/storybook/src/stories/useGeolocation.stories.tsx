@@ -31,8 +31,8 @@ function BasicGeolocationDemo() {
 
   if (!isSupported) {
     return (
-      <div className={storyTheme.container}>
-        <div className={storyTheme.cardWarning}>
+      <div className={storyTheme.container + " max-w-md mx-auto"}>
+        <div className={storyTheme.cardWarning + " bg-amber-50 border border-amber-200 rounded-2xl p-5"}>
           <p className="text-amber-800">
             ⚠️ Geolocation is not supported in your browser
           </p>
@@ -42,15 +42,15 @@ function BasicGeolocationDemo() {
   }
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Current Location</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Current Location</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Your device's geographic coordinates
       </p>
 
       {/* Permission Status */}
-      <div className="mb-4">
-        <div className="flex items-center gap-2">
+      <div className="mb-6">
+        <div className="flex items-center gap-3 bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
           <span className="text-sm text-gray-500">Permission:</span>
           <span
             data-testid="permission-badge"
@@ -71,7 +71,7 @@ function BasicGeolocationDemo() {
       {loading && (
         <div
           data-testid="loading-indicator"
-          className={storyTheme.cardInfo + " text-center"}
+          className={storyTheme.cardInfo + " text-center bg-slate-50 p-8 rounded-2xl"}
         >
           <div className="animate-pulse">📍 Getting your location...</div>
         </div>
@@ -79,7 +79,7 @@ function BasicGeolocationDemo() {
 
       {/* Error State */}
       {error && (
-        <div data-testid="error-message" className={storyTheme.cardError}>
+        <div data-testid="error-message" className={storyTheme.cardError + " bg-rose-50 border border-rose-200 rounded-2xl p-5 text-rose-800"}>
           <p className="font-semibold">Error: {error.code}</p>
           <p className="text-sm">{error.message}</p>
         </div>
@@ -87,28 +87,28 @@ function BasicGeolocationDemo() {
 
       {/* Position Data */}
       {position && (
-        <div data-testid="position-data" className={storyTheme.card}>
+        <div data-testid="position-data" className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
           <div className="space-y-2">
-            <div className="flex justify-between py-2 border-b border-gray-200">
+            <div className="flex justify-between py-2 border-b border-slate-100">
               <span className="text-gray-600">Latitude:</span>
               <span className="font-mono font-semibold">
                 {position.coords.latitude.toFixed(6)}°
               </span>
             </div>
-            <div className="flex justify-between py-2 border-b border-gray-200">
+            <div className="flex justify-between py-2 border-b border-slate-100">
               <span className="text-gray-600">Longitude:</span>
               <span className="font-mono font-semibold">
                 {position.coords.longitude.toFixed(6)}°
               </span>
             </div>
-            <div className="flex justify-between py-2 border-b border-gray-200">
+            <div className="flex justify-between py-2 border-b border-slate-100">
               <span className="text-gray-600">Accuracy:</span>
               <span className="font-mono font-semibold">
                 {position.coords.accuracy.toFixed(1)}m
               </span>
             </div>
             {position.coords.altitude !== null && (
-              <div className="flex justify-between py-2 border-b border-gray-200">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-gray-600">Altitude:</span>
                 <span className="font-mono font-semibold">
                   {position.coords.altitude.toFixed(1)}m
@@ -116,7 +116,7 @@ function BasicGeolocationDemo() {
               </div>
             )}
             {position.coords.speed !== null && (
-              <div className="flex justify-between py-2 border-b border-gray-200">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-gray-600">Speed:</span>
                 <span className="font-mono font-semibold">
                   {position.coords.speed.toFixed(1)}m/s
@@ -124,7 +124,7 @@ function BasicGeolocationDemo() {
               </div>
             )}
             {position.coords.heading !== null && (
-              <div className="flex justify-between py-2 border-b border-gray-200">
+              <div className="flex justify-between py-2 border-b border-slate-100">
                 <span className="text-gray-600">Heading:</span>
                 <span className="font-mono font-semibold">
                   {position.coords.heading.toFixed(0)}°
@@ -176,8 +176,8 @@ function ManualControlDemo() {
 
   if (!isSupported) {
     return (
-      <div className={storyTheme.container}>
-        <div className={storyTheme.cardWarning}>
+      <div className={storyTheme.container + " max-w-md mx-auto"}>
+        <div className={storyTheme.cardWarning + " bg-amber-50 border border-amber-200 rounded-2xl p-5"}>
           <p>Geolocation not supported</p>
         </div>
       </div>
@@ -185,28 +185,28 @@ function ManualControlDemo() {
   }
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Manual Control</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Manual Control</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Get location on demand or track in real-time
       </p>
 
       {/* Control Buttons */}
-      <div className="flex flex-col gap-2 mb-4">
+      <div className="flex flex-col gap-3 mb-6">
         <button
           data-testid="get-location-btn"
           onClick={handleGetLocation}
           disabled={loading}
-          className={storyTheme.buttonPrimary}
+          className={storyTheme.buttonPrimary + " w-full py-3 rounded-xl font-bold shadow-lg"}
         >
           📍 Get Current Location
         </button>
-        <div className="flex gap-2">
+        <div className="flex gap-3">
           <button
             data-testid="start-watch-btn"
             onClick={handleStartWatch}
             disabled={isWatching || loading}
-            className={storyTheme.buttonSuccess}
+            className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-xl font-bold"}
           >
             ▶️ Start Tracking
           </button>
@@ -214,7 +214,7 @@ function ManualControlDemo() {
             data-testid="stop-watch-btn"
             onClick={handleStopWatch}
             disabled={!isWatching}
-            className={storyTheme.buttonDanger}
+            className={storyTheme.buttonDanger + " flex-1 py-3 rounded-xl font-bold"}
           >
             ⏹️ Stop Tracking
           </button>
@@ -223,26 +223,26 @@ function ManualControlDemo() {
 
       {/* Status */}
       {isWatching && (
-        <div className={storyTheme.cardSuccess}>
+        <div className={storyTheme.cardSuccess + " bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-4"}>
           <p className="text-green-800">🔴 Live tracking active</p>
         </div>
       )}
 
       {loading && (
-        <div data-testid="loading-state" className={storyTheme.cardInfo}>
+        <div data-testid="loading-state" className={storyTheme.cardInfo + " bg-slate-50 p-4 rounded-2xl mb-4"}>
           <p>Loading...</p>
         </div>
       )}
 
       {error && (
-        <div data-testid="error-state" className={storyTheme.cardError}>
+        <div data-testid="error-state" className={storyTheme.cardError + " bg-rose-50 border border-rose-200 rounded-2xl p-4 mb-4 text-rose-800"}>
           <p>{error.message}</p>
         </div>
       )}
 
       {/* Position Display */}
       {position && (
-        <div data-testid="position-display" className={storyTheme.card}>
+        <div data-testid="position-display" className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
           <p className="font-mono text-sm">
             {position.coords.latitude.toFixed(6)},{" "}
             {position.coords.longitude.toFixed(6)}
@@ -270,21 +270,21 @@ function DistanceCalculationDemo() {
   ];
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Distance Calculator</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-2xl mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Distance Calculator</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Calculate distances and bearings to famous cities
       </p>
 
       {loading && (
-        <div className={storyTheme.cardInfo}>
+        <div className={storyTheme.cardInfo + " bg-slate-50 p-4 rounded-2xl mb-4"}>
           <p>Getting your location...</p>
         </div>
       )}
 
       {position && (
         <div className="space-y-3">
-          <div className={storyTheme.card}>
+          <div className={storyTheme.card + " bg-white rounded-2xl p-5 shadow-sm border border-slate-100"}>
             <p className="text-sm text-gray-600 mb-1">Your Location</p>
             <p className="font-mono">
               {position.coords.latitude.toFixed(4)}°,{" "}
@@ -301,7 +301,7 @@ function DistanceCalculationDemo() {
                 <div
                   key={loc.name}
                   data-testid={`distance-${loc.name.toLowerCase()}`}
-                  className={storyTheme.card}
+                  className={storyTheme.card + " bg-white rounded-2xl p-5 shadow-sm border border-slate-100 hover:shadow-md transition-all"}
                 >
                   <div className="flex justify-between items-center">
                     <div>
@@ -354,21 +354,21 @@ function HighAccuracyDemo() {
   };
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title}>Accuracy Comparison</h2>
-      <p className={storyTheme.subtitle}>
+    <div className={storyTheme.container + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Accuracy Comparison</h2>
+      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
         Compare standard vs high accuracy mode
       </p>
 
       {/* Mode Toggle */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-6 bg-slate-100 p-1 rounded-xl">
         <button
           data-testid="standard-mode-btn"
           onClick={() => setMode("standard")}
           className={
             mode === "standard"
-              ? storyTheme.buttonPrimary
-              : storyTheme.buttonSecondary
+              ? "flex-1 py-2 rounded-lg bg-white shadow-sm font-semibold text-slate-800"
+              : "flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-700"
           }
         >
           Standard
@@ -378,8 +378,8 @@ function HighAccuracyDemo() {
           onClick={() => setMode("high")}
           className={
             mode === "high"
-              ? storyTheme.buttonPrimary
-              : storyTheme.buttonSecondary
+              ? "flex-1 py-2 rounded-lg bg-white shadow-sm font-semibold text-slate-800"
+              : "flex-1 py-2 rounded-lg text-slate-500 hover:text-slate-700"
           }
         >
           High Accuracy
@@ -390,13 +390,13 @@ function HighAccuracyDemo() {
         data-testid="fetch-location-btn"
         onClick={handleFetch}
         disabled={current.loading}
-        className={storyTheme.buttonPrimary}
+        className={storyTheme.buttonPrimary + " w-full py-3 rounded-xl font-bold shadow-lg"}
       >
         Get Location ({mode})
       </button>
 
       {current.loading && (
-        <div className={storyTheme.cardInfo + " mt-4"}>
+        <div className={storyTheme.cardInfo + " mt-6 bg-slate-50 p-4 rounded-2xl"}>
           <p>Fetching with {mode} accuracy...</p>
         </div>
       )}
@@ -404,7 +404,7 @@ function HighAccuracyDemo() {
       {current.position && (
         <div
           data-testid="accuracy-result"
-          className={storyTheme.card + " mt-4"}
+          className={storyTheme.card + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}
         >
           <p className="text-sm text-gray-600">
             Mode: <span className="font-semibold">{mode}</span>
@@ -516,9 +516,9 @@ export const HighAccuracyMode: Story = {
     // Switch to high accuracy mode
     await userEvent.click(highAccuracyBtn);
 
-    // Verify button states changed (buttonPrimary uses gradient)
+    // Verify button states changed (active button has bg-white and shadow)
     await waitFor(() => {
-      expect(highAccuracyBtn).toHaveClass("from-indigo-500");
+      expect(highAccuracyBtn).toHaveClass("bg-white");
     });
   },
 };
@@ -568,19 +568,19 @@ export const RealTimeTracking: Story = {
     }
 
     return (
-      <div className={storyTheme.container}>
-        <h2 className={storyTheme.title}>Real-Time Tracking</h2>
-        <p className={storyTheme.subtitle}>
+      <div className={storyTheme.container + " max-w-md mx-auto"}>
+        <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Real-Time Tracking</h2>
+        <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
           Watch position changes in real-time
         </p>
 
         {/* Controls */}
-        <div className="flex gap-2 mb-4">
+        <div className="flex gap-3 mb-6">
           <button
             data-testid="start-tracking-btn"
             onClick={handleStartTracking}
             disabled={isTracking || loading}
-            className={storyTheme.buttonSuccess}
+            className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-xl font-bold"}
           >
             🔴 Start Tracking
           </button>
@@ -588,7 +588,7 @@ export const RealTimeTracking: Story = {
             data-testid="stop-tracking-btn"
             onClick={handleStopTracking}
             disabled={!isTracking}
-            className={storyTheme.buttonDanger}
+            className={storyTheme.buttonDanger + " flex-1 py-3 rounded-xl font-bold"}
           >
             ⏹️ Stop Tracking
           </button>
@@ -596,7 +596,7 @@ export const RealTimeTracking: Story = {
 
         {/* Tracking Status */}
         {isTracking && (
-          <div className={storyTheme.cardSuccess}>
+          <div className={storyTheme.cardSuccess + " bg-emerald-50 border border-emerald-200 rounded-2xl p-4 mb-4"}>
             <div className="flex items-center justify-between">
               <span className="text-green-800 font-semibold">
                 🔴 LIVE TRACKING
@@ -612,14 +612,14 @@ export const RealTimeTracking: Story = {
         )}
 
         {loading && (
-          <div className={storyTheme.cardInfo}>
+          <div className={storyTheme.cardInfo + " bg-slate-50 p-4 rounded-2xl mb-4"}>
             <p>Initializing tracking...</p>
           </div>
         )}
 
         {/* Current Position */}
         {position && (
-          <div data-testid="tracking-position" className={storyTheme.card}>
+          <div data-testid="tracking-position" className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span className="text-gray-600">Latitude:</span>

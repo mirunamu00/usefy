@@ -65,7 +65,7 @@ function ModalDemo({ enabled = true }: { enabled?: boolean }) {
         </div>
       )}
 
-      <div className={storyTheme.statBox + " mt-6"}>
+      <div className={storyTheme.statBox + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Outside clicks: </span>
           <span className={storyTheme.statValue} data-testid="click-count">
@@ -122,7 +122,7 @@ function DropdownDemo() {
         {isOpen && (
           <div
             ref={menuRef}
-            className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden z-10"
+            className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden z-10"
             data-testid="dropdown-menu"
           >
             {menuItems.map((item) => (
@@ -141,8 +141,8 @@ function DropdownDemo() {
         )}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-8"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600"}>
           Click outside both the button and menu to close the dropdown.
           <br />
           Clicking the button toggles the menu without triggering outside click.
@@ -241,7 +241,7 @@ function ExcludeRefsDemo() {
         </div>
       )}
 
-      <div className={storyTheme.statBox + " mt-6"}>
+      <div className={storyTheme.statBox + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Modal: </span>
           <span
@@ -318,7 +318,7 @@ function ConditionalDemo() {
         </p>
       </div>
 
-      <div className={storyTheme.statBox + " mt-6"}>
+      <div className={storyTheme.statBox + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Listener: </span>
           <span
@@ -385,7 +385,7 @@ function ShouldExcludeDemo() {
       {isOpen && (
         <div
           ref={menuRef}
-          className="bg-white rounded-xl p-6 shadow-xl border border-gray-200 mb-6"
+          className="bg-white rounded-xl p-6 shadow-xl border border-slate-200 mb-6"
           data-testid="menu"
         >
           <p className="text-gray-700 font-semibold mb-4">
@@ -419,7 +419,7 @@ function ShouldExcludeDemo() {
         </button>
       </div>
 
-      <div className={storyTheme.statBox}>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Menu: </span>
           <span

@@ -23,27 +23,27 @@ function WindowResizeDemo() {
   });
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Window Resize Listener
       </h2>
 
-      <div className={storyTheme.gradientBox + " text-center mb-6"}>
-        <p className="text-white/80 text-sm mb-2">Window Size</p>
-        <p className="text-3xl font-bold text-white" data-testid="window-size">
+      <div className={storyTheme.gradientBox + " text-center mb-8 p-10 rounded-3xl shadow-2xl transform transition-all hover:scale-[1.02] duration-300"}>
+        <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-4">Window Size</p>
+        <p className="text-5xl font-black text-white drop-shadow-sm" data-testid="window-size">
           {windowSize.width} × {windowSize.height}
         </p>
       </div>
 
-      <div className={storyTheme.statBox}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Resize Count: </span>
-          <span data-testid="resize-count">{resizeCount}</span>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Resize Count</span>
+          <span className="text-2xl font-bold text-slate-800" data-testid="resize-count">{resizeCount}</span>
         </p>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Resize the browser window to see the dimensions update.
         </p>
       </div>
@@ -85,28 +85,28 @@ function KeyboardEventsDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Keyboard Event Listener
       </h2>
 
-      <div className={storyTheme.gradientBox + " text-center mb-6"}>
+      <div className={storyTheme.gradientBox + " text-center mb-8 p-10 rounded-3xl shadow-2xl min-h-[200px] flex flex-col justify-center items-center"}>
         {lastKey ? (
           <>
-            <p className="text-white/80 text-sm mb-2">Last Key Pressed</p>
-            <p className="text-4xl font-bold text-white" data-testid="last-key">
+            <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-4">Last Key Pressed</p>
+            <p className="text-6xl font-black text-white drop-shadow-sm" data-testid="last-key">
               {lastKey === " " ? "Space" : lastKey}
             </p>
           </>
         ) : (
-          <p className="text-white/80 text-lg" data-testid="no-key-message">
+          <p className="text-white/80 text-xl font-medium animate-pulse" data-testid="no-key-message">
             Press any key
           </p>
         )}
       </div>
 
-      <div className={storyTheme.statBox + " mb-4"}>
-        <p className={storyTheme.statLabel + " mb-3"}>Modifier Keys:</p>
+      <div className={storyTheme.statBox + " mb-4 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " mb-4 text-slate-400 text-xs font-bold uppercase tracking-wider"}>Modifier Keys</p>
         <div className="flex gap-2 flex-wrap justify-center">
           <span
             className={`px-3 py-1 rounded-full text-sm ${
@@ -148,13 +148,13 @@ function KeyboardEventsDemo() {
       </div>
 
       {keyHistory.length > 0 && (
-        <div className={storyTheme.statBox}>
-          <p className={storyTheme.statLabel + " mb-3"}>Key History:</p>
+        <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+          <p className={storyTheme.statLabel + " mb-4 text-slate-400 text-xs font-bold uppercase tracking-wider"}>Key History</p>
           <div className="flex gap-2 flex-wrap justify-center">
             {keyHistory.map(({ key, id }) => (
               <span
                 key={id}
-                className="px-3 py-1 bg-gray-100 rounded-full text-sm text-gray-600"
+                className="px-3 py-1.5 bg-slate-100 rounded-lg text-sm font-mono text-slate-600 border border-slate-200"
               >
                 {key === " " ? "Space" : key}
               </span>
@@ -163,8 +163,8 @@ function KeyboardEventsDemo() {
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Press any key to see the key name and modifier states.
         </p>
       </div>
@@ -214,14 +214,14 @@ function ElementMouseEventsDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Element Mouse Tracking
       </h2>
 
       <div
         ref={boxRef}
-        className={`w-80 h-48 rounded-xl border-2 border-dashed flex items-center justify-center mb-6 transition-colors ${
+        className={`w-full h-64 rounded-3xl border-2 border-dashed flex items-center justify-center mb-8 transition-all duration-300 shadow-sm ${
           isInside
             ? "border-indigo-500 bg-indigo-50"
             : "border-gray-300 bg-gray-50"
@@ -230,9 +230,9 @@ function ElementMouseEventsDemo() {
       >
         {position ? (
           <div className="text-center">
-            <p className="text-gray-500 text-sm mb-1">Mouse Position</p>
+            <p className="text-indigo-400 text-xs font-bold uppercase tracking-wider mb-2">Relative Position</p>
             <p
-              className="text-2xl font-bold text-indigo-600"
+              className="text-4xl font-black text-indigo-600 font-mono"
               data-testid="mouse-position"
             >
               ({position.x}, {position.y})
@@ -245,11 +245,11 @@ function ElementMouseEventsDemo() {
         )}
       </div>
 
-      <div className={storyTheme.statBox}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Mouse Status: </span>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Mouse Status</span>
           <span
-            className={isInside ? "text-green-600" : "text-gray-400"}
+            className={`px-3 py-1 rounded-full text-sm font-bold ${isInside ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-500"}`}
             data-testid="inside-status"
           >
             {isInside ? "Inside" : "Outside"}
@@ -257,8 +257,8 @@ function ElementMouseEventsDemo() {
         </p>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Move your mouse over the box to track position relative to the
           element.
         </p>
@@ -288,14 +288,14 @@ function ScrollEventsDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Scroll Event (Passive)
       </h2>
 
       <div
         ref={scrollContainerRef}
-        className="w-80 border border-gray-200 rounded-xl mb-6 bg-white"
+        className="w-full border border-slate-200 rounded-2xl mb-8 bg-white shadow-inner"
         style={{ height: "200px", overflowY: "scroll" }}
         data-testid="scroll-container"
       >
@@ -303,7 +303,7 @@ function ScrollEventsDemo() {
           {Array.from({ length: 20 }, (_, i) => (
             <div
               key={i}
-              className="p-3 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg"
+              className="p-4 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border border-indigo-100"
             >
               <p className="text-gray-600">Scroll Item {i + 1}</p>
             </div>
@@ -311,21 +311,21 @@ function ScrollEventsDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.statBox}>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className="grid grid-cols-2 gap-4">
-          <div>
-            <p className={storyTheme.statTextSecondary}>Scroll Position</p>
+          <div className="text-center">
+            <p className={storyTheme.statTextSecondary + " text-xs font-bold uppercase tracking-wider mb-1"}>Position</p>
             <p
-              className="text-xl font-bold text-gray-800"
+              className="text-2xl font-black text-slate-800"
               data-testid="scroll-position"
             >
               {Math.round(scrollPosition)}px
             </p>
           </div>
-          <div>
-            <p className={storyTheme.statTextSecondary}>Scroll Events</p>
+          <div className="text-center">
+            <p className={storyTheme.statTextSecondary + " text-xs font-bold uppercase tracking-wider mb-1"}>Events</p>
             <p
-              className="text-xl font-bold text-gray-800"
+              className="text-2xl font-black text-slate-800"
               data-testid="scroll-count"
             >
               {scrollCount}
@@ -334,8 +334,8 @@ function ScrollEventsDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Scroll the container above. Using passive: true for optimal
           performance.
         </p>
@@ -361,14 +361,14 @@ function ConditionalListenerDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Conditional Listener
       </h2>
 
-      <div className={storyTheme.gradientBox + " text-center mb-6"}>
-        <p className="text-white/80 text-sm mb-2">Click Count</p>
-        <p className="text-6xl font-bold text-white" data-testid="click-count">
+      <div className={storyTheme.gradientBox + " text-center mb-8 p-10 rounded-3xl shadow-2xl"}>
+        <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-4">Click Count</p>
+        <p className="text-7xl font-black text-white drop-shadow-sm" data-testid="click-count">
           {clickCount}
         </p>
       </div>
@@ -378,19 +378,19 @@ function ConditionalListenerDemo() {
           e.stopPropagation();
           setIsListening((prev) => !prev);
         }}
-        className={
-          isListening ? storyTheme.buttonDanger : storyTheme.buttonPrimary
-        }
+        className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all shadow-lg active:scale-[0.98] ${
+          isListening ? "bg-rose-500 text-white hover:bg-rose-600 shadow-rose-200" : "bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-200"
+        }`}
         data-testid="toggle-button"
       >
         {isListening ? "Disable Listener" : "Enable Listener"}
       </button>
 
-      <div className={storyTheme.statBox + " mt-6"}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Status: </span>
+      <div className={storyTheme.statBox + " mt-8 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Listener Status</span>
           <span
-            className={isListening ? "text-green-600" : "text-red-500"}
+            className={`px-4 py-1.5 rounded-full text-sm font-bold ${isListening ? "bg-emerald-100 text-emerald-700" : "bg-rose-100 text-rose-700"}`}
             data-testid="listener-status"
           >
             {isListening ? "Listening" : "Disabled"}
@@ -398,8 +398,8 @@ function ConditionalListenerDemo() {
         </p>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Toggle the listener on/off. Clicks are only counted when enabled.
         </p>
       </div>
@@ -435,21 +435,21 @@ function NetworkStatusDemo() {
   });
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Network Status Listener
       </h2>
 
       <div
-        className={`${storyTheme.gradientBox} text-center mb-6 ${
+        className={`${storyTheme.gradientBox} text-center mb-8 p-10 rounded-3xl shadow-2xl transition-all duration-500 ${
           isOnline
             ? "from-green-500 to-emerald-600"
             : "from-red-500 to-rose-600"
         }`}
       >
-        <p className="text-white/80 text-sm mb-2">Network Status</p>
+        <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-4">Network Status</p>
         <p
-          className="text-4xl font-bold text-white"
+          className="text-5xl font-black text-white drop-shadow-sm"
           data-testid="network-status"
         >
           {isOnline ? "Online" : "Offline"}
@@ -457,13 +457,13 @@ function NetworkStatusDemo() {
       </div>
 
       {statusHistory.length > 0 && (
-        <div className={storyTheme.statBox}>
-          <p className={storyTheme.statLabel + " mb-3"}>Status History:</p>
+        <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+          <p className={storyTheme.statLabel + " mb-4 text-slate-400 text-xs font-bold uppercase tracking-wider"}>Status History</p>
           <div className="space-y-2">
             {statusHistory.map(({ online, time, id }) => (
               <div
                 key={id}
-                className="flex justify-between items-center text-sm"
+                className="flex justify-between items-center text-sm p-2 hover:bg-slate-50 rounded-lg transition-colors"
               >
                 <span className={online ? "text-green-600" : "text-red-500"}>
                   {online ? "Online" : "Offline"}
@@ -475,8 +475,8 @@ function NetworkStatusDemo() {
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Toggle your network connection to see status changes. (Use DevTools
           Network tab to simulate)
         </p>
@@ -865,38 +865,38 @@ function FocusBlurDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Focus & Blur Events
       </h2>
 
-      <div className="space-y-4 mb-6 w-80">
+      <div className="space-y-4 mb-8 w-full">
         <input
           ref={input1Ref}
           type="text"
           placeholder="Input 1"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
           data-testid="input-1"
         />
         <input
           ref={input2Ref}
           type="text"
           placeholder="Input 2"
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
           data-testid="input-2"
         />
         <button
           ref={buttonRef}
-          className={storyTheme.buttonPrimary + " w-full"}
+          className={storyTheme.buttonPrimary + " w-full py-3 rounded-xl font-bold shadow-lg"}
           data-testid="focus-button"
         >
           Focusable Button
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mb-4"}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>
             Currently Focused:{" "}
           </span>
           <span
@@ -909,13 +909,13 @@ function FocusBlurDemo() {
       </div>
 
       {focusHistory.length > 0 && (
-        <div className={storyTheme.statBox}>
-          <p className={storyTheme.statLabel + " mb-3"}>Focus History:</p>
+        <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+          <p className={storyTheme.statLabel + " mb-4 text-slate-400 text-xs font-bold uppercase tracking-wider"}>Focus History</p>
           <div className="space-y-2">
             {focusHistory.map(({ element, type, id }) => (
               <div
                 key={id}
-                className="flex justify-between items-center text-sm"
+                className="flex justify-between items-center text-sm p-2 hover:bg-slate-50 rounded-lg transition-colors"
               >
                 <span className="text-gray-600">{element}</span>
                 <span
@@ -931,8 +931,8 @@ function FocusBlurDemo() {
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Click or tab between elements to see focus/blur events.
         </p>
       </div>
@@ -995,12 +995,12 @@ function TouchEventsDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>Touch Events</h2>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>Touch Events</h2>
 
       <div
         ref={touchAreaRef}
-        className="w-80 h-48 rounded-xl border-2 border-dashed border-indigo-300 bg-indigo-50 flex items-center justify-center mb-6"
+        className="w-full h-64 rounded-3xl border-2 border-dashed border-indigo-300 bg-indigo-50 flex items-center justify-center mb-8 shadow-inner"
         data-testid="touch-area"
       >
         {touchInfo ? (
@@ -1020,15 +1020,15 @@ function TouchEventsDemo() {
         )}
       </div>
 
-      <div className={storyTheme.statBox}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Touch Count: </span>
-          <span data-testid="touch-count">{touchCount}</span>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Touch Count</span>
+          <span className="text-2xl font-bold text-slate-800" data-testid="touch-count">{touchCount}</span>
         </p>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Touch the area above on a touch-enabled device.
         </p>
       </div>
@@ -1079,13 +1079,13 @@ function ClipboardEventsDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Clipboard Events
       </h2>
 
-      <div className="w-80 space-y-4 mb-6">
-        <div className="p-4 bg-gray-100 rounded-lg select-all">
+      <div className="w-full space-y-4 mb-8">
+        <div className="p-5 bg-slate-100 rounded-2xl select-all border border-slate-200">
           <p className="text-gray-600 text-sm mb-1">
             Select and copy this text:
           </p>
@@ -1097,14 +1097,14 @@ function ClipboardEventsDemo() {
         <input
           ref={inputRef}
           type="text"
-          placeholder="Paste here..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
+          placeholder="Paste here to test..."
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
           data-testid="paste-input"
         />
       </div>
 
       <div
-        className={`${storyTheme.gradientBox} text-center mb-6 transition-all ${
+        className={`${storyTheme.gradientBox} text-center mb-8 p-8 rounded-3xl shadow-lg transition-all duration-300 ${
           clipboardAction
             ? clipboardAction === "copy"
               ? "from-blue-500 to-indigo-600"
@@ -1114,34 +1114,34 @@ function ClipboardEventsDemo() {
             : ""
         }`}
       >
-        <p className="text-white/80 text-sm mb-2">Last Action</p>
+        <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-2">Last Action</p>
         <p
-          className="text-2xl font-bold text-white"
+          className="text-3xl font-black text-white drop-shadow-sm"
           data-testid="clipboard-action"
         >
           {clipboardAction?.toUpperCase() || "None"}
         </p>
       </div>
 
-      <div className={storyTheme.statBox}>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className="space-y-2 text-sm">
-          <p>
-            <span className={storyTheme.statTextSecondary}>Copied/Cut: </span>
-            <span className="text-gray-800" data-testid="copied-text">
+          <p className="flex justify-between">
+            <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Copied/Cut: </span>
+            <span className="text-slate-800 font-mono" data-testid="copied-text">
               {copiedText || "-"}
             </span>
           </p>
-          <p>
-            <span className={storyTheme.statTextSecondary}>Pasted: </span>
-            <span className="text-gray-800" data-testid="pasted-text">
+          <p className="flex justify-between">
+            <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Pasted: </span>
+            <span className="text-slate-800 font-mono" data-testid="pasted-text">
               {pastedText || "-"}
             </span>
           </p>
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Try copy (Ctrl+C), cut (Ctrl+X), and paste (Ctrl+V) operations.
         </p>
       </div>
@@ -1189,44 +1189,44 @@ function VisibilityChangeDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Visibility Change
       </h2>
 
       <div
-        className={`${storyTheme.gradientBox} text-center mb-6 ${
+        className={`${storyTheme.gradientBox} text-center mb-8 p-10 rounded-3xl shadow-2xl transition-all duration-500 ${
           isVisible
             ? "from-green-500 to-emerald-600"
             : "from-gray-500 to-gray-600"
         }`}
       >
-        <p className="text-white/80 text-sm mb-2">Page Status</p>
+        <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-4">Page Status</p>
         <p
-          className="text-4xl font-bold text-white"
+          className="text-5xl font-black text-white drop-shadow-sm"
           data-testid="visibility-status"
         >
           {isVisible ? "Visible" : "Hidden"}
         </p>
       </div>
 
-      <div className={storyTheme.statBox + " mb-4"}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>
             Total Hidden Duration:{" "}
           </span>
-          <span data-testid="hidden-duration">{hiddenDuration}s</span>
+          <span className="text-2xl font-bold text-slate-800" data-testid="hidden-duration">{hiddenDuration}s</span>
         </p>
       </div>
 
       {visibilityHistory.length > 0 && (
-        <div className={storyTheme.statBox}>
-          <p className={storyTheme.statLabel + " mb-3"}>Visibility History:</p>
+        <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+          <p className={storyTheme.statLabel + " mb-4 text-slate-400 text-xs font-bold uppercase tracking-wider"}>Visibility History</p>
           <div className="space-y-2">
             {visibilityHistory.map(({ visible, time, id }) => (
               <div
                 key={id}
-                className="flex justify-between items-center text-sm"
+                className="flex justify-between items-center text-sm p-2 hover:bg-slate-50 rounded-lg transition-colors"
               >
                 <span className={visible ? "text-green-600" : "text-gray-500"}>
                   {visible ? "Visible" : "Hidden"}
@@ -1238,8 +1238,8 @@ function VisibilityChangeDemo() {
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Switch to another tab and come back to see visibility changes.
         </p>
       </div>
@@ -1291,22 +1291,22 @@ function MouseEventsAdvancedDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Advanced Mouse Events
       </h2>
 
       <div
         ref={boxRef}
         style={{
-          width: "320px",
+          width: "100%",
           height: "128px",
-          borderRadius: "12px",
+          borderRadius: "1.5rem",
           background: "linear-gradient(to right, #6366f1, #9333ea)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          marginBottom: "24px",
+          marginBottom: "2rem",
           cursor: "pointer",
           userSelect: "none",
         }}
@@ -1317,40 +1317,40 @@ function MouseEventsAdvancedDemo() {
         </p>
       </div>
 
-      <div className={storyTheme.gradientBox + " text-center mb-6"}>
-        <p className="text-white/80 text-sm mb-2">Last Event</p>
+      <div className={storyTheme.gradientBox + " text-center mb-8 p-8 rounded-3xl shadow-lg"}>
+        <p className="text-white/90 text-sm font-medium uppercase tracking-widest mb-2">Last Event</p>
         <p
-          className="text-2xl font-bold text-white"
+          className="text-3xl font-black text-white drop-shadow-sm"
           data-testid="last-mouse-event"
         >
           {lastEvent || "None"}
         </p>
       </div>
 
-      <div className={storyTheme.statBox}>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
-            <p className={storyTheme.statTextSecondary}>Click</p>
+            <p className={storyTheme.statTextSecondary + " text-xs font-bold uppercase tracking-wider mb-1"}>Click</p>
             <p
-              className="text-xl font-bold text-gray-800"
+              className="text-2xl font-black text-slate-800"
               data-testid="click-count"
             >
               {eventCounts.click}
             </p>
           </div>
           <div>
-            <p className={storyTheme.statTextSecondary}>Double</p>
+            <p className={storyTheme.statTextSecondary + " text-xs font-bold uppercase tracking-wider mb-1"}>Double</p>
             <p
-              className="text-xl font-bold text-gray-800"
+              className="text-2xl font-black text-slate-800"
               data-testid="dblclick-count"
             >
               {eventCounts.dblclick}
             </p>
           </div>
           <div>
-            <p className={storyTheme.statTextSecondary}>Right</p>
+            <p className={storyTheme.statTextSecondary + " text-xs font-bold uppercase tracking-wider mb-1"}>Right</p>
             <p
-              className="text-xl font-bold text-gray-800"
+              className="text-2xl font-black text-slate-800"
               data-testid="contextmenu-count"
             >
               {eventCounts.contextmenu}
@@ -1359,8 +1359,8 @@ function MouseEventsAdvancedDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Try single click, double click, and right click on the box.
         </p>
       </div>
@@ -1407,36 +1407,36 @@ function FormEventsDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>Form Events</h2>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>Form Events</h2>
 
-      <form ref={formRef} className="w-80 space-y-4 mb-6">
+      <form ref={formRef} className="w-full space-y-4 mb-8">
         <input
           ref={inputRef}
           type="text"
           placeholder="Type something..."
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none"
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 outline-none transition-all"
           data-testid="form-input"
         />
         <button
           type="submit"
-          className={storyTheme.buttonPrimary + " w-full"}
+          className={storyTheme.buttonPrimary + " w-full py-3 rounded-xl font-bold shadow-lg"}
           data-testid="submit-button"
         >
           Submit
         </button>
       </form>
 
-      <div className={storyTheme.statBox + " mb-4"}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Current Value: </span>
-          <span className="text-indigo-600" data-testid="input-value">
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Current Value</span>
+          <span className="text-indigo-600 font-bold" data-testid="input-value">
             {inputValue || "(empty)"}
           </span>
         </p>
       </div>
 
-      <div className={storyTheme.statBox}>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
         <div className="grid grid-cols-3 gap-4 text-center">
           <div>
             <p className={storyTheme.statTextSecondary}>Input</p>
@@ -1468,8 +1468,8 @@ function FormEventsDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Input fires on every keystroke, Change fires when focus leaves.
         </p>
       </div>
@@ -1535,19 +1535,19 @@ function DragDropDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         Drag & Drop Events
       </h2>
 
-      <div style={{ display: "flex", gap: "24px", marginBottom: "24px" }}>
+      <div className="flex gap-6 mb-8 justify-center">
         <div
           ref={draggableRef}
           draggable
           style={{
             width: "128px",
             height: "128px",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             background: "linear-gradient(to right, #6366f1, #9333ea)",
             display: "flex",
             alignItems: "center",
@@ -1569,7 +1569,7 @@ function DragDropDemo() {
           style={{
             width: "200px",
             height: "160px",
-            borderRadius: "12px",
+            borderRadius: "1.5rem",
             border: `2px dashed ${
               dragStatus === "over"
                 ? "#22c55e"
@@ -1598,13 +1598,13 @@ function DragDropDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.statBox + " mb-4"}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Status: </span>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Status</span>
           <span
             className={
               dragStatus === "dropped"
-                ? "text-green-600"
+                ? "text-emerald-600"
                 : dragStatus === "over"
                 ? "text-blue-600"
                 : dragStatus === "dragging"
@@ -1619,13 +1619,13 @@ function DragDropDemo() {
       </div>
 
       {droppedItems.length > 0 && (
-        <div className={storyTheme.statBox}>
-          <p className={storyTheme.statLabel + " mb-3"}>Dropped Items:</p>
+        <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+          <p className={storyTheme.statLabel + " mb-4 text-slate-400 text-xs font-bold uppercase tracking-wider"}>Dropped Items</p>
           <div className="flex flex-wrap gap-2">
             {droppedItems.map((item, index) => (
               <span
                 key={index}
-                className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm"
+                className="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full text-sm font-medium"
               >
                 {item}
               </span>
@@ -1634,8 +1634,8 @@ function DragDropDemo() {
         </div>
       )}
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Drag the purple box and drop it in the drop zone.
         </p>
       </div>
@@ -1703,13 +1703,13 @@ function PointerEventsDemo() {
   );
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>Pointer Events</h2>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>Pointer Events</h2>
 
       <div
         ref={areaRef}
         style={{
-          width: "400px",
+          width: "100%",
           height: "280px",
           borderRadius: "12px",
           border: "2px dashed #d8b4fe",
@@ -1742,15 +1742,15 @@ function PointerEventsDemo() {
         )}
       </div>
 
-      <div className={storyTheme.statBox}>
-        <p className={storyTheme.statLabel}>
-          <span className={storyTheme.statTextSecondary}>Pointer Events: </span>
-          <span data-testid="pointer-count">{pointerCount}</span>
+      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+        <p className={storyTheme.statLabel + " flex justify-between items-center"}>
+          <span className={storyTheme.statTextSecondary + " text-slate-500 font-medium"}>Pointer Events</span>
+          <span className="text-2xl font-bold text-slate-800" data-testid="pointer-count">{pointerCount}</span>
         </p>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center"}>
           Works with mouse, touch, and pen input. Shows pointer type and
           pressure.
         </p>

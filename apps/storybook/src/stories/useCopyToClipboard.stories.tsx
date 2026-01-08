@@ -30,20 +30,20 @@ function CopyToClipboardDemo({
   const isCopied = copiedText !== null;
 
   return (
-    <div className={storyTheme.containerCentered}>
-      <h2 className={storyTheme.title + " text-center mb-8"}>
+    <div className={storyTheme.containerCentered + " max-w-md mx-auto"}>
+      <h2 className={storyTheme.title + " text-center mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>
         useCopyToClipboard Demo
       </h2>
 
       {/* Input Field */}
-      <div className="mb-6">
-        <label className={storyTheme.label}>Text to copy:</label>
+      <div className="mb-6 bg-white p-1 rounded-2xl shadow-sm border border-slate-200 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
         <input
           type="text"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
-          className={storyTheme.input}
+          className={storyTheme.input + " w-full border-none focus:ring-0 rounded-xl bg-transparent px-4 py-3 text-slate-700 placeholder:text-slate-400 font-medium"}
           data-testid="copy-input"
+          placeholder="Type text to copy..."
         />
       </div>
 
@@ -52,41 +52,41 @@ function CopyToClipboardDemo({
         onClick={() => copy(inputText)}
         data-testid="copy-button"
         aria-label="Copy text to clipboard"
-        className={`w-full py-4 px-6 text-lg font-semibold border-none rounded-xl cursor-pointer transition-all duration-300 ${
+        className={`w-full py-4 px-6 text-lg font-bold border-none rounded-2xl cursor-pointer transition-all duration-300 shadow-lg hover:shadow-xl active:scale-[0.98] flex items-center justify-center gap-2 ${
           isCopied
-            ? "bg-gradient-to-br from-green-500 to-green-600 text-white shadow-[0_6px_20px_rgba(16,185,129,0.4)]"
-            : "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-[0_4px_12px_rgba(99,102,241,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(99,102,241,0.4)]"
+            ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-emerald-500/30"
+            : "bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-indigo-500/30 hover:-translate-y-0.5"
         }`}
       >
-        {isCopied ? "Copied!" : "Copy to Clipboard"}
+        {isCopied ? <><span>✨</span> Copied!</> : <><span>📋</span> Copy to Clipboard</>}
       </button>
 
       {/* Status Display */}
-      <div className="mt-6">
+      <div className="mt-8">
         <div
           data-testid="status-display"
           role="status"
           aria-live="polite"
-          className={storyTheme.statBox}
+          className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}
         >
-          <p className={storyTheme.statLabel}>
-            <span className={storyTheme.statTextSecondary}>Copied Text: </span>
+          <div className="flex justify-between items-center mb-4">
+             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Copied Text</span>
+             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Status</span>
+          </div>
+          <div className="flex justify-between items-center">
             <span
-              className={storyTheme.statValue}
+              className="font-mono text-sm bg-slate-50 px-3 py-1.5 rounded-lg text-slate-700 border border-slate-200 max-w-[200px] truncate"
               data-testid="copied-text-value"
             >
               {copiedText ?? "(none)"}
             </span>
-          </p>
-          <p className={storyTheme.statLabel + " mt-2"}>
-            <span className={storyTheme.statTextSecondary}>Status: </span>
             <span
-              className={isCopied ? "text-green-600" : "text-gray-500"}
+              className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide ${isCopied ? "bg-emerald-100 text-emerald-700 border border-emerald-200" : "bg-slate-100 text-slate-500 border border-slate-200"}`}
               data-testid="copy-status"
             >
               {isCopied ? "Copied" : "Ready"}
             </span>
-          </p>
+          </div>
         </div>
       </div>
 
@@ -105,9 +105,9 @@ function CopyToClipboardDemo({
       )}
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-6"}>
-        <p className={storyTheme.infoText}>
-          Timeout: {timeout === 0 ? "No auto-reset" : `${timeout}ms`}
+      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+        <p className={storyTheme.infoText + " text-slate-600 text-center text-sm"}>
+          <span className="font-semibold">Timeout:</span> {timeout === 0 ? "No auto-reset" : `${timeout}ms`}
         </p>
       </div>
     </div>
@@ -128,14 +128,14 @@ function MultipleInputsDemo() {
   ];
 
   return (
-    <div className={storyTheme.container}>
-      <h2 className={storyTheme.title + " mb-8"}>Multiple Copy Targets</h2>
+    <div className={storyTheme.container + " max-w-2xl mx-auto"}>
+      <h2 className={storyTheme.title + " mb-8 text-3xl font-extrabold tracking-tight text-slate-900"}>Multiple Copy Targets</h2>
 
       <div className="space-y-3">
         {items.map((item) => (
           <div
             key={item.label}
-            className="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg shadow-sm"
+            className="flex items-center justify-between p-5 bg-white border border-slate-200 rounded-2xl shadow-sm hover:shadow-md transition-all duration-200"
           >
             <div>
               <span className="text-sm text-gray-500">{item.label}</span>
@@ -149,10 +149,10 @@ function MultipleInputsDemo() {
             <button
               onClick={() => copy(item.value)}
               data-testid={`copy-${item.label.toLowerCase()}`}
-              className={`px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+              className={`px-4 py-2 text-sm font-bold rounded-xl transition-all duration-200 ${
                 copiedText === item.value
-                  ? "bg-green-100 text-green-700 border border-green-300"
-                  : "bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200"
+                  ? "bg-emerald-100 text-emerald-700 border border-emerald-200"
+                  : "bg-slate-100 text-slate-700 border border-slate-200 hover:bg-slate-200"
               }`}
             >
               {copiedText === item.value ? "Copied!" : "Copy"}
@@ -375,9 +375,8 @@ function CopyNoReset() {
     });
 
     // Verify info shows no auto-reset
-    await expect(
-      canvas.getByText("Timeout: No auto-reset")
-    ).toBeInTheDocument();
+    await expect(canvas.getByText("Timeout:")).toBeInTheDocument();
+    await expect(canvas.getByText("No auto-reset")).toBeInTheDocument();
   },
 };
 
