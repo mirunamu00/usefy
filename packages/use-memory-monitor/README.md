@@ -340,6 +340,31 @@ function LeakDetector() {
 }
 ```
 
+#### How Leak Detection Works
+
+The hook uses **Linear Regression Analysis** to detect memory leaks:
+
+1. **Data Collection**: Collects memory samples over time (configurable via `sampleSize`)
+2. **Linear Regression**: Applies least squares regression to find the best-fit line through the memory data points
+3. **Slope Analysis**: The slope indicates memory growth rate (bytes per sample)
+4. **R² Coefficient**: Measures how well the data fits the linear model (0-1, higher = more consistent growth)
+5. **Probability Calculation**: Combines slope and R² to calculate leak probability
+
+```
+Leak Probability = f(slope, R², sensitivity)
+
+- High slope + High R² = High probability (consistent memory growth)
+- High slope + Low R² = Lower probability (fluctuating memory)
+- Low slope = Low probability (stable memory)
+```
+
+**Sensitivity Levels:**
+| Sensitivity | Min Slope | Min R² | Description |
+|-------------|-----------|--------|-------------|
+| `low` | 10KB/sample | 0.8 | Only detects obvious leaks |
+| `medium` | 5KB/sample | 0.6 | Balanced detection (default) |
+| `high` | 1KB/sample | 0.4 | Detects subtle leaks |
+
 ### Threshold Alerts
 
 ```tsx
