@@ -1,5 +1,11 @@
 # @usefy/use-memory-monitor
 
+## 0.0.35
+
+### Patch Changes
+
+- 30a0467: update README.md
+
 ## 0.0.34
 
 ### Patch Changes

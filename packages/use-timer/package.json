@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-timer",
-  "version": "0.0.34",
+  "version": "0.0.35",
   "description": "A React hook for managing countdown timers with precision and control",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
