@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-unmount",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "description": "A React hook that executes a callback when the component unmounts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

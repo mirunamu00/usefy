@@ -1,5 +1,31 @@
 # @usefy/usefy
 
+## 0.0.32
+
+### Patch Changes
+
+- 67af59f: add useMemoryMonitor
+- Updated dependencies [67af59f]
+  - @usefy/use-memory-monitor@0.0.32
+  - @usefy/use-click-any-where@0.0.32
+  - @usefy/use-copy-to-clipboard@0.0.32
+  - @usefy/use-counter@0.0.32
+  - @usefy/use-debounce@0.0.32
+  - @usefy/use-debounce-callback@0.0.32
+  - @usefy/use-event-listener@0.0.32
+  - @usefy/use-geolocation@0.0.32
+  - @usefy/use-init@0.0.32
+  - @usefy/use-intersection-observer@0.0.32
+  - @usefy/use-local-storage@0.0.32
+  - @usefy/use-on-click-outside@0.0.32
+  - @usefy/use-session-storage@0.0.32
+  - @usefy/use-signal@0.0.32
+  - @usefy/use-throttle@0.0.32
+  - @usefy/use-throttle-callback@0.0.32
+  - @usefy/use-timer@0.0.32
+  - @usefy/use-toggle@0.0.32
+  - @usefy/use-unmount@0.0.32
+
 ## 0.0.31
 
 ### Patch Changes
