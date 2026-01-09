@@ -1,4 +1,18 @@
-import type { PanelSettings, TriggerPosition } from "./types";
+import type { PanelSettings, TriggerPosition, Severity } from "./types";
+
+/**
+ * Severity color scheme type
+ */
+export interface SeverityColorScheme {
+  bg: string;
+  bgDark: string;
+  border: string;
+  borderDark: string;
+  text: string;
+  textDark: string;
+  accent: string;
+  accentRgb: string;
+}
 
 /**
  * Default storage key for settings persistence
@@ -69,7 +83,7 @@ export const INTERVAL_OPTIONS = [
 /**
  * Color scheme for severity levels
  */
-export const SEVERITY_COLORS = {
+export const SEVERITY_COLORS: Record<Severity, SeverityColorScheme> = {
   normal: {
     bg: "bg-green-50",
     bgDark: "dark:bg-green-950",
@@ -100,7 +114,7 @@ export const SEVERITY_COLORS = {
     accent: "#ef4444",
     accentRgb: "239, 68, 68",
   },
-} as const;
+};
 
 /**
  * Chart color palette
