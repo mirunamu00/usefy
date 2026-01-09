@@ -45,7 +45,6 @@ const meta: Meta<typeof MemoryMonitorPanel> = {
       },
     },
   },
-  tags: ["autodocs"],
   argTypes: {
     mode: {
       control: "select",
@@ -81,12 +80,12 @@ const meta: Meta<typeof MemoryMonitorPanel> = {
         defaultValue: { summary: "true" },
       },
     },
-    width: {
-      control: { type: "number", min: 300, max: 600, step: 50 },
-      description: "Panel width in pixels",
+    defaultWidth: {
+      control: { type: "number", min: 320, max: 600, step: 50 },
+      description: "Initial panel width in pixels",
       table: {
         type: { summary: "number" },
-        defaultValue: { summary: "400" },
+        defaultValue: { summary: "420" },
       },
     },
     zIndex: {
@@ -139,7 +138,7 @@ export const Overview: Story = {
     position: "right",
     defaultOpen: true,
     showTrigger: true,
-    width: 400,
+    defaultWidth: 420,
     enableLeakDetection: true,
   },
   render: (args) => (
@@ -233,11 +232,11 @@ function App() {
   mode="always"           // 'development' | 'production' | 'always' | 'never'
   position="right"        // 'left' | 'right'
   defaultOpen={false}     // Initial open state
-  width={400}             // Panel width in pixels
+  defaultWidth={420}      // Panel width in pixels
   shortcut="ctrl+shift+m" // Keyboard shortcut
   enableLeakDetection     // Enable memory leak detection
   onOpenChange={(open) => console.log('Panel:', open)}
-  onThresholdExceeded={(data) => console.log('Warning:', data)}
+  onWarning={(data) => console.log('Warning:', data)}
   onAutoGC={(data) => console.log('Auto-GC:', data)}
 />`,
         language: "tsx",
