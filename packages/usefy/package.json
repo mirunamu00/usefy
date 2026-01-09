@@ -1,5 +1,5 @@
 {
-  "name": "usefy",
+  "name": "@usefy/hooks",
   "version": "0.0.35",
   "description": "A collection of useful React hooks",
   "main": "./dist/index.js",
