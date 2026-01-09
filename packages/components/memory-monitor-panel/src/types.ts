@@ -112,6 +112,82 @@ export interface PanelState {
 }
 
 /**
+ * Leak probability contributing factors
+ */
+export interface LeakProbabilityFactors {
+  /** Contribution from memory growth slope (0-30) */
+  slopeContribution: number;
+  /** Contribution from regression fit quality (0-20) */
+  rSquaredContribution: number;
+  /** Contribution from GC ineffectiveness (0-25) */
+  gcContribution: number;
+  /** Contribution from observation duration (0-15) */
+  timeContribution: number;
+  /** Contribution from baseline growth (0-10) */
+  baselineContribution: number;
+}
+
+/**
+ * GC analysis data captured at snapshot time
+ */
+export interface SnapshotGCAnalysis {
+  /** Number of GC events detected */
+  gcEventCount: number;
+  /** Average memory recovery ratio (0-1) */
+  avgRecoveryRatio: number;
+  /** Whether GC is effective (recovering significant memory) */
+  isGCEffective: boolean;
+}
+
+/**
+ * Baseline analysis data captured at snapshot time
+ */
+export interface SnapshotBaselineAnalysis {
+  /** Established baseline heap (post-GC minimum) in bytes */
+  baselineHeap: number;
+  /** Growth ratio from baseline (0-1) */
+  growthRatio: number;
+  /** Whether growth is significant (above threshold) */
+  isSignificantGrowth: boolean;
+}
+
+/**
+ * Analysis context captured at the time of snapshot
+ * Contains memory analysis state for comprehensive reporting
+ */
+export interface SnapshotAnalysisContext {
+  // === Core Analysis ===
+  /** Memory trend at snapshot time */
+  trend: "stable" | "increasing" | "decreasing";
+  /** Leak probability at snapshot time (0-100) */
+  leakProbability: number;
+  /** Severity level at snapshot time */
+  severity: "normal" | "warning" | "critical";
+  /** Usage percentage at snapshot time (0-100) */
+  usagePercentage: number;
+
+  // === Leak Factor Analysis (optional) ===
+  /** Breakdown of leak probability contributing factors */
+  leakFactors?: LeakProbabilityFactors;
+
+  // === GC Analysis (optional) ===
+  /** Garbage collection analysis data */
+  gcAnalysis?: SnapshotGCAnalysis;
+
+  // === Baseline Analysis (optional) ===
+  /** Baseline memory analysis data */
+  baselineAnalysis?: SnapshotBaselineAnalysis;
+
+  // === Quality Metrics (optional) ===
+  /** Confidence level of the analysis (0-100) */
+  confidence?: number;
+  /** R-squared value from regression analysis (0-1) */
+  rSquared?: number;
+  /** Average memory growth rate in bytes per sample */
+  averageGrowth?: number;
+}
+
+/**
  * Snapshot with additional metadata
  */
 export interface PanelSnapshot {
@@ -126,6 +202,8 @@ export interface PanelSnapshot {
   notes?: string;
   /** Whether this snapshot was created automatically by scheduler */
   isAuto?: boolean;
+  /** Analysis context captured at the time of snapshot */
+  analysisContext?: SnapshotAnalysisContext;
 }
 
 /**

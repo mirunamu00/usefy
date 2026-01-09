@@ -396,7 +396,17 @@ export interface UseMemoryMonitorReturn {
   compareSnapshots: (id1: string, id2: string) => SnapshotDiff | null;
   /** Clear history */
   clearHistory: () => void;
-  /** Request garbage collection hint */
+  /**
+   * Request garbage collection (hint only, not guaranteed).
+   *
+   * **Important limitations:**
+   * - In standard browsers, JavaScript cannot force GC. This is a hint only.
+   * - Only works reliably with Chrome/Node.js launched with `--expose-gc` flag.
+   * - The fallback memory pressure technique has no guaranteed effect.
+   * - V8 engine decides GC timing based on its own heuristics.
+   *
+   * Use this for debugging purposes, not for production memory management.
+   */
   requestGC: () => void;
 
   // Formatting

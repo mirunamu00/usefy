@@ -424,36 +424,34 @@ export function useMemoryMonitor(
     }
   }, []);
 
-  // Request GC (hint only, not guaranteed)
+  // Request GC (hint only, NOT guaranteed in standard browsers)
+  // JavaScript cannot force GC - this only works with --expose-gc flag
   const requestGC = useCallback(() => {
     if (isServer()) return;
 
-    // Try to call gc() if available (Chrome with --expose-gc flag, or Node.js)
+    // Only works with Chrome/Node.js launched with --expose-gc flag
+    // In standard browsers, gc() does not exist
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     if (typeof (globalThis as any).gc === "function") {
       try {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (globalThis as any).gc();
         if (devMode && logToConsole) {
-          console.log("[useMemoryMonitor] GC triggered successfully");
+          console.log("[useMemoryMonitor] GC triggered via --expose-gc");
         }
         return;
       } catch {
-        // gc() exists but failed, continue to fallback
+        // gc() exists but failed
       }
     }
 
-    // Fallback: memory pressure hint (not guaranteed to work)
-    // This creates temporary memory pressure that may encourage GC
-    try {
-      const pressure = new Array(1000000).fill(0);
-      pressure.length = 0;
-    } catch {
-      // Ignore errors
-    }
-
+    // Note: No reliable fallback exists for standard browsers.
+    // V8 engine controls GC timing based on its own heuristics.
     if (devMode && logToConsole) {
-      console.log("[useMemoryMonitor] GC hint requested (gc() not available)");
+      console.warn(
+        "[useMemoryMonitor] GC not available. " +
+        "Use Chrome/Node.js with --expose-gc flag to enable manual GC."
+      );
     }
   }, [devMode, logToConsole]);
 

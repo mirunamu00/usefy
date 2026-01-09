@@ -8,6 +8,8 @@ export interface PanelTabsProps {
   activeTab: PanelTab;
   /** Tab change handler */
   onTabChange: (tab: PanelTab) => void;
+  /** Whether auto-snapshot is currently active */
+  isAutoSnapshotActive?: boolean;
   /** Custom class name */
   className?: string;
 }
@@ -86,6 +88,7 @@ const TabIcons: Record<string, React.FC<{ className?: string }>> = {
 export function PanelTabs({
   activeTab,
   onTabChange,
+  isAutoSnapshotActive = false,
   className,
 }: PanelTabsProps) {
   return (
@@ -101,6 +104,7 @@ export function PanelTabs({
       {PANEL_TABS.map((tab) => {
         const Icon = TabIcons[tab.icon];
         const isActive = activeTab === tab.id;
+        const showPulseDot = tab.id === "snapshots" && isAutoSnapshotActive;
 
         return (
           <button
@@ -111,7 +115,7 @@ export function PanelTabs({
             aria-controls={`panel-${tab.id}`}
             onClick={() => onTabChange(tab.id as PanelTab)}
             className={cn(
-              "flex-1 flex items-center justify-center gap-1.5",
+              "relative flex-1 flex items-center justify-center gap-1.5",
               "px-3 py-2.5",
               "text-sm font-medium",
               "border-b-2 -mb-px",
@@ -123,6 +127,14 @@ export function PanelTabs({
           >
             {Icon && <Icon className="w-4 h-4" />}
             <span className="hidden sm:inline">{tab.label}</span>
+
+            {/* Pulse dot for active auto-snapshot */}
+            {showPulseDot && (
+              <span className="absolute top-1.5 right-1.5 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+              </span>
+            )}
           </button>
         );
       })}

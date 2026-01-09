@@ -1,6 +1,6 @@
 import React, { forwardRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useMemoryMonitor } from "@usefy/use-memory-monitor";
-import type { MemoryMonitorPanelProps, PanelTab, Severity, PanelSnapshot } from "./types";
+import type { MemoryMonitorPanelProps, PanelTab, Severity, PanelSnapshot, SnapshotAnalysisContext } from "./types";
 import {
   DEFAULT_SETTINGS,
   DEFAULT_TRIGGER_POSITION,
@@ -42,7 +42,7 @@ import {
   IntervalSelector,
   SnapshotSettings,
 } from "./components/Controls";
-import { SnapshotList, SnapshotCompare } from "./components/Snapshots";
+import { SnapshotList, SnapshotCompare, ReportButton } from "./components/Snapshots";
 
 /**
  * Enterprise-grade React component for real-time browser memory monitoring.
@@ -275,6 +275,8 @@ export const MemoryMonitorPanel = forwardRef<HTMLDivElement, MemoryMonitorPanelP
     const [snapshots, setSnapshots] = useState<PanelSnapshot[]>([]);
     const [selectedSnapshotId, setSelectedSnapshotId] = useState<string | null>(null);
     const [compareSnapshotId, setCompareSnapshotId] = useState<string | null>(null);
+    // Counter for sequential snapshot numbering (persists through auto-delete cycles)
+    const snapshotCounterRef = React.useRef(0);
 
     // Get selected snapshots
     const selectedSnapshot = useMemo(
@@ -291,6 +293,18 @@ export const MemoryMonitorPanel = forwardRef<HTMLDivElement, MemoryMonitorPanelP
       const maxSnapshots = settings.snapshot?.maxSnapshots ?? DEFAULT_SETTINGS.snapshot.maxSnapshots;
       const autoDeleteOldest = settings.snapshot?.autoDeleteOldest ?? true;
 
+      // Capture current analysis context
+      const analysisContext: SnapshotAnalysisContext = {
+        trend: monitor.trend,
+        leakProbability: monitor.leakProbability,
+        severity: monitor.severity,
+        usagePercentage: monitor.usagePercentage ?? 0,
+      };
+
+      // Increment counter for sequential numbering
+      snapshotCounterRef.current += 1;
+      const snapshotNumber = snapshotCounterRef.current;
+
       // If at max capacity
       if (snapshots.length >= maxSnapshots) {
         if (autoDeleteOldest) {
@@ -298,7 +312,7 @@ export const MemoryMonitorPanel = forwardRef<HTMLDivElement, MemoryMonitorPanelP
           setSnapshots((prev) => {
             const remaining = prev.slice(1);
             const id = `snapshot-${Date.now()}`;
-            const label = isAuto ? `Auto ${remaining.length + 1}` : `Snapshot ${remaining.length + 1}`;
+            const label = isAuto ? `Auto ${snapshotNumber}` : `Snapshot ${snapshotNumber}`;
             const newSnapshot: PanelSnapshot = {
               id,
               label,
@@ -309,6 +323,7 @@ export const MemoryMonitorPanel = forwardRef<HTMLDivElement, MemoryMonitorPanelP
               domNodes: monitor.domNodes ?? undefined,
               eventListeners: monitor.eventListeners ?? undefined,
               isAuto,
+              analysisContext,
             };
             monitor.takeSnapshot(id);
             return [...remaining, newSnapshot];
@@ -318,7 +333,7 @@ export const MemoryMonitorPanel = forwardRef<HTMLDivElement, MemoryMonitorPanelP
       }
 
       const id = `snapshot-${Date.now()}`;
-      const label = isAuto ? `Auto ${snapshots.length + 1}` : `Snapshot ${snapshots.length + 1}`;
+      const label = isAuto ? `Auto ${snapshotNumber}` : `Snapshot ${snapshotNumber}`;
 
       const newSnapshot: PanelSnapshot = {
         id,
@@ -330,6 +345,7 @@ export const MemoryMonitorPanel = forwardRef<HTMLDivElement, MemoryMonitorPanelP
         domNodes: monitor.domNodes ?? undefined,
         eventListeners: monitor.eventListeners ?? undefined,
         isAuto,
+        analysisContext,
       };
 
       setSnapshots((prev) => [...prev, newSnapshot]);
@@ -527,6 +543,7 @@ export const MemoryMonitorPanel = forwardRef<HTMLDivElement, MemoryMonitorPanelP
           <PanelTabs
             activeTab={activeTab}
             onTabChange={setActiveTab}
+            isAutoSnapshotActive={(settings.snapshot?.scheduleInterval ?? "off") !== "off"}
           />
 
           {/* Tab content */}
@@ -767,6 +784,9 @@ function SnapshotsTab({
           Delete All
         </button>
       </div>
+
+      {/* Report Button */}
+      <ReportButton snapshots={snapshots} />
 
       {/* Capacity indicator */}
       <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">

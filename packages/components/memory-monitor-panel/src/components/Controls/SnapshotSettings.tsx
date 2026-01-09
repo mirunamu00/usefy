@@ -20,6 +20,28 @@ export interface SnapshotSettingsProps {
 }
 
 /**
+ * Warning icon for alerts
+ */
+function WarningIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={className}
+    >
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </svg>
+  );
+}
+
+/**
  * Camera icon for snapshots
  */
 function CameraIcon({ className }: { className?: string }) {
@@ -74,6 +96,9 @@ export function SnapshotSettings({
   const scheduleId = useId();
   const autoDeleteId = useId();
 
+  // Check if auto-snapshot schedule is active
+  const isAutoSnapshotActive = value.scheduleInterval !== "off";
+
   const handleMaxSnapshotsChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newValue = Math.min(
@@ -116,7 +141,7 @@ export function SnapshotSettings({
           className={cn(
             "block text-sm font-medium",
             "text-slate-700 dark:text-slate-300",
-            disabled && "opacity-50"
+            (disabled || isAutoSnapshotActive) && "opacity-50"
           )}
         >
           Maximum Snapshots
@@ -129,7 +154,7 @@ export function SnapshotSettings({
             max={MAX_SNAPSHOTS_LIMIT}
             value={value.maxSnapshots}
             onChange={handleMaxSnapshotsChange}
-            disabled={disabled}
+            disabled={disabled || isAutoSnapshotActive}
             className={cn(
               "w-20 px-3 py-2 rounded-lg",
               "bg-white dark:bg-slate-800",
@@ -137,7 +162,7 @@ export function SnapshotSettings({
               "text-slate-900 dark:text-slate-100",
               "text-sm text-center",
               "focus:outline-none focus:ring-2 focus:ring-blue-500",
-              disabled && "opacity-50 cursor-not-allowed"
+              (disabled || isAutoSnapshotActive) && "opacity-50 cursor-not-allowed"
             )}
           />
           <span className="text-sm text-slate-500 dark:text-slate-400">
@@ -147,6 +172,20 @@ export function SnapshotSettings({
         <p className="text-xs text-slate-500 dark:text-slate-400">
           Maximum number of snapshots to store
         </p>
+
+        {/* Warning when auto-snapshot is active */}
+        {isAutoSnapshotActive && (
+          <div className={cn(
+            "flex items-start gap-2 p-2 mt-2 rounded-lg",
+            "bg-amber-50 dark:bg-amber-900/20",
+            "border border-amber-200 dark:border-amber-800"
+          )}>
+            <WarningIcon className="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5" />
+            <p className="text-xs text-amber-700 dark:text-amber-300">
+              Cannot modify while auto-snapshot is active. Turn off the schedule first.
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Schedule selector */}
@@ -232,8 +271,8 @@ export function SnapshotSettings({
           onClick={() => onChange({ ...value, autoDeleteOldest: !value.autoDeleteOldest })}
           disabled={disabled}
           className={cn(
-            "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full",
-            "border-2 border-transparent",
+            "relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full",
+            "p-0.5",
             "transition-colors duration-200 ease-in-out",
             "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2",
             value.autoDeleteOldest
@@ -244,10 +283,10 @@ export function SnapshotSettings({
         >
           <span
             className={cn(
-              "pointer-events-none inline-block h-5 w-5 transform rounded-full",
-              "bg-white shadow ring-0",
+              "pointer-events-none inline-block h-4 w-4 transform rounded-full",
+              "bg-white shadow-sm",
               "transition duration-200 ease-in-out",
-              value.autoDeleteOldest ? "translate-x-5" : "translate-x-0"
+              value.autoDeleteOldest ? "translate-x-4" : "translate-x-0"
             )}
           />
         </button>

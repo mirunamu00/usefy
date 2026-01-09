@@ -120,19 +120,15 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(
           aria-modal={showBackdrop}
           aria-hidden={!isOpen}
           className={cn(
+            // Dark mode class must be on outer element for Tailwind dark: variants to work on children
+            isDark && "dark",
             // Base styles
             "fixed top-0 bottom-0 flex flex-col",
-            "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md", // Glassmorphism effect
-            "shadow-2xl shadow-slate-200/50 dark:shadow-black/50", // Enhanced shadow
-            "border-slate-200 dark:border-slate-800",
             "transition-transform ease-out",
             // Position-based styles (from lookup table)
             styles.position,
-            styles.border,
             // Transform based on open state (from lookup table)
             isOpen ? styles.openTransform : styles.closedTransform,
-            // Dark mode and custom classes
-            isDark && "dark",
             className
           )}
           style={{
@@ -141,7 +137,18 @@ export const Panel = forwardRef<HTMLDivElement, PanelProps>(
             transitionDuration: `${ANIMATION_DURATION.panelSlide}ms`,
           }}
         >
-          {children}
+          {/* Inner wrapper with theme-aware styles */}
+          <div
+            className={cn(
+              "flex flex-col h-full",
+              "bg-white/95 dark:bg-slate-900/95 backdrop-blur-md", // Glassmorphism effect
+              "shadow-2xl shadow-slate-200/50 dark:shadow-black/50", // Enhanced shadow
+              "border-slate-200 dark:border-slate-800",
+              styles.border
+            )}
+          >
+            {children}
+          </div>
         </div>
       </>
     );

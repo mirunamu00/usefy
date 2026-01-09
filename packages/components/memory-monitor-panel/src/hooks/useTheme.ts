@@ -76,10 +76,15 @@ function resolveTheme(
  * ```
  */
 export function useTheme(options: UseThemeOptions = {}): UseThemeReturn {
-  const { theme: initialTheme = "system", onThemeChange } = options;
+  const { theme: themeProp = "system", onThemeChange } = options;
 
-  const [themeSetting, setThemeSetting] = useState<ThemeSetting>(initialTheme);
+  const [themeSetting, setThemeSetting] = useState<ThemeSetting>(themeProp);
   const [systemPrefersDark, setSystemPrefersDark] = useState(getSystemPreference);
+
+  // Sync with external theme prop changes
+  useEffect(() => {
+    setThemeSetting(themeProp);
+  }, [themeProp]);
 
   // Listen for system preference changes
   useEffect(() => {
