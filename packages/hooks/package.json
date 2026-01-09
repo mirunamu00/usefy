@@ -1,6 +1,6 @@
 {
   "name": "@usefy/hooks",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "description": "A collection of useful React hooks",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
