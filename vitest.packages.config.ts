@@ -5,11 +5,17 @@ export default defineConfig({
     environment: "jsdom",
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
-    include: ["packages/*/src/**/*.test.{ts,tsx}"],
+    include: [
+      "packages/hooks/*/src/**/*.test.{ts,tsx}",
+      "packages/components/*/src/**/*.test.{ts,tsx}",
+    ],
     coverage: {
       provider: "v8",
       reporter: ["text", "html", "lcov"],
-      include: ["packages/*/src/**/*.ts"],
+      include: [
+        "packages/hooks/*/src/**/*.ts",
+        "packages/components/*/src/**/*.ts",
+      ],
       exclude: ["**/*.test.ts", "**/*.test.tsx", "**/index.ts"],
     },
   },
