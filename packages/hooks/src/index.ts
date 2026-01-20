@@ -153,3 +153,11 @@ export {
   type FormattedMemory,
   type BrowserSupport,
 } from "@usefy/use-memory-monitor";
+
+// useTimeout
+export {
+  useTimeout,
+  type TimeoutDelay,
+  type UseTimeoutCallback,
+  type UseTimeoutReturn,
+} from "@usefy/use-timeout";
