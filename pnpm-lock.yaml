@@ -135,6 +135,9 @@ importers:
       '@usefy/use-throttle-callback':
         specifier: workspace:*
         version: link:../../packages/hooks/use-throttle-callback
+      '@usefy/use-timeout':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-timeout
       '@usefy/use-timer':
         specifier: workspace:*
         version: link:../../packages/hooks/use-timer
