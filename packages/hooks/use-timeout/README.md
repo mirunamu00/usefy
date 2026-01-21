@@ -112,18 +112,18 @@ A hook that executes a callback after a specified delay with automatic cleanup a
 
 #### Parameters
 
-| Parameter  | Type                          | Description                                           |
-| ---------- | ----------------------------- | ----------------------------------------------------- |
-| `callback` | `() => void`                  | Function to execute after the delay                   |
+| Parameter  | Type                          | Description                                             |
+| ---------- | ----------------------------- | ------------------------------------------------------- |
+| `callback` | `() => void`                  | Function to execute after the delay                     |
 | `delay`    | `number \| null \| undefined` | Delay in milliseconds, or `null`/`undefined` to disable |
 
 #### Returns `UseTimeoutReturn`
 
-| Property    | Type         | Description                              |
-| ----------- | ------------ | ---------------------------------------- |
-| `reset`     | `() => void` | Restart the timer from the beginning     |
-| `clear`     | `() => void` | Cancel the timer (callback won't execute)|
-| `isPending` | `boolean`    | Whether the timer is currently pending   |
+| Property    | Type         | Description                               |
+| ----------- | ------------ | ----------------------------------------- |
+| `reset`     | `() => void` | Restart the timer from the beginning      |
+| `clear`     | `() => void` | Cancel the timer (callback won't execute) |
+| `isPending` | `boolean`    | Whether the timer is currently pending    |
 
 ---
 
@@ -142,11 +142,7 @@ function AutoDismissToast({ message }: { message: string }) {
     setShow(false);
   }, 3000);
 
-  return show ? (
-    <div className="toast">
-      {message}
-    </div>
-  ) : null;
+  return show ? <div className="toast">{message}</div> : null;
 }
 ```
 
@@ -261,21 +257,25 @@ import { useTimeout } from "@usefy/use-timeout";
 function NotificationBanner() {
   const [notification, setNotification] = useState<string | null>(null);
 
-  const { reset } = useTimeout(() => {
-    setNotification(null);
-  }, notification ? 4000 : null);
+  const { reset } = useTimeout(
+    () => {
+      setNotification(null);
+    },
+    notification ? 4000 : null
+  );
 
-  const showNotification = useCallback((message: string) => {
-    setNotification(message);
-    reset();
-  }, [reset]);
+  const showNotification = useCallback(
+    (message: string) => {
+      setNotification(message);
+      reset();
+    },
+    [reset]
+  );
 
   return (
     <>
       {notification && (
-        <div className="notification-banner">
-          {notification}
-        </div>
+        <div className="notification-banner">{notification}</div>
       )}
       <button onClick={() => showNotification("New message!")}>
         Show Notification
@@ -331,15 +331,15 @@ useEffect(() => {
 
 ## Edge Cases
 
-| Scenario | Behavior |
-| -------- | -------- |
-| `delay < 0` | Treated as 0 (immediate execution) |
-| `delay === 0` | Executes on next event loop |
-| `delay === null` | Timer disabled, `isPending` is `false` |
-| `delay === undefined` | Timer disabled, `isPending` is `false` |
-| Unmount before delay | Callback not executed, timer cleaned up |
-| Callback changes | Timer continues, latest callback executed |
-| `reset()` when `delay` is `null` | No effect |
+| Scenario                         | Behavior                                  |
+| -------------------------------- | ----------------------------------------- |
+| `delay < 0`                      | Treated as 0 (immediate execution)        |
+| `delay === 0`                    | Executes on next event loop               |
+| `delay === null`                 | Timer disabled, `isPending` is `false`    |
+| `delay === undefined`            | Timer disabled, `isPending` is `false`    |
+| Unmount before delay             | Callback not executed, timer cleaned up   |
+| Callback changes                 | Timer continues, latest callback executed |
+| `reset()` when `delay` is `null` | No effect                                 |
 
 ---
 
@@ -347,89 +347,9 @@ useEffect(() => {
 
 This package maintains comprehensive test coverage to ensure reliability and stability.
 
-### Test Categories
+### Test Coverage
 
-<details>
-<summary><strong>Basic Behavior Tests</strong></summary>
-
-- Execute callback after delay
-- Not execute before delay
-- Return correct interface
-
-</details>
-
-<details>
-<summary><strong>Automatic Cleanup Tests</strong></summary>
-
-- Not execute callback on unmount
-- Clean up timeout on unmount
-
-</details>
-
-<details>
-<summary><strong>Delay Change Tests</strong></summary>
-
-- Reset timer when delay changes
-- Handle delay change from number to null
-
-</details>
-
-<details>
-<summary><strong>Null Delay Tests</strong></summary>
-
-- Not set timer when delay is null
-- Not set timer when delay is undefined
-- Start timer when delay changes from null to number
-
-</details>
-
-<details>
-<summary><strong>Reset Function Tests</strong></summary>
-
-- Restart timer from beginning
-- Do nothing when delay is null
-- Stable reference across renders
-
-</details>
-
-<details>
-<summary><strong>Clear Function Tests</strong></summary>
-
-- Cancel timer
-- Safe to call multiple times
-- Stable reference across renders
-
-</details>
-
-<details>
-<summary><strong>isPending State Tests</strong></summary>
-
-- True when timer is pending
-- False after timer executes
-- False after clear is called
-- True after reset is called
-
-</details>
-
-<details>
-<summary><strong>Callback Change Tests</strong></summary>
-
-- Execute latest callback without resetting timer
-- Not reset timer when callback changes
-
-</details>
-
-<details>
-<summary><strong>Edge Case Tests</strong></summary>
-
-- Negative delay treated as 0
-- Handle delay of 0
-- Handle very large delay
-- Multiple resets in quick succession
-- Reset after clear
-- Separate state across multiple instances
-
-</details>
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-timeout/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ---
 
