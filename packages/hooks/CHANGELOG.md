@@ -1,5 +1,34 @@
 # @usefy/usefy
 
+## 0.2.5
+
+### Patch Changes
+
+- e079da8: update README.md
+- bcf6e57: add useTimeout
+- Updated dependencies [e079da8]
+- Updated dependencies [bcf6e57]
+  - @usefy/use-timeout@0.2.5
+  - @usefy/use-click-any-where@0.2.5
+  - @usefy/use-copy-to-clipboard@0.2.5
+  - @usefy/use-counter@0.2.5
+  - @usefy/use-debounce@0.2.5
+  - @usefy/use-debounce-callback@0.2.5
+  - @usefy/use-event-listener@0.2.5
+  - @usefy/use-geolocation@0.2.5
+  - @usefy/use-init@0.2.5
+  - @usefy/use-intersection-observer@0.2.5
+  - @usefy/use-local-storage@0.2.5
+  - @usefy/use-memory-monitor@0.2.5
+  - @usefy/use-on-click-outside@0.2.5
+  - @usefy/use-session-storage@0.2.5
+  - @usefy/use-signal@0.2.5
+  - @usefy/use-throttle@0.2.5
+  - @usefy/use-throttle-callback@0.2.5
+  - @usefy/use-timer@0.2.5
+  - @usefy/use-toggle@0.2.5
+  - @usefy/use-unmount@0.2.5
+
 ## 0.2.4
 
 ### Patch Changes
