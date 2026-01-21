@@ -1,5 +1,7 @@
 # @usefy/use-resize-observer
 
+## 0.2.5
+
 ## 0.2.4
 
 ### Patch Changes
