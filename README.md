@@ -64,7 +64,7 @@
   <img src="https://img.shields.io/bundlephobia/minzip/@usefy/hooks?style=flat-square&color=007acc" alt="bundle size" />
 </a>
 
-A collection of **19+ lightweight React hooks** for common patterns like state management, timing, storage, events, and more.
+A collection of **20+ lightweight React hooks** for common patterns like state management, timing, storage, events, and more.
 
 ```bash
 pnpm add @usefy/hooks
@@ -87,7 +87,7 @@ function App() {
 - `useToggle`, `useCounter` — State management
 - `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
 - `useLocalStorage`, `useSessionStorage` — Persistent storage
-- `useEventListener`, `useOnClickOutside` — DOM events
+- `useEventListener`, `useOnClickOutside`, `useHover` — DOM events
 - `useIntersectionObserver`, `useGeolocation` — Browser APIs
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
@@ -222,6 +222,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useCopyToClipboard` | Clipboard operations |
 | `useGeolocation` | Device geolocation with tracking |
 | `useIntersectionObserver` | Element visibility detection |
+| `useHover` | Element hover detection with delay |
 | `useSignal` | Event-driven communication |
 | `useUnmount` | Unmount callback |
 | `useInit` | One-time initialization |

@@ -128,6 +128,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-intersection-observer" target="_blank" rel="noopener noreferrer">@usefy/use-intersection-observer</a> | Element visibility detection with Intersection Observer | <a href="https://www.npmjs.com/package/@usefy/use-intersection-observer" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-intersection-observer.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![94%](https://img.shields.io/badge/coverage-94%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer">@usefy/use-signal</a>                                   | Event-driven communication between components           | <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-signal.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-memory-monitor" target="_blank" rel="noopener noreferrer">@usefy/use-memory-monitor</a>                   | Real-time browser memory monitoring with leak detection | <a href="https://www.npmjs.com/package/@usefy/use-memory-monitor" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-memory-monitor.svg?style=flat-square&color=007acc" alt="npm version" /></a>                   | ![90%](https://img.shields.io/badge/coverage-90%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-hover" target="_blank" rel="noopener noreferrer">@usefy/use-hover</a>                                     | Element hover detection with delay support              | <a href="https://www.npmjs.com/package/@usefy/use-hover" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-hover.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                     | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square)   |
 
 ---
 
@@ -145,6 +146,7 @@ import {
   useEventListener,
   useOnClickOutside,
   useIntersectionObserver,
+  useHover,
   useSignal,
   useUnmount,
   useInit,
@@ -651,6 +653,50 @@ Perfect for lazy loading, infinite scroll, scroll animations, progress tracking,
 
 </details>
 
+<details>
+<summary><strong>useHover</strong> — Element hover detection with delay support</summary>
+
+```tsx
+import { useHover } from "@usefy/use-hover";
+
+// Basic usage
+const { ref, isHovered } = useHover<HTMLDivElement>();
+
+// Tuple destructuring
+const [ref, isHovered] = useHover<HTMLDivElement>();
+
+// Tooltip pattern with delays
+const { ref, isHovered } = useHover<HTMLButtonElement>({
+  delay: { enter: 500, leave: 100 }, // Show after 500ms, hide after 100ms
+});
+
+// Dropdown menu pattern
+const { ref, isHovered } = useHover<HTMLDivElement>({
+  delay: { leave: 300 }, // Keep open for 300ms after mouse leaves
+});
+
+// With onChange callback
+const { ref, isHovered } = useHover<HTMLDivElement>({
+  onChange: (hovered, event) => {
+    if (hovered) analytics.track("element_hovered");
+  },
+});
+
+// Touch support for mobile devices
+const { ref, isHovered } = useHover<HTMLButtonElement>({
+  detectTouch: true,
+  delay: { leave: 1500 },
+});
+
+// Conditional enabling
+const [enabled, setEnabled] = useState(true);
+const { ref, isHovered } = useHover<HTMLDivElement>({ enabled });
+```
+
+Perfect for tooltips, dropdowns, interactive cards, and any hover-based interactions with configurable delays and touch support.
+
+</details>
+
 ### 🔄 Lifecycle
 
 <details>
@@ -731,28 +777,6 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 📊 <a href="https://mirunamu00.github.io/usefy/coverage/" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 > 💡 To generate coverage report locally, run `pnpm test:coverage`. The report will be available at `coverage/index.html`.
-
-| Package                   | Statements | Branches | Functions | Lines  |
-| ------------------------- | ---------- | -------- | --------- | ------ |
-| use-toggle                | 100%       | 100%     | 100%      | 100%   |
-| use-counter               | 100%       | 100%     | 100%      | 100%   |
-| use-throttle              | 100%       | 100%     | 100%      | 100%   |
-| use-throttle-callback     | 100%       | 100%     | 100%      | 100%   |
-| use-on-click-outside      | 97.61%     | 93.93%   | 100%      | 97.61% |
-| use-event-listener        | 96.29%     | 91.66%   | 100%      | 96.29% |
-| use-init                  | 96.1%      | 88.63%   | 100%      | 96%    |
-| use-local-storage         | 95.18%     | 86.84%   | 93.75%    | 95.12% |
-| use-session-storage       | 94.66%     | 82.75%   | 93.33%    | 94.59% |
-| use-debounce-callback     | 93.2%      | 76%      | 93.75%    | 93.13% |
-| use-click-any-where       | 92.3%      | 87.5%    | 100%      | 92.3%  |
-| use-debounce              | 90%        | 82.6%    | 66.66%    | 91.95% |
-| use-copy-to-clipboard     | 87.87%     | 79.16%   | 85.71%    | 87.87% |
-| use-unmount               | 100%       | 100%     | 100%      | 100%   |
-| use-timer                 | 83.8%      | 72.63%   | 93.93%    | 84.13% |
-| use-geolocation           | 93.89%     | 93.47%   | 100%      | 93.75% |
-| use-intersection-observer | 94%        | 85%      | 95%       | 93.93% |
-| use-signal                | 98.61%     | 90.9%    | 96.42%    | 98.59% |
-| use-memory-monitor        | 89.05%     | 71.64%   | 87.87%    | 92.27% |
 
 ---
 

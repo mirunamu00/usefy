@@ -161,3 +161,14 @@ export {
   type UseTimeoutCallback,
   type UseTimeoutReturn,
 } from "@usefy/use-timeout";
+
+// useHover
+export {
+  useHover,
+  isHoverSupported,
+  normalizeDelay,
+  type UseHoverOptions,
+  type UseHoverReturn,
+  type HoverDelayConfig,
+  type OnHoverChangeCallback,
+} from "@usefy/use-hover";
