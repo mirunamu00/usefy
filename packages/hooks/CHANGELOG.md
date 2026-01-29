@@ -1,5 +1,33 @@
 # @usefy/usefy
 
+## 0.2.6
+
+### Patch Changes
+
+- 7981be9: add useHover
+- Updated dependencies [7981be9]
+  - @usefy/use-hover@0.2.6
+  - @usefy/use-click-any-where@0.2.6
+  - @usefy/use-copy-to-clipboard@0.2.6
+  - @usefy/use-counter@0.2.6
+  - @usefy/use-debounce@0.2.6
+  - @usefy/use-debounce-callback@0.2.6
+  - @usefy/use-event-listener@0.2.6
+  - @usefy/use-geolocation@0.2.6
+  - @usefy/use-init@0.2.6
+  - @usefy/use-intersection-observer@0.2.6
+  - @usefy/use-local-storage@0.2.6
+  - @usefy/use-memory-monitor@0.2.6
+  - @usefy/use-on-click-outside@0.2.6
+  - @usefy/use-session-storage@0.2.6
+  - @usefy/use-signal@0.2.6
+  - @usefy/use-throttle@0.2.6
+  - @usefy/use-throttle-callback@0.2.6
+  - @usefy/use-timeout@0.2.6
+  - @usefy/use-timer@0.2.6
+  - @usefy/use-toggle@0.2.6
+  - @usefy/use-unmount@0.2.6
+
 ## 0.2.5
 
 ### Patch Changes
