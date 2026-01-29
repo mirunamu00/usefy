@@ -1,5 +1,11 @@
 # @usefy/memory-monitor
 
+## 0.2.6
+
+### Patch Changes
+
+- @usefy/use-memory-monitor@0.2.6
+
 ## 0.2.5
 
 ### Patch Changes
