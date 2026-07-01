@@ -172,3 +172,18 @@ export {
   type HoverDelayConfig,
   type OnHoverChangeCallback,
 } from "@usefy/use-hover";
+
+// useKeyPress
+export {
+  useKeyPress,
+  parseShortcut,
+  isKeyPressSupported,
+  isApplePlatform,
+  type KeyPressTarget,
+  type KeyPressPredicate,
+  type KeyPressEventTarget,
+  type KeyPressEventType,
+  type KeyPressMatchBy,
+  type UseKeyPressOptions,
+  type ParsedShortcut,
+} from "@usefy/use-key-press";
