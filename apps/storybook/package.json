@@ -35,6 +35,7 @@
     "@usefy/use-unmount": "workspace:*",
     "@usefy/use-timeout": "workspace:*",
     "@usefy/use-hover": "workspace:*",
+    "@usefy/use-key-press": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
