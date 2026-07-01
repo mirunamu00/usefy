@@ -187,3 +187,11 @@ export {
   type UseKeyPressOptions,
   type ParsedShortcut,
 } from "@usefy/use-key-press";
+
+// useMap
+export {
+  useMap,
+  type MapInitializer,
+  type UseMapActions,
+  type UseMapReturn,
+} from "@usefy/use-map";

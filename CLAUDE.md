@@ -86,6 +86,9 @@ packages/hooks/use-<name>/
 - **Vitest** runs in a jsdom environment with `globals: true` and a shared setup file.
 
 ### Hook authoring conventions
+
+> Adding a whole new hook? Use the **`add-usefy-hook`** skill — it walks the full workflow (scaffold → implement → test → umbrella wiring → Storybook → coverage → 3 READMEs → changeset).
+
 1. Export the hook function plus its return-type interface (e.g. `useToggle` + `UseToggleReturn`), and any pure helpers the hook exposes.
 2. Wrap every returned function in `useCallback` for stable references.
 3. Comprehensive JSDoc with a runnable `@example`.
