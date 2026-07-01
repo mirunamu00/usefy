@@ -131,6 +131,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-hover" target="_blank" rel="noopener noreferrer">@usefy/use-hover</a>                                     | Element hover detection with delay support              | <a href="https://www.npmjs.com/package/@usefy/use-hover" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-hover.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                     | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-key-press" target="_blank" rel="noopener noreferrer">@usefy/use-key-press</a>                             | Keyboard key, shortcut, and combination detection       | <a href="https://www.npmjs.com/package/@usefy/use-key-press" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-key-press.svg?style=flat-square&color=007acc" alt="npm version" /></a>                             | ![93%](https://img.shields.io/badge/coverage-93%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-map" target="_blank" rel="noopener noreferrer">@usefy/use-map</a>                                         | Map data structure state with immutable updates         | <a href="https://www.npmjs.com/package/@usefy/use-map" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-map.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer">@usefy/use-set</a>                                         | Set data structure state with immutable updates         | <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-set.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -151,6 +152,7 @@ import {
   useHover,
   useKeyPress,
   useMap,
+  useSet,
   useSignal,
   useUnmount,
   useInit,
@@ -295,6 +297,24 @@ reset();                              // back to initial
 ```
 
 Immutable updates (new `Map` on every change), a `ReadonlyMap` return type, stable action identities, lazy initialization, and no-op skipping. Perfect for keyed collections, caches, form field maps, and feature flags.
+
+</details>
+
+<details>
+<summary><strong>useSet</strong> — Set state with immutable updates</summary>
+
+```tsx
+import { useSet } from "@usefy/use-set";
+
+const [selected, { add, remove, toggle, has, clear, reset }] = useSet<string>(["1"]);
+
+toggle("2");           // flip membership
+toggle("3", true);     // force add (like DOMTokenList.toggle)
+has("1");              // membership check
+remove("1");           // delete
+```
+
+Immutable updates (new `Set` on every change), a `ReadonlySet` return type, `toggle` with an optional force argument, stable action identities, lazy initialization, and no-op skipping. Perfect for multi-select, tag filters, and tracking selected ids.
 
 </details>
 

@@ -45,7 +45,8 @@
     "@usefy/use-timeout": "workspace:*",
     "@usefy/use-hover": "workspace:*",
     "@usefy/use-key-press": "workspace:*",
-    "@usefy/use-map": "workspace:*"
+    "@usefy/use-map": "workspace:*",
+    "@usefy/use-set": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"

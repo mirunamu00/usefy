@@ -195,3 +195,11 @@ export {
   type UseMapActions,
   type UseMapReturn,
 } from "@usefy/use-map";
+
+// useSet
+export {
+  useSet,
+  type SetInitializer,
+  type UseSetActions,
+  type UseSetReturn,
+} from "@usefy/use-set";
