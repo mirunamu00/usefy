@@ -129,6 +129,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer">@usefy/use-signal</a>                                   | Event-driven communication between components           | <a href="https://www.npmjs.com/package/@usefy/use-signal" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-signal.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                   | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-memory-monitor" target="_blank" rel="noopener noreferrer">@usefy/use-memory-monitor</a>                   | Real-time browser memory monitoring with leak detection | <a href="https://www.npmjs.com/package/@usefy/use-memory-monitor" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-memory-monitor.svg?style=flat-square&color=007acc" alt="npm version" /></a>                   | ![90%](https://img.shields.io/badge/coverage-90%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-hover" target="_blank" rel="noopener noreferrer">@usefy/use-hover</a>                                     | Element hover detection with delay support              | <a href="https://www.npmjs.com/package/@usefy/use-hover" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-hover.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                     | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-key-press" target="_blank" rel="noopener noreferrer">@usefy/use-key-press</a>                             | Keyboard key, shortcut, and combination detection       | <a href="https://www.npmjs.com/package/@usefy/use-key-press" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-key-press.svg?style=flat-square&color=007acc" alt="npm version" /></a>                             | ![93%](https://img.shields.io/badge/coverage-93%25-brightgreen?style=flat-square)   |
 
 ---
 
@@ -147,6 +148,7 @@ import {
   useOnClickOutside,
   useIntersectionObserver,
   useHover,
+  useKeyPress,
   useSignal,
   useUnmount,
   useInit,
@@ -545,6 +547,43 @@ const success = await copy("text to copy");
 ```
 
 Modern Clipboard API with automatic fallback for older browsers.
+
+</details>
+
+### ⌨️ Keyboard
+
+<details>
+<summary><strong>useKeyPress</strong> — Keyboard key, shortcut, and combination detection</summary>
+
+```tsx
+import { useKeyPress } from "@usefy/use-key-press";
+
+// Single key — true while held
+const escapePressed = useKeyPress("Escape");
+
+// Combination (mod = Ctrl on Win/Linux, Cmd on macOS)
+useKeyPress("mod+k", {
+  preventDefault: true,
+  onPress: () => openCommandPalette(),
+});
+
+// Alternative bindings — array is OR
+useKeyPress(["ctrl+s", "meta+s"], {
+  preventDefault: true,
+  onPress: () => save(),
+});
+
+// Physical keys for game controls (layout-independent)
+const forward = useKeyPress("w", { matchBy: "code" });
+
+// Custom predicate
+const digitPressed = useKeyPress((e) => /^[0-9]$/.test(e.key));
+
+// Ignore shortcuts while typing in inputs
+useKeyPress("f", { ignoreInputElements: true, onPress: openFilter });
+```
+
+Perfect for command palettes, editor shortcuts, modal dismissal, and game controls — with cross-platform `mod`, `onPress`/`onRelease` callbacks, auto-repeat handling, and blur-safe held state.
 
 </details>
 

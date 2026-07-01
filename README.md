@@ -88,6 +88,7 @@ function App() {
 - `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
 - `useLocalStorage`, `useSessionStorage` — Persistent storage
 - `useEventListener`, `useOnClickOutside`, `useHover` — DOM events
+- `useKeyPress` — Keyboard shortcuts and combinations
 - `useIntersectionObserver`, `useGeolocation` — Browser APIs
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
@@ -223,6 +224,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useGeolocation` | Device geolocation with tracking |
 | `useIntersectionObserver` | Element visibility detection |
 | `useHover` | Element hover detection with delay |
+| `useKeyPress` | Keyboard key, shortcut, and combination detection |
 | `useSignal` | Event-driven communication |
 | `useUnmount` | Unmount callback |
 | `useInit` | One-time initialization |
