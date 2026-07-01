@@ -1,5 +1,52 @@
 # @usefy/usefy
 
+## 0.6.0
+
+### Minor Changes
+
+- 0439340: feat(use-list): add useList hook for array state management
+
+  Introduces `@usefy/use-list`, a hook for managing array state with immutable updates:
+
+  - Returns `[list, { set, push, filter, sort, clear, removeAt, insertAt, updateAt, reset }]` with a `readonly T[]` to prevent accidental in-place mutation
+  - Immutable updates — every change produces a new array; the initial value is copied and never mutated
+  - `set` accepts a new array or an updater function; `sort` is immutable (`[...prev].sort()`)
+  - Stable action identities, safe to use as effect dependencies
+  - `useState`-style lazy initialization (accepts an array/iterable or a factory)
+  - No-op skipping (out-of-range index, empty clear, unchanged value, filtering out nothing) to avoid needless re-renders
+  - Full TypeScript generics `<T>`
+
+  Also re-exported from the `@usefy/hooks` umbrella package.
+
+### Patch Changes
+
+- Updated dependencies [0439340]
+  - @usefy/use-list@0.6.0
+  - @usefy/use-click-any-where@0.6.0
+  - @usefy/use-copy-to-clipboard@0.6.0
+  - @usefy/use-counter@0.6.0
+  - @usefy/use-debounce@0.6.0
+  - @usefy/use-debounce-callback@0.6.0
+  - @usefy/use-event-listener@0.6.0
+  - @usefy/use-geolocation@0.6.0
+  - @usefy/use-hover@0.6.0
+  - @usefy/use-init@0.6.0
+  - @usefy/use-intersection-observer@0.6.0
+  - @usefy/use-key-press@0.6.0
+  - @usefy/use-local-storage@0.6.0
+  - @usefy/use-map@0.6.0
+  - @usefy/use-memory-monitor@0.6.0
+  - @usefy/use-on-click-outside@0.6.0
+  - @usefy/use-session-storage@0.6.0
+  - @usefy/use-set@0.6.0
+  - @usefy/use-signal@0.6.0
+  - @usefy/use-throttle@0.6.0
+  - @usefy/use-throttle-callback@0.6.0
+  - @usefy/use-timeout@0.6.0
+  - @usefy/use-timer@0.6.0
+  - @usefy/use-toggle@0.6.0
+  - @usefy/use-unmount@0.6.0
+
 ## 0.5.0
 
 ### Minor Changes
