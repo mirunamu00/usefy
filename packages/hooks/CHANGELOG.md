@@ -1,5 +1,49 @@
 # @usefy/usefy
 
+## 0.4.0
+
+### Minor Changes
+
+- c4305e9: feat(use-map): add useMap hook for Map state management
+
+  Introduces `@usefy/use-map`, a hook for managing `Map` state with immutable updates:
+
+  - Returns `[map, { set, setAll, remove, reset, clear, get }]` with a `ReadonlyMap` to prevent accidental in-place mutation
+  - Immutable updates — every change produces a new `Map`; the initial value is copied and never mutated
+  - Stable action identities, safe to use as effect dependencies
+  - `useState`-style lazy initialization (accepts a `Map`, tuples, or a factory)
+  - No-op skipping (absent-key removal, empty clear, same-value set) to avoid needless re-renders
+  - Full TypeScript generics `<K, V>`
+
+  Also re-exported from the `@usefy/hooks` umbrella package.
+
+### Patch Changes
+
+- Updated dependencies [c4305e9]
+  - @usefy/use-map@0.4.0
+  - @usefy/use-click-any-where@0.4.0
+  - @usefy/use-copy-to-clipboard@0.4.0
+  - @usefy/use-counter@0.4.0
+  - @usefy/use-debounce@0.4.0
+  - @usefy/use-debounce-callback@0.4.0
+  - @usefy/use-event-listener@0.4.0
+  - @usefy/use-geolocation@0.4.0
+  - @usefy/use-hover@0.4.0
+  - @usefy/use-init@0.4.0
+  - @usefy/use-intersection-observer@0.4.0
+  - @usefy/use-key-press@0.4.0
+  - @usefy/use-local-storage@0.4.0
+  - @usefy/use-memory-monitor@0.4.0
+  - @usefy/use-on-click-outside@0.4.0
+  - @usefy/use-session-storage@0.4.0
+  - @usefy/use-signal@0.4.0
+  - @usefy/use-throttle@0.4.0
+  - @usefy/use-throttle-callback@0.4.0
+  - @usefy/use-timeout@0.4.0
+  - @usefy/use-timer@0.4.0
+  - @usefy/use-toggle@0.4.0
+  - @usefy/use-unmount@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes

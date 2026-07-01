@@ -1,5 +1,12 @@
 # @usefy/playground
 
+## 0.4.0
+
+### Patch Changes
+
+- @usefy/use-memory-monitor@0.4.0
+- @usefy/memory-monitor@0.4.0
+
 ## 0.3.1
 
 ### Patch Changes
