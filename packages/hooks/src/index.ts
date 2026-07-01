@@ -203,3 +203,11 @@ export {
   type UseSetActions,
   type UseSetReturn,
 } from "@usefy/use-set";
+
+// useList
+export {
+  useList,
+  type ListInitializer,
+  type UseListActions,
+  type UseListReturn,
+} from "@usefy/use-list";

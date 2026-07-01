@@ -38,6 +38,7 @@
     "@usefy/use-key-press": "workspace:*",
     "@usefy/use-map": "workspace:*",
     "@usefy/use-set": "workspace:*",
+    "@usefy/use-list": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

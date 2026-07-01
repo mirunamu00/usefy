@@ -132,6 +132,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-key-press" target="_blank" rel="noopener noreferrer">@usefy/use-key-press</a>                             | Keyboard key, shortcut, and combination detection       | <a href="https://www.npmjs.com/package/@usefy/use-key-press" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-key-press.svg?style=flat-square&color=007acc" alt="npm version" /></a>                             | ![93%](https://img.shields.io/badge/coverage-93%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-map" target="_blank" rel="noopener noreferrer">@usefy/use-map</a>                                         | Map data structure state with immutable updates         | <a href="https://www.npmjs.com/package/@usefy/use-map" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-map.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer">@usefy/use-set</a>                                         | Set data structure state with immutable updates         | <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-set.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer">@usefy/use-list</a>                                       | Array state with push/filter/sort/insertAt/updateAt     | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-list.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -153,6 +154,7 @@ import {
   useKeyPress,
   useMap,
   useSet,
+  useList,
   useSignal,
   useUnmount,
   useInit,
@@ -315,6 +317,24 @@ remove("1");           // delete
 ```
 
 Immutable updates (new `Set` on every change), a `ReadonlySet` return type, `toggle` with an optional force argument, stable action identities, lazy initialization, and no-op skipping. Perfect for multi-select, tag filters, and tracking selected ids.
+
+</details>
+
+<details>
+<summary><strong>useList</strong> — Array state with immutable updates</summary>
+
+```tsx
+import { useList } from "@usefy/use-list";
+
+const [todos, { push, removeAt, updateAt, sort, filter, reset }] = useList<Todo>([]);
+
+push({ id: 1, text: "Hi", completed: false }); // append
+updateAt(0, { ...todos[0], completed: true }); // replace at index
+removeAt(0);                                    // delete at index
+sort((a, b) => a.id - b.id);                    // immutable sort
+```
+
+Immutable updates (new array on every change), a `readonly T[]` return type, a rich action set (`set`/`push`/`filter`/`sort`/`clear`/`removeAt`/`insertAt`/`updateAt`/`reset`), `set` with an updater function, stable action identities, lazy init, and no-op skipping. Perfect for todo lists, editable tables, and ordered collections.
 
 </details>
 

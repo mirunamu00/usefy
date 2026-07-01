@@ -89,7 +89,7 @@ function App() {
 - `useLocalStorage`, `useSessionStorage` — Persistent storage
 - `useEventListener`, `useOnClickOutside`, `useHover` — DOM events
 - `useKeyPress` — Keyboard shortcuts and combinations
-- `useMap`, `useSet` — Map / Set data structure state management
+- `useMap`, `useSet`, `useList` — Map / Set / array data structure state management
 - `useIntersectionObserver`, `useGeolocation` — Browser APIs
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
@@ -228,6 +228,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useKeyPress` | Keyboard key, shortcut, and combination detection |
 | `useMap` | Map data structure state with immutable updates |
 | `useSet` | Set data structure state with immutable updates |
+| `useList` | Array state with push/filter/sort/insertAt/updateAt |
 | `useSignal` | Event-driven communication |
 | `useUnmount` | Unmount callback |
 | `useInit` | One-time initialization |
