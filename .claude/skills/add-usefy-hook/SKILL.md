@@ -51,11 +51,27 @@ Follow the house conventions (they're what make these hooks feel consistent and 
 
 **Return shape convention**: match the ecosystem idiom for the specific hook, not a blanket rule. State-tracking hooks that expose several controls return an object (+ optional `Symbol.iterator` for tuple destructuring, like `use-hover`). A single-value detector returns the bare value (e.g. `useKeyPress` returns a `boolean`). Put everything else in an options object rather than growing the return.
 
+### Collection / data-structure hook recipe
+
+Hooks that wrap a mutable collection (`useMap`, `useSet`, and future `useArray`/`useQueue`/`useStack`/`useObject`) share one proven shape — reuse it verbatim, it's what makes them enterprise-grade:
+
+- **Return `[value, actions]`** (tuple), with the value typed **read-only** (`ReadonlyMap`/`ReadonlySet`/`readonly T[]`). The read-only type is the point: it makes `value.set(...)`/`value.push(...)` a compile error, steering callers to the actions instead of silently breaking React state.
+- **Immutable updates**: every mutating action does `setState(prev => { const next = new Map(prev); …; return next; })`. Never mutate `prev`.
+- **No-op skipping**: if an update wouldn't change anything (removing an absent key, clearing an empty collection, setting a key to the value it already holds by `Object.is`), `return prev` so React bails out of the re-render. Test this (see Phase 3).
+- **Stable actions**: wrap each action in `useCallback([])` (functional `setState` means no deps) and bundle them in a `useMemo` object. The actions object then keeps a stable identity forever, so it's safe as a `useEffect` dependency.
+- **Lazy init**: accept `Collection | Iterable<…> | (() => Collection | Iterable<…>)`. Resolve once into a `useRef` (so `reset` can restore a *fresh copy* of the original), and seed `useState` from a copy of it. Never mutate the caller's passed-in collection.
+- **Stable readers**: expose `has`/`get` as `useCallback([])` that read from a ref mirroring the latest state (`const ref = useRef(value); ref.current = value;`), so they're both stable and always current.
+- **Scope discipline**: add genuinely useful extras (`useSet`'s `toggle(value, force?)`, `useMap`'s `get`) but *decline* ones that hurt type safety — e.g. a functional updater on `set(key, value)` is ambiguous when `V` is itself a function, so leave it out and say why.
+
+`useMap` (`packages/hooks/use-map`) and `useSet` (`packages/hooks/use-set`) are the reference implementations — copy their structure.
+
 ## Phase 3 — Write tests (target 90%+ coverage)
 
 Co-locate `use<Name>.test.ts` in `src/`. Use `@testing-library/react`'s `renderHook`/`act` and Vitest. Cover: initialization/defaults, every option, the happy path, edge cases, `enabled`/disable toggling, cleanup on unmount, and SSR/unsupported environments. Unit-test the pure helpers in `utils.ts` directly — they're the cheapest coverage and the easiest to reason about.
 
 **Coerce DOM values you return or branch on to strict types.** A real bug from `useKeyPress`: an `isEditableElement` helper returned `element.isContentEditable`, which is `undefined` in jsdom, violating its `: boolean` contract and failing a test. Fix at the source (`=== true`), not by loosening the test. This applies to any DOM property that may be absent in the test environment.
+
+**Assert reference stability / no-op skipping.** For collection and state hooks, capture the value before an update and assert identity: `const before = result.current[0]; act(() => actions.remove("absent")); expect(result.current[0]).toBe(before);`. This proves no-op updates don't allocate a new collection or trigger a re-render, and that mutating actions *do* produce a new reference (`expect(after).not.toBe(before)`). Also assert the actions object and each action stay identity-stable across `rerender()` — that's the contract that lets consumers use them as effect deps.
 
 ## Phase 4 — Wire the umbrella (3 places — miss one and it won't ship)
 

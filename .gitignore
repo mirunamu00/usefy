@@ -41,7 +41,6 @@ apps/storybook/public/reports
 # Misc
 .DS_Store
 *.pem
-.claude
 lodash.js
 tsconfig.tsbuildinfo
 
