@@ -1,5 +1,38 @@
 # @usefy/usefy
 
+## 0.3.1
+
+### Patch Changes
+
+- 565a971: docs(use-key-press): add package README and update hooks documentation
+
+  - Add the `@usefy/use-key-press` README with installation, full API reference (target forms, modifier/key aliases, all options), usage examples, behavior notes, and coverage links.
+  - Update the `@usefy/hooks` README: add `useKeyPress` to the hooks table with a coverage badge, include it in the Quick Start imports, and add a Keyboard section to the feature list.
+
+- Updated dependencies [565a971]
+  - @usefy/use-key-press@0.3.1
+  - @usefy/use-click-any-where@0.3.1
+  - @usefy/use-copy-to-clipboard@0.3.1
+  - @usefy/use-counter@0.3.1
+  - @usefy/use-debounce@0.3.1
+  - @usefy/use-debounce-callback@0.3.1
+  - @usefy/use-event-listener@0.3.1
+  - @usefy/use-geolocation@0.3.1
+  - @usefy/use-hover@0.3.1
+  - @usefy/use-init@0.3.1
+  - @usefy/use-intersection-observer@0.3.1
+  - @usefy/use-local-storage@0.3.1
+  - @usefy/use-memory-monitor@0.3.1
+  - @usefy/use-on-click-outside@0.3.1
+  - @usefy/use-session-storage@0.3.1
+  - @usefy/use-signal@0.3.1
+  - @usefy/use-throttle@0.3.1
+  - @usefy/use-throttle-callback@0.3.1
+  - @usefy/use-timeout@0.3.1
+  - @usefy/use-timer@0.3.1
+  - @usefy/use-toggle@0.3.1
+  - @usefy/use-unmount@0.3.1
+
 ## 0.3.0
 
 ### Minor Changes
