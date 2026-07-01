@@ -1,5 +1,47 @@
 # @usefy/usefy
 
+## 0.3.0
+
+### Minor Changes
+
+- d0e98cd: feat(use-key-press): add useKeyPress hook for keyboard detection
+
+  Introduces `@usefy/use-key-press`, a hook for detecting key presses, shortcuts, and combinations:
+
+  - Single keys (`"Escape"`), combinations (`"ctrl+s"`, `"mod+shift+k"`), and alternative bindings via arrays (`["ctrl+s", "meta+s"]`, matched as OR)
+  - Cross-platform `"mod"` alias (Ctrl on Windows/Linux, Cmd on macOS) and friendly aliases (`esc`, `space`, arrows, etc.)
+  - Predicate targets for full control, plus match-by logical key (`event.key`) or physical key (`event.code`)
+  - `onPress`/`onRelease` callbacks with the raw event, `preventDefault`/`stopPropagation`, exact/loose modifier matching
+  - Robustness: ignores auto-repeat and typing inside editable elements (opt-in), resets on window blur, SSR-safe with automatic cleanup
+
+  Also re-exported from the `@usefy/hooks` umbrella package.
+
+### Patch Changes
+
+- Updated dependencies [d0e98cd]
+  - @usefy/use-key-press@0.3.0
+  - @usefy/use-click-any-where@0.3.0
+  - @usefy/use-copy-to-clipboard@0.3.0
+  - @usefy/use-counter@0.3.0
+  - @usefy/use-debounce@0.3.0
+  - @usefy/use-debounce-callback@0.3.0
+  - @usefy/use-event-listener@0.3.0
+  - @usefy/use-geolocation@0.3.0
+  - @usefy/use-hover@0.3.0
+  - @usefy/use-init@0.3.0
+  - @usefy/use-intersection-observer@0.3.0
+  - @usefy/use-local-storage@0.3.0
+  - @usefy/use-memory-monitor@0.3.0
+  - @usefy/use-on-click-outside@0.3.0
+  - @usefy/use-session-storage@0.3.0
+  - @usefy/use-signal@0.3.0
+  - @usefy/use-throttle@0.3.0
+  - @usefy/use-throttle-callback@0.3.0
+  - @usefy/use-timeout@0.3.0
+  - @usefy/use-timer@0.3.0
+  - @usefy/use-toggle@0.3.0
+  - @usefy/use-unmount@0.3.0
+
 ## 0.2.6
 
 ### Patch Changes
