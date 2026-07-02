@@ -133,6 +133,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-map" target="_blank" rel="noopener noreferrer">@usefy/use-map</a>                                         | Map data structure state with immutable updates         | <a href="https://www.npmjs.com/package/@usefy/use-map" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-map.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer">@usefy/use-set</a>                                         | Set data structure state with immutable updates         | <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-set.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer">@usefy/use-list</a>                                       | Array state with push/filter/sort/insertAt/updateAt     | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-list.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer">@usefy/use-queue</a>                                     | FIFO queue state with enqueue/dequeue and immutable updates | <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-queue.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -155,6 +156,7 @@ import {
   useMap,
   useSet,
   useList,
+  useQueue,
   useSignal,
   useUnmount,
   useInit,
@@ -335,6 +337,23 @@ sort((a, b) => a.id - b.id);                    // immutable sort
 ```
 
 Immutable updates (new array on every change), a `readonly T[]` return type, a rich action set (`set`/`push`/`filter`/`sort`/`clear`/`removeAt`/`insertAt`/`updateAt`/`reset`), `set` with an updater function, stable action identities, lazy init, and no-op skipping. Perfect for todo lists, editable tables, and ordered collections.
+
+</details>
+
+<details>
+<summary><strong>useQueue</strong> — FIFO queue state with immutable updates</summary>
+
+```tsx
+import { useQueue } from "@usefy/use-queue";
+
+const [queue, { add, remove, peek, clear, reset }] = useQueue<Task>([]);
+
+add(task);              // enqueue to the back (variadic: add(a, b, c))
+const next = remove();  // dequeue the front and return it (undefined if empty)
+peek();                 // read the front without mutating
+```
+
+FIFO semantics (`add` to the back, `remove`/`peek` from the front), immutable updates (new array on every change), a `readonly T[]` return type, `remove` that returns the dequeued item, stable action identities, lazy init, and no-op skipping. Read `first`/`last`/`size` directly from the queue (`queue[0]`, `queue[queue.length - 1]`, `queue.length`). Perfect for task runners, print/job queues, message buffers, and breadth-first traversals.
 
 </details>
 

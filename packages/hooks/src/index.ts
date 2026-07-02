@@ -211,3 +211,11 @@ export {
   type UseListActions,
   type UseListReturn,
 } from "@usefy/use-list";
+
+// useQueue
+export {
+  useQueue,
+  type QueueInitializer,
+  type UseQueueActions,
+  type UseQueueReturn,
+} from "@usefy/use-queue";
