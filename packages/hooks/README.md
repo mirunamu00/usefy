@@ -135,6 +135,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer">@usefy/use-list</a>                                       | Array state with push/filter/sort/insertAt/updateAt     | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-list.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer">@usefy/use-queue</a>                                     | FIFO queue state with enqueue/dequeue and immutable updates | <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-queue.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer">@usefy/use-history-state</a>                     | Undo/redo state history with time-travel                | <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-history-state.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-step" target="_blank" rel="noopener noreferrer">@usefy/use-step</a>                                       | Multi-step navigation for wizards, forms, carousels     | <a href="https://www.npmjs.com/package/@usefy/use-step" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-step.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -159,6 +160,7 @@ import {
   useList,
   useQueue,
   useHistoryState,
+  useStep,
   useSignal,
   useUnmount,
   useInit,
@@ -375,6 +377,24 @@ goTo(0);                              // jump to any point on the timeline
 ```
 
 Undo/redo/`goTo` time travel over an immutable timeline, `set` with value-or-updater (like `useState`), `canUndo`/`canRedo` flags, the full `history` array + `currentIndex`, an optional `limit` to bound memory, `clear`/`reset`, stable control identities (safe as effect deps), and no-op skipping. Perfect for editors, drawing/design canvases, form builders, and any `Ctrl/Cmd+Z` experience.
+
+</details>
+
+<details>
+<summary><strong>useStep</strong> — Multi-step navigation for wizards, forms, and carousels</summary>
+
+```tsx
+import { useStep } from "@usefy/use-step";
+
+const [step, { goToNextStep, goToPrevStep, canGoToNextStep, canGoToPrevStep, setStep, reset }] =
+  useStep(4); // steps 0..3
+
+goToNextStep();     // advance (no-op on the last step)
+setStep(2);         // jump to a step (value or updater, clamped)
+setStep((s) => s + 1);
+```
+
+0-based indexing with automatic range validation, `goToNextStep`/`goToPrevStep` plus ready-made `canGoToNextStep`/`canGoToPrevStep` flags for disabling buttons, `setStep` (value or updater), `reset`, stable control identities (safe as effect deps), resilience to a changing step `count`, and no-op skipping at the edges. Perfect for multi-step forms, wizards, onboarding flows, and carousels.
 
 </details>
 

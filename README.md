@@ -91,6 +91,7 @@ function App() {
 - `useKeyPress` — Keyboard shortcuts and combinations
 - `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
 - `useHistoryState` — Undo/redo state history with time-travel
+- `useStep` — Multi-step navigation for wizards, forms, and carousels
 - `useIntersectionObserver`, `useGeolocation` — Browser APIs
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
@@ -232,6 +233,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useList` | Array state with push/filter/sort/insertAt/updateAt |
 | `useQueue` | FIFO queue state with enqueue/dequeue and immutable updates |
 | `useHistoryState` | Undo/redo state history with time-travel |
+| `useStep` | Multi-step navigation for wizards, forms, carousels |
 | `useSignal` | Event-driven communication |
 | `useUnmount` | Unmount callback |
 | `useInit` | One-time initialization |
