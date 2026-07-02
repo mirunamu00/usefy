@@ -40,6 +40,7 @@
     "@usefy/use-set": "workspace:*",
     "@usefy/use-list": "workspace:*",
     "@usefy/use-queue": "workspace:*",
+    "@usefy/use-history-state": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

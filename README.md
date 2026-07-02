@@ -90,6 +90,7 @@ function App() {
 - `useEventListener`, `useOnClickOutside`, `useHover` — DOM events
 - `useKeyPress` — Keyboard shortcuts and combinations
 - `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
+- `useHistoryState` — Undo/redo state history with time-travel
 - `useIntersectionObserver`, `useGeolocation` — Browser APIs
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
@@ -230,6 +231,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useSet` | Set data structure state with immutable updates |
 | `useList` | Array state with push/filter/sort/insertAt/updateAt |
 | `useQueue` | FIFO queue state with enqueue/dequeue and immutable updates |
+| `useHistoryState` | Undo/redo state history with time-travel |
 | `useSignal` | Event-driven communication |
 | `useUnmount` | Unmount callback |
 | `useInit` | One-time initialization |

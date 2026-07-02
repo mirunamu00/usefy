@@ -134,6 +134,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer">@usefy/use-set</a>                                         | Set data structure state with immutable updates         | <a href="https://www.npmjs.com/package/@usefy/use-set" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-set.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer">@usefy/use-list</a>                                       | Array state with push/filter/sort/insertAt/updateAt     | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-list.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer">@usefy/use-queue</a>                                     | FIFO queue state with enqueue/dequeue and immutable updates | <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-queue.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer">@usefy/use-history-state</a>                     | Undo/redo state history with time-travel                | <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-history-state.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -157,6 +158,7 @@ import {
   useSet,
   useList,
   useQueue,
+  useHistoryState,
   useSignal,
   useUnmount,
   useInit,
@@ -354,6 +356,25 @@ peek();                 // read the front without mutating
 ```
 
 FIFO semantics (`add` to the back, `remove`/`peek` from the front), immutable updates (new array on every change), a `readonly T[]` return type, `remove` that returns the dequeued item, stable action identities, lazy init, and no-op skipping. Read `first`/`last`/`size` directly from the queue (`queue[0]`, `queue[queue.length - 1]`, `queue.length`). Perfect for task runners, print/job queues, message buffers, and breadth-first traversals.
+
+</details>
+
+<details>
+<summary><strong>useHistoryState</strong> — Undo/redo state history with time-travel</summary>
+
+```tsx
+import { useHistoryState } from "@usefy/use-history-state";
+
+const { state, set, undo, redo, canUndo, canRedo, goTo, history } =
+  useHistoryState(initialCanvas, { limit: 50 });
+
+set((s) => ({ ...s, dirty: true })); // record a new entry (value or updater)
+undo();                               // step back
+redo();                               // step forward
+goTo(0);                              // jump to any point on the timeline
+```
+
+Undo/redo/`goTo` time travel over an immutable timeline, `set` with value-or-updater (like `useState`), `canUndo`/`canRedo` flags, the full `history` array + `currentIndex`, an optional `limit` to bound memory, `clear`/`reset`, stable control identities (safe as effect deps), and no-op skipping. Perfect for editors, drawing/design canvases, form builders, and any `Ctrl/Cmd+Z` experience.
 
 </details>
 
