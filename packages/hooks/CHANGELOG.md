@@ -1,5 +1,41 @@
 # @usefy/usefy
 
+## 0.7.0
+
+### Minor Changes
+
+- e42e45c: Add `useQueue` — a hook for managing FIFO queue state with immutable updates. Enqueue to the back with `add` (variadic), dequeue from the front with `remove` (which returns the removed item), inspect the front with `peek`, plus `clear` and `reset`. Returns a `[queue, actions]` tuple with a `readonly T[]` value, stable action identities, lazy initialization, and no-op skipping — consistent with `useMap`/`useSet`/`useList`.
+
+### Patch Changes
+
+- Updated dependencies [e42e45c]
+  - @usefy/use-queue@0.7.0
+  - @usefy/use-click-any-where@0.7.0
+  - @usefy/use-copy-to-clipboard@0.7.0
+  - @usefy/use-counter@0.7.0
+  - @usefy/use-debounce@0.7.0
+  - @usefy/use-debounce-callback@0.7.0
+  - @usefy/use-event-listener@0.7.0
+  - @usefy/use-geolocation@0.7.0
+  - @usefy/use-hover@0.7.0
+  - @usefy/use-init@0.7.0
+  - @usefy/use-intersection-observer@0.7.0
+  - @usefy/use-key-press@0.7.0
+  - @usefy/use-list@0.7.0
+  - @usefy/use-local-storage@0.7.0
+  - @usefy/use-map@0.7.0
+  - @usefy/use-memory-monitor@0.7.0
+  - @usefy/use-on-click-outside@0.7.0
+  - @usefy/use-session-storage@0.7.0
+  - @usefy/use-set@0.7.0
+  - @usefy/use-signal@0.7.0
+  - @usefy/use-throttle@0.7.0
+  - @usefy/use-throttle-callback@0.7.0
+  - @usefy/use-timeout@0.7.0
+  - @usefy/use-timer@0.7.0
+  - @usefy/use-toggle@0.7.0
+  - @usefy/use-unmount@0.7.0
+
 ## 0.6.0
 
 ### Minor Changes
