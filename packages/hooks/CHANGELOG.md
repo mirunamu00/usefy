@@ -1,5 +1,42 @@
 # @usefy/usefy
 
+## 0.8.0
+
+### Minor Changes
+
+- 41e74f7: Add `useHistoryState` — a hook for state with built-in undo/redo history (time travel). Records each `set` (value or updater) on an immutable timeline; navigate with `undo`/`redo`/`goTo`, read `canUndo`/`canRedo`, and inspect the full `history` array + `currentIndex`. Includes an optional `limit` to bound memory (oldest entries drop off the front), `clear`/`reset`, no-op skipping, and stable control identities that are safe as effect dependencies.
+
+### Patch Changes
+
+- Updated dependencies [41e74f7]
+  - @usefy/use-history-state@0.8.0
+  - @usefy/use-click-any-where@0.8.0
+  - @usefy/use-copy-to-clipboard@0.8.0
+  - @usefy/use-counter@0.8.0
+  - @usefy/use-debounce@0.8.0
+  - @usefy/use-debounce-callback@0.8.0
+  - @usefy/use-event-listener@0.8.0
+  - @usefy/use-geolocation@0.8.0
+  - @usefy/use-hover@0.8.0
+  - @usefy/use-init@0.8.0
+  - @usefy/use-intersection-observer@0.8.0
+  - @usefy/use-key-press@0.8.0
+  - @usefy/use-list@0.8.0
+  - @usefy/use-local-storage@0.8.0
+  - @usefy/use-map@0.8.0
+  - @usefy/use-memory-monitor@0.8.0
+  - @usefy/use-on-click-outside@0.8.0
+  - @usefy/use-queue@0.8.0
+  - @usefy/use-session-storage@0.8.0
+  - @usefy/use-set@0.8.0
+  - @usefy/use-signal@0.8.0
+  - @usefy/use-throttle@0.8.0
+  - @usefy/use-throttle-callback@0.8.0
+  - @usefy/use-timeout@0.8.0
+  - @usefy/use-timer@0.8.0
+  - @usefy/use-toggle@0.8.0
+  - @usefy/use-unmount@0.8.0
+
 ## 0.7.0
 
 ### Minor Changes
