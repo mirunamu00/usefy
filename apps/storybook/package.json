@@ -39,6 +39,7 @@
     "@usefy/use-map": "workspace:*",
     "@usefy/use-set": "workspace:*",
     "@usefy/use-list": "workspace:*",
+    "@usefy/use-queue": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
