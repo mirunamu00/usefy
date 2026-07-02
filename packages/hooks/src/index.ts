@@ -219,3 +219,12 @@ export {
   type UseQueueActions,
   type UseQueueReturn,
 } from "@usefy/use-queue";
+
+// useHistoryState
+export {
+  useHistoryState,
+  type HistoryStateInitializer,
+  type HistoryStateUpdater,
+  type UseHistoryStateOptions,
+  type UseHistoryStateReturn,
+} from "@usefy/use-history-state";
