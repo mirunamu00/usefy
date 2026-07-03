@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-key-press",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "description": "A React hook for detecting keyboard key presses, shortcuts, and combinations",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

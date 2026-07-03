@@ -1,5 +1,44 @@
 # @usefy/usefy
 
+## 0.10.0
+
+### Minor Changes
+
+- 4abbdc5: Add `useWindowSize` — a hook for tracking the browser window size with debounce/throttle, SSR-safe initial values, scrollbar control, an `onChange` callback, and no-op re-render skipping.
+
+### Patch Changes
+
+- Updated dependencies [4abbdc5]
+  - @usefy/use-window-size@0.10.0
+  - @usefy/use-click-any-where@0.10.0
+  - @usefy/use-copy-to-clipboard@0.10.0
+  - @usefy/use-counter@0.10.0
+  - @usefy/use-debounce@0.10.0
+  - @usefy/use-debounce-callback@0.10.0
+  - @usefy/use-event-listener@0.10.0
+  - @usefy/use-geolocation@0.10.0
+  - @usefy/use-history-state@0.10.0
+  - @usefy/use-hover@0.10.0
+  - @usefy/use-init@0.10.0
+  - @usefy/use-intersection-observer@0.10.0
+  - @usefy/use-key-press@0.10.0
+  - @usefy/use-list@0.10.0
+  - @usefy/use-local-storage@0.10.0
+  - @usefy/use-map@0.10.0
+  - @usefy/use-memory-monitor@0.10.0
+  - @usefy/use-on-click-outside@0.10.0
+  - @usefy/use-queue@0.10.0
+  - @usefy/use-session-storage@0.10.0
+  - @usefy/use-set@0.10.0
+  - @usefy/use-signal@0.10.0
+  - @usefy/use-step@0.10.0
+  - @usefy/use-throttle@0.10.0
+  - @usefy/use-throttle-callback@0.10.0
+  - @usefy/use-timeout@0.10.0
+  - @usefy/use-timer@0.10.0
+  - @usefy/use-toggle@0.10.0
+  - @usefy/use-unmount@0.10.0
+
 ## 0.9.0
 
 ### Minor Changes
