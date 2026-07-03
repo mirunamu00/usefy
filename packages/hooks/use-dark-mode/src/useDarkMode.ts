@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type {
   DarkModeMode,
   UseDarkModeOptions,
@@ -44,6 +44,18 @@ const DARK_QUERY = "(prefers-color-scheme: dark)";
  *   <option value="dark">Dark</option>
  * </select>;
  * ```
+ *
+ * @remarks
+ * **SSR / hydration:** the initial `mode` is read from `localStorage` and the
+ * system preference is read eagerly on the client, so the first client render
+ * can differ from the server HTML (which has no access to either). If you
+ * server-render, avoid a hydration mismatch by either (a) gating theme-dependent
+ * markup behind an `useIsClient()`/mounted check, or (b) applying the stored
+ * theme with a small blocking `<script>` in `<head>` before hydration.
+ *
+ * The `attribute`/`darkClass`/`element` options should have a **stable
+ * identity** across renders; changing them is supported (the previous DOM write
+ * is reverted) but is not a hot path.
  */
 export function useDarkMode(
   options: UseDarkModeOptions = {}
@@ -80,13 +92,39 @@ export function useDarkMode(
 
   const isDark = resolveIsDark(mode, systemDark);
 
-  // Apply the resolved theme to the DOM.
+  // Apply the resolved theme to the DOM. If the target element or the
+  // write-style (attribute vs class name) changes between renders, the previous
+  // write is reverted first so no stale class/attribute is left behind. The
+  // applied theme intentionally persists on unmount (theme hooks are usually
+  // mounted once at the root).
+  const appliedRef = useRef<{
+    element: HTMLElement;
+    attribute?: string;
+    darkClass: string;
+  } | null>(null);
+
   useEffect(() => {
     if (!isBrowser()) {
       return;
     }
     const target = element ?? document.documentElement;
+
+    const prev = appliedRef.current;
+    if (
+      prev &&
+      (prev.element !== target ||
+        prev.attribute !== attribute ||
+        prev.darkClass !== darkClass)
+    ) {
+      if (prev.attribute) {
+        prev.element.removeAttribute(prev.attribute);
+      } else {
+        prev.element.classList.remove(prev.darkClass);
+      }
+    }
+
     applyTheme(target, isDark, attribute, darkClass);
+    appliedRef.current = { element: target, attribute, darkClass };
   }, [isDark, element, attribute, darkClass]);
 
   const setMode = useCallback(

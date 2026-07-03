@@ -24,6 +24,13 @@ import { useRef } from "react";
  *   return () => clearInterval(id);
  * }, [latestCount]);
  * ```
+ *
+ * @remarks
+ * The ref is updated during render. Under concurrent rendering a render React
+ * discards can still write `.current`, so between an interrupted render and the
+ * next commit `.current` may briefly hold an uncommitted value. For the common
+ * synchronous case this is not observable; if you need the last *committed*
+ * value only, mirror it in a `useEffect` instead.
  */
 export function useLatest<T>(value: T): { readonly current: T } {
   const ref = useRef(value);

@@ -1,14 +1,15 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 /**
  * Returns `true` on the component's first render and `false` on every render
  * thereafter.
  *
- * Useful for skipping logic during the initial render — e.g. avoiding an
- * `onChange` fired on mount, or gating an animation to updates only.
+ * Useful for skipping logic during the initial render — an `onChange` you don't
+ * want firing on mount, or gating an animation to updates only.
  *
- * The flag flips during render (via a ref), so the very first call in a
- * component's life returns `true` and all subsequent renders return `false`.
+ * The flag is flipped in an effect (after commit), never during render, so it
+ * stays correct under React StrictMode's double-invoked render (which commits
+ * the second pass) and under concurrent rendering.
  *
  * @returns `true` on the first render, otherwise `false`
  *
@@ -22,12 +23,11 @@ import { useRef } from "react";
  * ```
  */
 export function useIsFirstRender(): boolean {
-  const isFirst = useRef(true);
+  const isFirstRef = useRef(true);
 
-  if (isFirst.current) {
-    isFirst.current = false;
-    return true;
-  }
+  useEffect(() => {
+    isFirstRef.current = false;
+  }, []);
 
-  return false;
+  return isFirstRef.current;
 }

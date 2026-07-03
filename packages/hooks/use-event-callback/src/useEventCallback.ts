@@ -26,6 +26,15 @@ const useIsomorphicLayoutEffect =
  *   return () => el.removeEventListener("click", onClick);
  * }, [onClick]);
  * ```
+ *
+ * @remarks
+ * Intended for callbacks fired **after** render/paint (events, timeouts,
+ * subscriptions). The stored function is updated in a layout effect, so:
+ * - Calling the returned function **during render throws** (guards against
+ *   reading state that isn't committed yet).
+ * - Do not call it from an effect that commits *before* this component's layout
+ *   effect on the same pass (e.g. a child component's layout effect) — it may
+ *   still hold the previous render's function.
  */
 export function useEventCallback<Args extends unknown[], Return>(
   fn: (...args: Args) => Return

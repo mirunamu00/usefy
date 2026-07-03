@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useLatest } from "@usefy/use-latest";
-import { within, expect, waitFor } from "@storybook/test";
+import { within, userEvent, expect, waitFor } from "@storybook/test";
 import { storyTheme } from "../styles/storyTheme";
 
 function Demo() {
@@ -91,6 +91,14 @@ function Poller({ value }: { value: number }) {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    // Initially the stable interval reads 0...
     await waitFor(() => expect(canvas.getByTestId("seen")).toHaveTextContent("0"));
+    // ...and after incrementing it reads the LATEST value (no stale closure),
+    // even though the interval was set up once and never re-subscribed.
+    await userEvent.click(canvas.getByTestId("inc"));
+    await userEvent.click(canvas.getByTestId("inc"));
+    await waitFor(() => expect(canvas.getByTestId("seen")).toHaveTextContent("2"), {
+      timeout: 2000,
+    });
   },
 };

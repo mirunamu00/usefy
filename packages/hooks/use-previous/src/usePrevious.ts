@@ -35,6 +35,13 @@ export type UsePreviousComparator<T> = (previous: T, current: T) => boolean;
  * // Ignore new-but-equal objects
  * const prev = usePrevious(user, (a, b) => a.id === b.id);
  * ```
+ *
+ * @remarks
+ * This tracks the previous *distinct* value (updated during render), which is
+ * correct under StrictMode's double-invoked render. Under concurrent rendering,
+ * a render React discards can still advance the stored value, so in rare cases
+ * the "previous" may reflect a value from an interrupted (never committed)
+ * render. For the common synchronous case this is not observable.
  */
 export function usePrevious<T>(
   value: T,

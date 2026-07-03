@@ -1,10 +1,18 @@
 import { renderHook } from "@testing-library/react";
+import { StrictMode } from "react";
 import { describe, expect, it } from "vitest";
 import { useIsFirstRender } from "./useIsFirstRender";
 
 describe("useIsFirstRender", () => {
   it("returns true on the first render", () => {
     const { result } = renderHook(() => useIsFirstRender());
+    expect(result.current).toBe(true);
+  });
+
+  it("returns true on the first render under StrictMode (double-invoke safe)", () => {
+    const { result } = renderHook(() => useIsFirstRender(), {
+      wrapper: StrictMode,
+    });
     expect(result.current).toBe(true);
   });
 

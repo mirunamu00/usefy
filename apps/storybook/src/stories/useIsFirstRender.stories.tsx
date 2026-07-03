@@ -79,6 +79,9 @@ function OnChange({ value }: { value: string }) {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    // true on the first render...
+    await expect(canvas.getByTestId("flag")).toHaveTextContent("true");
+    // ...and false on every render after.
     await userEvent.click(canvas.getByTestId("rerender"));
     await waitFor(() => expect(canvas.getByTestId("flag")).toHaveTextContent("false"));
   },

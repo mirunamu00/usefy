@@ -146,6 +146,30 @@ describe("useDarkMode", () => {
     });
   });
 
+  it("applies to a custom element and leaves <html> untouched", () => {
+    setupMatchMedia(false);
+    const el = document.createElement("div");
+    const { result } = renderHook(() => useDarkMode({ element: el }));
+    act(() => result.current.enable());
+    expect(el.classList.contains("dark")).toBe(true);
+    expect(document.documentElement.classList.contains("dark")).toBe(false);
+  });
+
+  it("reverts the previous write when the write-style changes (no stale state)", () => {
+    setupMatchMedia(false);
+    const { result, rerender } = renderHook(
+      ({ attribute }) => useDarkMode({ attribute }),
+      { initialProps: { attribute: "data-theme" as string | undefined } }
+    );
+    act(() => result.current.enable());
+    expect(document.documentElement.getAttribute("data-theme")).toBe("dark");
+
+    // Switch to class mode -> the stale attribute must be removed.
+    rerender({ attribute: undefined });
+    expect(document.documentElement.hasAttribute("data-theme")).toBe(false);
+    expect(document.documentElement.classList.contains("dark")).toBe(true);
+  });
+
   it("syncs mode across tabs via the storage event", () => {
     setupMatchMedia(false);
     const { result } = renderHook(() => useDarkMode());
@@ -159,6 +183,23 @@ describe("useDarkMode", () => {
     });
     expect(result.current.mode).toBe("dark");
     expect(result.current.isDark).toBe(true);
+  });
+
+  it("ignores an invalid or cleared value from the storage event", () => {
+    setupMatchMedia(false);
+    const { result } = renderHook(() => useDarkMode({ defaultMode: "light" }));
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", { key: "usefy-dark-mode", newValue: "garbage" })
+      );
+    });
+    expect(result.current.mode).toBe("light");
+    act(() => {
+      window.dispatchEvent(
+        new StorageEvent("storage", { key: "usefy-dark-mode", newValue: null })
+      );
+    });
+    expect(result.current.mode).toBe("light");
   });
 
   it("does not crash when matchMedia is unavailable", () => {
