@@ -1,5 +1,52 @@
 # @usefy/usefy
 
+## 0.11.0
+
+### Minor Changes
+
+- 28b23d8: Add SSR & lifecycle hooks (Batch 1): `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, and `useIsFirstRender`. Each ships with tests, a Storybook story, a README, and `@usefy/hooks` umbrella re-exports.
+
+### Patch Changes
+
+- Updated dependencies [28b23d8]
+  - @usefy/use-is-client@0.11.0
+  - @usefy/use-isomorphic-layout-effect@0.11.0
+  - @usefy/use-previous@0.11.0
+  - @usefy/use-latest@0.11.0
+  - @usefy/use-event-callback@0.11.0
+  - @usefy/use-update-effect@0.11.0
+  - @usefy/use-mount@0.11.0
+  - @usefy/use-is-first-render@0.11.0
+  - @usefy/use-click-any-where@0.11.0
+  - @usefy/use-copy-to-clipboard@0.11.0
+  - @usefy/use-counter@0.11.0
+  - @usefy/use-debounce@0.11.0
+  - @usefy/use-debounce-callback@0.11.0
+  - @usefy/use-event-listener@0.11.0
+  - @usefy/use-geolocation@0.11.0
+  - @usefy/use-history-state@0.11.0
+  - @usefy/use-hover@0.11.0
+  - @usefy/use-init@0.11.0
+  - @usefy/use-intersection-observer@0.11.0
+  - @usefy/use-key-press@0.11.0
+  - @usefy/use-list@0.11.0
+  - @usefy/use-local-storage@0.11.0
+  - @usefy/use-map@0.11.0
+  - @usefy/use-memory-monitor@0.11.0
+  - @usefy/use-on-click-outside@0.11.0
+  - @usefy/use-queue@0.11.0
+  - @usefy/use-session-storage@0.11.0
+  - @usefy/use-set@0.11.0
+  - @usefy/use-signal@0.11.0
+  - @usefy/use-step@0.11.0
+  - @usefy/use-throttle@0.11.0
+  - @usefy/use-throttle-callback@0.11.0
+  - @usefy/use-timeout@0.11.0
+  - @usefy/use-timer@0.11.0
+  - @usefy/use-toggle@0.11.0
+  - @usefy/use-unmount@0.11.0
+  - @usefy/use-window-size@0.11.0
+
 ## 0.10.0
 
 ### Minor Changes
