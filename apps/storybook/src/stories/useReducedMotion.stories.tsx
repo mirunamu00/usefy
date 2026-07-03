@@ -23,8 +23,8 @@ function Demo() {
 
       <div className="flex justify-center my-8">
         <div
-          className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600"
-          style={{ animation: reduced ? "none" : "usefy-spin 1.2s linear infinite" }}
+          className="w-16 h-16 rounded-full border-[6px] border-indigo-500 border-t-transparent"
+          style={{ animation: reduced ? "none" : "usefy-spin 0.9s linear infinite" }}
           data-testid="spinner"
         />
         <style>{`@keyframes usefy-spin { to { transform: rotate(360deg); } }`}</style>
