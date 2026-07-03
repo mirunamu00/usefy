@@ -1,5 +1,43 @@
 # @usefy/usefy
 
+## 0.9.0
+
+### Minor Changes
+
+- c269c3d: Add `useStep` — a hook for multi-step navigation (wizards, multi-step forms, onboarding, carousels). Tracks a 0-based step index with automatic range validation: `goToNextStep`/`goToPrevStep` with ready-made `canGoToNextStep`/`canGoToPrevStep` flags, `setStep` (value or updater, clamped), and `reset`. Returns a `[currentStep, controls]` tuple with stable control identities, resilience to a changing step `count`, and no-op skipping at the edges.
+
+### Patch Changes
+
+- Updated dependencies [c269c3d]
+  - @usefy/use-step@0.9.0
+  - @usefy/use-click-any-where@0.9.0
+  - @usefy/use-copy-to-clipboard@0.9.0
+  - @usefy/use-counter@0.9.0
+  - @usefy/use-debounce@0.9.0
+  - @usefy/use-debounce-callback@0.9.0
+  - @usefy/use-event-listener@0.9.0
+  - @usefy/use-geolocation@0.9.0
+  - @usefy/use-history-state@0.9.0
+  - @usefy/use-hover@0.9.0
+  - @usefy/use-init@0.9.0
+  - @usefy/use-intersection-observer@0.9.0
+  - @usefy/use-key-press@0.9.0
+  - @usefy/use-list@0.9.0
+  - @usefy/use-local-storage@0.9.0
+  - @usefy/use-map@0.9.0
+  - @usefy/use-memory-monitor@0.9.0
+  - @usefy/use-on-click-outside@0.9.0
+  - @usefy/use-queue@0.9.0
+  - @usefy/use-session-storage@0.9.0
+  - @usefy/use-set@0.9.0
+  - @usefy/use-signal@0.9.0
+  - @usefy/use-throttle@0.9.0
+  - @usefy/use-throttle-callback@0.9.0
+  - @usefy/use-timeout@0.9.0
+  - @usefy/use-timer@0.9.0
+  - @usefy/use-toggle@0.9.0
+  - @usefy/use-unmount@0.9.0
+
 ## 0.8.0
 
 ### Minor Changes
