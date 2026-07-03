@@ -228,3 +228,11 @@ export {
   type UseHistoryStateOptions,
   type UseHistoryStateReturn,
 } from "@usefy/use-history-state";
+
+// useStep
+export {
+  useStep,
+  type StepUpdater,
+  type UseStepControls,
+  type UseStepReturn,
+} from "@usefy/use-step";
