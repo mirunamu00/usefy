@@ -236,3 +236,15 @@ export {
   type UseStepControls,
   type UseStepReturn,
 } from "@usefy/use-step";
+
+// useWindowSize
+export {
+  useWindowSize,
+  isWindowAvailable,
+  getWindowSize,
+  areSizesEqual,
+  type WindowSize,
+  type OnWindowSizeChange,
+  type UseWindowSizeOptions,
+  type UseWindowSizeReturn,
+} from "@usefy/use-window-size";

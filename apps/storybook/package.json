@@ -42,6 +42,7 @@
     "@usefy/use-queue": "workspace:*",
     "@usefy/use-history-state": "workspace:*",
     "@usefy/use-step": "workspace:*",
+    "@usefy/use-window-size": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
