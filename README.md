@@ -96,6 +96,7 @@ function App() {
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
 - `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, `useIsFirstRender` — SSR & lifecycle utilities
+- `useMediaQuery`, `usePreferredColorScheme`, `useReducedMotion`, `useDarkMode`, `useDocumentTitle` — Responsive, theme & accessibility
 
 <a href="./packages/hooks/README.md"><strong>View full documentation →</strong></a>
 
@@ -248,6 +249,11 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useUpdateEffect` | useEffect that skips the first render |
 | `useMount` | Run a callback once on mount |
 | `useIsFirstRender` | True only on the first render |
+| `useMediaQuery` | Match CSS media queries (matchMedia, SSR-safe) |
+| `usePreferredColorScheme` | System color scheme (prefers-color-scheme) |
+| `useReducedMotion` | Reduced-motion preference (a11y) |
+| `useDarkMode` | Dark mode: system/light/dark, persistence, DOM apply |
+| `useDocumentTitle` | Set document.title with restore-on-unmount |
 
 ### Kits (`@usefy/kits`)
 
