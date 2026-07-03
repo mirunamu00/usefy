@@ -43,6 +43,14 @@
     "@usefy/use-history-state": "workspace:*",
     "@usefy/use-step": "workspace:*",
     "@usefy/use-window-size": "workspace:*",
+    "@usefy/use-is-client": "workspace:*",
+    "@usefy/use-isomorphic-layout-effect": "workspace:*",
+    "@usefy/use-previous": "workspace:*",
+    "@usefy/use-latest": "workspace:*",
+    "@usefy/use-event-callback": "workspace:*",
+    "@usefy/use-update-effect": "workspace:*",
+    "@usefy/use-mount": "workspace:*",
+    "@usefy/use-is-first-render": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

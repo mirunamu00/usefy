@@ -137,6 +137,14 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer">@usefy/use-history-state</a>                     | Undo/redo state history with time-travel                | <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-history-state.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-step" target="_blank" rel="noopener noreferrer">@usefy/use-step</a>                                       | Multi-step navigation for wizards, forms, carousels     | <a href="https://www.npmjs.com/package/@usefy/use-step" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-step.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-window-size" target="_blank" rel="noopener noreferrer">@usefy/use-window-size</a>                       | Window size tracking with debounce/throttle and SSR     | <a href="https://www.npmjs.com/package/@usefy/use-window-size" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-window-size.svg?style=flat-square&color=007acc" alt="npm version" /></a>                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-is-client" target="_blank" rel="noopener noreferrer">@usefy/use-is-client</a> | True once hydrated on the client (SSR guard) | <a href="https://www.npmjs.com/package/@usefy/use-is-client" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-is-client.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-isomorphic-layout-effect" target="_blank" rel="noopener noreferrer">@usefy/use-isomorphic-layout-effect</a> | SSR-safe useLayoutEffect | <a href="https://www.npmjs.com/package/@usefy/use-isomorphic-layout-effect" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-isomorphic-layout-effect.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-previous" target="_blank" rel="noopener noreferrer">@usefy/use-previous</a> | Value from the previous render | <a href="https://www.npmjs.com/package/@usefy/use-previous" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-previous.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-latest" target="_blank" rel="noopener noreferrer">@usefy/use-latest</a> | Ref that always holds the latest value | <a href="https://www.npmjs.com/package/@usefy/use-latest" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-latest.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-event-callback" target="_blank" rel="noopener noreferrer">@usefy/use-event-callback</a> | Stable callback that sees the latest state | <a href="https://www.npmjs.com/package/@usefy/use-event-callback" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-event-callback.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-update-effect" target="_blank" rel="noopener noreferrer">@usefy/use-update-effect</a> | useEffect that skips the first render | <a href="https://www.npmjs.com/package/@usefy/use-update-effect" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-update-effect.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-mount" target="_blank" rel="noopener noreferrer">@usefy/use-mount</a> | Run a callback once on mount | <a href="https://www.npmjs.com/package/@usefy/use-mount" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-mount.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-is-first-render" target="_blank" rel="noopener noreferrer">@usefy/use-is-first-render</a> | True only on the first render | <a href="https://www.npmjs.com/package/@usefy/use-is-first-render" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-is-first-render.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -166,6 +174,14 @@ import {
   useSignal,
   useUnmount,
   useInit,
+  useIsClient,
+  useIsomorphicLayoutEffect,
+  usePrevious,
+  useLatest,
+  useEventCallback,
+  useUpdateEffect,
+  useMount,
+  useIsFirstRender,
 } from "@usefy/hooks";
 
 function App() {
@@ -966,6 +982,112 @@ useInit(() => {
 ```
 
 Perfect for initializing services, loading configuration, setting up subscriptions, and any one-time setup tasks with robust error handling.
+
+</details>
+
+### 🔩 SSR & Render Lifecycle
+
+<details>
+<summary><strong>useIsClient</strong> — True once hydrated on the client</summary>
+
+```tsx
+const isClient = useIsClient();
+return isClient ? <ClientOnlyWidget /> : <ServerFallback />;
+```
+
+`false` on the server and first render, `true` after hydration — the canonical guard for client-only UI without hydration mismatches.
+
+</details>
+
+<details>
+<summary><strong>useIsomorphicLayoutEffect</strong> — SSR-safe useLayoutEffect</summary>
+
+```tsx
+useIsomorphicLayoutEffect(() => {
+  setSize(ref.current?.getBoundingClientRect());
+}, []);
+```
+
+`useLayoutEffect` in the browser, `useEffect` on the server — silences the SSR warning while keeping synchronous layout on the client.
+
+</details>
+
+<details>
+<summary><strong>usePrevious</strong> — Value from the previous render</summary>
+
+```tsx
+const prev = usePrevious(count);
+// ignore new-but-equal values with a comparator
+const prevUser = usePrevious(user, (a, b) => a.id === b.id);
+```
+
+Tracks the previous distinct value (via ref, no extra render); optional comparator defaults to `Object.is`.
+
+</details>
+
+<details>
+<summary><strong>useLatest</strong> — Ref that always holds the latest value</summary>
+
+```tsx
+const latest = useLatest(value);
+useEffect(() => {
+  const id = setInterval(() => console.log(latest.current), 1000);
+  return () => clearInterval(id);
+}, [latest]);
+```
+
+Read fresh props/state inside stable callbacks without stale closures or extra deps. Stable ref identity.
+
+</details>
+
+<details>
+<summary><strong>useEventCallback</strong> — Stable callback that sees the latest state</summary>
+
+```tsx
+const onClick = useEventCallback(() => console.log(count));
+// stable identity, always reads the current count
+```
+
+The community `useEffectEvent`: a referentially-stable function that always proxies to the latest closure.
+
+</details>
+
+<details>
+<summary><strong>useUpdateEffect</strong> — useEffect that skips the first render</summary>
+
+```tsx
+useUpdateEffect(() => {
+  search(query); // runs only when query changes, not on mount
+}, [query]);
+```
+
+Same as `useEffect` but never runs on the initial render — no spurious mount-time call.
+
+</details>
+
+<details>
+<summary><strong>useMount</strong> — Run a callback once on mount</summary>
+
+```tsx
+useMount(() => {
+  analytics.page();
+  return () => cleanup();
+});
+```
+
+A readable alias for `useEffect(fn, [])`; the optional returned function runs on unmount.
+
+</details>
+
+<details>
+<summary><strong>useIsFirstRender</strong> — True only on the first render</summary>
+
+```tsx
+const isFirst = useIsFirstRender();
+if (!isFirst) onValueChange(value);
+```
+
+`true` on the first render, `false` on every render thereafter.
 
 </details>
 

@@ -95,6 +95,7 @@ function App() {
 - `useIntersectionObserver`, `useGeolocation`, `useWindowSize` — Browser APIs
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
+- `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, `useIsFirstRender` — SSR & lifecycle utilities
 
 <a href="./packages/hooks/README.md"><strong>View full documentation →</strong></a>
 
@@ -239,6 +240,14 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useUnmount` | Unmount callback |
 | `useInit` | One-time initialization |
 | `useMemoryMonitor` | Browser memory monitoring |
+| `useIsClient` | True once hydrated on the client (SSR guard) |
+| `useIsomorphicLayoutEffect` | SSR-safe useLayoutEffect |
+| `usePrevious` | Value from the previous render |
+| `useLatest` | Ref that always holds the latest value |
+| `useEventCallback` | Stable callback that sees the latest state |
+| `useUpdateEffect` | useEffect that skips the first render |
+| `useMount` | Run a callback once on mount |
+| `useIsFirstRender` | True only on the first render |
 
 ### Kits (`@usefy/kits`)
 

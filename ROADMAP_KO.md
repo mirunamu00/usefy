@@ -1,951 +1,223 @@
 # usefy Hooks Roadmap
 
-## Overview
+> 2026년 7월, 현재의 React 19 생태계 · 이미 구현된 훅 · 주요 훅 라이브러리
+> (usehooks-ts, ahooks, @mantine/hooks, react-use, @react-hookz/web)의 실제
+> 수요를 반영해 **처음부터 다시 작성**했습니다. 이 문서는 앞으로 무엇을 만들지,
+> 그리고 그만큼 중요하게 **무엇을 만들지 않을지**에 대한 기준(source of truth)입니다.
 
-이 문서는 usefy 라이브러리에 포함될 React 커스텀 훅들의 로드맵과 상세 기능 명세를 담고 있습니다.
+## 비전
 
----
+usefy는 **개별 버전으로 배포되는 프로덕션급 React 훅** 모음입니다. 모든 훅은 진지한
+애플리케이션이나 디자인 시스템이 의존할 수 있는 빌딩 블록입니다 — 타입 안전하고,
+테스트되고, SSR-safe하며, tree-shakeable합니다. 기준은 "데모에서 동작함"이 아니라
+**"컴포넌트 라이브러리가 이대로 배포해도 되는 수준"**입니다.
 
-## Hooks List
+## 설계 원칙 (엔터프라이즈 기준선)
 
-### 19. useScreen
+우리가 배포하는 모든 훅은 아래를 전부 만족해야 합니다.
 
-**목적**: 화면 정보 추적 (screen 객체)
+1. **TypeScript 우선** — 완전한 추론, 옵션/반환 타입 export, 공개 표면에 `any` 노출
+   금지. 가변 컬렉션이 foot-gun이 될 곳은 읽기 전용 반환 타입(`ReadonlyMap`,
+   `readonly T[]`).
+2. **SSR-safe** — `window`/`document` 가드, 서버에서는 결정적인 inert 값 반환,
+   hydration mismatch 유발 금지(초기값 허용).
+3. **안정적 참조** — 반환 함수는 `useCallback` 메모이제이션, 액션 묶음은 `useMemo`로
+   안정화해 effect 의존성으로 안전하게 사용 가능.
+4. **불필요한 리렌더 없음** — 값이 안 바뀌는 상태 업데이트는 스킵(`Object.is` /
+   구조적 no-op skipping).
+5. **latest-callback 패턴** — 사용자 콜백은 ref로 읽어, 핸들러가 바뀌어도 리스너를
+   재등록하지 않음.
+6. **React를 보완, 대체하지 않음** — React 19가 이미 제공하는 것은 재구현하지 않음
+   (아래 범위 경계 참고).
+7. **테스트 커버리지 ~100%**, `play` 테스트가 있는 Storybook 스토리, README 3종,
+   changeset. 이 전부가 갖춰져야 훅이 "완료"된 것.
 
-**주요 기능**:
+## 범위 경계 — usefy가 만들지 "않는" 것
 
-- screen.width, screen.height
-- screen.orientation
-- availWidth, availHeight
-- 디바이스 화면 정보 제공
+판단(judgment)도 제품의 일부입니다. 아래 카테고리는 통째로 제외합니다.
 
-**API**:
+**React 19 빌트인 (절대 재구현 금지):**
+`use`, `useActionState`, `useFormStatus`, `useOptimistic`, `useId`,
+`useTransition`, `useDeferredValue`, `useSyncExternalStore`, `useLayoutEffect`.
+이들을 감싸는 얇은 편의 헬퍼는 가능하지만, 클론은 만들지 않습니다.
 
-```typescript
-const screen = useScreen();
-```
+**전용 라이브러리 영역 (우리는 프리미티브만 제공, 완제품은 아님):**
 
-**사용 예시**:
-
-```typescript
-const screen = useScreen();
-
-return (
-  <div>
-    화면 해상도: {screen?.width}×{screen?.height}
-    사용 가능 영역: {screen?.availWidth}×{screen?.availHeight}
-  </div>
-);
-```
-
-**구현 포인트**:
-
-- window.screen 객체 사용
-- orientationchange 이벤트
-- SSR-safe
-- 화면 정보 객체 반환
-
----
-
-### 23. useIsClient
-
-**목적**: 클라이언트 사이드인지 확인 (SSR 체크)
-
-**주요 기능**:
-
-- SSR/CSR 구분
-- hydration 완료 감지
-- 클라이언트 전용 코드 실행
-- 간단한 boolean 반환
-
-**API**:
-
-```typescript
-const isClient = useIsClient();
-```
-
-**사용 예시**:
-
-```typescript
-const isClient = useIsClient();
-
-return <div>{isClient ? <ClientOnlyComponent /> : <ServerFallback />}</div>;
-```
-
-**구현 포인트**:
-
-- useEffect로 클라이언트 감지
-- 초기값 false
-- hydration 이후 true
+| 필요 | 대신 사용 | usefy가 제공하는 것 |
+| ---- | -------- | ------------------- |
+| 서버 상태 / 캐싱 | TanStack Query, SWR | 단순 로컬 async용 `useAsync` |
+| 폼 & 검증 | react-hook-form, TanStack Form | `useControllableState`, 필드 프리미티브 |
+| 가상화 | TanStack Virtual | `useIntersectionObserver` (구현됨) |
+| 애니메이션 | Framer Motion, react-spring | `useRafState`, `useReducedMotion` |
+| 전역 상태 | Zustand, Jotai, Redux | `useSignal` (구현됨), 로컬 컬렉션 |
+| 라우팅 / i18n / DnD | 전용 라이브러리 | — |
 
 ---
 
-### 24. useIsMounted
+## 구현 완료 (v0.9.x)
 
-**목적**: 컴포넌트가 마운트되었는지 확인
+아래 로드맵은 이들이 이미 존재한다고 가정합니다. 다시 제안하지 마세요.
 
-**주요 기능**:
-
-- 마운트 상태 추적
-- 비동기 작업 취소에 유용
-- 메모리 누수 방지
-- cleanup 함수에서 사용
-
-**API**:
-
-```typescript
-const isMounted = useIsMounted();
-```
-
-**사용 예시**:
-
-```typescript
-const isMounted = useIsMounted();
-
-const fetchData = async () => {
-  const data = await api.getData();
-  if (isMounted()) {
-    setState(data);
-  }
-};
-```
-
-**구현 포인트**:
-
-- useRef로 마운트 상태 저장
-- useEffect cleanup에서 false 설정
-- 함수 반환 (최신 값 참조)
+- **상태 & 자료구조** — `useToggle`, `useCounter`, `useMap`, `useSet`,
+  `useList`, `useQueue`, `useHistoryState`, `useLocalStorage`,
+  `useSessionStorage`, `useSignal`
+- **타이밍** — `useDebounce`, `useDebounceCallback`, `useThrottle`,
+  `useThrottleCallback`, `useTimeout`, `useInterval`, `useTimer`
+- **DOM & 이벤트** — `useEventListener`, `useOnClickOutside`,
+  `useClickAnyWhere`, `useHover`, `useKeyPress`, `useIntersectionObserver`,
+  `useResizeObserver`, `useWindowSize`
+- **브라우저 & 디바이스** — `useCopyToClipboard`, `useGeolocation`,
+  `useMemoryMonitor`
+- **라이프사이클 & 흐름** — `useUnmount`, `useInit`, `useStep`
 
 ---
 
-### 25. useIsomorphicLayoutEffect
+## 로드맵
 
-**목적**: useLayoutEffect의 SSR-safe 버전
+**우선순위 범례**
+- **P0** — 수요 최상 / 디자인 시스템 구축의 토대. 다음으로 구현.
+- **P1** — 강하고 넓은 수요. P0 다음.
+- **P2** — 가치 있으나 니치하거나 플랫폼 종속. 기회 되는 대로.
 
-**주요 기능**:
+### 1. SSR & 라이프사이클
 
-- SSR에서는 useEffect
-- 클라이언트에서는 useLayoutEffect
-- Next.js, Gatsby 호환
-- 경고 메시지 제거
+| 훅 | 우선 | 목적 & API 스케치 |
+| -- | --- | ----------------- |
+| `useIsClient` | **P0** | hydration 이후 클라이언트 렌더 감지. `const isClient = useIsClient()`. 클라이언트 전용 UI의 표준 SSR 가드. |
+| `useIsomorphicLayoutEffect` | **P0** | 클라이언트는 `useLayoutEffect`, 서버는 `useEffect` — SSR 경고 제거. 다른 훅의 빌딩 블록. |
+| `usePrevious` | **P0** | 직전 렌더의 값. `const prev = usePrevious(value)`. 비교자 옵션, ref 기반(추가 렌더 없음). |
+| `useEventCallback` | **P0** | 항상 최신 props/state를 보는 안정적 콜백(커뮤니티 `useEffectEvent`). `const fn = useEventCallback(cb)`. |
+| `useUpdateEffect` | **P1** | 첫 실행을 건너뛰는 `useEffect`. `useEffectOnce`/`useMount`와 짝. |
+| `useMount` / `useIsFirstRender` | **P1** | `useMount(fn)`은 마운트 시 1회; `useIsFirstRender()`는 boolean 반환. 작고 매우 흔함. |
+| `useIsMounted` | **P2** | 마운트 ref 가드: `const isMounted = useIsMounted()`. 탈출구(escape hatch)로 문서화 — React는 `AbortController`를 선호. 가이드와 함께 제공. |
+| `useForceUpdate` | **P2** | 명령형 리렌더 트리거(interop/레거시). `const rerender = useForceUpdate()`. |
+| `useLatest` | **P1** | 최신 값을 미러링하는 ref. 안정적 콜백 안에서 최신 상태를 읽을 때. `const ref = useLatest(value)`. |
 
-**API**:
+### 2. 상태 & 자료구조
 
-```typescript
-useIsomorphicLayoutEffect(() => {
-  // effect
-}, deps);
-```
+| 훅 | 우선 | 목적 & API 스케치 |
+| -- | --- | ----------------- |
+| `useControllableState` | **P0** | 모든 컴포넌트 라이브러리가 필요로 하는 제어/비제어 프리미티브. `const [v, setV] = useControllableState({ value, defaultValue, onChange })`. Radix/Mantine 패턴. |
+| `useDisclosure` | **P0** | 모달·드로어·팝오버용 open/close/toggle 상태. `const [opened, { open, close, toggle }] = useDisclosure(false)`. |
+| `useObjectState` | **P1** | 불변성 + reset을 갖춘 객체 부분 업데이트. `const [state, patch, reset] = useObjectState(init)`; `patch({ field })`. |
+| `useStack` | **P1** | `useQueue`의 LIFO 짝. `[stack, { push, pop, peek, clear, reset }]`, `readonly T[]`, 불변, no-op skipping. |
+| `useSelection` | **P1** | 리스트·테이블용 다중/단일 선택 상태. `{ selected, isSelected, toggle, selectAll, clear, isAllSelected }`. `Set` 기반. |
+| `useCookie` | **P1** | 쿠키 값을 상태처럼, SSR 인지. `const [value, setValue, remove] = useCookie(key, opts)`. 스토리지 3종(local/session/cookie) 완성. |
+| `useDefault` | **P2** | `null`/`undefined`로 설정 시 기본값으로 돌아가는 상태. |
 
-**사용 예시**:
+### 3. 반응형 · 테마 · 접근성
 
-```typescript
-useIsomorphicLayoutEffect(() => {
-  // DOM 측정 또는 동기 업데이트
-  const rect = elementRef.current?.getBoundingClientRect();
-  setDimensions(rect);
-}, []);
-```
+| 훅 | 우선 | 목적 & API 스케치 |
+| -- | --- | ----------------- |
+| `useMediaQuery` | **P0** | 가장 시급한 미구현 훅. `const isWide = useMediaQuery('(min-width: 1024px)', { defaultValue, initializeWithValue })`. `matchMedia`, SSR 기본값, 리스너 정리. |
+| `useReducedMotion` | **P0** | `prefers-reduced-motion`을 boolean으로. 애니메이션이 있는 모든 곳에서 접근성 필수. |
+| `useDarkMode` | **P0** | 시스템 감지 + 영속화 + DOM class/attribute를 갖춘 테마 상태. `{ mode, isDark, setMode, toggle }`, `mode: 'system' \| 'light' \| 'dark'` (기존 `useTernaryDarkMode` 흡수). |
+| `usePreferredColorScheme` | **P1** | 원시 `prefers-color-scheme`(`'light' \| 'dark'`). `useDarkMode`의 하부 프리미티브. |
+| `useDocumentTitle` | **P0** | `document.title` 설정 + 언마운트 시 복원. `useDocumentTitle(title, { restoreOnUnmount })`. |
+| `useFavicon` | **P2** | 파비콘 동적 교체. |
+| `usePreferredLanguage` | **P2** | `navigator.language`/`languages` 변경에 반응. |
 
-**구현 포인트**:
+### 4. DOM · Ref · Observer
 
-- typeof window 체크
-- 조건부 export
-- useEffect/useLayoutEffect 선택
+| 훅 | 우선 | 목적 & API 스케치 |
+| -- | --- | ----------------- |
+| `useMergedRefs` | **P0** | 여러 콜백/객체 ref를 한 노드로 병합 — `forwardRef` 컴포넌트에 필수. `const ref = useMergedRefs(localRef, forwardedRef)`. |
+| `useMeasure` | **P1** | `ResizeObserver`로 요소 bounds(`x, y, width, height, top…`). `const [ref, bounds] = useMeasure()`. 구현된 `useResizeObserver` 위의 편의 계층. |
+| `useMutationObserver` | **P1** | DOM 하위 트리 변경 관찰 — observer 3종(intersection/resize/mutation) 완성. `useMutationObserver(ref, cb, options)`. |
+| `useScrollPosition` | **P1** | window/요소의 throttle된 스크롤 오프셋. `const { x, y } = useScrollPosition({ element, throttleMs })`. |
+| `useScrollLock` | **P1** | body 스크롤 잠금(iOS 대응, 중첩 카운터, 위치 복원) — 모달용. `const { lock, unlock, isLocked } = useScrollLock()`. |
+| `useScrollIntoView` | **P2** | 정렬 옵션과 함께 대상으로 부드럽게 스크롤. |
+| `useTextSelection` | **P2** | 하위 트리 내 현재 선택된 텍스트/range. |
 
----
+### 5. 인터랙션 · 제스처 · 포커스(A11y)
 
-### 26. useDocumentTitle
+| 훅 | 우선 | 목적 & API 스케치 |
+| -- | --- | ----------------- |
+| `useHotkeys` | **P0** | `useKeyPress` 위의 고수준 단축키: 스코프, 시퀀스, `mod` 별칭, 입력 필드 가드. `useHotkeys('mod+k', handler, { enabled })`. |
+| `useFocusTrap` | **P1** | 하위 트리 안에 포커스 가둠(모달/다이얼로그) — 접근성 필수. `const ref = useFocusTrap(active)`. |
+| `useFocusWithin` | **P1** | 하위 트리 어딘가에 포커스가 있는지 추적. `const [ref, focused] = useFocusWithin()`. |
+| `useLongPress` | **P1** | threshold + 이동 취소를 갖춘 롱프레스 제스처, 마우스 + 터치. `const bind = useLongPress(cb, { threshold })`. |
+| `useInfiniteScroll` | **P1** | `IntersectionObserver` 기반 sentinel 무한 로딩. `const ref = useInfiniteScroll(loadMore, { hasMore, loading })`. |
+| `usePagination` | **P1** | 페이지네이션 상태 머신. `{ page, pageCount, next, prev, setPage, range }`. |
+| `usePageLeave` | **P2** | 커서가 뷰포트를 벗어남 감지(exit-intent). |
 
-**목적**: 문서 제목 설정
+### 6. 비동기 & 데이터
 
-**주요 기능**:
+| 훅 | 우선 | 목적 & API 스케치 |
+| -- | --- | ----------------- |
+| `useAsync` | **P0** | 단일 비동기 작업의 라이프사이클: `{ data, error, status, isLoading, execute, reset }`, `AbortController` 취소, `immediate` 옵션. 의도적으로 쿼리 캐시가 아님 — 그건 TanStack Query의 역할. |
+| `useAsyncFn` | **P1** | 수동 트리거 변형, `[state, run]` 반환(이벤트 기반 호출용). |
+| `usePolling` | **P1** | 비동기 fn을 인터벌로 폴링, pause/resume 및 backoff. |
+| `useDebouncedState` / `useThrottledState` | **P1** | 상태 + 구현된 debounce/throttle을 짝지은 `[value, debouncedValue, setValue]` 편의 훅. |
+| `useRafState` | **P1** | 업데이트를 `requestAnimationFrame`으로 배칭하는 상태 — 스크롤/리사이즈/포인터 UI에 부드러움. |
+| `useAnimationFrame` | **P2** | delta time을 주는 rAF 루프, start/stop. `useAnimationFrame(({ delta }) => …)`. |
 
-- document.title 업데이트
-- 이전 제목 복원 옵션
-- 동적 제목 변경
-- SSR-safe
+### 7. 브라우저 & 디바이스 API
 
-**API**:
-
-```typescript
-useDocumentTitle(title, options);
-```
-
-**사용 예시**:
-
-```typescript
-const [count, setCount] = useState(0);
-useDocumentTitle(`Count: ${count}`, {
-  restoreOnUnmount: true,
-});
-```
-
-**구현 포인트**:
-
-- document.title 설정
-- 이전 제목 저장
-- cleanup 시 복원
-- SSR 체크
-
----
-
-### 27. useEventCallback
-
-**목적**: 안정적인 이벤트 콜백 (항상 최신 값 참조)
-
-**주요 기능**:
-
-- 의존성 배열 없이 최신 값 참조
-- 함수 참조 안정성 유지
-- 불필요한 리렌더링 방지
-- useCallback 대안
-
-**API**:
-
-```typescript
-const stableCallback = useEventCallback(callback);
-```
-
-**사용 예시**:
-
-```typescript
-const [count, setCount] = useState(0);
-
-const handleClick = useEventCallback(() => {
-  // 항상 최신 count 값 참조
-  console.log(count);
-});
-
-// handleClick 참조는 변하지 않음
-useEffect(() => {
-  element.addEventListener("click", handleClick);
-}, [handleClick]);
-```
-
-**구현 포인트**:
-
-- useRef로 콜백 저장
-- useLayoutEffect로 업데이트
-- 안정적인 참조 반환
+| 훅 | 우선 | 목적 & API 스케치 |
+| -- | --- | ----------------- |
+| `useNetworkState` | **P1** | 온라인/오프라인 + Network Information(`effectiveType`, `downlink`, `saveData`). `const { online, effectiveType } = useNetworkState()`. |
+| `usePageVisibility` | **P1** | Page Visibility API 기반 문서 가시성(탭 focus/blur). `const visible = usePageVisibility()`. |
+| `useIdle` | **P1** | 타임아웃 후 사용자 비활성, throttle된 활동 리스너. `const idle = useIdle(60_000)`. |
+| `usePermission` | **P1** | Permissions API 상태 + 실시간 갱신. `const state = usePermission({ name: 'camera' })`. |
+| `useScript` | **P1** | 외부 스크립트 로드, `idle/loading/ready/error` 상태, 중복 제거, 정리. `const status = useScript(src)`. |
+| `useClipboardRead` | **P2** | 클립보드 읽기/붙여넣기(구현된 `useCopyToClipboard` 확장). |
+| `useShare` | **P2** | Web Share API + 지원 감지. `const { share, canShare } = useShare()`. |
+| `useFullscreen` | **P2** | 요소 대상 Fullscreen API. `{ isFullscreen, enter, exit, toggle, isSupported }`. |
+| `useOrientation` | **P2** | 화면 방향(`angle`, `type`). |
+| `useScreen` | **P2** | `screen` 객체 정보(가용 크기, 방향). 낮은 우선순위 — `useMediaQuery`/`useWindowSize`로 대부분 커버됨. |
+| `useBattery` | **P2** | Battery Status API(`level`, `charging`). |
+| `useWakeLock` | **P2** | Screen Wake Lock API — 화면을 깨어 있게 유지. |
+| `useMediaDevices` | **P2** | 카메라/마이크/스피커 열거. |
+| `useNotification` | **P2** | Web Notifications + 권한 플로우. |
+| `useBroadcastChannel` | **P2** | BroadcastChannel 기반 탭 간 메시징. |
+| `useStyleTag` | **P2** | `<style>` 태그 주입/관리. |
+| `useEyeDropper` | **P2** | EyeDropper API 색상 추출. |
 
 ---
 
-### 28. usePrevious
+## 이전 로드맵에서 제거 / 병합
 
-**목적**: 이전 렌더링의 값 저장
+| 기존 항목 | 결정 | 근거 |
+| -------- | ---- | ---- |
+| `useCountdown` (#22) | **제거** | 구현된 `useTimer`가 커버. |
+| `useOnScreen` (#34) | **제거** | `useIntersectionObserver`와 중복. boolean 전용 편의가 필요하면 새 패키지 대신 거기에 `boolean` 반환 모드를 추가. |
+| `useTernaryDarkMode` (#31) | **병합** | `useDarkMode`의 `mode: 'system' \| 'light' \| 'dark'`로 흡수. 훅 두 개가 아니라 하나. |
+| `useMeasure` (#44) vs `useResizeObserver` | **유지, 재정의** | `useMeasure`는 구현된 `useResizeObserver` 위의 bounds 반환 편의 계층으로 유지. 문서에서 중복 회피. |
+| `useIsMounted` (#24) | **유지(주의)** | 유지(P2)하되 탈출구로 문서화. 비동기 취소는 `AbortController` 선호. |
 
-**주요 기능**:
+## 이번 로드맵의 신규 항목 (이전엔 없던 것)
 
-- 값의 변화 추적
-- 애니메이션, 비교 로직에 유용
-- useRef 기반으로 리렌더링 없음
-- 커스텀 비교 함수 지원
-
-**API**:
-
-```typescript
-const previousValue = usePrevious(value, compareFn);
-```
-
-**사용 예시**:
-
-```typescript
-const [count, setCount] = useState(0);
-const prevCount = usePrevious(count);
-
-return (
-  <div>
-    현재: {count}, 이전: {prevCount}
-    <p>{count > prevCount ? "증가 ↑" : "감소 ↓"}</p>
-  </div>
-);
-```
-
-**구현 포인트**:
-
-- useRef로 값 저장
-- useEffect에서 업데이트
-- 초기값은 undefined
-- 비교 함수 옵션
+현재 수요 & React 19 기반: `useMediaQuery`, `useReducedMotion`,
+`useControllableState`, `useMergedRefs`, `useDisclosure`, `useHotkeys`,
+`useFocusTrap`, `useFocusWithin`, `useMutationObserver`, `useScrollPosition`,
+`useNetworkState`, `usePageVisibility`, `useSelection`, `useStack`, `useCookie`,
+`useRafState`, `usePagination`, `useInfiniteScroll`, `usePolling`,
+`useAsync`/`useAsyncFn`, `usePreferredColorScheme`, `useShare`, `useWakeLock`,
+`useBroadcastChannel` 등.
 
 ---
 
-### 30. useDarkMode
-
-**목적**: 다크 모드 상태 관리
-
-**주요 기능**:
-
-- localStorage 저장
-- 시스템 설정 감지
-- toggle, enable, disable 함수
-- class 또는 attribute 적용
-- prefers-color-scheme 지원
-
-**API**:
-
-```typescript
-const { isDarkMode, toggle, enable, disable } = useDarkMode(options);
-```
-
-**사용 예시**:
-
-```typescript
-const { isDarkMode, toggle } = useDarkMode({
-  defaultValue: false,
-  localStorageKey: "theme",
-});
-
-return <button onClick={toggle}>{isDarkMode ? "🌙 다크" : "☀️ 라이트"}</button>;
-```
-
-**구현 포인트**:
-
-- useLocalStorage 활용
-- useMediaQuery로 시스템 설정
-- document.documentElement에 class 추가
-- 초기값 결정 로직
-
----
-
-### 31. useTernaryDarkMode
-
-**목적**: 3단계 다크 모드 (system, light, dark)
-
-**주요 기능**:
-
-- system/light/dark 3가지 모드
-- 시스템 설정 자동 반영
-- localStorage 저장
-- 토글 기능
-
-**API**:
-
-```typescript
-const {
-  isDarkMode,
-  ternaryDarkMode,
-  setTernaryDarkMode,
-  toggleTernaryDarkMode,
-} = useTernaryDarkMode();
-```
-
-**사용 예시**:
-
-```typescript
-const { ternaryDarkMode, setTernaryDarkMode } = useTernaryDarkMode();
-
-return (
-  <select
-    value={ternaryDarkMode}
-    onChange={(e) => setTernaryDarkMode(e.target.value)}
-  >
-    <option value="system">시스템 설정</option>
-    <option value="light">라이트</option>
-    <option value="dark">다크</option>
-  </select>
-);
-```
-
-**구현 포인트**:
-
-- 3가지 모드 관리
-- system일 때 prefers-color-scheme 적용
-- localStorage 저장
-- 실제 다크 모드 여부 계산
-
----
-
-### 32. useScrollLock
-
-**목적**: body 스크롤 잠금/해제
-
-**주요 기능**:
-
-- 모달 열릴 때 배경 스크롤 방지
-- iOS Safari 대응
-- 자동 cleanup
-- 중첩 락 지원 (카운터)
-- 원래 스크롤 위치 복원
-
-**API**:
-
-```typescript
-const [lockScroll, unlockScroll] = useScrollLock();
-// 또는
-const { lock, unlock, isLocked } = useScrollLock();
-```
-
-**사용 예시**:
-
-```typescript
-const [isModalOpen, setIsModalOpen] = useState(false);
-const { lock, unlock } = useScrollLock();
-
-useEffect(() => {
-  if (isModalOpen) {
-    lock();
-  } else {
-    unlock();
-  }
-  return () => unlock();
-}, [isModalOpen]);
-
-return (
-  <>
-    <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
-    {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
-  </>
-);
-```
-
-**구현 포인트**:
-
-- body에 overflow: hidden
-- iOS Safari: position: fixed + top
-- 스크롤 위치 저장/복원
-- 중첩 락 카운터
-
----
-
-### 34. useOnScreen (useIsVisible)
-
-**목적**: 요소가 화면에 보이는지 감지
-
-**주요 기능**:
-
-- useIntersectionObserver 간소화 버전
-- 단순 boolean 반환
-- Lazy loading에 적합
-- once 옵션 (한 번만 감지)
-
-**API**:
-
-```typescript
-const isVisible = useOnScreen(ref, options);
-```
-
-**사용 예시**:
-
-```typescript
-const ref = useRef<HTMLImageElement>(null);
-const isVisible = useOnScreen(ref, {
-  threshold: 0.1,
-  once: true,
-});
-
-return (
-  <img ref={ref} src={isVisible ? actualSrc : placeholder} alt="Lazy loaded" />
-);
-```
-
-**구현 포인트**:
-
-- IntersectionObserver 사용
-- boolean으로 단순화
-- once 옵션으로 성능 최적화
-- threshold 기본값 0
-
----
-
-### 35. useAsync
-
-**목적**: 비동기 작업 상태 관리
-
-**주요 기능**:
-
-- loading, error, data 상태
-- 자동 에러 처리
-- 재시도 기능
-- 취소 가능 (AbortController)
-- 즉시 실행 또는 수동 실행
-
-**API**:
-
-```typescript
-const { data, loading, error, execute, reset } = useAsync(
-  asyncFunction,
-  options
-);
-```
-
-**사용 예시**:
-
-```typescript
-const { data, loading, error, execute } = useAsync(
-  async () => {
-    const response = await fetch("/api/users");
-    return response.json();
-  },
-  { immediate: true }
-);
-
-if (loading) return <Spinner />;
-if (error) return <Error message={error.message} />;
-if (!data) return null;
-
-return <UserList users={data} />;
-```
-
-**구현 포인트**:
-
-- loading/error/data 상태 관리
-- try-catch 에러 처리
-- AbortController로 취소
-- immediate 옵션
-- reset 함수
-
----
-
-### 43. useScript
-
-**목적**: 동적 스크립트 로딩
-
-**주요 기능**:
-
-- 외부 스크립트 동적 로드
-- loading, ready, error 상태
-- 중복 로드 방지
-- 자동 cleanup
-- async/defer 옵션
-
-**API**:
-
-```typescript
-const status = useScript(src, options);
-// status: 'idle' | 'loading' | 'ready' | 'error'
-```
-
-**사용 예시**:
-
-```typescript
-const status = useScript(
-  "https://maps.googleapis.com/maps/api/js?key=YOUR_KEY"
-);
-
-if (status === "loading") return <div>Loading map...</div>;
-if (status === "error") return <div>Failed to load map</div>;
-if (status === "ready") return <GoogleMap />;
-```
-
-**구현 포인트**:
-
-- script 태그 동적 생성
-- load/error 이벤트 리스너
-- 이미 로드된 스크립트 체크
-- cleanup 시 제거
-- 전역 캐시로 중복 방지
-
----
-
-### 44. useMeasure
-
-**목적**: 요소의 크기와 위치 측정
-
-**주요 기능**:
-
-- getBoundingClientRect 값 제공
-- width, height, top, left 등
-- ResizeObserver 기반
-- 실시간 업데이트
-
-**API**:
-
-```typescript
-const [ref, bounds] = useMeasure<T>();
-// bounds: { x, y, width, height, top, right, bottom, left }
-```
-
-**사용 예시**:
-
-```typescript
-const [ref, bounds] = useMeasure<HTMLDivElement>();
-
-return (
-  <div>
-    <div ref={ref} style={{ width: "50%" }}>
-      Measure me
-    </div>
-    <p>
-      Width: {Math.round(bounds.width)}px
-      <br />
-      Height: {Math.round(bounds.height)}px
-    </p>
-  </div>
-);
-```
-
-**구현 포인트**:
-
-- ResizeObserver 사용
-- getBoundingClientRect 호출
-- 상태로 bounds 저장
-- 리사이즈 시 자동 업데이트
-
----
-
-### 45. useLongPress
-
-**목적**: 길게 누르기 이벤트 감지
-
-**주요 기능**:
-
-- 길게 누르기 감지
-- threshold (지속 시간) 설정
-- onStart, onFinish, onCancel 콜백
-- 터치/마우스 이벤트 모두 지원
-- 이동 시 취소
-
-**API**:
-
-```typescript
-const bind = useLongPress(callback, options);
-// bind: { onMouseDown, onMouseUp, onMouseLeave, onTouchStart, onTouchEnd }
-```
-
-**사용 예시**:
-
-```typescript
-const bind = useLongPress(
-  () => {
-    console.log("Long pressed!");
-    showContextMenu();
-  },
-  {
-    threshold: 500,
-    onStart: () => console.log("Press started"),
-    onCancel: () => console.log("Cancelled"),
-  }
-);
-
-return <button {...bind}>길게 눌러서 메뉴 열기</button>;
-```
-
-**구현 포인트**:
-
-- setTimeout으로 지속 시간 체크
-- mousedown/touchstart 시작
-- mouseup/touchend 종료
-- mouseleave/touchcancel 취소
-- 이동 거리 체크
-
----
-
-### 47. useBattery
-
-**목적**: 배터리 상태 추적
-
-**주요 기능**:
-
-- 배터리 레벨
-- 충전 상태
-- 충전 시간, 방전 시간
-- Battery Status API
-
-**API**:
-
-```typescript
-const { level, charging, chargingTime, dischargingTime, loading } =
-  useBattery();
-```
-
-**사용 예시**:
-
-```typescript
-const { level, charging } = useBattery();
-
-return (
-  <div>
-    배터리: {Math.round(level * 100)}%{charging ? " (충전 중)" : ""}
-  </div>
-);
-```
-
-**구현 포인트**:
-
-- navigator.getBattery() 사용
-- 이벤트 리스너 등록
-- 브라우저 호환성 체크
-- cleanup
-
----
-
-### 48. useNetwork
-
-**목적**: 네트워크 상태 추적
-
-**주요 기능**:
-
-- 온라인/오프라인 상태
-- 연결 타입 (4g, wifi 등)
-- 다운링크 속도
-- Network Information API
-
-**API**:
-
-```typescript
-const { online, downlink, effectiveType, rtt, saveData } = useNetwork();
-```
-
-**사용 예시**:
-
-```typescript
-const { online, effectiveType } = useNetwork();
-
-return (
-  <div>
-    {!online && <Alert>오프라인 상태입니다</Alert>}
-    연결: {effectiveType}
-  </div>
-);
-```
-
-**구현 포인트**:
-
-- navigator.onLine
-- navigator.connection
-- online/offline 이벤트
-- connection change 이벤트
-
----
-
-### 49. useIdle
-
-**목적**: 사용자 비활성 상태 감지
-
-**주요 기능**:
-
-- 일정 시간 동안 활동 없으면 idle
-- 마우스, 키보드, 터치 활동 감지
-- 자동 로그아웃, 알림에 유용
-- 타임아웃 설정
-
-**API**:
-
-```typescript
-const isIdle = useIdle(timeout, options);
-```
-
-**사용 예시**:
-
-```typescript
-const isIdle = useIdle(5 * 60 * 1000); // 5분
-
-useEffect(() => {
-  if (isIdle) {
-    showInactivityWarning();
-  }
-}, [isIdle]);
-```
-
-**구현 포인트**:
-
-- 여러 이벤트 리스너
-- 마지막 활동 시간 추적
-- 타이머로 idle 체크
-- throttle 적용
-
----
-
-### 50. useOrientation
-
-**목적**: 디바이스 방향 감지
-
-**주요 기능**:
-
-- portrait/landscape 감지
-- 각도 정보
-- Screen Orientation API
-- orientationchange 이벤트
-
-**API**:
-
-```typescript
-const { angle, type } = useOrientation();
-// type: 'portrait' | 'landscape'
-```
-
-**사용 예시**:
-
-```typescript
-const { type } = useOrientation();
-
-return (
-  <div>{type === "portrait" ? <PortraitLayout /> : <LandscapeLayout />}</div>
-);
-```
-
-**구현 포인트**:
-
-- screen.orientation
-- orientationchange 이벤트
-- 폴백: window.orientation
-- SSR-safe
-
----
-
-### 51. useFullscreen
-
-**목적**: 전체화면 모드 관리
-
-**주요 기능**:
-
-- 전체화면 진입/해제
-- 현재 상태 추적
-- Fullscreen API
-- toggle 함수
-
-**API**:
-
-```typescript
-const { isFullscreen, toggle, enter, exit, isSupported } = useFullscreen(ref);
-```
-
-**사용 예시**:
-
-```typescript
-const videoRef = useRef<HTMLVideoElement>(null);
-const { isFullscreen, toggle } = useFullscreen(videoRef);
-
-return (
-  <div>
-    <video ref={videoRef} src="video.mp4" />
-    <button onClick={toggle}>
-      {isFullscreen ? "전체화면 해제" : "전체화면"}
-    </button>
-  </div>
-);
-```
-
-**구현 포인트**:
-
-- requestFullscreen/exitFullscreen
-- fullscreenchange 이벤트
-- 브라우저 prefix 처리
-- document.fullscreenElement 체크
-
----
-
-### 52. usePageLeave
-
-**목적**: 페이지 이탈 감지
-
-**주요 기능**:
-
-- 마우스가 viewport 벗어남 감지
-- 페이지 나가기 전 경고
-- 저장 안 된 변경사항 알림
-- beforeunload 이벤트 대안
-
-**API**:
-
-```typescript
-usePageLeave(callback, options);
-```
-
-**사용 예시**:
-
-```typescript
-const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-usePageLeave(() => {
-  if (hasUnsavedChanges) {
-    const confirm = window.confirm("저장하지 않은 변경사항이 있습니다.");
-    if (confirm) {
-      saveChanges();
-    }
-  }
-});
-```
-
-**구현 포인트**:
-
-- mouseleave 이벤트 (document)
-- clientY < 0 체크
-- beforeunload와 차이점 이해
-
----
-
-### 53. useObjectState
-
-**목적**: 객체 상태 관리 유틸리티
-
-**주요 기능**:
-
-- 객체 상태를 편리하게 업데이트
-- 부분 업데이트 지원
-- reset 함수
-- 불변성 자동 유지
-
-**API**:
-
-```typescript
-const [state, setState, reset] = useObjectState<T>(initialState);
-```
-
-**사용 예시**:
-
-```typescript
-const [form, setForm, resetForm] = useObjectState({
-  name: "",
-  email: "",
-  age: 0,
-});
-
-const handleChange = (field: string, value: any) => {
-  setForm({ [field]: value }); // 부분 업데이트
-};
-
-return (
-  <form>
-    <input
-      value={form.name}
-      onChange={(e) => handleChange("name", e.target.value)}
-    />
-    <button onClick={resetForm}>초기화</button>
-  </form>
-);
-```
-
-**구현 포인트**:
-
-- useState 기반
-- 부분 업데이트 (spread)
-- reset 함수로 초기 상태 복원
-- TypeScript 제네릭
-
----
-
-### 54. usePermission
-
-**목적**: 브라우저 권한 상태 확인
-
-**주요 기능**:
-
-- Permissions API 사용
-- granted/denied/prompt 상태
-- 권한 변경 감지
-- 다양한 권한 지원 (geolocation, camera 등)
-
-**API**:
-
-```typescript
-const permissionState = usePermission({ name: "geolocation" });
-// 'granted' | 'denied' | 'prompt' | 'unsupported'
-```
-
-**사용 예시**:
-
-```typescript
-const cameraPermission = usePermission({ name: "camera" });
-const micPermission = usePermission({ name: "microphone" });
-
-return (
-  <div>
-    카메라: {cameraPermission}
-    마이크: {micPermission}
-    {cameraPermission === "denied" && <Alert>카메라 권한이 필요합니다</Alert>}
-  </div>
-);
-```
+## 권장 구현 순서 (배치)
+
+관련 훅이 설계 결정을 공유하고 함께 배포되도록 응집된 배치로 진행합니다.
+
+1. **SSR & 라이프사이클 코어** — `useIsClient`, `useIsomorphicLayoutEffect`,
+   `usePrevious`, `useEventCallback`, `useLatest`, `useUpdateEffect`, `useMount`.
+   *(작고 근본적이며 다른 훅의 선행)*
+2. **반응형 & 테마** — `useMediaQuery`, `usePreferredColorScheme`,
+   `useReducedMotion`, `useDarkMode`, `useDocumentTitle`.
+3. **디자인 시스템 프리미티브** — `useControllableState`, `useMergedRefs`,
+   `useDisclosure`.
+4. **DOM & Observer** — `useMeasure`, `useMutationObserver`,
+   `useScrollPosition`, `useScrollLock`.
+5. **인터랙션 & 접근성** — `useHotkeys`, `useFocusTrap`, `useFocusWithin`,
+   `useLongPress`.
+6. **비동기 & 데이터** — `useAsync`, `useAsyncFn`, `usePolling`, `useRafState`.
+7. **상태 추가** — `useObjectState`, `useStack`, `useSelection`, `useCookie`.
+8. **인터랙션/데이터 패턴** — `useInfiniteScroll`, `usePagination`.
+9. **브라우저/디바이스** — `useNetworkState`, `usePageVisibility`, `useIdle`,
+   `usePermission`, `useScript`, 이후 수요에 따라 P2 플랫폼 훅.
+
+각 훅은 `add-usefy-hook` 워크플로우를 따릅니다: 스캐폴드 → 구현 → 테스트(~100%) →
+엄브렐라 연결 → Storybook 스토리 → 커버리지 배지 → README 3종 → changeset.
