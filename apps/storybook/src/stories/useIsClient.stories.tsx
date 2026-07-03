@@ -27,7 +27,25 @@ function Demo() {
 const meta: Meta<typeof Demo> = {
   title: "Hooks/useIsClient",
   component: Demo,
-  parameters: { layout: "centered" },
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: `Detects whether the component has hydrated on the client. Returns \`false\` during SSR and the first client render, then \`true\` — the canonical guard for rendering client-only UI without hydration mismatches.
+
+## Features
+- **SSR-safe** — the first render matches the server output
+- **Zero config** — no arguments, returns a boolean
+- **Hydration guard** — enable client-only UI only after mount
+
+## Basic Usage
+\`\`\`tsx
+const isClient = useIsClient();
+return isClient ? <ClientOnly /> : <ServerFallback />;
+\`\`\``,
+      },
+    },
+  },
   tags: ["autodocs"],
 };
 export default meta;
@@ -35,6 +53,25 @@ type Story = StoryObj<typeof Demo>;
 
 export const Default: Story = {
   render: () => <Demo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Shows the server / pre-hydration state first, then flips to the client state after mount.",
+      },
+      source: {
+        language: "tsx",
+        code: `import { useIsClient } from "@usefy/use-is-client";
+
+function Component() {
+  const isClient = useIsClient();
+
+  // Render browser-only UI only after hydration to avoid mismatches
+  return isClient ? <ClientOnlyWidget /> : <ServerFallback />;
+}`,
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() => expect(canvas.getByTestId("env")).toHaveTextContent("Client (hydrated)"));

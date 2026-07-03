@@ -127,6 +127,45 @@ pnpm changeset   # select the new package + @usefy/hooks, choose the bump
 
 Or write `.changeset/<name>.md` by hand with frontmatter listing `"@usefy/use-<name>"` and `"@usefy/hooks"` and the bump type (new feature = `minor`; docs-only follow-ups = `patch`). Because of the fixed group, the whole `@usefy/*` set bumps together — that's expected. Verify with `pnpm changeset status`. **Without a changeset, nothing publishes.**
 
+## Phase 10 — Generate a prefilled PR link (at task completion)
+
+When the branch's work is complete and green (a single hook, or the last hook
+in a batch), **produce a ready-to-open GitHub PR link with the title and
+description already filled in** — so the user only clicks it and presses
+"Create pull request", no copy-paste.
+
+Build a **compare URL** with URL-encoded `title` and `body` query params:
+
+```
+https://github.com/mirunamu00/usefy/compare/master...<branch>?expand=1&title=<enc>&body=<enc>
+```
+
+- `master` is the base (default) branch; `<branch>` is the current feature branch.
+- A `body` query param **overrides** the static `.github/PULL_REQUEST_TEMPLATE.md`, so encode a fully-written body (follow the template's sections: Summary / Type of change / Changes / Checklist / Notes; list every affected `@usefy/*` package and tick the checklist).
+
+**Generate it with a node script file, never `node -e` inline** — the `&` in the URL and in text like "SSR & lifecycle" is interpreted by the shell (Git Bash) and corrupts inline eval. Write a `.mjs` to the scratchpad and run it:
+
+```js
+import { readFileSync, writeFileSync } from "fs";
+const body = readFileSync(process.argv[2], "utf8");        // pre-written PR body .md
+const title = "feat: <concise title>";
+const url =
+  "https://github.com/mirunamu00/usefy/compare/master...<branch>?expand=1" +
+  "&title=" + encodeURIComponent(title) +
+  "&body="  + encodeURIComponent(body);
+writeFileSync(process.argv[3], url);
+console.log("len", url.length);   // keep under ~8000 (GitHub URL limit)
+```
+
+Then present the URL to the user as a single clickable markdown link. If `gh`
+is installed and authenticated, `gh pr create --title ... --body-file ...` is an
+alternative, but the prefilled link needs no auth and is the default.
+
+Commit-message note: this repo's Bash tool is Git Bash (POSIX sh), not
+PowerShell — do **not** use `@'...'@` heredocs for `git commit -m` (they inject
+a literal `@`). Use `git commit -F <file>` with a message file, or `-m` with a
+plain single-line string.
+
 ## Release & publishing notes (context, not usually your job)
 
 Merging to `master` creates a "Version Packages" PR; merging *that* publishes to npm. Two npm gotchas that have bitten this repo — surface them if a release fails:
@@ -135,4 +174,4 @@ Merging to `master` creates a "Version Packages" PR; merging *that* publishes to
 
 ## Definition of done
 
-Implementation + tests (90%+) green · umbrella wired in all 3 places · `pnpm build && pnpm test && pnpm typecheck` clean · Storybook story compiles · coverage badge added · three READMEs updated · changeset present and `pnpm changeset status` shows the expected bump.
+Implementation + tests (90%+) green · umbrella wired in all 3 places · `pnpm build && pnpm test && pnpm typecheck` clean · Storybook story compiles · coverage badge added · three READMEs updated · changeset present and `pnpm changeset status` shows the expected bump · **a prefilled PR link generated and handed to the user (Phase 10)**.
