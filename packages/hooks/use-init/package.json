@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-init",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "A React hook for one-time initialization with async support, retry, timeout, and conditional execution",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

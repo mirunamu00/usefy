@@ -1,5 +1,11 @@
 # @usefy/components
 
+## 0.12.2
+
+### Patch Changes
+
+- @usefy/memory-monitor@0.12.2
+
 ## 0.12.1
 
 ### Patch Changes
