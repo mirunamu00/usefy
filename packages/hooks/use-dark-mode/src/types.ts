@@ -22,8 +22,7 @@ export interface UseDarkModeOptions {
 
   /**
    * Element the theme is applied to. Defaults to `document.documentElement`
-   * (the `<html>` element). Pass `null`/`false` behaviour by leaving DOM
-   * application to your own code is not supported — omit to use `<html>`.
+   * (the `<html>` element). `null` (or omitting it) resolves to `<html>`.
    */
   element?: HTMLElement | null;
 

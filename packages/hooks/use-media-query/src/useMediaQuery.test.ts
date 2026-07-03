@@ -74,13 +74,18 @@ describe("useMediaQuery", () => {
     expect(result.current).toBe(false);
   });
 
-  it("re-subscribes when the query string changes", () => {
+  it("re-subscribes when the query string changes and removes the old listener", () => {
     const { result, rerender } = renderHook(({ q }) => useMediaQuery(q), {
       initialProps: { q: "(min-width: 768px)" },
     });
+    expect(mm.listenerCount("(min-width: 768px)")).toBe(1);
+
     mm.set("(min-width: 1200px)", true);
     rerender({ q: "(min-width: 1200px)" });
     expect(result.current).toBe(true);
+    // Old query's listener must be gone; new one subscribed.
+    expect(mm.listenerCount("(min-width: 768px)")).toBe(0);
+    expect(mm.listenerCount("(min-width: 1200px)")).toBe(1);
   });
 
   it("removes its listener on unmount", () => {
@@ -99,17 +104,23 @@ describe("useMediaQuery", () => {
       expect(result.current).toBe(true);
     });
 
-    it("uses defaultValue on first render when initializeWithValue is false", () => {
-      // matchMedia says true, but eager init is disabled -> keep defaultValue,
-      // then the effect syncs to the real value.
+    it("uses defaultValue on the FIRST render when initializeWithValue is false, then syncs", () => {
+      // matchMedia already matches, but eager init is disabled: the first render
+      // must return defaultValue (false) so it can match the server output, and
+      // only after the effect does it reflect the real value (true).
       mm.set("(min-width: 768px)", true);
-      const { result } = renderHook(() =>
-        useMediaQuery("(min-width: 768px)", {
+      const values: boolean[] = [];
+      const { result } = renderHook(() => {
+        const v = useMediaQuery("(min-width: 768px)", {
           defaultValue: false,
           initializeWithValue: false,
-        })
-      );
-      // After effects flush, it reflects the real match.
+        });
+        values.push(v);
+        return v;
+      });
+      // First render is the SSR-safe default, not the eager real value.
+      expect(values[0]).toBe(false);
+      // After the effect flushes it reflects the real match.
       expect(result.current).toBe(true);
     });
   });

@@ -1,4 +1,5 @@
 import { renderHook } from "@testing-library/react";
+import { StrictMode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { useUpdateEffect } from "./useUpdateEffect";
 
@@ -7,6 +8,23 @@ describe("useUpdateEffect", () => {
     const effect = vi.fn();
     renderHook(() => useUpdateEffect(effect, [0]));
     expect(effect).not.toHaveBeenCalled();
+  });
+
+  it("does not run on mount under StrictMode (remount-safe)", () => {
+    const effect = vi.fn();
+    renderHook(() => useUpdateEffect(effect, [0]), { wrapper: StrictMode });
+    expect(effect).not.toHaveBeenCalled();
+  });
+
+  it("still runs on updates under StrictMode", () => {
+    const effect = vi.fn();
+    const { rerender } = renderHook(
+      ({ dep }) => useUpdateEffect(effect, [dep]),
+      { initialProps: { dep: 0 }, wrapper: StrictMode }
+    );
+    expect(effect).not.toHaveBeenCalled();
+    rerender({ dep: 1 });
+    expect(effect).toHaveBeenCalledTimes(1);
   });
 
   it("runs when dependencies change after mount", () => {
