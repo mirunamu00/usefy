@@ -115,7 +115,17 @@ Note the new package's **statement** coverage %. Confirm the HTML report exists 
 
 ## Phase 8 — READMEs (three files)
 
-1. **New** `packages/hooks/use-<name>/README.md` — clone `use-hover/README.md` and rewrite: overview, install, quick start, full API reference (options table), examples, behavior notes, Storybook + coverage links, test count.
+1. **New** `packages/hooks/use-<name>/README.md` — follow the standardized
+   template in `references/readme-template.md` (do NOT free-hand it; that led to
+   inconsistent headers and missing links). The required backbone: centered logo
+   + name + tagline, the four badges, a nav row, and the **📚 View Storybook
+   Demo** link (path `hooks-use<hooklower>--docs`, matching the story title
+   `Hooks/useX`) — this link is mandatory and was the most-missed piece — then
+   Overview, Features, Installation, Quick Start, API, Testing (real coverage %
+   and test count from Phase 7), and License. Rich option-driven hooks may add
+   `## Examples`/`## Performance`/`## Browser Support`, but the backbone is the
+   consistent minimum. When standardizing several packages, drive the template
+   from a small data-per-hook node script rather than editing each file by hand.
 2. **Root** `README.md` — add the hook to the "Highlights" list and to the `Packages → Hooks` table.
 3. **Umbrella** `packages/hooks/README.md` — add a row to the "Available Hooks" table **with a coverage badge** (`![NN%](https://img.shields.io/badge/coverage-NN%25-brightgreen?style=flat-square)` using the Phase 7 number), add the hook to the Quick Start import list, and add a `<details>` block under the appropriate Features section.
 
