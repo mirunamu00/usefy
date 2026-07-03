@@ -7,12 +7,6 @@ on:
 
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
-# Explicitly opt JavaScript actions into Node.js 24 so the runner does not emit
-# "forced to run on Node 24" deprecation warnings for actions that still target
-# Node 20 (e.g. changesets/action).
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 jobs:
   release:
     name: Release

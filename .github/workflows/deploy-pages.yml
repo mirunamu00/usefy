@@ -18,12 +18,6 @@ concurrency:
   group: "pages"
   cancel-in-progress: false
 
-# Explicitly opt JavaScript actions into Node.js 24 so the runner does not emit
-# "forced to run on Node 24" deprecation warnings for actions that still target
-# Node 20 (notably the GitHub Pages actions, which have no Node 24 release yet).
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
-
 jobs:
   deploy:
     name: Build and Deploy Pages
