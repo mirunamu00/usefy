@@ -1,5 +1,11 @@
 # @usefy/use-throttle-callback
 
+## 0.10.0
+
+### Patch Changes
+
+- @usefy/use-debounce-callback@0.10.0
+
 ## 0.9.0
 
 ### Patch Changes

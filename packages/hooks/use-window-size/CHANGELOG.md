@@ -1,0 +1,7 @@
+# @usefy/use-window-size
+
+## 0.10.0
+
+### Minor Changes
+
+- 4abbdc5: Add `useWindowSize` — a hook for tracking the browser window size with debounce/throttle, SSR-safe initial values, scrollbar control, an `onChange` callback, and no-op re-render skipping.
