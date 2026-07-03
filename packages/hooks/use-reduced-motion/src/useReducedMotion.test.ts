@@ -72,4 +72,27 @@ describe("useReducedMotion", () => {
     );
     expect(result.current).toBe(true);
   });
+
+  it("uses addListener/removeListener when addEventListener is absent", () => {
+    const listeners = new Set<Listener>();
+    let matches = false;
+    window.matchMedia = vi.fn(
+      () =>
+        ({
+          get matches() {
+            return matches;
+          },
+          addListener: (cb: Listener) => listeners.add(cb),
+          removeListener: (cb: Listener) => listeners.delete(cb),
+        }) as unknown as MediaQueryList
+    ) as unknown as typeof window.matchMedia;
+
+    const { result, unmount } = renderHook(() => useReducedMotion());
+    expect(result.current).toBe(false);
+    matches = true;
+    act(() => listeners.forEach((cb) => cb()));
+    expect(result.current).toBe(true);
+    unmount();
+    expect(listeners.size).toBe(0);
+  });
 });

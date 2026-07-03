@@ -74,4 +74,27 @@ describe("usePreferredColorScheme", () => {
     );
     expect(result.current).toBe("dark");
   });
+
+  it("uses addListener/removeListener when addEventListener is absent", () => {
+    const listeners = new Set<Listener>();
+    let matches = false;
+    window.matchMedia = vi.fn(
+      () =>
+        ({
+          get matches() {
+            return matches;
+          },
+          addListener: (cb: Listener) => listeners.add(cb),
+          removeListener: (cb: Listener) => listeners.delete(cb),
+        }) as unknown as MediaQueryList
+    ) as unknown as typeof window.matchMedia;
+
+    const { result, unmount } = renderHook(() => usePreferredColorScheme());
+    expect(result.current).toBe("light");
+    matches = true;
+    act(() => listeners.forEach((cb) => cb()));
+    expect(result.current).toBe("dark");
+    unmount();
+    expect(listeners.size).toBe(0);
+  });
 });

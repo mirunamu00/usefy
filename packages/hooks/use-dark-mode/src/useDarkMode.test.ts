@@ -1,7 +1,13 @@
 import { act, renderHook } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useDarkMode } from "./useDarkMode";
-import { resolveIsDark } from "./utils";
+import {
+  isBrowser,
+  prefersDark,
+  readStoredMode,
+  resolveIsDark,
+  writeStoredMode,
+} from "./utils";
 
 type Listener = () => void;
 
@@ -163,6 +169,53 @@ describe("useDarkMode", () => {
     expect(result.current.isDark).toBe(true);
   });
 
+  it("uses addListener/removeListener when addEventListener is absent", () => {
+    const listeners = new Set<() => void>();
+    let matches = false;
+    window.matchMedia = vi.fn(
+      () =>
+        ({
+          get matches() {
+            return matches;
+          },
+          addListener: (cb: () => void) => listeners.add(cb),
+          removeListener: (cb: () => void) => listeners.delete(cb),
+        }) as unknown as MediaQueryList
+    ) as unknown as typeof window.matchMedia;
+
+    const { result, unmount } = renderHook(() => useDarkMode());
+    expect(result.current.isDark).toBe(false);
+    matches = true;
+    act(() => listeners.forEach((cb) => cb()));
+    expect(result.current.isDark).toBe(true);
+    unmount();
+    expect(listeners.size).toBe(0);
+  });
+
+  it("survives localStorage access throwing (read and write)", () => {
+    setupMatchMedia(false);
+    const getSpy = vi
+      .spyOn(Storage.prototype, "getItem")
+      .mockImplementation(() => {
+        throw new Error("blocked");
+      });
+    const setSpy = vi
+      .spyOn(Storage.prototype, "setItem")
+      .mockImplementation(() => {
+        throw new Error("blocked");
+      });
+
+    const { result } = renderHook(() => useDarkMode({ defaultMode: "light" }));
+    // read threw -> fell back to defaultMode
+    expect(result.current.mode).toBe("light");
+    // write throws but is swallowed
+    act(() => result.current.enable());
+    expect(result.current.isDark).toBe(true);
+
+    getSpy.mockRestore();
+    setSpy.mockRestore();
+  });
+
   describe("resolveIsDark util", () => {
     it("system follows systemDark", () => {
       expect(resolveIsDark("system", true)).toBe(true);
@@ -171,6 +224,17 @@ describe("useDarkMode", () => {
     it("explicit modes ignore systemDark", () => {
       expect(resolveIsDark("dark", false)).toBe(true);
       expect(resolveIsDark("light", true)).toBe(false);
+    });
+  });
+
+  describe("utils SSR guards", () => {
+    it("return safe defaults when window is undefined", () => {
+      vi.stubGlobal("window", undefined);
+      expect(isBrowser()).toBe(false);
+      expect(prefersDark()).toBe(false);
+      expect(readStoredMode("k", "light")).toBe("light");
+      expect(() => writeStoredMode("k", "dark")).not.toThrow();
+      vi.unstubAllGlobals();
     });
   });
 });

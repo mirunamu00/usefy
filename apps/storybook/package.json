@@ -51,6 +51,11 @@
     "@usefy/use-update-effect": "workspace:*",
     "@usefy/use-mount": "workspace:*",
     "@usefy/use-is-first-render": "workspace:*",
+    "@usefy/use-media-query": "workspace:*",
+    "@usefy/use-preferred-color-scheme": "workspace:*",
+    "@usefy/use-reduced-motion": "workspace:*",
+    "@usefy/use-dark-mode": "workspace:*",
+    "@usefy/use-document-title": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

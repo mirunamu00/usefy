@@ -145,6 +145,11 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-update-effect" target="_blank" rel="noopener noreferrer">@usefy/use-update-effect</a> | useEffect that skips the first render | <a href="https://www.npmjs.com/package/@usefy/use-update-effect" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-update-effect.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-mount" target="_blank" rel="noopener noreferrer">@usefy/use-mount</a> | Run a callback once on mount | <a href="https://www.npmjs.com/package/@usefy/use-mount" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-mount.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-is-first-render" target="_blank" rel="noopener noreferrer">@usefy/use-is-first-render</a> | True only on the first render | <a href="https://www.npmjs.com/package/@usefy/use-is-first-render" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-is-first-render.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-media-query" target="_blank" rel="noopener noreferrer">@usefy/use-media-query</a> | Match CSS media queries (matchMedia, SSR-safe) | <a href="https://www.npmjs.com/package/@usefy/use-media-query" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-media-query.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-preferred-color-scheme" target="_blank" rel="noopener noreferrer">@usefy/use-preferred-color-scheme</a> | System color scheme (prefers-color-scheme) | <a href="https://www.npmjs.com/package/@usefy/use-preferred-color-scheme" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-preferred-color-scheme.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-reduced-motion" target="_blank" rel="noopener noreferrer">@usefy/use-reduced-motion</a> | Reduced-motion preference (a11y) | <a href="https://www.npmjs.com/package/@usefy/use-reduced-motion" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-reduced-motion.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-dark-mode" target="_blank" rel="noopener noreferrer">@usefy/use-dark-mode</a> | Dark mode: system/light/dark, persistence, DOM apply | <a href="https://www.npmjs.com/package/@usefy/use-dark-mode" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-dark-mode.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-document-title" target="_blank" rel="noopener noreferrer">@usefy/use-document-title</a> | Set document.title with restore-on-unmount | <a href="https://www.npmjs.com/package/@usefy/use-document-title" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-document-title.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -182,6 +187,11 @@ import {
   useUpdateEffect,
   useMount,
   useIsFirstRender,
+  useMediaQuery,
+  usePreferredColorScheme,
+  useReducedMotion,
+  useDarkMode,
+  useDocumentTitle,
 } from "@usefy/hooks";
 
 function App() {
@@ -1088,6 +1098,88 @@ if (!isFirst) onValueChange(value);
 ```
 
 `true` on the first render, `false` on every render thereafter.
+
+</details>
+
+### 🎨 Responsive, Theme & Accessibility
+
+<details>
+<summary><strong>useMediaQuery</strong> — Match CSS media queries (matchMedia, SSR-safe)</summary>
+
+```tsx
+import { useMediaQuery } from "@usefy/use-media-query";
+
+const isDesktop = useMediaQuery("(min-width: 1024px)");
+const isLandscape = useMediaQuery("(orientation: landscape)");
+
+// SSR: keep the first client render matching the server
+const isWide = useMediaQuery("(min-width: 1024px)", {
+  defaultValue: false,
+  initializeWithValue: false,
+});
+```
+
+Live updates on change, any query (breakpoints, orientation, `prefers-*`), SSR-safe default. The #1 responsive primitive.
+
+</details>
+
+<details>
+<summary><strong>usePreferredColorScheme</strong> — System color scheme (prefers-color-scheme)</summary>
+
+```tsx
+import { usePreferredColorScheme } from "@usefy/use-preferred-color-scheme";
+
+const scheme = usePreferredColorScheme(); // "light" | "dark"
+```
+
+Reflects the OS color-scheme preference and updates live — the system-level primitive under `useDarkMode`.
+
+</details>
+
+<details>
+<summary><strong>useReducedMotion</strong> — Reduced-motion preference (a11y)</summary>
+
+```tsx
+import { useReducedMotion } from "@usefy/use-reduced-motion";
+
+const reduced = useReducedMotion();
+<div style={{ transition: reduced ? "none" : "transform 300ms" }} />;
+```
+
+Honor `prefers-reduced-motion` to disable or tone down animations — baseline accessibility.
+
+</details>
+
+<details>
+<summary><strong>useDarkMode</strong> — Dark mode with system detection, persistence, and DOM application</summary>
+
+```tsx
+import { useDarkMode } from "@usefy/use-dark-mode";
+
+const { mode, isDark, setMode, toggle } = useDarkMode();
+// mode: "system" | "light" | "dark"; isDark is the resolved theme
+
+<button onClick={toggle}>{isDark ? "🌙" : "☀️"}</button>;
+
+// Custom attribute instead of the default `dark` class on <html>
+useDarkMode({ attribute: "data-theme" });
+```
+
+Three modes, `localStorage` persistence, cross-tab sync, and automatic DOM application (class or attribute).
+
+</details>
+
+<details>
+<summary><strong>useDocumentTitle</strong> — Set document.title with restore-on-unmount</summary>
+
+```tsx
+import { useDocumentTitle } from "@usefy/use-document-title";
+
+useDocumentTitle(`Inbox (${unread})`);
+useDocumentTitle("Checkout", { restoreOnUnmount: true });
+```
+
+Keeps the tab title in sync with your value; optionally restores the original on unmount. SSR-safe.
 
 </details>
 

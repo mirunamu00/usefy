@@ -93,12 +93,18 @@ importers:
       '@usefy/use-counter':
         specifier: workspace:*
         version: link:../../packages/hooks/use-counter
+      '@usefy/use-dark-mode':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-dark-mode
       '@usefy/use-debounce':
         specifier: workspace:*
         version: link:../../packages/hooks/use-debounce
       '@usefy/use-debounce-callback':
         specifier: workspace:*
         version: link:../../packages/hooks/use-debounce-callback
+      '@usefy/use-document-title':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-document-title
       '@usefy/use-event-callback':
         specifier: workspace:*
         version: link:../../packages/hooks/use-event-callback
@@ -144,6 +150,9 @@ importers:
       '@usefy/use-map':
         specifier: workspace:*
         version: link:../../packages/hooks/use-map
+      '@usefy/use-media-query':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-media-query
       '@usefy/use-memory-monitor':
         specifier: workspace:*
         version: link:../../packages/hooks/use-memory-monitor
@@ -153,12 +162,18 @@ importers:
       '@usefy/use-on-click-outside':
         specifier: workspace:*
         version: link:../../packages/hooks/use-on-click-outside
+      '@usefy/use-preferred-color-scheme':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-preferred-color-scheme
       '@usefy/use-previous':
         specifier: workspace:*
         version: link:../../packages/hooks/use-previous
       '@usefy/use-queue':
         specifier: workspace:*
         version: link:../../packages/hooks/use-queue
+      '@usefy/use-reduced-motion':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-reduced-motion
       '@usefy/use-resize-observer':
         specifier: workspace:*
         version: link:../../packages/hooks/use-resize-observer
