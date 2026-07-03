@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-preferred-color-scheme",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "A React hook for the user's preferred color scheme (prefers-color-scheme)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

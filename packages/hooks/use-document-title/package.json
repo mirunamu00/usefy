@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-document-title",
-  "version": "0.12.1",
+  "version": "0.12.2",
   "description": "A React hook for setting document.title with restore-on-unmount",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
