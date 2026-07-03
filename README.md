@@ -92,7 +92,7 @@ function App() {
 - `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
-- `useIntersectionObserver`, `useGeolocation` — Browser APIs
+- `useIntersectionObserver`, `useGeolocation`, `useWindowSize` — Browser APIs
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
 
@@ -226,6 +226,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useCopyToClipboard` | Clipboard operations |
 | `useGeolocation` | Device geolocation with tracking |
 | `useIntersectionObserver` | Element visibility detection |
+| `useWindowSize` | Window size tracking with debounce/throttle and SSR support |
 | `useHover` | Element hover detection with delay |
 | `useKeyPress` | Keyboard key, shortcut, and combination detection |
 | `useMap` | Map data structure state with immutable updates |
