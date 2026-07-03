@@ -32,7 +32,26 @@ function Demo() {
 const meta: Meta<typeof Demo> = {
   title: "Hooks/useIsomorphicLayoutEffect",
   component: Demo,
-  parameters: { layout: "centered" },
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component: `An SSR-safe \`useLayoutEffect\`: it resolves to \`useLayoutEffect\` in the browser and \`useEffect\` on the server, silencing React's SSR warning while keeping synchronous, flicker-free layout work on the client.
+
+## Features
+- **No SSR warning** — falls back to \`useEffect\` on the server
+- **Synchronous on client** — measure/mutate the DOM before paint
+- **Same signature** — use exactly like \`useLayoutEffect\`
+
+## Basic Usage
+\`\`\`tsx
+useIsomorphicLayoutEffect(() => {
+  measure();
+}, []);
+\`\`\``,
+      },
+    },
+  },
   tags: ["autodocs"],
 };
 export default meta;
@@ -40,6 +59,29 @@ type Story = StoryObj<typeof Demo>;
 
 export const Default: Story = {
   render: () => <Demo />,
+  parameters: {
+    docs: {
+      description: {
+        story: "The box's width is measured synchronously on mount and shown without a visible layout flash.",
+      },
+      source: {
+        language: "tsx",
+        code: `import { useRef, useState } from "react";
+import { useIsomorphicLayoutEffect } from "@usefy/use-isomorphic-layout-effect";
+
+function Measured() {
+  const ref = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+
+  useIsomorphicLayoutEffect(() => {
+    setWidth(ref.current?.getBoundingClientRect().width ?? 0);
+  }, []);
+
+  return <div ref={ref}>Width: {width}px</div>;
+}`,
+      },
+    },
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await waitFor(() => {
