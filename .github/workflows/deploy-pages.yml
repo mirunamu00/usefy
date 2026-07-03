@@ -21,6 +21,14 @@ concurrency:
 jobs:
   deploy:
     name: Build and Deploy Pages
+    # Skip on the Changesets "Version Packages" (release) merge — it only bumps
+    # versions/changelogs, so the deployed Storybook/coverage site is unchanged.
+    # The preceding feature merge already deployed the latest content.
+    # (On pull_request events head_commit is absent, so this evaluates true and
+    # the PR still runs the build validation while the deploy steps stay guarded.)
+    if: >-
+      !contains(github.event.head_commit.message, 'changeset-release') &&
+      !contains(github.event.head_commit.message, 'release packages')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
