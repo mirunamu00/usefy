@@ -1,5 +1,7 @@
 # @usefy/use-isomorphic-layout-effect
 
+## 0.12.0
+
 ## 0.11.0
 
 ### Minor Changes
