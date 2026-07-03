@@ -1,953 +1,226 @@
 # usefy Hooks Roadmap
 
-## Overview
+> Rewritten from scratch (July 2026) against the current React 19 landscape,
+> the hooks already shipped in this repo, and real-world demand across the
+> leading hook libraries (usehooks-ts, ahooks, @mantine/hooks, react-use,
+> @react-hookz/web). This document is the source of truth for what we build
+> next and, just as importantly, what we deliberately do **not** build.
 
-This document contains the roadmap and detailed feature specifications for React custom hooks to be included in the usefy library.
+## Vision
 
----
+usefy is a collection of **independently versioned, production-grade React
+hooks**. Every hook is a building block that a serious application or design
+system can depend on: typed, tested, SSR-safe, and tree-shakeable. The bar is
+not "it works in a demo" — it is "a component library could ship this."
 
-## Hooks List
+## Design principles (the enterprise bar)
 
-### 19. useScreen
+Every hook we ship must satisfy all of these:
 
-**Purpose**: Track screen information (screen object)
+1. **TypeScript-first** — full inference, exported option/return types, no `any`
+   leaking into the public surface. Read-only return types where a mutable
+   collection would otherwise be a foot-gun (`ReadonlyMap`, `readonly T[]`).
+2. **SSR-safe** — guard `window`/`document`; return a deterministic inert value
+   on the server; never cause hydration mismatches (accept an initial value).
+3. **Stable identities** — every returned function is `useCallback`-memoized;
+   action bundles are `useMemo`-stable so they are safe as effect deps.
+4. **No wasted renders** — bail out of state updates that don't change anything
+   (`Object.is` / structural no-op skipping).
+5. **Latest-callback pattern** — user callbacks are read through a ref so that
+   changing a handler never re-subscribes listeners.
+6. **Complements React, never fights it** — we do not re-implement anything React
+   19 already ships (see Scope boundaries).
+7. **~100% test coverage**, a Storybook story with `play` tests, three READMEs,
+   and a changeset. A hook is not "done" until it ships complete.
 
-**Key Features**:
+## Scope boundaries — what usefy does NOT build
 
-- screen.width, screen.height
-- screen.orientation
-- availWidth, availHeight
-- Provides device screen information
+Judgment is part of the product. We decline whole categories:
 
-**API**:
+**React 19 built-ins (never re-implement):**
+`use`, `useActionState`, `useFormStatus`, `useOptimistic`, `useId`,
+`useTransition`, `useDeferredValue`, `useSyncExternalStore`, `useLayoutEffect`.
+We may ship thin *ergonomic* helpers around them, but not clones.
 
-```typescript
-const screen = useScreen();
-```
+**Dedicated-library territory (we ship primitives, not the whole solution):**
 
-**Usage Example**:
-
-```typescript
-const screen = useScreen();
-
-return (
-  <div>
-    Screen resolution: {screen?.width}×{screen?.height}
-    Available area: {screen?.availWidth}×{screen?.availHeight}
-  </div>
-);
-```
-
-**Implementation Points**:
-
-- Use window.screen object
-- orientationchange event
-- SSR-safe
-- Return screen information object
-
----
-
-### 23. useIsClient
-
-**Purpose**: Check if client-side (SSR check)
-
-**Key Features**:
-
-- Distinguish SSR/CSR
-- Detect hydration completion
-- Execute client-only code
-- Returns simple boolean
-
-**API**:
-
-```typescript
-const isClient = useIsClient();
-```
-
-**Usage Example**:
-
-```typescript
-const isClient = useIsClient();
-
-return <div>{isClient ? <ClientOnlyComponent /> : <ServerFallback />}</div>;
-```
-
-**Implementation Points**:
-
-- Detect client with useEffect
-- Initial value false
-- true after hydration
+| Need | Use instead | usefy provides only |
+| ---- | ----------- | ------------------- |
+| Server state / caching | TanStack Query, SWR | `useAsync` for simple local async |
+| Forms & validation | react-hook-form, TanStack Form | `useControllableState`, field primitives |
+| Virtualization | TanStack Virtual | `useIntersectionObserver` (shipped) |
+| Animation | Framer Motion, react-spring | `useRafState`, `useReducedMotion` |
+| Global state | Zustand, Jotai, Redux | `useSignal` (shipped), local collections |
+| Routing / i18n / DnD | dedicated libs | — |
 
 ---
 
-### 24. useIsMounted
+## Shipped (v0.9.x)
 
-**Purpose**: Check if component is mounted
+The roadmap below assumes these already exist. Do not re-propose them.
 
-**Key Features**:
-
-- Track mount state
-- Useful for canceling async tasks
-- Prevent memory leaks
-- Use in cleanup function
-
-**API**:
-
-```typescript
-const isMounted = useIsMounted();
-```
-
-**Usage Example**:
-
-```typescript
-const isMounted = useIsMounted();
-
-const fetchData = async () => {
-  const data = await api.getData();
-  if (isMounted()) {
-    setState(data);
-  }
-};
-```
-
-**Implementation Points**:
-
-- Store mount state with useRef
-- Set false in useEffect cleanup
-- Return function (reference latest value)
+- **State & structures** — `useToggle`, `useCounter`, `useMap`, `useSet`,
+  `useList`, `useQueue`, `useHistoryState`, `useLocalStorage`,
+  `useSessionStorage`, `useSignal`
+- **Timing** — `useDebounce`, `useDebounceCallback`, `useThrottle`,
+  `useThrottleCallback`, `useTimeout`, `useInterval`, `useTimer`
+- **DOM & events** — `useEventListener`, `useOnClickOutside`,
+  `useClickAnyWhere`, `useHover`, `useKeyPress`, `useIntersectionObserver`,
+  `useResizeObserver`, `useWindowSize`
+- **Browser & device** — `useCopyToClipboard`, `useGeolocation`,
+  `useMemoryMonitor`
+- **Lifecycle & flow** — `useUnmount`, `useInit`, `useStep`
 
 ---
 
-### 25. useIsomorphicLayoutEffect
+## Roadmap
 
-**Purpose**: SSR-safe version of useLayoutEffect
+**Priority legend**
+- **P0** — highest demand / foundational for building design systems. Build next.
+- **P1** — strong, broad demand. Build after P0.
+- **P2** — valuable but niche or platform-specific. Build opportunistically.
 
-**Key Features**:
+### 1. SSR & Lifecycle
 
-- useEffect in SSR
-- useLayoutEffect in client
-- Compatible with Next.js, Gatsby
-- Removes warning messages
+| Hook | Pri | Purpose & API sketch |
+| ---- | --- | -------------------- |
+| `useIsClient` | **P0** | Detect post-hydration client render. `const isClient = useIsClient()`. Canonical SSR guard for client-only UI. |
+| `useIsomorphicLayoutEffect` | **P0** | `useLayoutEffect` on client, `useEffect` on server — silences the SSR warning. Building block used by other hooks. |
+| `usePrevious` | **P0** | Value from the previous render. `const prev = usePrevious(value)`. Optional comparator; ref-based (no extra render). |
+| `useEventCallback` | **P0** | Stable callback that always sees the latest props/state (community `useEffectEvent`). `const fn = useEventCallback(cb)`. |
+| `useUpdateEffect` | **P1** | `useEffect` that skips the first run. Pairs with `useEffectOnce`/`useMount`. |
+| `useMount` / `useIsFirstRender` | **P1** | `useMount(fn)` runs once on mount; `useIsFirstRender()` returns a boolean. Small, extremely common. |
+| `useIsMounted` | **P2** | Mounted-ref guard: `const isMounted = useIsMounted()`. Document as an escape hatch — React prefers `AbortController`; ship with guidance. |
+| `useForceUpdate` | **P2** | Imperative re-render trigger for interop/legacy. `const rerender = useForceUpdate()`. |
+| `useLatest` | **P1** | Ref mirroring the latest value, for reading fresh state inside stable callbacks. `const ref = useLatest(value)`. |
 
-**API**:
+### 2. State & Data Structures
 
-```typescript
-useIsomorphicLayoutEffect(() => {
-  // effect
-}, deps);
-```
+| Hook | Pri | Purpose & API sketch |
+| ---- | --- | -------------------- |
+| `useControllableState` | **P0** | The controlled/uncontrolled primitive every component library needs. `const [v, setV] = useControllableState({ value, defaultValue, onChange })`. Radix/Mantine pattern. |
+| `useDisclosure` | **P0** | Open/close/toggle state for modals, drawers, popovers. `const [opened, { open, close, toggle }] = useDisclosure(false)`. |
+| `useObjectState` | **P1** | Partial object updates with immutability + reset. `const [state, patch, reset] = useObjectState(init)`; `patch({ field })`. |
+| `useStack` | **P1** | LIFO companion to `useQueue`. `[stack, { push, pop, peek, clear, reset }]`, `readonly T[]`, immutable, no-op skipping. |
+| `useSelection` | **P1** | Multi/single selection state for lists & tables. `{ selected, isSelected, toggle, selectAll, clear, isAllSelected }`. Built on `Set`. |
+| `useCookie` | **P1** | Cookie value as state, SSR-aware. `const [value, setValue, remove] = useCookie(key, opts)`. Fills the storage trio (local/session/cookie). |
+| `useDefault` | **P2** | State that falls back to a default when set to `null`/`undefined`. |
 
-**Usage Example**:
+### 3. Responsive, Theme & Accessibility
 
-```typescript
-useIsomorphicLayoutEffect(() => {
-  // DOM measurement or synchronous update
-  const rect = elementRef.current?.getBoundingClientRect();
-  setDimensions(rect);
-}, []);
-```
+| Hook | Pri | Purpose & API sketch |
+| ---- | --- | -------------------- |
+| `useMediaQuery` | **P0** | The #1 missing hook. `const isWide = useMediaQuery('(min-width: 1024px)', { defaultValue, initializeWithValue })`. `matchMedia`, SSR default, listener cleanup. |
+| `useReducedMotion` | **P0** | `prefers-reduced-motion` as a boolean. Accessibility table-stakes for any animation. |
+| `useDarkMode` | **P0** | Theme state with system detection + persistence + DOM class/attribute. `{ mode, isDark, setMode, toggle }` where `mode: 'system' \| 'light' \| 'dark'` (folds in the old `useTernaryDarkMode`). |
+| `usePreferredColorScheme` | **P1** | Raw `prefers-color-scheme` (`'light' \| 'dark'`), the primitive under `useDarkMode`. |
+| `useDocumentTitle` | **P0** | Set `document.title` with restore-on-unmount. `useDocumentTitle(title, { restoreOnUnmount })`. |
+| `useFavicon` | **P2** | Swap the page favicon dynamically. |
+| `usePreferredLanguage` | **P2** | `navigator.language`/`languages` reactive to change. |
 
-**Implementation Points**:
+### 4. DOM, Refs & Observers
 
-- typeof window check
-- Conditional export
-- Choose useEffect/useLayoutEffect
+| Hook | Pri | Purpose & API sketch |
+| ---- | --- | -------------------- |
+| `useMergedRefs` | **P0** | Merge callback/object refs onto one node — essential for `forwardRef` components. `const ref = useMergedRefs(localRef, forwardedRef)`. |
+| `useMeasure` | **P1** | Element bounds (`x, y, width, height, top…`) via `ResizeObserver`. `const [ref, bounds] = useMeasure()`. Convenience layer over the shipped `useResizeObserver`. |
+| `useMutationObserver` | **P1** | Observe DOM subtree mutations — completes the observer trio (intersection/resize/mutation). `useMutationObserver(ref, cb, options)`. |
+| `useScrollPosition` | **P1** | Throttled scroll offset for window or element. `const { x, y } = useScrollPosition({ element, throttleMs })`. |
+| `useScrollLock` | **P1** | Lock body scroll (iOS-safe, nested counter, restores position) for modals. `const { lock, unlock, isLocked } = useScrollLock()`. |
+| `useScrollIntoView` | **P2** | Smooth-scroll a target into view with alignment options. |
+| `useTextSelection` | **P2** | Currently selected text/range within a subtree. |
 
----
+### 5. Interaction, Gestures & Focus (A11y)
 
-### 26. useDocumentTitle
+| Hook | Pri | Purpose & API sketch |
+| ---- | --- | -------------------- |
+| `useHotkeys` | **P0** | High-level keyboard shortcuts above `useKeyPress`: scopes, sequences, `mod` alias, input-field guards. `useHotkeys('mod+k', handler, { enabled })`. |
+| `useFocusTrap` | **P1** | Contain focus within a subtree (modals/dialogs) — accessibility essential. `const ref = useFocusTrap(active)`. |
+| `useFocusWithin` | **P1** | Track whether focus is anywhere inside a subtree. `const [ref, focused] = useFocusWithin()`. |
+| `useLongPress` | **P1** | Long-press gesture with threshold and move-cancel, mouse + touch. `const bind = useLongPress(cb, { threshold })`. |
+| `useInfiniteScroll` | **P1** | Sentinel-driven infinite loading built on `IntersectionObserver`. `const ref = useInfiniteScroll(loadMore, { hasMore, loading })`. |
+| `usePagination` | **P1** | Pagination state machine. `{ page, pageCount, next, prev, setPage, range }`. |
+| `usePageLeave` | **P2** | Detect the cursor leaving the viewport (exit-intent). |
 
-**Purpose**: Set document title
+### 6. Async & Data
 
-**Key Features**:
+| Hook | Pri | Purpose & API sketch |
+| ---- | --- | -------------------- |
+| `useAsync` | **P0** | Lifecycle for a single async op: `{ data, error, status, isLoading, execute, reset }`, `AbortController` cancellation, `immediate` option. Deliberately *not* a query cache — that's TanStack Query's job. |
+| `useAsyncFn` | **P1** | Manual-trigger variant returning `[state, run]` for event-driven calls. |
+| `usePolling` | **P1** | Poll an async fn on an interval with pause/resume and backoff. |
+| `useDebouncedState` / `useThrottledState` | **P1** | `[value, debouncedValue, setValue]` conveniences pairing state with the shipped debounce/throttle. |
+| `useRafState` | **P1** | State whose updates are batched to `requestAnimationFrame` — smooth for scroll/resize/pointer-driven UI. |
+| `useAnimationFrame` | **P2** | rAF loop with delta time, start/stop. `useAnimationFrame(({ delta }) => …)`. |
 
-- Update document.title
-- Option to restore previous title
-- Dynamic title changes
-- SSR-safe
+### 7. Browser & Device APIs
 
-**API**:
-
-```typescript
-useDocumentTitle(title, options);
-```
-
-**Usage Example**:
-
-```typescript
-const [count, setCount] = useState(0);
-useDocumentTitle(`Count: ${count}`, {
-  restoreOnUnmount: true,
-});
-```
-
-**Implementation Points**:
-
-- Set document.title
-- Save previous title
-- Restore on cleanup
-- SSR check
-
----
-
-### 27. useEventCallback
-
-**Purpose**: Stable event callback (always references latest value)
-
-**Key Features**:
-
-- Reference latest value without dependency array
-- Maintain function reference stability
-- Prevent unnecessary re-renders
-- Alternative to useCallback
-
-**API**:
-
-```typescript
-const stableCallback = useEventCallback(callback);
-```
-
-**Usage Example**:
-
-```typescript
-const [count, setCount] = useState(0);
-
-const handleClick = useEventCallback(() => {
-  // Always references latest count value
-  console.log(count);
-});
-
-// handleClick reference doesn't change
-useEffect(() => {
-  element.addEventListener("click", handleClick);
-}, [handleClick]);
-```
-
-**Implementation Points**:
-
-- Store callback with useRef
-- Update with useLayoutEffect
-- Return stable reference
+| Hook | Pri | Purpose & API sketch |
+| ---- | --- | -------------------- |
+| `useNetworkState` | **P1** | Online/offline + Network Information (`effectiveType`, `downlink`, `saveData`). `const { online, effectiveType } = useNetworkState()`. |
+| `usePageVisibility` | **P1** | Document visibility (tab focus/blur) via the Page Visibility API. `const visible = usePageVisibility()`. |
+| `useIdle` | **P1** | User inactivity after a timeout, throttled activity listeners. `const idle = useIdle(60_000)`. |
+| `usePermission` | **P1** | Permissions API status with live updates. `const state = usePermission({ name: 'camera' })`. |
+| `useScript` | **P1** | Load an external script with `idle/loading/ready/error` status, dedup, cleanup. `const status = useScript(src)`. |
+| `useClipboardRead` | **P2** | Read/paste side of the clipboard (extends the shipped `useCopyToClipboard`). |
+| `useShare` | **P2** | Web Share API with capability detection. `const { share, canShare } = useShare()`. |
+| `useFullscreen` | **P2** | Fullscreen API for an element. `{ isFullscreen, enter, exit, toggle, isSupported }`. |
+| `useOrientation` | **P2** | Screen orientation (`angle`, `type`). |
+| `useScreen` | **P2** | `screen` object info (avail size, orientation). Low priority — largely covered by `useMediaQuery`/`useWindowSize`. |
+| `useBattery` | **P2** | Battery Status API (`level`, `charging`). |
+| `useWakeLock` | **P2** | Screen Wake Lock API — keep the display awake. |
+| `useMediaDevices` | **P2** | Enumerate cameras/microphones/speakers. |
+| `useNotification` | **P2** | Web Notifications with permission flow. |
+| `useBroadcastChannel` | **P2** | Cross-tab messaging via BroadcastChannel. |
+| `useStyleTag` | **P2** | Inject/manage a `<style>` tag. |
+| `useEyeDropper` | **P2** | EyeDropper API color picking. |
 
 ---
 
-### 28. usePrevious
+## Removed / merged from the previous roadmap
 
-**Purpose**: Store value from previous render
+| Old entry | Decision | Rationale |
+| --------- | -------- | --------- |
+| `useCountdown` (#22) | **Removed** | Covered by the shipped `useTimer`. |
+| `useOnScreen` (#34) | **Removed** | Duplicate of `useIntersectionObserver`; if a boolean-only convenience is wanted, add a `boolean` return mode there instead of a new package. |
+| `useTernaryDarkMode` (#31) | **Merged** | Folded into `useDarkMode` as `mode: 'system' \| 'light' \| 'dark'`. One hook, not two. |
+| `useMeasure` (#44) vs `useResizeObserver` | **Kept, reframed** | `useMeasure` stays as the ergonomic bounds-returning layer over the shipped `useResizeObserver`; avoid overlap in docs. |
+| `useIsMounted` (#24) | **Kept w/ caveat** | Retained (P2) but documented as an escape hatch; prefer `AbortController` for async cancellation. |
 
-**Key Features**:
+## New in this roadmap (not in the old one)
 
-- Track value changes
-- Useful for animations, comparison logic
-- No re-render with useRef-based
-- Support custom comparison function
-
-**API**:
-
-```typescript
-const previousValue = usePrevious(value, compareFn);
-```
-
-**Usage Example**:
-
-```typescript
-const [count, setCount] = useState(0);
-const prevCount = usePrevious(count);
-
-return (
-  <div>
-    Current: {count}, Previous: {prevCount}
-    <p>{count > prevCount ? "Increased ↑" : "Decreased ↓"}</p>
-  </div>
-);
-```
-
-**Implementation Points**:
-
-- Store value with useRef
-- Update in useEffect
-- Initial value is undefined
-- Comparison function option
+Driven by current demand & React 19: `useMediaQuery`, `useReducedMotion`,
+`useControllableState`, `useMergedRefs`, `useDisclosure`, `useHotkeys`,
+`useFocusTrap`, `useFocusWithin`, `useMutationObserver`, `useScrollPosition`,
+`useNetworkState`, `usePageVisibility`, `useSelection`, `useStack`, `useCookie`,
+`useRafState`, `usePagination`, `useInfiniteScroll`, `usePolling`,
+`useAsync`/`useAsyncFn`, `usePreferredColorScheme`, `useShare`, `useWakeLock`,
+`useBroadcastChannel`, and more.
 
 ---
 
-### 30. useDarkMode
-
-**Purpose**: Manage dark mode state
-
-**Key Features**:
-
-- localStorage persistence
-- Detect system settings
-- toggle, enable, disable functions
-- Apply class or attribute
-- Support prefers-color-scheme
-
-**API**:
-
-```typescript
-const { isDarkMode, toggle, enable, disable } = useDarkMode(options);
-```
-
-**Usage Example**:
-
-```typescript
-const { isDarkMode, toggle } = useDarkMode({
-  defaultValue: false,
-  localStorageKey: "theme",
-});
-
-return <button onClick={toggle}>{isDarkMode ? "🌙 Dark" : "☀️ Light"}</button>;
-```
-
-**Implementation Points**:
-
-- Utilize useLocalStorage
-- System settings with useMediaQuery
-- Add class to document.documentElement
-- Initial value determination logic
-
----
-
-### 31. useTernaryDarkMode
-
-**Purpose**: 3-level dark mode (system, light, dark)
-
-**Key Features**:
-
-- Three modes: system/light/dark
-- Automatically reflect system settings
-- localStorage persistence
-- Toggle functionality
-
-**API**:
-
-```typescript
-const {
-  isDarkMode,
-  ternaryDarkMode,
-  setTernaryDarkMode,
-  toggleTernaryDarkMode,
-} = useTernaryDarkMode();
-```
-
-**Usage Example**:
-
-```typescript
-const { ternaryDarkMode, setTernaryDarkMode } = useTernaryDarkMode();
-
-return (
-  <select
-    value={ternaryDarkMode}
-    onChange={(e) => setTernaryDarkMode(e.target.value)}
-  >
-    <option value="system">System</option>
-    <option value="light">Light</option>
-    <option value="dark">Dark</option>
-  </select>
-);
-```
-
-**Implementation Points**:
-
-- Manage 3 modes
-- Apply prefers-color-scheme when system
-- localStorage persistence
-- Calculate actual dark mode status
-
----
-
-### 32. useScrollLock
-
-**Purpose**: Lock/unlock body scroll
-
-**Key Features**:
-
-- Prevent background scroll when modal opens
-- iOS Safari support
-- Automatic cleanup
-- Support nested locks (counter)
-- Restore original scroll position
-
-**API**:
-
-```typescript
-const [lockScroll, unlockScroll] = useScrollLock();
-// or
-const { lock, unlock, isLocked } = useScrollLock();
-```
-
-**Usage Example**:
-
-```typescript
-const [isModalOpen, setIsModalOpen] = useState(false);
-const { lock, unlock } = useScrollLock();
-
-useEffect(() => {
-  if (isModalOpen) {
-    lock();
-  } else {
-    unlock();
-  }
-  return () => unlock();
-}, [isModalOpen]);
-
-return (
-  <>
-    <button onClick={() => setIsModalOpen(true)}>Open Modal</button>
-    {isModalOpen && <Modal onClose={() => setIsModalOpen(false)} />}
-  </>
-);
-```
-
-**Implementation Points**:
-
-- overflow: hidden on body
-- iOS Safari: position: fixed + top
-- Save/restore scroll position
-- Nested lock counter
-
----
-
-### 34. useOnScreen (useIsVisible)
-
-**Purpose**: Detect if element is visible on screen
-
-**Key Features**:
-
-- Simplified version of useIntersectionObserver
-- Returns simple boolean
-- Suitable for lazy loading
-- once option (detect only once)
-
-**API**:
-
-```typescript
-const isVisible = useOnScreen(ref, options);
-```
-
-**Usage Example**:
-
-```typescript
-const ref = useRef<HTMLImageElement>(null);
-const isVisible = useOnScreen(ref, {
-  threshold: 0.1,
-  once: true,
-});
-
-return (
-  <img ref={ref} src={isVisible ? actualSrc : placeholder} alt="Lazy loaded" />
-);
-```
-
-**Implementation Points**:
-
-- Use IntersectionObserver
-- Simplify to boolean
-- Performance optimization with once option
-- Default threshold 0
-
----
-
-### 35. useAsync
-
-**Purpose**: Manage async task state
-
-**Key Features**:
-
-- loading, error, data state
-- Automatic error handling
-- Retry functionality
-- Cancellable (AbortController)
-- Immediate or manual execution
-
-**API**:
-
-```typescript
-const { data, loading, error, execute, reset } = useAsync(
-  asyncFunction,
-  options
-);
-```
-
-**Usage Example**:
-
-```typescript
-const { data, loading, error, execute } = useAsync(
-  async () => {
-    const response = await fetch("/api/users");
-    return response.json();
-  },
-  { immediate: true }
-);
-
-if (loading) return <Spinner />;
-if (error) return <Error message={error.message} />;
-if (!data) return null;
-
-return <UserList users={data} />;
-```
-
-**Implementation Points**:
-
-- Manage loading/error/data state
-- Error handling with try-catch
-- Cancel with AbortController
-- immediate option
-- reset function
-
----
-
-### 43. useScript
-
-**Purpose**: Dynamic script loading
-
-**Key Features**:
-
-- Dynamically load external scripts
-- loading, ready, error states
-- Prevent duplicate loading
-- Automatic cleanup
-- async/defer options
-
-**API**:
-
-```typescript
-const status = useScript(src, options);
-// status: 'idle' | 'loading' | 'ready' | 'error'
-```
-
-**Usage Example**:
-
-```typescript
-const status = useScript(
-  "https://maps.googleapis.com/maps/api/js?key=YOUR_KEY"
-);
-
-if (status === "loading") return <div>Loading map...</div>;
-if (status === "error") return <div>Failed to load map</div>;
-if (status === "ready") return <GoogleMap />;
-```
-
-**Implementation Points**:
-
-- Dynamically create script tag
-- load/error event listeners
-- Check already loaded scripts
-- Remove on cleanup
-- Prevent duplicates with global cache
-
----
-
-### 44. useMeasure
-
-**Purpose**: Measure element size and position
-
-**Key Features**:
-
-- Provide getBoundingClientRect values
-- width, height, top, left, etc.
-- Based on ResizeObserver
-- Real-time updates
-
-**API**:
-
-```typescript
-const [ref, bounds] = useMeasure<T>();
-// bounds: { x, y, width, height, top, right, bottom, left }
-```
-
-**Usage Example**:
-
-```typescript
-const [ref, bounds] = useMeasure<HTMLDivElement>();
-
-return (
-  <div>
-    <div ref={ref} style={{ width: "50%" }}>
-      Measure me
-    </div>
-    <p>
-      Width: {Math.round(bounds.width)}px
-      <br />
-      Height: {Math.round(bounds.height)}px
-    </p>
-  </div>
-);
-```
-
-**Implementation Points**:
-
-- Use ResizeObserver
-- Call getBoundingClientRect
-- Store bounds as state
-- Auto-update on resize
-
----
-
-### 45. useLongPress
-
-**Purpose**: Detect long press events
-
-**Key Features**:
-
-- Detect long press
-- Configure threshold (duration)
-- onStart, onFinish, onCancel callbacks
-- Support touch/mouse events
-- Cancel on movement
-
-**API**:
-
-```typescript
-const bind = useLongPress(callback, options);
-// bind: { onMouseDown, onMouseUp, onMouseLeave, onTouchStart, onTouchEnd }
-```
-
-**Usage Example**:
-
-```typescript
-const bind = useLongPress(
-  () => {
-    console.log("Long pressed!");
-    showContextMenu();
-  },
-  {
-    threshold: 500,
-    onStart: () => console.log("Press started"),
-    onCancel: () => console.log("Cancelled"),
-  }
-);
-
-return <button {...bind}>Long press to open menu</button>;
-```
-
-**Implementation Points**:
-
-- Check duration with setTimeout
-- Start with mousedown/touchstart
-- End with mouseup/touchend
-- Cancel with mouseleave/touchcancel
-- Check movement distance
-
----
-
-### 47. useBattery
-
-**Purpose**: Track battery status
-
-**Key Features**:
-
-- Battery level
-- Charging status
-- Charging time, discharging time
-- Battery Status API
-
-**API**:
-
-```typescript
-const { level, charging, chargingTime, dischargingTime, loading } =
-  useBattery();
-```
-
-**Usage Example**:
-
-```typescript
-const { level, charging } = useBattery();
-
-return (
-  <div>
-    Battery: {Math.round(level * 100)}%{charging ? " (Charging)" : ""}
-  </div>
-);
-```
-
-**Implementation Points**:
-
-- Use navigator.getBattery()
-- Register event listeners
-- Browser compatibility check
-- cleanup
-
----
-
-### 48. useNetwork
-
-**Purpose**: Track network status
-
-**Key Features**:
-
-- Online/offline status
-- Connection type (4g, wifi, etc.)
-- Downlink speed
-- Network Information API
-
-**API**:
-
-```typescript
-const { online, downlink, effectiveType, rtt, saveData } = useNetwork();
-```
-
-**Usage Example**:
-
-```typescript
-const { online, effectiveType } = useNetwork();
-
-return (
-  <div>
-    {!online && <Alert>You are offline</Alert>}
-    Connection: {effectiveType}
-  </div>
-);
-```
-
-**Implementation Points**:
-
-- navigator.onLine
-- navigator.connection
-- online/offline events
-- connection change event
-
----
-
-### 49. useIdle
-
-**Purpose**: Detect user inactivity
-
-**Key Features**:
-
-- Becomes idle after no activity for specified time
-- Detect mouse, keyboard, touch activity
-- Useful for auto-logout, notifications
-- Configurable timeout
-
-**API**:
-
-```typescript
-const isIdle = useIdle(timeout, options);
-```
-
-**Usage Example**:
-
-```typescript
-const isIdle = useIdle(5 * 60 * 1000); // 5 minutes
-
-useEffect(() => {
-  if (isIdle) {
-    showInactivityWarning();
-  }
-}, [isIdle]);
-```
-
-**Implementation Points**:
-
-- Multiple event listeners
-- Track last activity time
-- Check idle with timer
-- Apply throttle
-
----
-
-### 50. useOrientation
-
-**Purpose**: Detect device orientation
-
-**Key Features**:
-
-- Detect portrait/landscape
-- Angle information
-- Screen Orientation API
-- orientationchange event
-
-**API**:
-
-```typescript
-const { angle, type } = useOrientation();
-// type: 'portrait' | 'landscape'
-```
-
-**Usage Example**:
-
-```typescript
-const { type } = useOrientation();
-
-return (
-  <div>{type === "portrait" ? <PortraitLayout /> : <LandscapeLayout />}</div>
-);
-```
-
-**Implementation Points**:
-
-- screen.orientation
-- orientationchange event
-- Fallback: window.orientation
-- SSR-safe
-
----
-
-### 51. useFullscreen
-
-**Purpose**: Manage fullscreen mode
-
-**Key Features**:
-
-- Enter/exit fullscreen
-- Track current state
-- Fullscreen API
-- toggle function
-
-**API**:
-
-```typescript
-const { isFullscreen, toggle, enter, exit, isSupported } = useFullscreen(ref);
-```
-
-**Usage Example**:
-
-```typescript
-const videoRef = useRef<HTMLVideoElement>(null);
-const { isFullscreen, toggle } = useFullscreen(videoRef);
-
-return (
-  <div>
-    <video ref={videoRef} src="video.mp4" />
-    <button onClick={toggle}>
-      {isFullscreen ? "Exit Fullscreen" : "Fullscreen"}
-    </button>
-  </div>
-);
-```
-
-**Implementation Points**:
-
-- requestFullscreen/exitFullscreen
-- fullscreenchange event
-- Handle browser prefixes
-- Check document.fullscreenElement
-
----
-
-### 52. usePageLeave
-
-**Purpose**: Detect page leave
-
-**Key Features**:
-
-- Detect mouse leaving viewport
-- Warn before leaving page
-- Alert about unsaved changes
-- Alternative to beforeunload event
-
-**API**:
-
-```typescript
-usePageLeave(callback, options);
-```
-
-**Usage Example**:
-
-```typescript
-const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-
-usePageLeave(() => {
-  if (hasUnsavedChanges) {
-    const confirm = window.confirm("You have unsaved changes.");
-    if (confirm) {
-      saveChanges();
-    }
-  }
-});
-```
-
-**Implementation Points**:
-
-- mouseleave event (document)
-- Check clientY < 0
-- Understand difference from beforeunload
-
----
-
-### 53. useObjectState
-
-**Purpose**: Object state management utility
-
-**Key Features**:
-
-- Conveniently update object state
-- Support partial updates
-- reset function
-- Automatically maintain immutability
-
-**API**:
-
-```typescript
-const [state, setState, reset] = useObjectState<T>(initialState);
-```
-
-**Usage Example**:
-
-```typescript
-const [form, setForm, resetForm] = useObjectState({
-  name: "",
-  email: "",
-  age: 0,
-});
-
-const handleChange = (field: string, value: any) => {
-  setForm({ [field]: value }); // Partial update
-};
-
-return (
-  <form>
-    <input
-      value={form.name}
-      onChange={(e) => handleChange("name", e.target.value)}
-    />
-    <button onClick={resetForm}>Reset</button>
-  </form>
-);
-```
-
-**Implementation Points**:
-
-- Based on useState
-- Partial update (spread)
-- Restore initial state with reset function
-- TypeScript generics
-
----
-
-### 54. usePermission
-
-**Purpose**: Check browser permission status
-
-**Key Features**:
-
-- Use Permissions API
-- granted/denied/prompt status
-- Detect permission changes
-- Support various permissions (geolocation, camera, etc.)
-
-**API**:
-
-```typescript
-const permissionState = usePermission({ name: "geolocation" });
-// 'granted' | 'denied' | 'prompt' | 'unsupported'
-```
-
-**Usage Example**:
-
-```typescript
-const cameraPermission = usePermission({ name: "camera" });
-const micPermission = usePermission({ name: "microphone" });
-
-return (
-  <div>
-    Camera: {cameraPermission}
-    Microphone: {micPermission}
-    {cameraPermission === "denied" && (
-      <Alert>Camera permission is required</Alert>
-    )}
-  </div>
-);
-```
+## Recommended build order (batches)
+
+Ship in cohesive batches so related hooks share design decisions and land
+together:
+
+1. **SSR & lifecycle core** — `useIsClient`, `useIsomorphicLayoutEffect`,
+   `usePrevious`, `useEventCallback`, `useLatest`, `useUpdateEffect`, `useMount`.
+   *(small, foundational, unblock other hooks)*
+2. **Responsive & theme** — `useMediaQuery`, `usePreferredColorScheme`,
+   `useReducedMotion`, `useDarkMode`, `useDocumentTitle`.
+3. **Design-system primitives** — `useControllableState`, `useMergedRefs`,
+   `useDisclosure`.
+4. **DOM & observers** — `useMeasure`, `useMutationObserver`,
+   `useScrollPosition`, `useScrollLock`.
+5. **Interaction & a11y** — `useHotkeys`, `useFocusTrap`, `useFocusWithin`,
+   `useLongPress`.
+6. **Async & data** — `useAsync`, `useAsyncFn`, `usePolling`, `useRafState`.
+7. **State extras** — `useObjectState`, `useStack`, `useSelection`, `useCookie`.
+8. **Interaction/data patterns** — `useInfiniteScroll`, `usePagination`.
+9. **Browser/device** — `useNetworkState`, `usePageVisibility`, `useIdle`,
+   `usePermission`, `useScript`, then P2 platform hooks as demand warrants.
+
+Each hook follows the `add-usefy-hook` workflow: scaffold → implement → tests
+(~100%) → umbrella wiring → Storybook story → coverage badge → three READMEs →
+changeset.
