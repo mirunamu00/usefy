@@ -304,12 +304,18 @@ importers:
       '@usefy/use-counter':
         specifier: workspace:*
         version: link:use-counter
+      '@usefy/use-dark-mode':
+        specifier: workspace:*
+        version: link:use-dark-mode
       '@usefy/use-debounce':
         specifier: workspace:*
         version: link:use-debounce
       '@usefy/use-debounce-callback':
         specifier: workspace:*
         version: link:use-debounce-callback
+      '@usefy/use-document-title':
+        specifier: workspace:*
+        version: link:use-document-title
       '@usefy/use-event-callback':
         specifier: workspace:*
         version: link:use-event-callback
@@ -355,6 +361,9 @@ importers:
       '@usefy/use-map':
         specifier: workspace:*
         version: link:use-map
+      '@usefy/use-media-query':
+        specifier: workspace:*
+        version: link:use-media-query
       '@usefy/use-memory-monitor':
         specifier: workspace:*
         version: link:use-memory-monitor
@@ -364,12 +373,18 @@ importers:
       '@usefy/use-on-click-outside':
         specifier: workspace:*
         version: link:use-on-click-outside
+      '@usefy/use-preferred-color-scheme':
+        specifier: workspace:*
+        version: link:use-preferred-color-scheme
       '@usefy/use-previous':
         specifier: workspace:*
         version: link:use-previous
       '@usefy/use-queue':
         specifier: workspace:*
         version: link:use-queue
+      '@usefy/use-reduced-motion':
+        specifier: workspace:*
+        version: link:use-reduced-motion
       '@usefy/use-session-storage':
         specifier: workspace:*
         version: link:use-session-storage
@@ -522,6 +537,39 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
+  packages/hooks/use-dark-mode:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
   packages/hooks/use-debounce:
     devDependencies:
       '@testing-library/jest-dom':
@@ -556,6 +604,39 @@ importers:
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
   packages/hooks/use-debounce-callback:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
+  packages/hooks/use-document-title:
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.9.1
@@ -1080,6 +1161,39 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
+  packages/hooks/use-media-query:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
   packages/hooks/use-memory-monitor:
     devDependencies:
       '@testing-library/jest-dom':
@@ -1179,6 +1293,39 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
+  packages/hooks/use-preferred-color-scheme:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
   packages/hooks/use-previous:
     devDependencies:
       '@testing-library/jest-dom':
@@ -1213,6 +1360,39 @@ importers:
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
   packages/hooks/use-queue:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
+  packages/hooks/use-reduced-motion:
     devDependencies:
       '@testing-library/jest-dom':
         specifier: ^6.9.1

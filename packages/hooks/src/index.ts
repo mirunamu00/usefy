@@ -275,3 +275,44 @@ export { useMount } from "@usefy/use-mount";
 
 // useIsFirstRender
 export { useIsFirstRender } from "@usefy/use-is-first-render";
+
+// useMediaQuery
+export {
+  useMediaQuery,
+  isMatchMediaSupported,
+  getMatches,
+  type UseMediaQueryOptions,
+} from "@usefy/use-media-query";
+
+// usePreferredColorScheme
+export {
+  usePreferredColorScheme,
+  type ColorScheme,
+  type UsePreferredColorSchemeOptions,
+} from "@usefy/use-preferred-color-scheme";
+
+// useReducedMotion
+export {
+  useReducedMotion,
+  type UseReducedMotionOptions,
+} from "@usefy/use-reduced-motion";
+
+// useDarkMode
+export {
+  useDarkMode,
+  isBrowser,
+  prefersDark,
+  resolveIsDark,
+  readStoredMode,
+  writeStoredMode,
+  applyTheme,
+  type DarkModeMode,
+  type UseDarkModeOptions,
+  type UseDarkModeReturn,
+} from "@usefy/use-dark-mode";
+
+// useDocumentTitle
+export {
+  useDocumentTitle,
+  type UseDocumentTitleOptions,
+} from "@usefy/use-document-title";
