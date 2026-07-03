@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-click-any-where",
-  "version": "0.12.0",
+  "version": "0.12.1",
   "description": "A React hook for detecting document-wide click events",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

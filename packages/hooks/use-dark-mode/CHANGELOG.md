@@ -1,5 +1,11 @@
 # @usefy/use-dark-mode
 
+## 0.12.1
+
+### Patch Changes
+
+- b850ad8: Standardize the per-package READMEs (consistent header, badges, a nav row, the "View Storybook Demo" link, and Overview/Features/Installation/Quick Start/API/Testing/License sections) so they render consistently on npm.
+
 ## 0.12.0
 
 ### Minor Changes

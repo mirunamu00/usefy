@@ -1,5 +1,53 @@
 # @usefy/usefy
 
+## 0.12.1
+
+### Patch Changes
+
+- Updated dependencies [b850ad8]
+  - @usefy/use-is-client@0.12.1
+  - @usefy/use-isomorphic-layout-effect@0.12.1
+  - @usefy/use-previous@0.12.1
+  - @usefy/use-latest@0.12.1
+  - @usefy/use-event-callback@0.12.1
+  - @usefy/use-update-effect@0.12.1
+  - @usefy/use-mount@0.12.1
+  - @usefy/use-is-first-render@0.12.1
+  - @usefy/use-media-query@0.12.1
+  - @usefy/use-preferred-color-scheme@0.12.1
+  - @usefy/use-reduced-motion@0.12.1
+  - @usefy/use-dark-mode@0.12.1
+  - @usefy/use-document-title@0.12.1
+  - @usefy/use-click-any-where@0.12.1
+  - @usefy/use-copy-to-clipboard@0.12.1
+  - @usefy/use-counter@0.12.1
+  - @usefy/use-debounce@0.12.1
+  - @usefy/use-debounce-callback@0.12.1
+  - @usefy/use-event-listener@0.12.1
+  - @usefy/use-geolocation@0.12.1
+  - @usefy/use-history-state@0.12.1
+  - @usefy/use-hover@0.12.1
+  - @usefy/use-init@0.12.1
+  - @usefy/use-intersection-observer@0.12.1
+  - @usefy/use-key-press@0.12.1
+  - @usefy/use-list@0.12.1
+  - @usefy/use-local-storage@0.12.1
+  - @usefy/use-map@0.12.1
+  - @usefy/use-memory-monitor@0.12.1
+  - @usefy/use-on-click-outside@0.12.1
+  - @usefy/use-queue@0.12.1
+  - @usefy/use-session-storage@0.12.1
+  - @usefy/use-set@0.12.1
+  - @usefy/use-signal@0.12.1
+  - @usefy/use-step@0.12.1
+  - @usefy/use-throttle@0.12.1
+  - @usefy/use-throttle-callback@0.12.1
+  - @usefy/use-timeout@0.12.1
+  - @usefy/use-timer@0.12.1
+  - @usefy/use-toggle@0.12.1
+  - @usefy/use-unmount@0.12.1
+  - @usefy/use-window-size@0.12.1
+
 ## 0.12.0
 
 ### Minor Changes
