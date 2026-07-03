@@ -99,6 +99,9 @@ importers:
       '@usefy/use-debounce-callback':
         specifier: workspace:*
         version: link:../../packages/hooks/use-debounce-callback
+      '@usefy/use-event-callback':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-event-callback
       '@usefy/use-event-listener':
         specifier: workspace:*
         version: link:../../packages/hooks/use-event-listener
@@ -117,9 +120,21 @@ importers:
       '@usefy/use-intersection-observer':
         specifier: workspace:*
         version: link:../../packages/hooks/use-intersection-observer
+      '@usefy/use-is-client':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-is-client
+      '@usefy/use-is-first-render':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-is-first-render
+      '@usefy/use-isomorphic-layout-effect':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-isomorphic-layout-effect
       '@usefy/use-key-press':
         specifier: workspace:*
         version: link:../../packages/hooks/use-key-press
+      '@usefy/use-latest':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-latest
       '@usefy/use-list':
         specifier: workspace:*
         version: link:../../packages/hooks/use-list
@@ -132,9 +147,15 @@ importers:
       '@usefy/use-memory-monitor':
         specifier: workspace:*
         version: link:../../packages/hooks/use-memory-monitor
+      '@usefy/use-mount':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-mount
       '@usefy/use-on-click-outside':
         specifier: workspace:*
         version: link:../../packages/hooks/use-on-click-outside
+      '@usefy/use-previous':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-previous
       '@usefy/use-queue':
         specifier: workspace:*
         version: link:../../packages/hooks/use-queue
@@ -171,6 +192,9 @@ importers:
       '@usefy/use-unmount':
         specifier: workspace:*
         version: link:../../packages/hooks/use-unmount
+      '@usefy/use-update-effect':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-update-effect
       '@usefy/use-window-size':
         specifier: workspace:*
         version: link:../../packages/hooks/use-window-size
