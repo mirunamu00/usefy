@@ -135,6 +135,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer">@usefy/use-list</a>                                       | Array state with push/filter/sort/insertAt/updateAt     | <a href="https://www.npmjs.com/package/@usefy/use-list" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-list.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer">@usefy/use-queue</a>                                     | FIFO queue state with enqueue/dequeue and immutable updates | <a href="https://www.npmjs.com/package/@usefy/use-queue" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-queue.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer">@usefy/use-history-state</a>                     | Undo/redo state history with time-travel                | <a href="https://www.npmjs.com/package/@usefy/use-history-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-history-state.svg?style=flat-square&color=007acc" alt="npm version" /></a>                     | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-window-size" target="_blank" rel="noopener noreferrer">@usefy/use-window-size</a>                       | Window size tracking with debounce/throttle and SSR     | <a href="https://www.npmjs.com/package/@usefy/use-window-size" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-window-size.svg?style=flat-square&color=007acc" alt="npm version" /></a>                       | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -159,6 +160,7 @@ import {
   useList,
   useQueue,
   useHistoryState,
+  useWindowSize,
   useSignal,
   useUnmount,
   useInit,
@@ -835,6 +837,44 @@ const { ref, isHovered } = useHover<HTMLDivElement>({ enabled });
 ```
 
 Perfect for tooltips, dropdowns, interactive cards, and any hover-based interactions with configurable delays and touch support.
+
+</details>
+
+<details>
+<summary><strong>useWindowSize</strong> — Window size tracking with debounce/throttle and SSR support</summary>
+
+```tsx
+import { useWindowSize } from "@usefy/use-window-size";
+
+// Basic usage — live width/height
+const { width, height } = useWindowSize();
+
+// Responsive breakpoints
+const { width } = useWindowSize();
+if (width < 768) return <MobileView />;
+
+// Debounced updates (great for expensive layout work)
+const size = useWindowSize({ debounceMs: 200 });
+
+// Throttled updates with a change callback
+const { width } = useWindowSize({
+  throttleMs: 100,
+  onChange: ({ width }) => {
+    if (width < 768) closeSidebar();
+  },
+});
+
+// SSR-safe with initial values to avoid hydration mismatches
+const { width, height } = useWindowSize({
+  initialWidth: 1024,
+  initialHeight: 768,
+});
+
+// Exclude the scrollbar (documentElement client sizes)
+const inner = useWindowSize({ includeScrollbar: false });
+```
+
+Real-time width/height with debounce/throttle, SSR-safe initial values, no-op re-render skipping, and scrollbar control. Perfect for responsive layouts, charts, and viewport-driven UI.
 
 </details>
 

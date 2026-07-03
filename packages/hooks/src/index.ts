@@ -228,3 +228,15 @@ export {
   type UseHistoryStateOptions,
   type UseHistoryStateReturn,
 } from "@usefy/use-history-state";
+
+// useWindowSize
+export {
+  useWindowSize,
+  isWindowAvailable,
+  getWindowSize,
+  areSizesEqual,
+  type WindowSize,
+  type OnWindowSizeChange,
+  type UseWindowSizeOptions,
+  type UseWindowSizeReturn,
+} from "@usefy/use-window-size";
