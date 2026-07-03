@@ -21,14 +21,10 @@ concurrency:
 jobs:
   deploy:
     name: Build and Deploy Pages
-    # Skip on the Changesets "Version Packages" (release) merge — it only bumps
-    # versions/changelogs, so the deployed Storybook/coverage site is unchanged.
-    # The preceding feature merge already deployed the latest content.
-    # (On pull_request events head_commit is absent, so this evaluates true and
-    # the PR still runs the build validation while the deploy steps stay guarded.)
-    if: >-
-      !contains(github.event.head_commit.message, 'changeset-release') &&
-      !contains(github.event.head_commit.message, 'release packages')
+    # Deploy on EVERY push to master — both feature merges and the Changesets
+    # release merge. The release-merge deploy is intentional redundancy: it acts
+    # as an automatic retry if a feature-merge deploy hits a transient GitHub
+    # Pages backend failure, so the site never gets stuck on stale content.
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
