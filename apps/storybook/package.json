@@ -60,6 +60,7 @@
     "@usefy/use-merged-refs": "workspace:*",
     "@usefy/use-disclosure": "workspace:*",
     "@usefy/use-measure": "workspace:*",
+    "@usefy/use-mutation-observer": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
