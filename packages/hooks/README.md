@@ -150,6 +150,9 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-reduced-motion" target="_blank" rel="noopener noreferrer">@usefy/use-reduced-motion</a> | Reduced-motion preference (a11y) | <a href="https://www.npmjs.com/package/@usefy/use-reduced-motion" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-reduced-motion.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-dark-mode" target="_blank" rel="noopener noreferrer">@usefy/use-dark-mode</a> | Dark mode: system/light/dark, persistence, DOM apply | <a href="https://www.npmjs.com/package/@usefy/use-dark-mode" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-dark-mode.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-document-title" target="_blank" rel="noopener noreferrer">@usefy/use-document-title</a> | Set document.title with restore-on-unmount | <a href="https://www.npmjs.com/package/@usefy/use-document-title" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-document-title.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-controllable-state" target="_blank" rel="noopener noreferrer">@usefy/use-controllable-state</a> | Controlled/uncontrolled state primitive (Radix/Mantine pattern) | <a href="https://www.npmjs.com/package/@usefy/use-controllable-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-controllable-state.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-merged-refs" target="_blank" rel="noopener noreferrer">@usefy/use-merged-refs</a> | Merge multiple refs into one (forwardRef helper) | <a href="https://www.npmjs.com/package/@usefy/use-merged-refs" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-merged-refs.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-disclosure" target="_blank" rel="noopener noreferrer">@usefy/use-disclosure</a> | open/close/toggle state for modals, drawers, popovers | <a href="https://www.npmjs.com/package/@usefy/use-disclosure" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-disclosure.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -192,6 +195,9 @@ import {
   useReducedMotion,
   useDarkMode,
   useDocumentTitle,
+  useControllableState,
+  useMergedRefs,
+  useDisclosure,
 } from "@usefy/hooks";
 
 function App() {
@@ -1180,6 +1186,70 @@ useDocumentTitle("Checkout", { restoreOnUnmount: true });
 ```
 
 Keeps the tab title in sync with your value; optionally restores the original on unmount. SSR-safe.
+
+</details>
+
+### 🧩 Component Primitives
+
+<details>
+<summary><strong>useControllableState</strong> — Controlled/uncontrolled state primitive (Radix/Mantine pattern)</summary>
+
+```tsx
+import { useControllableState } from "@usefy/use-controllable-state";
+
+function Switch({ checked, defaultChecked, onCheckedChange }) {
+  const [on, setOn] = useControllableState({
+    value: checked,
+    defaultValue: defaultChecked ?? false,
+    onChange: onCheckedChange,
+  });
+
+  return (
+    <button role="switch" aria-checked={on} onClick={() => setOn((p) => !p)}>
+      {on ? "On" : "Off"}
+    </button>
+  );
+}
+
+// Uncontrolled: <Switch defaultChecked />
+// Controlled:   <Switch checked={value} onCheckedChange={setValue} />
+```
+
+One component, both modes: parent-controlled `value`/`onChange` **or** self-managed from `defaultValue`. `useState` ergonomics (value or updater), stable setter, StrictMode-safe `onChange`.
+
+</details>
+
+<details>
+<summary><strong>useMergedRefs</strong> — Merge multiple refs into one (forwardRef helper)</summary>
+
+```tsx
+import { forwardRef, useRef } from "react";
+import { useMergedRefs } from "@usefy/use-merged-refs";
+
+const Input = forwardRef<HTMLInputElement, InputProps>((props, forwardedRef) => {
+  const localRef = useRef<HTMLInputElement>(null);
+  const ref = useMergedRefs(localRef, forwardedRef);
+  return <input {...props} ref={ref} />;
+});
+```
+
+Fans a node out to any mix of callback and object refs. Supports React 19 callback-ref cleanups (with a "set null on unmount" fallback), keeps a stable identity, and ships a non-hook `mergeRefs` for use outside render.
+
+</details>
+
+<details>
+<summary><strong>useDisclosure</strong> — open/close/toggle state for modals, drawers, popovers</summary>
+
+```tsx
+import { useDisclosure } from "@usefy/use-disclosure";
+
+const [opened, { open, close, toggle }] = useDisclosure(false, {
+  onOpen: () => trackEvent("drawer_opened"),
+  onClose: () => trackEvent("drawer_closed"),
+});
+```
+
+Returns a `[opened, handlers]` tuple (Mantine shape) with stable `open`/`close`/`toggle` identities. Optional `onOpen`/`onClose` fire only on a real transition; `open()` while open (and `close()` while closed) is a no-op. StrictMode-safe.
 
 </details>
 

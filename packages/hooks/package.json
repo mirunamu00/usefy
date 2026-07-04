@@ -64,7 +64,10 @@
     "@usefy/use-preferred-color-scheme": "workspace:*",
     "@usefy/use-reduced-motion": "workspace:*",
     "@usefy/use-dark-mode": "workspace:*",
-    "@usefy/use-document-title": "workspace:*"
+    "@usefy/use-document-title": "workspace:*",
+    "@usefy/use-controllable-state": "workspace:*",
+    "@usefy/use-merged-refs": "workspace:*",
+    "@usefy/use-disclosure": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"

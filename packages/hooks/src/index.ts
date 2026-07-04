@@ -316,3 +316,26 @@ export {
   useDocumentTitle,
   type UseDocumentTitleOptions,
 } from "@usefy/use-document-title";
+
+// useControllableState
+export {
+  useControllableState,
+  type UseControllableStateOptions,
+  type UseControllableStateReturn,
+} from "@usefy/use-controllable-state";
+
+// useMergedRefs
+export {
+  useMergedRefs,
+  mergeRefs,
+  type PossibleRef,
+  type RefCleanup,
+} from "@usefy/use-merged-refs";
+
+// useDisclosure
+export {
+  useDisclosure,
+  type UseDisclosureOptions,
+  type UseDisclosureHandlers,
+  type UseDisclosureReturn,
+} from "@usefy/use-disclosure";
