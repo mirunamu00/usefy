@@ -92,7 +92,7 @@ function App() {
 - `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
-- `useIntersectionObserver`, `useGeolocation`, `useWindowSize` — Browser APIs
+- `useIntersectionObserver`, `useResizeObserver`, `useMeasure`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
 - `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, `useIsFirstRender` — SSR & lifecycle utilities
