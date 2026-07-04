@@ -87,12 +87,12 @@ function App() {
 - `useToggle`, `useCounter` — State management
 - `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
 - `useLocalStorage`, `useSessionStorage` — Persistent storage
-- `useEventListener`, `useOnClickOutside`, `useHover` — DOM events
+- `useEventListener`, `useOnClickOutside`, `useHover`, `useScrollLock` — DOM events
 - `useKeyPress` — Keyboard shortcuts and combinations
 - `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
-- `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
+- `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useScrollPosition`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
 - `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, `useIsFirstRender` — SSR & lifecycle utilities
@@ -259,6 +259,8 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useMergedRefs` | Merge multiple refs into one (forwardRef helper) |
 | `useDisclosure` | open/close/toggle state for modals, drawers, popovers |
 | `useMutationObserver` | Watch an element for DOM mutations (childList/attributes/characterData) |
+| `useScrollPosition` | Throttled scroll offset (x, y) of the window or an element |
+| `useScrollLock` | Lock body scroll for modals/drawers — iOS-aware, nested-lock counted |
 
 ### Kits (`@usefy/kits`)
 
