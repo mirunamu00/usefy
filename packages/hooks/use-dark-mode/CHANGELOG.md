@@ -1,5 +1,7 @@
 # @usefy/use-dark-mode
 
+## 0.13.0
+
 ## 0.12.2
 
 ### Patch Changes

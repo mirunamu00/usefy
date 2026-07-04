@@ -1,5 +1,64 @@
 # @usefy/usefy
 
+## 0.13.0
+
+### Minor Changes
+
+- 1bcb3ea: Add design-system primitive (Batch 3): `useControllableState` — a controlled/uncontrolled state primitive (Radix/Mantine pattern) that lets a component accept a parent-driven `value`/`onChange` or manage its own state from `defaultValue` with a single hook. `useState` ergonomics (value or updater), stable setter identity, and StrictMode-safe `onChange`. Ships with tests (100% coverage), a Storybook story, a README, and `@usefy/hooks` umbrella re-exports.
+- 1bcb3ea: Add design-system primitive (Batch 3): `useDisclosure` — open/close/toggle state for modals, drawers, popovers, and accordions. Returns a `[opened, { open, close, toggle }]` tuple (Mantine shape) with stable handler identities and optional `onOpen`/`onClose` callbacks that fire only on a real transition. `open()` while open (and `close()` while closed) is a no-op, and callbacks are StrictMode-safe (never dispatched from inside a setState updater). Includes tests (100% coverage), a Storybook story, a README, and `@usefy/hooks` umbrella re-exports.
+- 1bcb3ea: Add design-system primitive (Batch 3): `useMergedRefs` — merges any mix of callback refs and ref objects into a single stable callback ref, the essential helper for `forwardRef` components that also need their own ref to a node. Supports React 19 callback-ref cleanup functions with a "set null on unmount" fallback for React 18, and ships a non-hook `mergeRefs` for composing refs outside render. Includes tests (100% coverage), a Storybook story, a README, and `@usefy/hooks` umbrella re-exports.
+
+### Patch Changes
+
+- Updated dependencies [1bcb3ea]
+- Updated dependencies [1bcb3ea]
+- Updated dependencies [1bcb3ea]
+  - @usefy/use-controllable-state@0.13.0
+  - @usefy/use-disclosure@0.13.0
+  - @usefy/use-merged-refs@0.13.0
+  - @usefy/use-click-any-where@0.13.0
+  - @usefy/use-copy-to-clipboard@0.13.0
+  - @usefy/use-counter@0.13.0
+  - @usefy/use-dark-mode@0.13.0
+  - @usefy/use-debounce@0.13.0
+  - @usefy/use-debounce-callback@0.13.0
+  - @usefy/use-document-title@0.13.0
+  - @usefy/use-event-callback@0.13.0
+  - @usefy/use-event-listener@0.13.0
+  - @usefy/use-geolocation@0.13.0
+  - @usefy/use-history-state@0.13.0
+  - @usefy/use-hover@0.13.0
+  - @usefy/use-init@0.13.0
+  - @usefy/use-intersection-observer@0.13.0
+  - @usefy/use-is-client@0.13.0
+  - @usefy/use-is-first-render@0.13.0
+  - @usefy/use-isomorphic-layout-effect@0.13.0
+  - @usefy/use-key-press@0.13.0
+  - @usefy/use-latest@0.13.0
+  - @usefy/use-list@0.13.0
+  - @usefy/use-local-storage@0.13.0
+  - @usefy/use-map@0.13.0
+  - @usefy/use-media-query@0.13.0
+  - @usefy/use-memory-monitor@0.13.0
+  - @usefy/use-mount@0.13.0
+  - @usefy/use-on-click-outside@0.13.0
+  - @usefy/use-preferred-color-scheme@0.13.0
+  - @usefy/use-previous@0.13.0
+  - @usefy/use-queue@0.13.0
+  - @usefy/use-reduced-motion@0.13.0
+  - @usefy/use-session-storage@0.13.0
+  - @usefy/use-set@0.13.0
+  - @usefy/use-signal@0.13.0
+  - @usefy/use-step@0.13.0
+  - @usefy/use-throttle@0.13.0
+  - @usefy/use-throttle-callback@0.13.0
+  - @usefy/use-timeout@0.13.0
+  - @usefy/use-timer@0.13.0
+  - @usefy/use-toggle@0.13.0
+  - @usefy/use-unmount@0.13.0
+  - @usefy/use-update-effect@0.13.0
+  - @usefy/use-window-size@0.13.0
+
 ## 0.12.2
 
 ### Patch Changes
