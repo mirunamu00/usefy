@@ -1,5 +1,69 @@
 # @usefy/usefy
 
+## 0.15.0
+
+### Minor Changes
+
+- f439fb6: Add `@usefy/use-mutation-observer` — a React hook wrapping the DOM `MutationObserver` API to watch an element for child, attribute, and character-data mutations.
+
+  - Callback-`ref` API (`const { ref } = useMutationObserver(options)`); attaching a node observes it, `null` disconnects.
+  - Full `MutationObserverInit` surface (`childList`, `attributes`, `attributeFilter`, `attributeOldValue`, `characterData`, `characterDataOldValue`, `subtree`) with a sensible `childList: true` default so `observe()` never throws.
+  - React via the `onMutation` callback, the reactive `records` state, or both; `updateState: false` for a zero-re-render callback-only mode.
+  - `enabled` toggle plus manual `observe` / `disconnect` / `takeRecords` controls.
+  - `onMutation` is stored in a ref so changing its identity never re-registers the observer; SSR-safe and StrictMode/concurrent-safe.
+  - Re-exported from the `@usefy/hooks` umbrella.
+
+### Patch Changes
+
+- Updated dependencies [f439fb6]
+  - @usefy/use-mutation-observer@0.15.0
+  - @usefy/use-click-any-where@0.15.0
+  - @usefy/use-controllable-state@0.15.0
+  - @usefy/use-copy-to-clipboard@0.15.0
+  - @usefy/use-counter@0.15.0
+  - @usefy/use-dark-mode@0.15.0
+  - @usefy/use-debounce@0.15.0
+  - @usefy/use-debounce-callback@0.15.0
+  - @usefy/use-disclosure@0.15.0
+  - @usefy/use-document-title@0.15.0
+  - @usefy/use-event-callback@0.15.0
+  - @usefy/use-event-listener@0.15.0
+  - @usefy/use-geolocation@0.15.0
+  - @usefy/use-history-state@0.15.0
+  - @usefy/use-hover@0.15.0
+  - @usefy/use-init@0.15.0
+  - @usefy/use-intersection-observer@0.15.0
+  - @usefy/use-is-client@0.15.0
+  - @usefy/use-is-first-render@0.15.0
+  - @usefy/use-isomorphic-layout-effect@0.15.0
+  - @usefy/use-key-press@0.15.0
+  - @usefy/use-latest@0.15.0
+  - @usefy/use-list@0.15.0
+  - @usefy/use-local-storage@0.15.0
+  - @usefy/use-map@0.15.0
+  - @usefy/use-measure@0.15.0
+  - @usefy/use-media-query@0.15.0
+  - @usefy/use-memory-monitor@0.15.0
+  - @usefy/use-merged-refs@0.15.0
+  - @usefy/use-mount@0.15.0
+  - @usefy/use-on-click-outside@0.15.0
+  - @usefy/use-preferred-color-scheme@0.15.0
+  - @usefy/use-previous@0.15.0
+  - @usefy/use-queue@0.15.0
+  - @usefy/use-reduced-motion@0.15.0
+  - @usefy/use-session-storage@0.15.0
+  - @usefy/use-set@0.15.0
+  - @usefy/use-signal@0.15.0
+  - @usefy/use-step@0.15.0
+  - @usefy/use-throttle@0.15.0
+  - @usefy/use-throttle-callback@0.15.0
+  - @usefy/use-timeout@0.15.0
+  - @usefy/use-timer@0.15.0
+  - @usefy/use-toggle@0.15.0
+  - @usefy/use-unmount@0.15.0
+  - @usefy/use-update-effect@0.15.0
+  - @usefy/use-window-size@0.15.0
+
 ## 0.14.0
 
 ### Minor Changes
