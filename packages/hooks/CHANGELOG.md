@@ -1,5 +1,68 @@
 # @usefy/usefy
 
+## 0.14.0
+
+### Minor Changes
+
+- ff59cfe: feat(use-measure): add useMeasure hook for reactive element bounds
+
+  `const [ref, bounds] = useMeasure()` returns an element's live bounds — its size
+  and viewport-relative position (`x, y, width, height, top, right, bottom, left`)
+  — and keeps them in sync via ResizeObserver. It is the ergonomic "just give me
+  the bounds" convenience layer over `@usefy/use-resize-observer`, reusing that
+  hook internally rather than re-implementing observer wiring. SSR-safe,
+  StrictMode-safe, with a stable callback ref and equality-guarded updates.
+
+### Patch Changes
+
+- Updated dependencies [ff59cfe]
+  - @usefy/use-measure@0.14.0
+  - @usefy/use-click-any-where@0.14.0
+  - @usefy/use-controllable-state@0.14.0
+  - @usefy/use-copy-to-clipboard@0.14.0
+  - @usefy/use-counter@0.14.0
+  - @usefy/use-dark-mode@0.14.0
+  - @usefy/use-debounce@0.14.0
+  - @usefy/use-debounce-callback@0.14.0
+  - @usefy/use-disclosure@0.14.0
+  - @usefy/use-document-title@0.14.0
+  - @usefy/use-event-callback@0.14.0
+  - @usefy/use-event-listener@0.14.0
+  - @usefy/use-geolocation@0.14.0
+  - @usefy/use-history-state@0.14.0
+  - @usefy/use-hover@0.14.0
+  - @usefy/use-init@0.14.0
+  - @usefy/use-intersection-observer@0.14.0
+  - @usefy/use-is-client@0.14.0
+  - @usefy/use-is-first-render@0.14.0
+  - @usefy/use-isomorphic-layout-effect@0.14.0
+  - @usefy/use-key-press@0.14.0
+  - @usefy/use-latest@0.14.0
+  - @usefy/use-list@0.14.0
+  - @usefy/use-local-storage@0.14.0
+  - @usefy/use-map@0.14.0
+  - @usefy/use-media-query@0.14.0
+  - @usefy/use-memory-monitor@0.14.0
+  - @usefy/use-merged-refs@0.14.0
+  - @usefy/use-mount@0.14.0
+  - @usefy/use-on-click-outside@0.14.0
+  - @usefy/use-preferred-color-scheme@0.14.0
+  - @usefy/use-previous@0.14.0
+  - @usefy/use-queue@0.14.0
+  - @usefy/use-reduced-motion@0.14.0
+  - @usefy/use-session-storage@0.14.0
+  - @usefy/use-set@0.14.0
+  - @usefy/use-signal@0.14.0
+  - @usefy/use-step@0.14.0
+  - @usefy/use-throttle@0.14.0
+  - @usefy/use-throttle-callback@0.14.0
+  - @usefy/use-timeout@0.14.0
+  - @usefy/use-timer@0.14.0
+  - @usefy/use-toggle@0.14.0
+  - @usefy/use-unmount@0.14.0
+  - @usefy/use-update-effect@0.14.0
+  - @usefy/use-window-size@0.14.0
+
 ## 0.13.0
 
 ### Minor Changes
