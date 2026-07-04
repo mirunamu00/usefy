@@ -109,11 +109,21 @@ The orchestrating (main) agent MUST run this loop:
 
 `usefy-package-dev` builds; `usefy-reviewer` reviews; the main agent owns the loop between them. Do not report a package "shipped" or "green" until step 2–4 have actually run.
 
+## Opening a PR (STANDARD PROCESS — do not skip)
+
+When the user says "let's PR" / "PR 하자" (or similar), "doing the PR" means exactly three steps — **commit, push, then hand back a prefilled PR link. Do NOT create the PR yourself** (no `gh pr create`, no API call). The user reviews and submits it.
+
+1. Commit the change on the feature branch (feature work and unrelated process/docs changes in separate commits).
+2. `git push -u origin <branch>`.
+3. Build and hand back a **prefilled GitHub compare link** for the user to click:
+   `https://github.com/<owner>/<repo>/compare/master...<branch>?expand=1&title=<url-encoded title>&body=<url-encoded body>`
+   Encode with `[uri]::EscapeDataString(...)` in PowerShell. Fill the body with the standard PR summary/changes/verification sections.
+
 ## Release Process (Changesets)
 
 1. Make changes on a feature branch.
 2. `pnpm changeset` → select affected packages + bump type. **No changeset = not released.**
-3. Commit the changeset with your code; open a PR to `master`.
+3. Commit the changeset with your code; open a PR to `master` (see "Opening a PR" above — hand back the link, don't create it).
 4. On merge, the `Release` GitHub Action (`.github/workflows/release.yml`) opens a "Version Packages" PR.
 5. Merging that PR runs `pnpm release` (`pnpm build && changeset publish`) to publish to npm.
 
