@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-window-size",
-  "version": "0.12.2",
+  "version": "0.13.0",
   "description": "A React hook for tracking the browser window size with debounce/throttle and SSR support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
