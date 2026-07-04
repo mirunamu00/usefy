@@ -153,6 +153,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-controllable-state" target="_blank" rel="noopener noreferrer">@usefy/use-controllable-state</a> | Controlled/uncontrolled state primitive (Radix/Mantine pattern) | <a href="https://www.npmjs.com/package/@usefy/use-controllable-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-controllable-state.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-merged-refs" target="_blank" rel="noopener noreferrer">@usefy/use-merged-refs</a> | Merge multiple refs into one (forwardRef helper) | <a href="https://www.npmjs.com/package/@usefy/use-merged-refs" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-merged-refs.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-disclosure" target="_blank" rel="noopener noreferrer">@usefy/use-disclosure</a> | open/close/toggle state for modals, drawers, popovers | <a href="https://www.npmjs.com/package/@usefy/use-disclosure" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-disclosure.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-measure" target="_blank" rel="noopener noreferrer">@usefy/use-measure</a> | Reactive element bounds (x, y, width, height, top, right, bottom, left) via ResizeObserver | <a href="https://www.npmjs.com/package/@usefy/use-measure" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-measure.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -198,6 +199,7 @@ import {
   useControllableState,
   useMergedRefs,
   useDisclosure,
+  useMeasure,
 } from "@usefy/hooks";
 
 function App() {
@@ -927,6 +929,27 @@ const inner = useWindowSize({ includeScrollbar: false });
 ```
 
 Real-time width/height with debounce/throttle, SSR-safe initial values, no-op re-render skipping, and scrollbar control. Perfect for responsive layouts, charts, and viewport-driven UI.
+
+</details>
+
+<details>
+<summary><strong>useMeasure</strong> — Reactive element bounds (size + viewport position) via ResizeObserver</summary>
+
+```tsx
+import { useMeasure } from "@usefy/use-measure";
+
+// Live size + viewport-relative position
+const [ref, bounds] = useMeasure<HTMLDivElement>();
+return <div ref={ref}>{bounds.width} × {bounds.height}</div>;
+
+// Full bounds surface
+const { x, y, width, height, top, right, bottom, left } = bounds;
+
+// Userland container queries — layout keyed off the element's own width
+const isCompact = bounds.width > 0 && bounds.width < 400;
+```
+
+The ergonomic "just give me the bounds" convenience layer over `useResizeObserver`: it reuses that hook as the low-level observer and returns the full `getBoundingClientRect()` rect. Reach for `useResizeObserver` when you need box models, debounce/throttle, or callbacks; reach for `useMeasure` when you just want the current position + size. SSR-safe and StrictMode-safe.
 
 </details>
 

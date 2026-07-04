@@ -95,11 +95,35 @@ packages/hooks/use-<name>/
 4. Support React 18 and 19 (`peerDependencies: react ^18 || ^19`).
 5. Aim for 90%+ test coverage.
 
+## Mandatory review loop (STANDARD PROCESS — do not skip)
+
+Any time source code is added or changed under `packages/**` or `apps/**` (a new hook/component package, or a modification to an existing one), the change is **not done** until it has passed review. This applies whether the work was done directly or delegated to the **`usefy-package-dev`** agent.
+
+The orchestrating (main) agent MUST run this loop:
+
+1. **Build the change** — directly or via the `usefy-package-dev` agent (which drives the `add-usefy-*` skills).
+2. **Review** — invoke the **`usefy-reviewer`** agent on the diff. It reports findings only; it never edits code. Give it the changed files and design intent.
+3. **Triage & fix** — address every confirmed correctness/completeness finding (fix code, tests, docs, umbrella wiring, changeset). Consciously decide and state which findings are declined and why.
+4. **Re-verify** — re-run `pnpm typecheck` + the package's tests (and re-review if the fixes were substantial) until green.
+5. **Only then** report the change as complete / ready for commit / PR.
+
+`usefy-package-dev` builds; `usefy-reviewer` reviews; the main agent owns the loop between them. Do not report a package "shipped" or "green" until step 2–4 have actually run.
+
+## Opening a PR (STANDARD PROCESS — do not skip)
+
+When the user says "let's PR" / "PR 하자" (or similar), "doing the PR" means exactly three steps — **commit, push, then hand back a prefilled PR link. Do NOT create the PR yourself** (no `gh pr create`, no API call). The user reviews and submits it.
+
+1. Commit the change on the feature branch (feature work and unrelated process/docs changes in separate commits).
+2. `git push -u origin <branch>`.
+3. Build and hand back a **prefilled GitHub compare link** for the user to click:
+   `https://github.com/<owner>/<repo>/compare/master...<branch>?expand=1&title=<url-encoded title>&body=<url-encoded body>`
+   Encode with `[uri]::EscapeDataString(...)` in PowerShell. The body MUST follow the repo's PR template `.github/PULL_REQUEST_TEMPLATE.md` verbatim — same sections in the same order (Summary → Type of change → Changes → Checklist → Notes), with the checkboxes filled in. Do not invent your own sections.
+
 ## Release Process (Changesets)
 
 1. Make changes on a feature branch.
 2. `pnpm changeset` → select affected packages + bump type. **No changeset = not released.**
-3. Commit the changeset with your code; open a PR to `master`.
+3. Commit the changeset with your code; open a PR to `master` (see "Opening a PR" above — hand back the link, don't create it).
 4. On merge, the `Release` GitHub Action (`.github/workflows/release.yml`) opens a "Version Packages" PR.
 5. Merging that PR runs `pnpm release` (`pnpm build && changeset publish`) to publish to npm.
 
