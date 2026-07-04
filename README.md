@@ -97,6 +97,7 @@ function App() {
 - `useMemoryMonitor` — Memory monitoring hook
 - `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, `useIsFirstRender` — SSR & lifecycle utilities
 - `useMediaQuery`, `usePreferredColorScheme`, `useReducedMotion`, `useDarkMode`, `useDocumentTitle` — Responsive, theme & accessibility
+- `useControllableState`, `useMergedRefs`, `useDisclosure` — Component-library primitives (controllable state, ref merging, open/close state)
 
 <a href="./packages/hooks/README.md"><strong>View full documentation →</strong></a>
 
@@ -254,6 +255,9 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useReducedMotion` | Reduced-motion preference (a11y) |
 | `useDarkMode` | Dark mode: system/light/dark, persistence, DOM apply |
 | `useDocumentTitle` | Set document.title with restore-on-unmount |
+| `useControllableState` | Controlled/uncontrolled state primitive (Radix/Mantine pattern) |
+| `useMergedRefs` | Merge multiple refs into one (forwardRef helper) |
+| `useDisclosure` | open/close/toggle state for modals, drawers, popovers |
 
 ### Kits (`@usefy/kits`)
 

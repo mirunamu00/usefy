@@ -56,6 +56,9 @@
     "@usefy/use-reduced-motion": "workspace:*",
     "@usefy/use-dark-mode": "workspace:*",
     "@usefy/use-document-title": "workspace:*",
+    "@usefy/use-controllable-state": "workspace:*",
+    "@usefy/use-merged-refs": "workspace:*",
+    "@usefy/use-disclosure": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
