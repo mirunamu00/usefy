@@ -95,6 +95,20 @@ packages/hooks/use-<name>/
 4. Support React 18 and 19 (`peerDependencies: react ^18 || ^19`).
 5. Aim for 90%+ test coverage.
 
+## Mandatory review loop (STANDARD PROCESS — do not skip)
+
+Any time source code is added or changed under `packages/**` or `apps/**` (a new hook/component package, or a modification to an existing one), the change is **not done** until it has passed review. This applies whether the work was done directly or delegated to the **`usefy-package-dev`** agent.
+
+The orchestrating (main) agent MUST run this loop:
+
+1. **Build the change** — directly or via the `usefy-package-dev` agent (which drives the `add-usefy-*` skills).
+2. **Review** — invoke the **`usefy-reviewer`** agent on the diff. It reports findings only; it never edits code. Give it the changed files and design intent.
+3. **Triage & fix** — address every confirmed correctness/completeness finding (fix code, tests, docs, umbrella wiring, changeset). Consciously decide and state which findings are declined and why.
+4. **Re-verify** — re-run `pnpm typecheck` + the package's tests (and re-review if the fixes were substantial) until green.
+5. **Only then** report the change as complete / ready for commit / PR.
+
+`usefy-package-dev` builds; `usefy-reviewer` reviews; the main agent owns the loop between them. Do not report a package "shipped" or "green" until step 2–4 have actually run.
+
 ## Release Process (Changesets)
 
 1. Make changes on a feature branch.
