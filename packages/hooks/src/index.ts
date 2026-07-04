@@ -359,3 +359,22 @@ export {
   type UseMutationObserverReturn,
   type OnMutationCallback,
 } from "@usefy/use-mutation-observer";
+
+// useScrollPosition
+export {
+  useScrollPosition,
+  ZERO_SCROLL_POSITION,
+  type ScrollPosition,
+  type ScrollPositionTarget,
+  type UseScrollPositionOptions,
+  type UseScrollPositionReturn,
+} from "@usefy/use-scroll-position";
+
+// useScrollLock
+export {
+  useScrollLock,
+  isIOS,
+  getScrollbarWidth,
+  type UseScrollLockOptions,
+  type UseScrollLockReturn,
+} from "@usefy/use-scroll-lock";

@@ -61,6 +61,8 @@
     "@usefy/use-disclosure": "workspace:*",
     "@usefy/use-measure": "workspace:*",
     "@usefy/use-mutation-observer": "workspace:*",
+    "@usefy/use-scroll-position": "workspace:*",
+    "@usefy/use-scroll-lock": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

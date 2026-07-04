@@ -155,6 +155,8 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-disclosure" target="_blank" rel="noopener noreferrer">@usefy/use-disclosure</a> | open/close/toggle state for modals, drawers, popovers | <a href="https://www.npmjs.com/package/@usefy/use-disclosure" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-disclosure.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-measure" target="_blank" rel="noopener noreferrer">@usefy/use-measure</a> | Reactive element bounds (x, y, width, height, top, right, bottom, left) via ResizeObserver | <a href="https://www.npmjs.com/package/@usefy/use-measure" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-measure.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-mutation-observer" target="_blank" rel="noopener noreferrer">@usefy/use-mutation-observer</a> | Watch an element for DOM mutations (childList/attributes/characterData) via MutationObserver | <a href="https://www.npmjs.com/package/@usefy/use-mutation-observer" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-mutation-observer.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![99%](https://img.shields.io/badge/coverage-99%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-scroll-position" target="_blank" rel="noopener noreferrer">@usefy/use-scroll-position</a> | Throttled scroll offset (x, y) of the window or an element | <a href="https://www.npmjs.com/package/@usefy/use-scroll-position" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-scroll-position.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-scroll-lock" target="_blank" rel="noopener noreferrer">@usefy/use-scroll-lock</a> | Lock body scroll for modals/drawers — iOS-aware, nested-lock counted, with scroll-position restore | <a href="https://www.npmjs.com/package/@usefy/use-scroll-lock" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-scroll-lock.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -202,6 +204,8 @@ import {
   useDisclosure,
   useMeasure,
   useMutationObserver,
+  useScrollPosition,
+  useScrollLock,
 } from "@usefy/hooks";
 
 function App() {
@@ -984,6 +988,46 @@ const { ref: r, observe, disconnect, takeRecords } = useMutationObserver({
 ```
 
 The low-level observer primitive — a sibling to `useResizeObserver` and `useIntersectionObserver` — with the same callback-`ref` / `enabled` / `onXxx` / `updateState` conventions. Defaults to `childList: true` so `observe()` never throws, stores `onMutation` in a ref so it never re-registers, and is SSR-safe and StrictMode-safe.
+
+</details>
+
+<details>
+<summary><strong>useScrollPosition</strong> — Throttled scroll offset (x, y) of the window or an element</summary>
+
+```tsx
+import { useScrollPosition } from "@usefy/use-scroll-position";
+
+// Track the window/document scroll (throttled to 100ms by default)
+const { x, y } = useScrollPosition();
+return <div>Scrolled to {x}, {y}</div>;
+
+// Track a scrollable element via a ref, updating on every frame
+const ref = useRef<HTMLDivElement>(null);
+const { y: top } = useScrollPosition({ element: ref, throttleMs: 0 });
+```
+
+Reads the initial position synchronously on mount, attaches a `{ passive: true }` scroll listener, and throttles with **leading + trailing** edges so the final resting position is never dropped. Accepts a raw element or a ref, is SSR-safe (`{ x: 0, y: 0 }` on the server), and cleans up listeners/timers on unmount and target change.
+
+</details>
+
+<details>
+<summary><strong>useScrollLock</strong> — Lock body scroll for modals/drawers (iOS-aware, nested-lock counted)</summary>
+
+```tsx
+import { useScrollLock } from "@usefy/use-scroll-lock";
+
+// Imperative — lock while a modal is open
+const { lock, unlock, isLocked } = useScrollLock();
+useEffect(() => {
+  if (open) lock();
+  else unlock();
+}, [open, lock, unlock]);
+
+// Declarative — let `enabled` own the lock for the drawer's lifetime
+useScrollLock({ enabled: open });
+```
+
+Sets `overflow: hidden` + scrollbar-width `padding-right` on the body (no layout shift), and on iOS pins the body with `position: fixed` and restores the scroll position on unlock. A shared module-level reference counter means N stacked locks apply the body styles once and restore only on the last release. Per-instance idempotent, StrictMode-safe (unmount always releases), and SSR-safe.
 
 </details>
 

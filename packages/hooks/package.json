@@ -69,7 +69,9 @@
     "@usefy/use-merged-refs": "workspace:*",
     "@usefy/use-disclosure": "workspace:*",
     "@usefy/use-measure": "workspace:*",
-    "@usefy/use-mutation-observer": "workspace:*"
+    "@usefy/use-mutation-observer": "workspace:*",
+    "@usefy/use-scroll-position": "workspace:*",
+    "@usefy/use-scroll-lock": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
