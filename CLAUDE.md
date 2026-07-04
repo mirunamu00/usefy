@@ -117,7 +117,7 @@ When the user says "let's PR" / "PR 하자" (or similar), "doing the PR" means e
 2. `git push -u origin <branch>`.
 3. Build and hand back a **prefilled GitHub compare link** for the user to click:
    `https://github.com/<owner>/<repo>/compare/master...<branch>?expand=1&title=<url-encoded title>&body=<url-encoded body>`
-   Encode with `[uri]::EscapeDataString(...)` in PowerShell. Fill the body with the standard PR summary/changes/verification sections.
+   Encode with `[uri]::EscapeDataString(...)` in PowerShell. The body MUST follow the repo's PR template `.github/PULL_REQUEST_TEMPLATE.md` verbatim — same sections in the same order (Summary → Type of change → Changes → Checklist → Notes), with the checkboxes filled in. Do not invent your own sections.
 
 ## Release Process (Changesets)
 
