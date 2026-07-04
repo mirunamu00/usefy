@@ -348,3 +348,14 @@ export {
   type UseMeasureRef,
   type UseMeasureReturn,
 } from "@usefy/use-measure";
+
+// useMutationObserver
+export {
+  useMutationObserver,
+  isMutationObserverSupported,
+  resolveMutationConfig,
+  EMPTY_RECORDS,
+  type UseMutationObserverOptions,
+  type UseMutationObserverReturn,
+  type OnMutationCallback,
+} from "@usefy/use-mutation-observer";

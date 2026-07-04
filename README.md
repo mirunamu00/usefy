@@ -92,7 +92,7 @@ function App() {
 - `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
-- `useIntersectionObserver`, `useResizeObserver`, `useMeasure`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
+- `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
 - `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, `useIsFirstRender` — SSR & lifecycle utilities
@@ -258,6 +258,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useControllableState` | Controlled/uncontrolled state primitive (Radix/Mantine pattern) |
 | `useMergedRefs` | Merge multiple refs into one (forwardRef helper) |
 | `useDisclosure` | open/close/toggle state for modals, drawers, popovers |
+| `useMutationObserver` | Watch an element for DOM mutations (childList/attributes/characterData) |
 
 ### Kits (`@usefy/kits`)
 
