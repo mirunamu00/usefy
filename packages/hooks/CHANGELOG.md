@@ -1,5 +1,80 @@
 # @usefy/usefy
 
+## 0.16.0
+
+### Minor Changes
+
+- 2d11395: feat(use-scroll-lock): add useScrollLock hook to lock body scroll for modals, drawers, and menus
+
+  - `const { lock, unlock, isLocked } = useScrollLock({ enabled? })`
+  - Locks the page (`document.body`) scroll with `overflow: hidden` + scrollbar-width `padding-right` so content never shifts sideways
+  - iOS-aware: pins the body with `position: fixed` (offset by the current scroll) and restores the scroll position with `window.scrollTo` on unlock, where `overflow: hidden` alone isn't enough
+  - Shared module-level reference counter so N stacked locks apply the body styles once and restore the original inline styles only when the last lock is released
+  - Per-instance idempotent, StrictMode/concurrent-safe (unmount always releases a held lock), and SSR-safe (`isLocked` is `false`, `lock`/`unlock` are no-ops on the server); `enabled` convenience to lock for a component's lifetime
+  - Re-exported from `@usefy/hooks` (hook, the `isIOS` / `getScrollbarWidth` helpers, and the `UseScrollLockOptions`, `UseScrollLockReturn` types)
+
+- 2d11395: feat(use-scroll-position): add useScrollPosition hook for tracking the throttled scroll offset of the window or an element
+
+  - `const { x, y } = useScrollPosition({ element?, throttleMs? })`
+  - Tracks the window/document scroll by default, or a given `HTMLElement` / `RefObject<HTMLElement>`
+  - Leading + trailing throttle (default 100ms; `0` disables) so the settled resting position is never dropped
+  - Synchronous initial read on mount via `useIsomorphicLayoutEffect`, `{ passive: true }` listener, SSR-safe (`{ x: 0, y: 0 }`) and StrictMode-safe with listener/timer cleanup on unmount and target change
+  - Re-exported from `@usefy/hooks` (hook, `ZERO_SCROLL_POSITION`, and the `ScrollPosition`, `ScrollPositionTarget`, `UseScrollPositionOptions`, `UseScrollPositionReturn` types)
+
+### Patch Changes
+
+- Updated dependencies [2d11395]
+- Updated dependencies [2d11395]
+  - @usefy/use-scroll-lock@0.16.0
+  - @usefy/use-scroll-position@0.16.0
+  - @usefy/use-click-any-where@0.16.0
+  - @usefy/use-controllable-state@0.16.0
+  - @usefy/use-copy-to-clipboard@0.16.0
+  - @usefy/use-counter@0.16.0
+  - @usefy/use-dark-mode@0.16.0
+  - @usefy/use-debounce@0.16.0
+  - @usefy/use-debounce-callback@0.16.0
+  - @usefy/use-disclosure@0.16.0
+  - @usefy/use-document-title@0.16.0
+  - @usefy/use-event-callback@0.16.0
+  - @usefy/use-event-listener@0.16.0
+  - @usefy/use-geolocation@0.16.0
+  - @usefy/use-history-state@0.16.0
+  - @usefy/use-hover@0.16.0
+  - @usefy/use-init@0.16.0
+  - @usefy/use-intersection-observer@0.16.0
+  - @usefy/use-is-client@0.16.0
+  - @usefy/use-is-first-render@0.16.0
+  - @usefy/use-isomorphic-layout-effect@0.16.0
+  - @usefy/use-key-press@0.16.0
+  - @usefy/use-latest@0.16.0
+  - @usefy/use-list@0.16.0
+  - @usefy/use-local-storage@0.16.0
+  - @usefy/use-map@0.16.0
+  - @usefy/use-measure@0.16.0
+  - @usefy/use-media-query@0.16.0
+  - @usefy/use-memory-monitor@0.16.0
+  - @usefy/use-merged-refs@0.16.0
+  - @usefy/use-mount@0.16.0
+  - @usefy/use-mutation-observer@0.16.0
+  - @usefy/use-on-click-outside@0.16.0
+  - @usefy/use-preferred-color-scheme@0.16.0
+  - @usefy/use-previous@0.16.0
+  - @usefy/use-queue@0.16.0
+  - @usefy/use-reduced-motion@0.16.0
+  - @usefy/use-session-storage@0.16.0
+  - @usefy/use-set@0.16.0
+  - @usefy/use-signal@0.16.0
+  - @usefy/use-step@0.16.0
+  - @usefy/use-throttle@0.16.0
+  - @usefy/use-throttle-callback@0.16.0
+  - @usefy/use-timeout@0.16.0
+  - @usefy/use-timer@0.16.0
+  - @usefy/use-toggle@0.16.0
+  - @usefy/use-unmount@0.16.0
+  - @usefy/use-update-effect@0.16.0
+  - @usefy/use-window-size@0.16.0
+
 ## 0.15.0
 
 ### Minor Changes

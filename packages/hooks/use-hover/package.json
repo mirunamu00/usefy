@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-hover",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "A React hook for detecting hover state on elements",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

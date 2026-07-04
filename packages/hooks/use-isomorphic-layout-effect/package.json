@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-isomorphic-layout-effect",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "description": "An SSR-safe useLayoutEffect that falls back to useEffect on the server",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
