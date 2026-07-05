@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-measure",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "A React hook that reactively reports an element's bounds (x, y, width, height, top, right, bottom, left) via ResizeObserver",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

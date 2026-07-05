@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-mutation-observer",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "A React hook for observing DOM mutations using the MutationObserver API",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

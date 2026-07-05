@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-raf-state",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "A useState replacement that batches state updates to requestAnimationFrame, coalescing rapid updates (scroll / resize / pointer / animation) to at most one render per frame",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

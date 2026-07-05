@@ -1,5 +1,7 @@
 # @usefy/use-debounce-callback
 
+## 0.19.0
+
 ## 0.18.0
 
 ## 0.17.0
