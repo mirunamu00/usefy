@@ -1,5 +1,130 @@
 # @usefy/usefy
 
+## 0.18.0
+
+### Minor Changes
+
+- 2e53177: feat(use-async-fn): add useAsyncFn hook for manual-trigger async lifecycle tracking
+
+  The manual-trigger core for running a single async function and tracking its
+  lifecycle. Returns a `[state, run]` tuple — `state` is `{ data, error, status, isLoading }`
+  and `run(...args)` forwards its arguments to the wrapped function. Features
+  race-safe stale-response guarding (only the latest call updates state),
+  unmount safety, a referentially-stable `run` that reads the latest inline `fn`
+  through a ref, and a resolve-never-reject contract (errors surface via
+  `state.error`). SSR-safe and StrictMode-safe. Foundation for the upcoming
+  `useAsync` hook.
+
+- 2e53177: feat(use-raf-state): add useRafState hook — a useState replacement that batches updates to requestAnimationFrame
+
+  - Drop-in `useState` API: direct value or lazy `() => T` init, value-or-updater setter
+  - Batches updates to `requestAnimationFrame`, coalescing rapid scroll/resize/pointer/animation updates to at most one commit per frame (**last-write-wins**)
+  - Stable setter (`useCallback([])`), cancels the pending frame on unmount
+  - SSR-safe (synchronous fallback when rAF is unavailable) and StrictMode / concurrent-safe
+
+- 2e53177: feat(use-async): add useAsync hook for the full lifecycle of a single async task
+
+  The object-style, abortable sibling of `useAsyncFn`. Returns
+  `{ data, error, status, isLoading, execute, reset }` with the same state shape
+  (`status` is the source of truth; `data` retained on error). Adds the three
+  things a self-contained data-load needs on top of `useAsyncFn`: it runs itself
+  on mount (`immediate`, default `true`), passes your function an `AbortSignal`
+  as its first argument so obsolete requests are truly cancelled
+  (`fetch(url, { signal })`), and can be `reset()` back to idle. `execute` aborts
+  the previous in-flight request when a new one starts; `reset()` and unmount
+  abort too. A monotonic call-id stale-guard backs up the abort so a superseded
+  call never updates state. `execute`/`reset` are referentially stable and
+  `execute` never rejects (errors surface via `state.error`). SSR-safe (immediate
+  never runs during server render) and StrictMode-safe (the first auto-run is
+  aborted, the second wins). Reuses the shared `AsyncStatus`/`AsyncState`/`AsyncFn`
+  types from `@usefy/use-async-fn`. Deliberately not a query cache.
+
+- 2e53177: feat(use-polling): add usePolling hook to poll an async function on an interval
+
+  Polls `fn` on an interval and exposes the latest result with the same state
+  shape as the async siblings (`{ data, error, status, isLoading }`; `status` is
+  the source of truth, `isLoading === "pending"`, `data` retained on error) plus
+  polling-loop control: `isPolling` and imperative `pause`/`resume` (with
+  `start`/`stop` aliases). The next tick is scheduled **only after** the current
+  poll settles — a self-rescheduling `setTimeout`, never a stacking `setInterval` —
+  so a `fn` slower than the interval can never overlap in-flight requests.
+  `enabled` (default `true`) is the declarative master gate; `pause`/`resume` are
+  the imperative override within it (`isPolling === enabled && !paused`).
+  `immediate` (default `true`) polls right away vs. after one interval. Optional
+  **exponential backoff** grows the delay on consecutive failures (`true`,
+  `{ factor, maxInterval }`, or a custom `(failures, base) => ms`) and resets on
+  success. The `fn` receives an `AbortSignal` first (`AsyncFnWithSignal`); the
+  in-flight poll is aborted on pause/stop/`enabled:false`/unmount, backed by a
+  stale-guard. A changed `interval`/`args`/inline `fn` applies on the next tick
+  without restarting the loop. Standalone minimal state machine that reuses the
+  shared `AsyncState`/`AsyncStatus`/`AsyncFnWithSignal` types from
+  `@usefy/use-async-fn` and `@usefy/use-async` for family consistency. SSR-safe and
+  StrictMode-safe (exactly one self-scheduling loop — no runaway duplicate timers).
+
+### Patch Changes
+
+- Updated dependencies [2e53177]
+- Updated dependencies [2e53177]
+- Updated dependencies [2e53177]
+- Updated dependencies [2e53177]
+  - @usefy/use-async-fn@0.18.0
+  - @usefy/use-raf-state@0.18.0
+  - @usefy/use-async@0.18.0
+  - @usefy/use-polling@0.18.0
+  - @usefy/use-click-any-where@0.18.0
+  - @usefy/use-controllable-state@0.18.0
+  - @usefy/use-copy-to-clipboard@0.18.0
+  - @usefy/use-counter@0.18.0
+  - @usefy/use-dark-mode@0.18.0
+  - @usefy/use-debounce@0.18.0
+  - @usefy/use-debounce-callback@0.18.0
+  - @usefy/use-disclosure@0.18.0
+  - @usefy/use-document-title@0.18.0
+  - @usefy/use-event-callback@0.18.0
+  - @usefy/use-event-listener@0.18.0
+  - @usefy/use-focus-trap@0.18.0
+  - @usefy/use-focus-within@0.18.0
+  - @usefy/use-geolocation@0.18.0
+  - @usefy/use-history-state@0.18.0
+  - @usefy/use-hotkeys@0.18.0
+  - @usefy/use-hover@0.18.0
+  - @usefy/use-init@0.18.0
+  - @usefy/use-intersection-observer@0.18.0
+  - @usefy/use-is-client@0.18.0
+  - @usefy/use-is-first-render@0.18.0
+  - @usefy/use-isomorphic-layout-effect@0.18.0
+  - @usefy/use-key-press@0.18.0
+  - @usefy/use-latest@0.18.0
+  - @usefy/use-list@0.18.0
+  - @usefy/use-local-storage@0.18.0
+  - @usefy/use-long-press@0.18.0
+  - @usefy/use-map@0.18.0
+  - @usefy/use-measure@0.18.0
+  - @usefy/use-media-query@0.18.0
+  - @usefy/use-memory-monitor@0.18.0
+  - @usefy/use-merged-refs@0.18.0
+  - @usefy/use-mount@0.18.0
+  - @usefy/use-mutation-observer@0.18.0
+  - @usefy/use-on-click-outside@0.18.0
+  - @usefy/use-preferred-color-scheme@0.18.0
+  - @usefy/use-previous@0.18.0
+  - @usefy/use-queue@0.18.0
+  - @usefy/use-reduced-motion@0.18.0
+  - @usefy/use-scroll-lock@0.18.0
+  - @usefy/use-scroll-position@0.18.0
+  - @usefy/use-session-storage@0.18.0
+  - @usefy/use-set@0.18.0
+  - @usefy/use-signal@0.18.0
+  - @usefy/use-step@0.18.0
+  - @usefy/use-throttle@0.18.0
+  - @usefy/use-throttle-callback@0.18.0
+  - @usefy/use-timeout@0.18.0
+  - @usefy/use-timer@0.18.0
+  - @usefy/use-toggle@0.18.0
+  - @usefy/use-unmount@0.18.0
+  - @usefy/use-update-effect@0.18.0
+  - @usefy/use-window-size@0.18.0
+
 ## 0.17.0
 
 ### Minor Changes
