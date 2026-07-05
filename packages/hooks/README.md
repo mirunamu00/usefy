@@ -161,6 +161,10 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-focus-trap" target="_blank" rel="noopener noreferrer">@usefy/use-focus-trap</a> | Trap keyboard focus inside a subtree (modals/dialogs) — Tab cycling, initial focus, restore on close | <a href="https://www.npmjs.com/package/@usefy/use-focus-trap" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-focus-trap.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-focus-within" target="_blank" rel="noopener noreferrer">@usefy/use-focus-within</a> | Track whether keyboard focus is anywhere within a subtree — reactive `:focus-within` with `onFocus`/`onBlur` edges | <a href="https://www.npmjs.com/package/@usefy/use-focus-within" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-focus-within.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-long-press" target="_blank" rel="noopener noreferrer">@usefy/use-long-press</a> | Long-press ("press and hold") gestures for mouse and touch — time threshold, movement cancellation, `onStart`/`onFinish`/`onCancel` | <a href="https://www.npmjs.com/package/@usefy/use-long-press" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-long-press.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-async-fn" target="_blank" rel="noopener noreferrer">@usefy/use-async-fn</a> | Run a manual-trigger async function with idle/pending/success/error lifecycle, race-safe stale-response guarding, and unmount safety | <a href="https://www.npmjs.com/package/@usefy/use-async-fn" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-async-fn.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-async" target="_blank" rel="noopener noreferrer">@usefy/use-async</a> | Full async task lifecycle — object-style state, immediate auto-run, and AbortController cancellation | <a href="https://www.npmjs.com/package/@usefy/use-async" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-async.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-polling" target="_blank" rel="noopener noreferrer">@usefy/use-polling</a> | Poll an async function on an interval — non-overlapping ticks, pause/resume, an `enabled` gate, and exponential backoff | <a href="https://www.npmjs.com/package/@usefy/use-polling" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-polling.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![97%](https://img.shields.io/badge/coverage-97%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-raf-state" target="_blank" rel="noopener noreferrer">@usefy/use-raf-state</a> | A drop-in `useState` that batches updates to `requestAnimationFrame` — rapid scroll/resize/pointer/animation updates coalesce to at most one commit per frame | <a href="https://www.npmjs.com/package/@usefy/use-raf-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-raf-state.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -214,6 +218,10 @@ import {
   useFocusTrap,
   useFocusWithin,
   useLongPress,
+  useAsyncFn,
+  useAsync,
+  usePolling,
+  useRafState,
 } from "@usefy/hooks";
 
 function App() {
@@ -1452,6 +1460,104 @@ return (
 ```
 
 Recognise a press-and-hold gesture on any element, for both mouse and touch, and get back a stable `bind` object of DOM handler props to spread onto the target. The `callback` fires once when the press is held for at least `threshold` ms (default `400`) without being released or dragged past `moveThreshold` px (default `10`; pass `false` to disable). Optional `onStart`/`onFinish`/`onCancel` (with a `{ reason }` of `"released"` | `"moved"`) cover the full lifecycle, all kept in latest-refs so inline callbacks never destabilise the handlers. Synthetic mouse events emitted after a touch are ignored, so a touch long-press never double-fires. The timer is cleared on release/cancel/unmount; SSR-safe and StrictMode-safe. (React's passive touch listeners mean `preventDefault` can't stop scrolling — use CSS `touch-action`/`user-select` instead.)
+
+</details>
+
+### 🌐 Async & Data
+
+<details>
+<summary><strong>useAsyncFn</strong> — Run a manual-trigger async function with race-safe lifecycle tracking</summary>
+
+```tsx
+import { useAsyncFn } from "@usefy/use-async-fn";
+
+const [state, run] = useAsyncFn(async (id: string) => {
+  const res = await fetch(`/api/user/${id}`);
+  if (!res.ok) throw new Error("Failed to load user");
+  return res.json();
+});
+
+return (
+  <button onClick={() => run("42")} disabled={state.isLoading}>
+    {state.isLoading ? "Loading…" : "Load user"}
+  </button>
+);
+```
+
+The manual-trigger core for running a single async function and tracking its lifecycle — the foundation for building higher-level data hooks. Returns a `[state, run]` tuple where `state` is `{ data, error, status, isLoading }` (`status` is the source of truth: `idle` → `pending` → `success` | `error`; `isLoading` mirrors `pending`). Call `run(...args)` from an event handler; it forwards its arguments to your function. `data` is retained across later runs and only replaced on success; `error` is cleared when a run starts. Built-in **stale-response guarding** means calling `run` again before the previous call settles discards the older result — only the latest call updates state, so out-of-order resolutions never clobber fresh data. `run` is referentially stable, never rejects (it resolves with the value, or `undefined` on failure — errors surface via `state.error`), and reads the latest inline `fn` through a ref so no memoization is needed. Unmount-safe (no state updates or callbacks after unmount), SSR-safe, and StrictMode-safe.
+
+</details>
+
+<details>
+<summary><strong>useAsync</strong> — Full async task lifecycle with object-style state, immediate auto-run & AbortController</summary>
+
+```tsx
+import { useAsync } from "@usefy/use-async";
+
+const { data, error, isLoading, execute, reset } = useAsync(
+  async (signal: AbortSignal, id: string) => {
+    const res = await fetch(`/api/user/${id}`, { signal });
+    if (!res.ok) throw new Error("Failed to load user");
+    return res.json();
+  },
+  { immediate: true, args: ["42"] }, // auto-load on mount
+);
+
+if (isLoading) return <p>Loading…</p>;
+if (error) return <button onClick={() => execute("42")}>Retry</button>;
+return <button onClick={reset}>Clear {data?.name}</button>;
+```
+
+The object-style, abortable sibling of `useAsyncFn`. Returns `{ data, error, status, isLoading, execute, reset }` with the **same state shape** (`status` is the source of truth; `data` retained on error). Your function receives an **`AbortSignal` as its first argument** — wire it into `fetch(url, { signal })` so obsolete requests are truly cancelled. `execute` aborts the previous in-flight request before starting a new one; `reset()` aborts the in-flight request and returns to idle; both are aborted on unmount too. A monotonic call-id **stale-guard** backs up the abort so a superseded call never updates state. **`immediate` auto-runs once on mount by default** (opt out with `immediate: false`; feed args via `options.args`) — it fires from an effect, so it never runs during SSR, and under StrictMode the first run is aborted and the second wins. `execute`/`reset` are referentially stable and `execute` never rejects. Deliberately **not** a query cache — for keys/dedupe/revalidation use TanStack Query.
+
+</details>
+
+<details>
+<summary><strong>usePolling</strong> — Poll an async function on an interval with pause/resume, an enabled gate & exponential backoff</summary>
+
+```tsx
+import { usePolling } from "@usefy/use-polling";
+
+const { data, status, isPolling, pause, resume } = usePolling(
+  async (signal: AbortSignal) => {
+    const res = await fetch("/api/status", { signal });
+    return res.json();
+  },
+  { interval: 5000, immediate: true, backoff: { factor: 2, maxInterval: 30_000 } },
+);
+
+return (
+  <button onClick={isPolling ? pause : resume}>
+    {isPolling ? "Pause" : "Resume"} ({status})
+  </button>
+);
+```
+
+Polls `fn` on an interval, exposing the latest result with the **same state shape** as `useAsyncFn`/`useAsync` (`{ data, error, status, isLoading }`; `status` is the source of truth, `data` retained on error) plus polling-loop control: `isPolling` and imperative `pause`/`resume` (with `start`/`stop` aliases). The next tick is scheduled **only after** the current poll settles — a self-rescheduling `setTimeout`, never a stacking `setInterval` — so a slow `fn` can never overlap in-flight requests. `enabled` (default `true`) is the declarative master gate; `pause`/`resume` are the imperative override within it (`isPolling === enabled && !paused`). `immediate` (default `true`) polls right away vs. after one interval. **Exponential backoff** grows the delay on consecutive failures (`true`, `{ factor, maxInterval }`, or a custom `(failures, base) => ms`) and resets on success. Your `fn` receives an **`AbortSignal` first** — the in-flight poll is aborted on pause/stop/`enabled:false`/unmount, backed by a stale-guard. A changed `interval`/`args`/`fn` applies on the next tick without restarting the loop. SSR-safe and StrictMode-safe (exactly one self-scheduling loop — no runaway timers).
+
+</details>
+
+<details>
+<summary><strong>useRafState</strong> — A <code>useState</code> replacement that batches updates to <code>requestAnimationFrame</code> (one commit per frame)</summary>
+
+```tsx
+import { useEffect } from "react";
+import { useRafState } from "@usefy/use-raf-state";
+
+function MouseFollower() {
+  const [pos, setPos] = useRafState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const onMove = (e: PointerEvent) => setPos({ x: e.clientX, y: e.clientY });
+    window.addEventListener("pointermove", onMove);
+    return () => window.removeEventListener("pointermove", onMove);
+  }, [setPos]);
+
+  return <div style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}>◍</div>;
+}
+```
+
+A drop-in replacement for `useState` whose setter **batches** every update to `requestAnimationFrame`, so a burst of rapid `setState` calls (scroll, resize, pointer move, animation loops) coalesces to **at most one commit per frame** — smoother UI and far fewer wasted re-renders. The API matches `useState` exactly: a direct initial value **or** a lazy `() => T` initializer (forwarded to the underlying `useState`, so it runs once), and a setter that accepts a next value **or** a functional updater `(prev) => next`. **Coalescing is last-write-wins**: if the setter is called several times before the frame fires, the earlier frames are cancelled and only the latest call commits — functional updaters follow the same rule (three `setState(n => n+1)` in one frame commit `1`, not `3`; to accumulate within a frame, set an absolute value instead). The setter is referentially **stable** (`useCallback([])`), safe as a child prop or effect dependency. Any pending frame is **cancelled on unmount** (no setState after unmount), it never touches `requestAnimationFrame` at import time (**SSR-safe**, falling back to a synchronous update when rAF is unavailable), and it is **StrictMode / concurrent-safe** (no leaked or double-applied frames).
 
 </details>
 

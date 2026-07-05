@@ -423,3 +423,48 @@ export {
   type UseLongPressHandlers,
   type UseLongPressReturn,
 } from "@usefy/use-long-press";
+
+// useAsyncFn
+export {
+  useAsyncFn,
+  type AsyncStatus,
+  type AsyncFn,
+  type AsyncState,
+  type AsyncRunFn,
+  type UseAsyncFnOptions,
+  type UseAsyncFnReturn,
+} from "@usefy/use-async-fn";
+
+// useAsync — object-style, abortable sibling of useAsyncFn.
+// Shared types (AsyncStatus/AsyncFn/AsyncState) are already exported above via
+// the useAsyncFn block, so only useAsync's own new names are re-exported here.
+export {
+  useAsync,
+  type AsyncFnWithSignal,
+  type AsyncExecuteFn,
+  type UseAsyncOptions,
+  type UseAsyncReturn,
+} from "@usefy/use-async";
+
+// usePolling — poll an async function on an interval with pause/resume,
+// an enabled gate, and exponential backoff. Shared async types
+// (AsyncStatus/AsyncFn/AsyncState/AsyncFnWithSignal) are already exported above
+// via the useAsyncFn/useAsync blocks, so only usePolling's own new names are
+// re-exported here.
+export {
+  usePolling,
+  computePollingDelay,
+  DEFAULT_POLLING_INTERVAL,
+  type UsePollingOptions,
+  type UsePollingReturn,
+  type PollingBackoff,
+  type BackoffOptions,
+  type BackoffFn,
+} from "@usefy/use-polling";
+
+// useRafState — a useState replacement that batches updates to
+// requestAnimationFrame, coalescing rapid updates to one commit per frame.
+export {
+  useRafState,
+  type UseRafStateReturn,
+} from "@usefy/use-raf-state";
