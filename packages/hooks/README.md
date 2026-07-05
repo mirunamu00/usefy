@@ -117,6 +117,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-throttle-callback" target="_blank" rel="noopener noreferrer">@usefy/use-throttle-callback</a>         | Throttled callbacks with cancel/flush/pending           | <a href="https://www.npmjs.com/package/@usefy/use-throttle-callback" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-throttle-callback.svg?style=flat-square&color=007acc" alt="npm version" /></a>         | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-local-storage" target="_blank" rel="noopener noreferrer">@usefy/use-local-storage</a>                 | localStorage persistence with cross-tab sync            | <a href="https://www.npmjs.com/package/@usefy/use-local-storage" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-local-storage.svg?style=flat-square&color=007acc" alt="npm version" /></a>                 | ![95%](https://img.shields.io/badge/coverage-95%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-session-storage" target="_blank" rel="noopener noreferrer">@usefy/use-session-storage</a>             | sessionStorage persistence for tab lifetime             | <a href="https://www.npmjs.com/package/@usefy/use-session-storage" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-session-storage.svg?style=flat-square&color=007acc" alt="npm version" /></a>             | ![95%](https://img.shields.io/badge/coverage-95%25-brightgreen?style=flat-square)   |
+| <a href="https://www.npmjs.com/package/@usefy/use-cookie" target="_blank" rel="noopener noreferrer">@usefy/use-cookie</a>                                   | Browser cookie as React state, SSR-aware                | <a href="https://www.npmjs.com/package/@usefy/use-cookie" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-cookie.svg?style=flat-square&color=007acc" alt="npm version" /></a>                                   | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-click-any-where" target="_blank" rel="noopener noreferrer">@usefy/use-click-any-where</a>             | Document-wide click event detection                     | <a href="https://www.npmjs.com/package/@usefy/use-click-any-where" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-click-any-where.svg?style=flat-square&color=007acc" alt="npm version" /></a>             | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-copy-to-clipboard" target="_blank" rel="noopener noreferrer">@usefy/use-copy-to-clipboard</a>         | Clipboard copy with fallback support                    | <a href="https://www.npmjs.com/package/@usefy/use-copy-to-clipboard" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-copy-to-clipboard.svg?style=flat-square&color=007acc" alt="npm version" /></a>         | ![88%](https://img.shields.io/badge/coverage-88%25-brightgreen?style=flat-square)   |
 | <a href="https://www.npmjs.com/package/@usefy/use-event-listener" target="_blank" rel="noopener noreferrer">@usefy/use-event-listener</a>               | DOM event listener with auto cleanup                    | <a href="https://www.npmjs.com/package/@usefy/use-event-listener" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-event-listener.svg?style=flat-square&color=007acc" alt="npm version" /></a>               | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square)   |
@@ -165,6 +166,9 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-async" target="_blank" rel="noopener noreferrer">@usefy/use-async</a> | Full async task lifecycle — object-style state, immediate auto-run, and AbortController cancellation | <a href="https://www.npmjs.com/package/@usefy/use-async" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-async.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-polling" target="_blank" rel="noopener noreferrer">@usefy/use-polling</a> | Poll an async function on an interval — non-overlapping ticks, pause/resume, an `enabled` gate, and exponential backoff | <a href="https://www.npmjs.com/package/@usefy/use-polling" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-polling.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![97%](https://img.shields.io/badge/coverage-97%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-raf-state" target="_blank" rel="noopener noreferrer">@usefy/use-raf-state</a> | A drop-in `useState` that batches updates to `requestAnimationFrame` — rapid scroll/resize/pointer/animation updates coalesce to at most one commit per frame | <a href="https://www.npmjs.com/package/@usefy/use-raf-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-raf-state.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-object-state" target="_blank" rel="noopener noreferrer">@usefy/use-object-state</a> | Object state with immutable partial updates (patch/merge) and reset | <a href="https://www.npmjs.com/package/@usefy/use-object-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-object-state.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-stack" target="_blank" rel="noopener noreferrer">@usefy/use-stack</a> | LIFO stack state with push/pop/peek and immutable updates | <a href="https://www.npmjs.com/package/@usefy/use-stack" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-stack.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-selection" target="_blank" rel="noopener noreferrer">@usefy/use-selection</a> | Multi/single selection state for lists and tables — Set-based, checkbox-ready with indeterminate support | <a href="https://www.npmjs.com/package/@usefy/use-selection" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-selection.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -178,6 +182,7 @@ import {
   useCounter,
   useDebounce,
   useLocalStorage,
+  useCookie,
   useCopyToClipboard,
   useEventListener,
   useOnClickOutside,
@@ -222,6 +227,9 @@ import {
   useAsync,
   usePolling,
   useRafState,
+  useObjectState,
+  useStack,
+  useSelection,
 } from "@usefy/hooks";
 
 function App() {
@@ -456,6 +464,66 @@ setStep((s) => s + 1);
 
 </details>
 
+<details>
+<summary><strong>useObjectState</strong> — Object state with immutable partial updates (patch/merge) and reset</summary>
+
+```tsx
+import { useObjectState } from "@usefy/use-object-state";
+
+const [form, patch, reset] = useObjectState({
+  name: "",
+  email: "",
+  subscribe: false,
+});
+
+patch({ name: "Alice" });                     // shallow-merge a partial (immutably)
+patch((prev) => ({ subscribe: !prev.subscribe })); // functional updater form
+reset();                                       // back to the initial object
+reset({ name: "Bob", email: "", subscribe: true }); // reset to a provided object
+```
+
+A `useState`-style `[state, patch, reset]` tuple that sits between `useState` (replace the whole value) and `useReducer` (write a reducer). `patch` shallow-merges a `Partial<T>` immutably (`{ ...prev, ...partial }`) — update one field without spreading the whole object — or takes a functional updater; untouched keys are preserved by reference. `reset()` restores the captured initial value (lazy init is cached once), or `reset(next)` swaps in a provided object. `patch`/`reset` are referentially stable (safe as effect deps), and it's SSR- & StrictMode-safe. Shallow merge only — nested objects are replaced, not deep-merged; for array state use `useList`. Perfect for form state, settings panels, and filter/query objects.
+
+</details>
+
+<details>
+<summary><strong>useStack</strong> — LIFO stack state with immutable updates</summary>
+
+```tsx
+import { useStack } from "@usefy/use-stack";
+
+const [stack, { push, pop, peek, clear, reset }] = useStack<Snapshot>([]);
+
+push(snapshot);       // push onto the top (variadic: push(a, b, c))
+const last = pop();   // pop the top and return it (undefined if empty)
+peek();               // read the top without mutating
+```
+
+The LIFO sibling of `useQueue` — identical shape, but `push` and `pop` operate on the **same** end (the top). LIFO semantics, immutable updates (new array on every change), a `readonly T[]` return type, `pop` that returns the popped item, stable action identities, lazy init, and no-op skipping. Read `top`/`bottom`/`size` directly from the stack (`stack[stack.length - 1]`, `stack[0]`, `stack.length`). Perfect for undo history, navigation/back stacks, expression evaluation, and depth-first traversals.
+
+</details>
+
+<details>
+<summary><strong>useSelection</strong> — Multi/single selection state for lists and tables</summary>
+
+```tsx
+import { useSelection } from "@usefy/use-selection";
+
+const {
+  selected,             // selected items (derived from the current `items`)
+  isSelected,           // isSelected(item) → boolean
+  toggle,               // toggle(item)
+  selectAll,            // select every item (no-op in single-select mode)
+  clear,                // deselect all
+  isAllSelected,        // every item selected (false for an empty list)
+  isPartiallySelected,  // some-but-not-all → drive a header checkbox's indeterminate
+} = useSelection(users, { getKey: (u) => u.id });
+```
+
+Set-backed selection for checkbox lists and data tables. The backing `Set` stores **keys** (via `getKey`, default identity for primitives), so a selection survives new object identities across renders — rebuild `items` every render and the selection sticks. Item-facing values (`selected`, `isAllSelected`, …) are **derived from the current `items`**, so removing a row makes it drop out automatically. Ships `toggle`/`select`/`deselect`/`selectAll`/`clear`, the `isAllSelected`/`isPartiallySelected`/`isNoneSelected` flags for an indeterminate header checkbox, and a single-selection mode (`multiple: false`) that replaces the selection. Immutable Set updates, stable action identities, no-op skipping, and SSR/StrictMode safe.
+
+</details>
+
 ### ⏱️ Timing Utilities
 
 <details>
@@ -566,6 +634,21 @@ const [value, setValue, removeValue] = useSessionStorage("key", initialValue);
 ```
 
 Data persists during tab lifetime, isolated per tab.
+
+</details>
+
+<details>
+<summary><strong>useCookie</strong> — Browser cookie as React state</summary>
+
+```tsx
+const [value, setValue, remove] = useCookie("theme", {
+  initialValue: "light",
+  maxAge: 60 * 60 * 24 * 7, // one week
+  sameSite: "strict",
+});
+```
+
+Reads/writes `document.cookie` with a `useState`-like tuple. SSR-aware, JSON (de)serialization with a raw-string fallback, and full cookie attributes (`expires`/`maxAge`/`path`/`domain`/`secure`/`sameSite`). Same-document instances sync; cross-tab writes need polling (no `storage` event for cookies).
 
 </details>
 

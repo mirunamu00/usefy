@@ -71,6 +71,10 @@
     "@usefy/use-async": "workspace:*",
     "@usefy/use-polling": "workspace:*",
     "@usefy/use-raf-state": "workspace:*",
+    "@usefy/use-object-state": "workspace:*",
+    "@usefy/use-stack": "workspace:*",
+    "@usefy/use-selection": "workspace:*",
+    "@usefy/use-cookie": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

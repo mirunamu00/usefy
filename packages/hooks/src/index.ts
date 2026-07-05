@@ -468,3 +468,53 @@ export {
   useRafState,
   type UseRafStateReturn,
 } from "@usefy/use-raf-state";
+
+// useObjectState — object state with immutable partial updates (patch/merge)
+// and reset. `[state, patch, reset]`: `patch` shallow-merges a Partial (or a
+// functional updater) immutably, `reset()` restores the captured initial (or
+// `reset(next)` a provided object).
+export {
+  useObjectState,
+  type ObjectStateInitializer,
+  type ObjectStatePatch,
+  type ObjectStateReset,
+  type UseObjectStateReturn,
+} from "@usefy/use-object-state";
+
+// useStack — the LIFO sibling of useQueue: `[stack, actions]` where the top is
+// the last element. `push`/`pop` operate on the top (the array's end); `pop`
+// returns the popped item, `peek` reads the top without mutating. Immutable,
+// no-op skipping, stable actions, lazy init.
+export {
+  useStack,
+  type StackInitializer,
+  type UseStackActions,
+  type UseStackReturn,
+} from "@usefy/use-stack";
+
+// useSelection — multi/single selection state for lists and tables, backed by a
+// Set of keys. `{ selected, isSelected, toggle, select, deselect, selectAll,
+// clear, isAllSelected, isPartiallySelected, isNoneSelected, selectedKeys }`.
+// Stores keys (via `getKey`, default identity), so selection survives new item
+// identities; item-facing values are derived from the current `items`.
+export {
+  useSelection,
+  type SelectionKey,
+  type UseSelectionOptions,
+  type UseSelectionReturn,
+} from "@usefy/use-selection";
+
+// useCookie — read/write a browser cookie as React state, SSR-aware. The cookie
+// sibling of useLocalStorage/useSessionStorage: `[value, setValue, remove]` with
+// JSON-or-raw (de)serialization, cookie write attributes (expires/maxAge/path/
+// domain/secure/sameSite), and same-document sync. (Cross-tab writes are not
+// observable without polling — see the package README.) `InitialValue` is
+// already exported above via use-local-storage, so it is aliased here.
+export {
+  useCookie,
+  type UseCookieOptions,
+  type UseCookieReturn,
+  type CookieAttributes,
+  type SameSite,
+  type InitialValue as CookieInitialValue,
+} from "@usefy/use-cookie";
