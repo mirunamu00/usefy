@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-focus-within",
-  "version": "0.16.0",
+  "version": "0.17.0",
   "description": "A React hook that tracks whether keyboard focus is anywhere within a subtree — focusin/focusout based, SSR-safe, with onFocus/onBlur edge callbacks",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
