@@ -1,5 +1,7 @@
 # @usefy/use-intersection-observer
 
+## 0.17.0
+
 ## 0.16.0
 
 ## 0.15.0

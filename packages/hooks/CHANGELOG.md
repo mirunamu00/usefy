@@ -1,5 +1,101 @@
 # @usefy/usefy
 
+## 0.17.0
+
+### Minor Changes
+
+- ae97a69: feat(use-focus-trap): add useFocusTrap hook for trapping keyboard focus in modals/dialogs
+
+  - `const ref = useFocusTrap(active, options)` returns a stable callback ref; attach it to the container whose focus should be trapped while `active`.
+  - Tab / Shift+Tab wrap-around cycling through the container's focusable descendants, recomputed live on every keypress (never cached). Robust focusable selector excludes `disabled` (including controls inside a `<fieldset disabled>`), `hidden`, `inert`, `tabindex="-1"`, and invisible elements; zero-focusable containers pin focus and block Tab from escaping.
+  - Nested/simultaneous traps are handled via a topmost-wins activation stack: when a dialog opens over another dialog, only the most-recently activated trap reacts to Tab and Escape (Escape fires once, the Tab handlers never race), and the trap beneath becomes live again when the top one deactivates.
+  - Configurable `initialFocus` (element / ref / getter / `false`; defaults to the first focusable element or the container) and `returnFocus` (restore to the trigger by default, override to any target, or disable). `onEscape` is surfaced so the caller owns open/close state — the hook never manages it.
+  - Does one thing (focus only, no scroll lock, renders nothing). Built on `@usefy/use-isomorphic-layout-effect` + `@usefy/use-latest`; SSR-safe and StrictMode-safe with full listener cleanup and correct focus restore across double mounts. Also exports the reusable `getFocusableElements` helper and the `UseFocusTrapOptions` / `UseFocusTrapRef` / `FocusTarget` types.
+
+- ae97a69: feat(use-focus-within): add useFocusWithin hook for tracking focus within a subtree
+
+  - Returns a `[ref, focused]` tuple — `focused` is `true` whenever keyboard focus is on the container or any descendant (reactive `:focus-within`).
+  - Built on the bubbling `focusin`/`focusout` events; keeps `focused` steady when focus moves between descendants (no flicker) and only flips off when focus leaves the subtree.
+  - Robust `relatedTarget: null` handling via a deferred `document.activeElement` re-check.
+  - Optional `onFocus`/`onBlur` edge callbacks (stable via `@usefy/use-latest`), a stable callback ref, and SSR / StrictMode safety.
+  - Also exports the `isFocusInside` predicate.
+
+- ae97a69: feat(use-hotkeys): add useHotkeys hook for high-level keyboard shortcuts
+
+  - Register a hotkey string or an array of them against a single handler: `useHotkeys("mod+k", handler, { enabled })`, `useHotkeys(["mod+s", "ctrl+p"], handler)`.
+  - Combos (`"ctrl+shift+p"`, `"shift+?"`, `"Escape"`), space-separated sequences (`"g i"`, `"g g"`) with a configurable `sequenceTimeoutMs`, and a cross-platform `mod` alias (Cmd on macOS, Ctrl elsewhere; overridable via `mac`).
+  - Exact modifier matching, an input-field guard (`enableOnFormTags`), scoping to `document`/`window`/element/ref, `eventType`, and `preventDefault`.
+  - Built on `@usefy/use-event-listener` + `@usefy/use-latest`; SSR-safe and StrictMode-safe with full listener/timer cleanup. Also exports `parseHotkey`, `isMacPlatform`, `isHotkeysSupported`.
+
+- ae97a69: feat(use-long-press): add useLongPress hook for press-and-hold gestures
+
+  - `const bind = useLongPress(callback, options)` returns a stable `bind` object of DOM handler props (`onMouseDown`/`onMouseUp`/`onMouseLeave`/`onMouseMove`/`onTouchStart`/`onTouchEnd`/`onTouchMove`) — spread it onto any element to wire up the whole gesture.
+  - Time threshold: the `callback` fires once when the press is held for at least `threshold` ms (default `400`).
+  - Movement cancellation: dragging past `moveThreshold` px (default `10`) from the down point cancels the press (reason `"moved"`); pass `moveThreshold: false` to disable.
+  - Works for both mouse and touch; the synthetic mouse events browsers emit after a touch are timestamp-guarded and ignored, so a touch long-press never double-fires.
+  - Optional `onStart` / `onFinish` / `onCancel` (with a `{ reason }` of `"released"` | `"moved"`) and a `disabled` flag; all callbacks kept in latest-refs (`@usefy/use-latest`) so the handlers stay referentially stable without callers memoizing.
+  - Timer cleared on release/cancel/unmount; SSR-safe (no `window`/`document` access) and StrictMode/concurrent-safe (callbacks dispatched from handlers, never inside a `setState` updater). Also exports the `UseLongPressOptions` / `UseLongPressHandlers` / `UseLongPressReturn` / `LongPressEvent` / `LongPressCallback` / `LongPressCancelReason` / `LongPressCancelMeta` types.
+
+### Patch Changes
+
+- Updated dependencies [ae97a69]
+- Updated dependencies [ae97a69]
+- Updated dependencies [ae97a69]
+- Updated dependencies [ae97a69]
+  - @usefy/use-focus-trap@0.17.0
+  - @usefy/use-focus-within@0.17.0
+  - @usefy/use-hotkeys@0.17.0
+  - @usefy/use-long-press@0.17.0
+  - @usefy/use-click-any-where@0.17.0
+  - @usefy/use-controllable-state@0.17.0
+  - @usefy/use-copy-to-clipboard@0.17.0
+  - @usefy/use-counter@0.17.0
+  - @usefy/use-dark-mode@0.17.0
+  - @usefy/use-debounce@0.17.0
+  - @usefy/use-debounce-callback@0.17.0
+  - @usefy/use-disclosure@0.17.0
+  - @usefy/use-document-title@0.17.0
+  - @usefy/use-event-callback@0.17.0
+  - @usefy/use-event-listener@0.17.0
+  - @usefy/use-geolocation@0.17.0
+  - @usefy/use-history-state@0.17.0
+  - @usefy/use-hover@0.17.0
+  - @usefy/use-init@0.17.0
+  - @usefy/use-intersection-observer@0.17.0
+  - @usefy/use-is-client@0.17.0
+  - @usefy/use-is-first-render@0.17.0
+  - @usefy/use-isomorphic-layout-effect@0.17.0
+  - @usefy/use-key-press@0.17.0
+  - @usefy/use-latest@0.17.0
+  - @usefy/use-list@0.17.0
+  - @usefy/use-local-storage@0.17.0
+  - @usefy/use-map@0.17.0
+  - @usefy/use-measure@0.17.0
+  - @usefy/use-media-query@0.17.0
+  - @usefy/use-memory-monitor@0.17.0
+  - @usefy/use-merged-refs@0.17.0
+  - @usefy/use-mount@0.17.0
+  - @usefy/use-mutation-observer@0.17.0
+  - @usefy/use-on-click-outside@0.17.0
+  - @usefy/use-preferred-color-scheme@0.17.0
+  - @usefy/use-previous@0.17.0
+  - @usefy/use-queue@0.17.0
+  - @usefy/use-reduced-motion@0.17.0
+  - @usefy/use-scroll-lock@0.17.0
+  - @usefy/use-scroll-position@0.17.0
+  - @usefy/use-session-storage@0.17.0
+  - @usefy/use-set@0.17.0
+  - @usefy/use-signal@0.17.0
+  - @usefy/use-step@0.17.0
+  - @usefy/use-throttle@0.17.0
+  - @usefy/use-throttle-callback@0.17.0
+  - @usefy/use-timeout@0.17.0
+  - @usefy/use-timer@0.17.0
+  - @usefy/use-toggle@0.17.0
+  - @usefy/use-unmount@0.17.0
+  - @usefy/use-update-effect@0.17.0
+  - @usefy/use-window-size@0.17.0
+
 ## 0.16.0
 
 ### Minor Changes
