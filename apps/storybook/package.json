@@ -67,6 +67,10 @@
     "@usefy/use-focus-trap": "workspace:*",
     "@usefy/use-focus-within": "workspace:*",
     "@usefy/use-long-press": "workspace:*",
+    "@usefy/use-async-fn": "workspace:*",
+    "@usefy/use-async": "workspace:*",
+    "@usefy/use-polling": "workspace:*",
+    "@usefy/use-raf-state": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

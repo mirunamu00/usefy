@@ -85,6 +85,7 @@ function App() {
 
 **Highlights:**
 - `useToggle`, `useCounter` — State management
+- `useRafState` — `useState` that batches updates to `requestAnimationFrame` (one commit per frame)
 - `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
 - `useLocalStorage`, `useSessionStorage` — Persistent storage
 - `useEventListener`, `useOnClickOutside`, `useHover`, `useLongPress`, `useScrollLock`, `useFocusTrap`, `useFocusWithin` — DOM events, gestures & modal accessibility
@@ -93,6 +94,7 @@ function App() {
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
 - `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useScrollPosition`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
+- `useAsyncFn`, `useAsync`, `usePolling` — Async lifecycle tracking (manual-trigger / auto-run / interval polling with backoff and AbortController cancellation)
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
 - `useIsClient`, `useIsomorphicLayoutEffect`, `usePrevious`, `useLatest`, `useEventCallback`, `useUpdateEffect`, `useMount`, `useIsFirstRender` — SSR & lifecycle utilities
@@ -265,6 +267,10 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useFocusTrap` | Trap keyboard focus in a subtree (modals/dialogs) — Tab cycling, initial/return focus, Escape |
 | `useFocusWithin` | Track whether keyboard focus is anywhere within a subtree — reactive `:focus-within` with `onFocus`/`onBlur` edges |
 | `useLongPress` | Long-press ("press and hold") gestures for mouse and touch — time threshold, movement cancellation, `onStart`/`onFinish`/`onCancel` |
+| `useAsyncFn` | Run a manual-trigger async function with idle/pending/success/error lifecycle, race-safe stale-response guarding, and unmount safety |
+| `useAsync` | Full async task lifecycle — object-style state, immediate auto-run, and AbortController cancellation |
+| `usePolling` | Poll an async function on an interval — non-overlapping self-scheduling ticks, pause/resume, an `enabled` gate, and exponential backoff |
+| `useRafState` | A drop-in `useState` that batches updates to `requestAnimationFrame` — rapid scroll/resize/pointer/animation updates coalesce to at most one commit per frame |
 
 ### Kits (`@usefy/kits`)
 
