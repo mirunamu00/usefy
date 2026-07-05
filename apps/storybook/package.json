@@ -63,6 +63,10 @@
     "@usefy/use-mutation-observer": "workspace:*",
     "@usefy/use-scroll-position": "workspace:*",
     "@usefy/use-scroll-lock": "workspace:*",
+    "@usefy/use-hotkeys": "workspace:*",
+    "@usefy/use-focus-trap": "workspace:*",
+    "@usefy/use-focus-within": "workspace:*",
+    "@usefy/use-long-press": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {

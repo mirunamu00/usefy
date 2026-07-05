@@ -378,3 +378,48 @@ export {
   type UseScrollLockOptions,
   type UseScrollLockReturn,
 } from "@usefy/use-scroll-lock";
+
+// useHotkeys
+export {
+  useHotkeys,
+  parseHotkey,
+  isMacPlatform,
+  isHotkeysSupported,
+  type Hotkey,
+  type HotkeyTarget,
+  type HotkeyHandler,
+  type HotkeyMatch,
+  type ParsedChord,
+  type ParsedHotkey,
+  type UseHotkeysOptions,
+} from "@usefy/use-hotkeys";
+
+// useFocusTrap
+export {
+  useFocusTrap,
+  getFocusableElements,
+  type UseFocusTrapOptions,
+  type UseFocusTrapRef,
+  type FocusTarget,
+} from "@usefy/use-focus-trap";
+
+// useFocusWithin
+export {
+  useFocusWithin,
+  isFocusInside,
+  type UseFocusWithinOptions,
+  type UseFocusWithinRef,
+  type UseFocusWithinReturn,
+} from "@usefy/use-focus-within";
+
+// useLongPress
+export {
+  useLongPress,
+  type LongPressEvent,
+  type LongPressCallback,
+  type LongPressCancelReason,
+  type LongPressCancelMeta,
+  type UseLongPressOptions,
+  type UseLongPressHandlers,
+  type UseLongPressReturn,
+} from "@usefy/use-long-press";
