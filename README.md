@@ -87,8 +87,8 @@ function App() {
 - `useToggle`, `useCounter` — State management
 - `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
 - `useLocalStorage`, `useSessionStorage` — Persistent storage
-- `useEventListener`, `useOnClickOutside`, `useHover`, `useScrollLock` — DOM events
-- `useKeyPress` — Keyboard shortcuts and combinations
+- `useEventListener`, `useOnClickOutside`, `useHover`, `useLongPress`, `useScrollLock`, `useFocusTrap`, `useFocusWithin` — DOM events, gestures & modal accessibility
+- `useKeyPress`, `useHotkeys` — Keyboard shortcuts, combinations, and sequences
 - `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
@@ -261,6 +261,10 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useMutationObserver` | Watch an element for DOM mutations (childList/attributes/characterData) |
 | `useScrollPosition` | Throttled scroll offset (x, y) of the window or an element |
 | `useScrollLock` | Lock body scroll for modals/drawers — iOS-aware, nested-lock counted |
+| `useHotkeys` | High-level keyboard shortcuts — combos, sequences, `mod` alias, scoping, input-field guard |
+| `useFocusTrap` | Trap keyboard focus in a subtree (modals/dialogs) — Tab cycling, initial/return focus, Escape |
+| `useFocusWithin` | Track whether keyboard focus is anywhere within a subtree — reactive `:focus-within` with `onFocus`/`onBlur` edges |
+| `useLongPress` | Long-press ("press and hold") gestures for mouse and touch — time threshold, movement cancellation, `onStart`/`onFinish`/`onCancel` |
 
 ### Kits (`@usefy/kits`)
 

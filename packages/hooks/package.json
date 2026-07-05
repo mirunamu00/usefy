@@ -71,7 +71,11 @@
     "@usefy/use-measure": "workspace:*",
     "@usefy/use-mutation-observer": "workspace:*",
     "@usefy/use-scroll-position": "workspace:*",
-    "@usefy/use-scroll-lock": "workspace:*"
+    "@usefy/use-scroll-lock": "workspace:*",
+    "@usefy/use-hotkeys": "workspace:*",
+    "@usefy/use-focus-trap": "workspace:*",
+    "@usefy/use-focus-within": "workspace:*",
+    "@usefy/use-long-press": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"

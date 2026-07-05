@@ -157,6 +157,10 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-mutation-observer" target="_blank" rel="noopener noreferrer">@usefy/use-mutation-observer</a> | Watch an element for DOM mutations (childList/attributes/characterData) via MutationObserver | <a href="https://www.npmjs.com/package/@usefy/use-mutation-observer" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-mutation-observer.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![99%](https://img.shields.io/badge/coverage-99%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-scroll-position" target="_blank" rel="noopener noreferrer">@usefy/use-scroll-position</a> | Throttled scroll offset (x, y) of the window or an element | <a href="https://www.npmjs.com/package/@usefy/use-scroll-position" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-scroll-position.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-scroll-lock" target="_blank" rel="noopener noreferrer">@usefy/use-scroll-lock</a> | Lock body scroll for modals/drawers — iOS-aware, nested-lock counted, with scroll-position restore | <a href="https://www.npmjs.com/package/@usefy/use-scroll-lock" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-scroll-lock.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-hotkeys" target="_blank" rel="noopener noreferrer">@usefy/use-hotkeys</a> | High-level keyboard shortcuts — combos, sequences, `mod` alias, scoping, input-field guard | <a href="https://www.npmjs.com/package/@usefy/use-hotkeys" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-hotkeys.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-focus-trap" target="_blank" rel="noopener noreferrer">@usefy/use-focus-trap</a> | Trap keyboard focus inside a subtree (modals/dialogs) — Tab cycling, initial focus, restore on close | <a href="https://www.npmjs.com/package/@usefy/use-focus-trap" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-focus-trap.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-focus-within" target="_blank" rel="noopener noreferrer">@usefy/use-focus-within</a> | Track whether keyboard focus is anywhere within a subtree — reactive `:focus-within` with `onFocus`/`onBlur` edges | <a href="https://www.npmjs.com/package/@usefy/use-focus-within" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-focus-within.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-long-press" target="_blank" rel="noopener noreferrer">@usefy/use-long-press</a> | Long-press ("press and hold") gestures for mouse and touch — time threshold, movement cancellation, `onStart`/`onFinish`/`onCancel` | <a href="https://www.npmjs.com/package/@usefy/use-long-press" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-long-press.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -206,6 +210,10 @@ import {
   useMutationObserver,
   useScrollPosition,
   useScrollLock,
+  useHotkeys,
+  useFocusTrap,
+  useFocusWithin,
+  useLongPress,
 } from "@usefy/hooks";
 
 function App() {
@@ -748,6 +756,30 @@ useKeyPress("f", { ignoreInputElements: true, onPress: openFilter });
 ```
 
 Perfect for command palettes, editor shortcuts, modal dismissal, and game controls — with cross-platform `mod`, `onPress`/`onRelease` callbacks, auto-repeat handling, and blur-safe held state.
+
+</details>
+
+<details>
+<summary><strong>useHotkeys</strong> — High-level keyboard shortcuts with combos, sequences, and an input-field guard</summary>
+
+```tsx
+import { useHotkeys } from "@usefy/use-hotkeys";
+
+// Command palette (mod = Ctrl on Win/Linux, Cmd on macOS)
+useHotkeys("mod+k", () => openCommandPalette(), { preventDefault: true });
+
+// Multiple bindings for one handler (array is OR)
+useHotkeys(["mod+s", "ctrl+enter"], save, { preventDefault: true });
+
+// A Gmail-style sequence: press "g" then "i"
+useHotkeys("g i", () => navigate("/inbox"));
+
+// Scoped to an element, allowed inside inputs, only while enabled
+const ref = useRef<HTMLDivElement>(null);
+useHotkeys("Escape", close, { target: ref, enableOnFormTags: true, enabled: isOpen });
+```
+
+The high-level shortcut layer over the keyboard: combos (`"ctrl+shift+p"`, `"shift+?"`), space-separated **sequences** (`"g i"`, `"g g"`) with a configurable reset timeout, arrays of bindings on one handler, a cross-platform `mod` alias (overridable for tests), **exact** modifier matching (`"a"` never fires on `Ctrl+A`), and an input-field guard that ignores editable targets by default. Bind to `document`/`window`/an element/a ref. The handler is stored in a ref (no memoization needed), and it's SSR-safe and StrictMode-safe with full timer/listener cleanup.
 
 </details>
 
@@ -1351,6 +1383,75 @@ const [opened, { open, close, toggle }] = useDisclosure(false, {
 ```
 
 Returns a `[opened, handlers]` tuple (Mantine shape) with stable `open`/`close`/`toggle` identities. Optional `onOpen`/`onClose` fire only on a real transition; `open()` while open (and `close()` while closed) is a no-op. StrictMode-safe.
+
+</details>
+
+<details>
+<summary><strong>useFocusTrap</strong> — Trap keyboard focus inside a subtree (modals/dialogs)</summary>
+
+```tsx
+import { useState } from "react";
+import { useFocusTrap } from "@usefy/use-focus-trap";
+
+const [open, setOpen] = useState(false);
+// Focus is trapped while `open`, moved to the first field on open, and restored
+// to the trigger on close. Escape is surfaced so you own the open/close state.
+const ref = useFocusTrap<HTMLDivElement>(open, {
+  onEscape: () => setOpen(false),
+});
+
+return open ? (
+  <div ref={ref} role="dialog" aria-modal="true">
+    <input placeholder="Name" />
+    <button onClick={() => setOpen(false)}>Close</button>
+  </div>
+) : null;
+```
+
+The accessibility primitive behind modals, dialogs, drawers, and popovers. While active, `Tab`/`Shift+Tab` cycle only through the container's focusable elements (recomputed live on every keypress, excluding `disabled`/`hidden`/`inert`/`tabindex="-1"`/invisible), focus moves in on activation (`initialFocus`), and returns to the trigger on close/unmount (`returnFocus`). `onEscape` is surfaced so you own open/close. Does one thing — pair it with `useScrollLock` for a full modal. SSR-safe and StrictMode-safe. Also exports the reusable `getFocusableElements` helper.
+
+</details>
+
+<details>
+<summary><strong>useFocusWithin</strong> — Track whether keyboard focus is anywhere within a subtree</summary>
+
+```tsx
+import { useFocusWithin } from "@usefy/use-focus-within";
+
+const [ref, focused] = useFocusWithin<HTMLFormElement>();
+
+return (
+  <form ref={ref} style={{ outline: focused ? "2px solid dodgerblue" : "none" }}>
+    <input placeholder="Name" />
+    <input placeholder="Email" />
+  </form>
+);
+```
+
+The reactive, state-driven equivalent of the CSS `:focus-within` pseudo-class. Attach the callback ref to a container and `focused` is `true` whenever the active element is that container or any descendant. Built on the bubbling `focusin`/`focusout` events, it keeps `focused` steady when focus moves *between* descendants (no flicker) and only flips off when focus leaves the subtree — with robust handling of the unreliable `relatedTarget: null` case (a deferred `document.activeElement` re-check). Optional `onFocus`/`onBlur` fire on the subtree's edge transitions only. SSR-safe and StrictMode-safe.
+
+</details>
+
+<details>
+<summary><strong>useLongPress</strong> — Long-press ("press and hold") gestures for mouse and touch</summary>
+
+```tsx
+import { useLongPress } from "@usefy/use-long-press";
+
+const bind = useLongPress(() => deleteItem(), {
+  threshold: 600,
+  moveThreshold: 10,
+  onCancel: (_event, { reason }) => console.log("cancelled:", reason),
+});
+
+return (
+  <button {...bind} style={{ touchAction: "none", userSelect: "none" }}>
+    Hold to delete
+  </button>
+);
+```
+
+Recognise a press-and-hold gesture on any element, for both mouse and touch, and get back a stable `bind` object of DOM handler props to spread onto the target. The `callback` fires once when the press is held for at least `threshold` ms (default `400`) without being released or dragged past `moveThreshold` px (default `10`; pass `false` to disable). Optional `onStart`/`onFinish`/`onCancel` (with a `{ reason }` of `"released"` | `"moved"`) cover the full lifecycle, all kept in latest-refs so inline callbacks never destabilise the handlers. Synthetic mouse events emitted after a touch are ignored, so a touch long-press never double-fires. The timer is cleared on release/cancel/unmount; SSR-safe and StrictMode-safe. (React's passive touch listeners mean `preventDefault` can't stop scrolling — use CSS `touch-action`/`user-select` instead.)
 
 </details>
 

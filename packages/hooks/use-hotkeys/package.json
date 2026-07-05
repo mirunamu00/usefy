@@ -1,0 +1,67 @@
+{
+  "name": "@usefy/use-hotkeys",
+  "version": "0.16.0",
+  "description": "A React hook for high-level keyboard shortcuts — combos, sequences, the cross-platform mod alias, scoping, and an input-field guard",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@usefy/use-event-listener": "workspace:*",
+    "@usefy/use-latest": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.0.0",
+    "jsdom": "^27.3.0",
+    "react": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/hooks/use-hotkeys"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "hooks",
+    "keyboard",
+    "hotkeys",
+    "shortcut",
+    "keybinding",
+    "sequence",
+    "mod",
+    "accessibility",
+    "useHotkeys"
+  ]
+}
