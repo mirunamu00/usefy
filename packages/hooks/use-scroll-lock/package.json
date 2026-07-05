@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-scroll-lock",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "A React hook to lock body scroll for modals, drawers, and menus — with iOS handling, a nested lock counter, and scroll-position restore",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-timeout",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "A React hook for declarative setTimeout with automatic cleanup and controls",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

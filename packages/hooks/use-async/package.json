@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-async",
-  "version": "0.17.0",
+  "version": "0.18.0",
   "description": "A React hook for the full lifecycle of a single async task — object-style state, immediate auto-run, and AbortController cancellation",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
