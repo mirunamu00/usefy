@@ -84,13 +84,14 @@ function App() {
 ```
 
 **Highlights:**
-- `useToggle`, `useCounter` — State management
+- `useToggle`, `useCounter`, `useObjectState` — State management (boolean, counter, object patch/merge)
 - `useRafState` — `useState` that batches updates to `requestAnimationFrame` (one commit per frame)
 - `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
-- `useLocalStorage`, `useSessionStorage` — Persistent storage
+- `useLocalStorage`, `useSessionStorage`, `useCookie` — Persistent storage (localStorage, sessionStorage, cookies)
 - `useEventListener`, `useOnClickOutside`, `useHover`, `useLongPress`, `useScrollLock`, `useFocusTrap`, `useFocusWithin` — DOM events, gestures & modal accessibility
 - `useKeyPress`, `useHotkeys` — Keyboard shortcuts, combinations, and sequences
-- `useMap`, `useSet`, `useList`, `useQueue` — Map / Set / array / FIFO queue data structure state management
+- `useMap`, `useSet`, `useList`, `useQueue`, `useStack` — Map / Set / array / FIFO queue / LIFO stack data structure state management
+- `useSelection` — Multi/single selection state for lists and tables (Set-based, checkbox-ready)
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
 - `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useScrollPosition`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
@@ -225,6 +226,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useTimer` | Countdown timer with drift compensation |
 | `useLocalStorage` | localStorage with cross-tab sync |
 | `useSessionStorage` | sessionStorage persistence |
+| `useCookie` | Browser cookie as React state, SSR-aware |
 | `useEventListener` | DOM events with auto cleanup |
 | `useOnClickOutside` | Outside click detection |
 | `useClickAnyWhere` | Global click detection |
@@ -238,6 +240,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useSet` | Set data structure state with immutable updates |
 | `useList` | Array state with push/filter/sort/insertAt/updateAt |
 | `useQueue` | FIFO queue state with enqueue/dequeue and immutable updates |
+| `useStack` | LIFO stack state with push/pop/peek and immutable updates |
 | `useHistoryState` | Undo/redo state history with time-travel |
 | `useStep` | Multi-step navigation for wizards, forms, carousels |
 | `useSignal` | Event-driven communication |
@@ -271,6 +274,8 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useAsync` | Full async task lifecycle — object-style state, immediate auto-run, and AbortController cancellation |
 | `usePolling` | Poll an async function on an interval — non-overlapping self-scheduling ticks, pause/resume, an `enabled` gate, and exponential backoff |
 | `useRafState` | A drop-in `useState` that batches updates to `requestAnimationFrame` — rapid scroll/resize/pointer/animation updates coalesce to at most one commit per frame |
+| `useObjectState` | Object state with immutable partial updates (patch/merge) and reset |
+| `useSelection` | Multi/single selection state for lists and tables — Set-based, checkbox-ready with indeterminate support |
 
 ### Kits (`@usefy/kits`)
 

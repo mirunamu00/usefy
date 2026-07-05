@@ -79,7 +79,11 @@
     "@usefy/use-async-fn": "workspace:*",
     "@usefy/use-async": "workspace:*",
     "@usefy/use-polling": "workspace:*",
-    "@usefy/use-raf-state": "workspace:*"
+    "@usefy/use-raf-state": "workspace:*",
+    "@usefy/use-object-state": "workspace:*",
+    "@usefy/use-stack": "workspace:*",
+    "@usefy/use-selection": "workspace:*",
+    "@usefy/use-cookie": "workspace:*"
   },
   "peerDependencies": {
     "react": "^18.0.0 || ^19.0.0"
