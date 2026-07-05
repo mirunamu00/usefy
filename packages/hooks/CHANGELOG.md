@@ -1,5 +1,131 @@
 # @usefy/usefy
 
+## 0.19.0
+
+### Minor Changes
+
+- f561890: feat(use-cookie): add @usefy/use-cookie hook
+
+  Read and write a browser cookie as React state — the cookie sibling of
+  `@usefy/use-local-storage` and `@usefy/use-session-storage`, completing the
+  storage trio with a matching API. Returns a `[value, setValue, remove]` tuple:
+  `setValue` writes `document.cookie` (with `encodeURIComponent` and the standard
+  attributes) and supports a functional updater, while `remove` deletes the cookie
+  and resets state to `initialValue`. Values are JSON-serialized by default with a
+  graceful fallback to the raw string, so plain (non-JSON) cookies never throw.
+  Supports the full set of cookie write attributes (`expires` as a `Date` or days,
+  `maxAge`, `path`, `domain`, `secure`, `sameSite`), is SSR-safe (guards all
+  `document` access and returns `initialValue` on the server via
+  `useSyncExternalStore`, exactly like its storage siblings), and keeps
+  same-document `useCookie(key)` instances in sync via an internal subscription.
+  Cookie-string construction is extracted into pure, unit-tested helpers.
+  `setValue`/`remove` are referentially stable and StrictMode-safe. Cross-tab
+  writes are not observed (cookies have no `storage` event) — documented, not
+  faked. Re-exported from the `@usefy/hooks` umbrella.
+
+- f561890: feat(use-object-state): add @usefy/use-object-state hook
+
+  Object state with immutable partial updates (patch/merge) and reset. Returns a
+  `useState`-style `[state, patch, reset]` tuple: `patch` shallow-merges a
+  `Partial<T>` (or a functional updater) immutably, and `reset()` restores the
+  captured initial value while `reset(next)` swaps in a provided object. `patch`
+  and `reset` are referentially stable, and the hook is SSR- and StrictMode-safe.
+  Re-exported from the `@usefy/hooks` umbrella.
+
+- f561890: feat(use-selection): add useSelection hook for multi/single selection state in lists and tables
+
+  Set-backed selection for checkbox lists and data tables. Stores keys (via a
+  `getKey` option, default identity for primitives), so a selection survives new
+  item identities across renders. Returns `selected` items (derived from the
+  current `items`), `isSelected`/`toggle`/`select`/`deselect`/`selectAll`/`clear`,
+  and `isAllSelected`/`isPartiallySelected`/`isNoneSelected` flags for an
+  indeterminate header checkbox. Supports a single-selection mode
+  (`multiple: false`) that replaces the selection. Item-facing values reconcile
+  automatically when `items` changes; immutable Set updates, stable actions,
+  no-op skipping, and SSR/StrictMode safe.
+
+- f561890: feat(use-stack): add @usefy/use-stack hook
+
+  A LIFO (last-in, first-out) stack as React state — the LIFO sibling of
+  `@usefy/use-queue`, identical in shape but `push` and `pop` both operate on the
+  top (the array's end). Returns a `[stack, { push, pop, peek, clear, reset }]`
+  tuple with a `readonly T[]` collection. `push` is variadic and appends to the
+  top, `pop` removes and returns the top item (`undefined` + no-op when empty),
+  `peek` reads the top without mutating, and no-op updates (empty `push`, and
+  `pop`/`clear` on an empty stack) are skipped to avoid needless re-renders.
+  Every mutation produces a new array (the previous state is never mutated), all
+  actions are referentially stable, initialization supports arrays/iterables/lazy
+  factories, and the hook is SSR- and StrictMode-safe. Re-exported from the
+  `@usefy/hooks` umbrella.
+
+### Patch Changes
+
+- Updated dependencies [f561890]
+- Updated dependencies [f561890]
+- Updated dependencies [f561890]
+- Updated dependencies [f561890]
+  - @usefy/use-cookie@0.19.0
+  - @usefy/use-object-state@0.19.0
+  - @usefy/use-selection@0.19.0
+  - @usefy/use-stack@0.19.0
+  - @usefy/use-async@0.19.0
+  - @usefy/use-async-fn@0.19.0
+  - @usefy/use-click-any-where@0.19.0
+  - @usefy/use-controllable-state@0.19.0
+  - @usefy/use-copy-to-clipboard@0.19.0
+  - @usefy/use-counter@0.19.0
+  - @usefy/use-dark-mode@0.19.0
+  - @usefy/use-debounce@0.19.0
+  - @usefy/use-debounce-callback@0.19.0
+  - @usefy/use-disclosure@0.19.0
+  - @usefy/use-document-title@0.19.0
+  - @usefy/use-event-callback@0.19.0
+  - @usefy/use-event-listener@0.19.0
+  - @usefy/use-focus-trap@0.19.0
+  - @usefy/use-focus-within@0.19.0
+  - @usefy/use-geolocation@0.19.0
+  - @usefy/use-history-state@0.19.0
+  - @usefy/use-hotkeys@0.19.0
+  - @usefy/use-hover@0.19.0
+  - @usefy/use-init@0.19.0
+  - @usefy/use-intersection-observer@0.19.0
+  - @usefy/use-is-client@0.19.0
+  - @usefy/use-is-first-render@0.19.0
+  - @usefy/use-isomorphic-layout-effect@0.19.0
+  - @usefy/use-key-press@0.19.0
+  - @usefy/use-latest@0.19.0
+  - @usefy/use-list@0.19.0
+  - @usefy/use-local-storage@0.19.0
+  - @usefy/use-long-press@0.19.0
+  - @usefy/use-map@0.19.0
+  - @usefy/use-measure@0.19.0
+  - @usefy/use-media-query@0.19.0
+  - @usefy/use-memory-monitor@0.19.0
+  - @usefy/use-merged-refs@0.19.0
+  - @usefy/use-mount@0.19.0
+  - @usefy/use-mutation-observer@0.19.0
+  - @usefy/use-on-click-outside@0.19.0
+  - @usefy/use-polling@0.19.0
+  - @usefy/use-preferred-color-scheme@0.19.0
+  - @usefy/use-previous@0.19.0
+  - @usefy/use-queue@0.19.0
+  - @usefy/use-raf-state@0.19.0
+  - @usefy/use-reduced-motion@0.19.0
+  - @usefy/use-scroll-lock@0.19.0
+  - @usefy/use-scroll-position@0.19.0
+  - @usefy/use-session-storage@0.19.0
+  - @usefy/use-set@0.19.0
+  - @usefy/use-signal@0.19.0
+  - @usefy/use-step@0.19.0
+  - @usefy/use-throttle@0.19.0
+  - @usefy/use-throttle-callback@0.19.0
+  - @usefy/use-timeout@0.19.0
+  - @usefy/use-timer@0.19.0
+  - @usefy/use-toggle@0.19.0
+  - @usefy/use-unmount@0.19.0
+  - @usefy/use-update-effect@0.19.0
+  - @usefy/use-window-size@0.19.0
+
 ## 0.18.0
 
 ### Minor Changes

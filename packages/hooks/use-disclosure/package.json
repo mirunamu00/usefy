@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-disclosure",
-  "version": "0.18.0",
+  "version": "0.19.0",
   "description": "A React hook for open/close/toggle state — modals, drawers, popovers, and accordions",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

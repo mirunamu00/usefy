@@ -1,5 +1,11 @@
 # @usefy/use-raf-state
 
+## 0.19.0
+
+### Patch Changes
+
+- @usefy/use-unmount@0.19.0
+
 ## 0.18.0
 
 ### Minor Changes
