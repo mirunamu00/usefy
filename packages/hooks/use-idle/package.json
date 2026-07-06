@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-idle",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "A React hook that reports user inactivity after a timeout, with throttled activity listeners, visibility awareness, and SSR support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

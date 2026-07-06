@@ -1,5 +1,11 @@
 # @usefy/use-focus-within
 
+## 0.20.0
+
+### Patch Changes
+
+- @usefy/use-latest@0.20.0
+
 ## 0.19.0
 
 ### Patch Changes

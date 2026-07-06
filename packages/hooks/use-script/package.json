@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-script",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "A React hook for loading an external script with idle/loading/ready/error status, tag deduplication, and cleanup — SSR-safe and typed",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
