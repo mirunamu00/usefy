@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-history-state",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "A React hook for undo/redo state history with time-travel",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

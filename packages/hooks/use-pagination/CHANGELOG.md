@@ -1,5 +1,13 @@
 # @usefy/use-pagination
 
+## 0.21.0
+
+### Patch Changes
+
+- Updated dependencies [547ac84]
+- Updated dependencies [ba7c5da]
+  - @usefy/use-controllable-state@0.21.0
+
 ## 0.20.0
 
 ### Minor Changes

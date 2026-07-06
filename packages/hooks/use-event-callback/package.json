@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-event-callback",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "A React hook returning a stable callback that always sees the latest props and state",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

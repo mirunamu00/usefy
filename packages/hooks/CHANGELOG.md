@@ -1,5 +1,96 @@
 # @usefy/usefy
 
+## 0.21.0
+
+### Minor Changes
+
+- 547ac84: Fix `useControllableState` setter identity so it is genuinely stable in **controlled** mode. Previously the setter listed `controlledValue` in its `useCallback` deps, so it got a new identity on every render where the controlled prop changed — despite the docs promising a permanent identity — causing extra renders / effect re-runs for consumers that pass it to `React.memo` children or effect dependency arrays. The setter now reads the current mode and controlled value from refs (the Radix pattern), so its identity is constant for the component's lifetime in both modes while still resolving updater functions against the freshest prop. Also **removed the internal `isUpdater` and `useCallbackRef` helpers from the package's public entry point** — they were never documented and `useCallbackRef` duplicates `@usefy/use-event-callback`; they remain internal. Added controlled-mode setter-stability tests and a StrictMode test.
+- 547ac84: Stop re-exporting the generic `isBrowser`, `readStoredMode`, and `writeStoredMode` helpers from the `@usefy/hooks` umbrella. These are `use-dark-mode` internals that leaked into the umbrella's public namespace — `isBrowser` in particular is a generic SSR guard that would collide with future packages (the umbrella already keeps `useIdle`'s `isBrowser` package-only for exactly this reason). The `useDarkMode` hook, its dark-mode-specific helpers (`prefersDark`, `resolveIsDark`, `applyTheme`), and its types are unchanged. Import the removed generic helpers directly from `@usefy/use-dark-mode` if you were relying on them. Also corrects the `use-dark-mode` README's test count and coverage figures to the real values (21 tests, 94.8%).
+- 547ac84: Add an `initializeWithValue` option to `usePreferredColorScheme` (default `true`, matching `useMediaQuery`). Set it to `false` to render `defaultScheme` on the first client render and defer the real `matchMedia` read to a post-commit effect, avoiding a React hydration mismatch when the server rendered `defaultScheme` but the user's system preference differs.
+- 547ac84: Add an `initializeWithValue` option to `useReducedMotion` (default `true`, matching `useMediaQuery`). Set it to `false` to render `defaultValue` on the first client render and defer the real `matchMedia` read to a post-commit effect, avoiding a React hydration mismatch when the server rendered `defaultValue` but the user prefers reduced motion. Also coerce the `MediaQueryList.matches` read to a strict boolean (`=== true`) so a malformed environment reporting `undefined` can never leak a non-boolean through the `boolean` return type.
+
+### Patch Changes
+
+- ba7c5da: Fix incorrect npm package-provenance metadata. The `repository.directory` field pointed at non-existent paths for these packages (e.g. `packages/use-toggle` instead of `packages/hooks/use-toggle`, and the `@usefy/hooks` umbrella pointed at `packages/usefy`), which broke the "source" link on each npm package page. Each now points at its real location in the monorepo. Additionally, `@usefy/memory-monitor` had its `repository.url`, `bugs.url`, and `homepage` pointing at a non-existent `usefy/usefy` GitHub org and a wrong `packages/components/...` path — these are corrected to `mirunamu00/usefy` and `packages/kits/memory-monitor`. Metadata-only; no code or runtime change.
+- 547ac84: Clarify that `usePrevious` returns the previous **distinct** value — the value from the last render in which it actually changed — not simply "the value one render ago". The behavior is unchanged (it always tracked distinct values); the JSDoc summary, README, and umbrella descriptions now lead with the distinct-value semantic instead of burying it, so consumers aren't surprised when an unchanged re-render leaves the returned "previous" un-advanced. Added a test pinning the `1 → 1 → 2` distinct-tracking contract.
+- Updated dependencies [547ac84]
+- Updated dependencies [547ac84]
+- Updated dependencies [ba7c5da]
+- Updated dependencies [547ac84]
+- Updated dependencies [547ac84]
+- Updated dependencies [547ac84]
+- Updated dependencies [547ac84]
+- Updated dependencies [547ac84]
+- Updated dependencies [547ac84]
+  - @usefy/use-controllable-state@0.21.0
+  - @usefy/use-event-callback@0.21.0
+  - @usefy/use-click-any-where@0.21.0
+  - @usefy/use-copy-to-clipboard@0.21.0
+  - @usefy/use-counter@0.21.0
+  - @usefy/use-debounce@0.21.0
+  - @usefy/use-debounce-callback@0.21.0
+  - @usefy/use-disclosure@0.21.0
+  - @usefy/use-event-listener@0.21.0
+  - @usefy/use-geolocation@0.21.0
+  - @usefy/use-init@0.21.0
+  - @usefy/use-intersection-observer@0.21.0
+  - @usefy/use-local-storage@0.21.0
+  - @usefy/use-memory-monitor@0.21.0
+  - @usefy/use-merged-refs@0.21.0
+  - @usefy/use-on-click-outside@0.21.0
+  - @usefy/use-session-storage@0.21.0
+  - @usefy/use-signal@0.21.0
+  - @usefy/use-throttle@0.21.0
+  - @usefy/use-throttle-callback@0.21.0
+  - @usefy/use-timer@0.21.0
+  - @usefy/use-toggle@0.21.0
+  - @usefy/use-unmount@0.21.0
+  - @usefy/use-dark-mode@0.21.0
+  - @usefy/use-is-client@0.21.0
+  - @usefy/use-preferred-color-scheme@0.21.0
+  - @usefy/use-previous@0.21.0
+  - @usefy/use-reduced-motion@0.21.0
+  - @usefy/use-update-effect@0.21.0
+  - @usefy/use-pagination@0.21.0
+  - @usefy/use-hotkeys@0.21.0
+  - @usefy/use-infinite-scroll@0.21.0
+  - @usefy/use-raf-state@0.21.0
+  - @usefy/use-async@0.21.0
+  - @usefy/use-async-fn@0.21.0
+  - @usefy/use-cookie@0.21.0
+  - @usefy/use-document-title@0.21.0
+  - @usefy/use-focus-trap@0.21.0
+  - @usefy/use-focus-within@0.21.0
+  - @usefy/use-history-state@0.21.0
+  - @usefy/use-hover@0.21.0
+  - @usefy/use-idle@0.21.0
+  - @usefy/use-is-first-render@0.21.0
+  - @usefy/use-isomorphic-layout-effect@0.21.0
+  - @usefy/use-key-press@0.21.0
+  - @usefy/use-latest@0.21.0
+  - @usefy/use-list@0.21.0
+  - @usefy/use-long-press@0.21.0
+  - @usefy/use-map@0.21.0
+  - @usefy/use-measure@0.21.0
+  - @usefy/use-media-query@0.21.0
+  - @usefy/use-mount@0.21.0
+  - @usefy/use-mutation-observer@0.21.0
+  - @usefy/use-network-state@0.21.0
+  - @usefy/use-object-state@0.21.0
+  - @usefy/use-page-visibility@0.21.0
+  - @usefy/use-permission@0.21.0
+  - @usefy/use-polling@0.21.0
+  - @usefy/use-queue@0.21.0
+  - @usefy/use-script@0.21.0
+  - @usefy/use-scroll-lock@0.21.0
+  - @usefy/use-scroll-position@0.21.0
+  - @usefy/use-selection@0.21.0
+  - @usefy/use-set@0.21.0
+  - @usefy/use-stack@0.21.0
+  - @usefy/use-step@0.21.0
+  - @usefy/use-timeout@0.21.0
+  - @usefy/use-window-size@0.21.0
+
 ## 0.20.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-set",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "A React hook for managing Set state with immutable updates",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-page-visibility",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "A React hook for tracking document/tab visibility (foreground vs. background) via the Page Visibility API, with an optional onChange callback and SSR support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
