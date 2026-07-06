@@ -44,7 +44,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mirunamu00/usefy.git",
-    "directory": "packages/use-geolocation"
+    "directory": "packages/hooks/use-geolocation"
   },
   "license": "MIT",
   "keywords": [

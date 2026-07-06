@@ -5,7 +5,7 @@
 <h1 align="center">@usefy/use-previous</h1>
 
 <p align="center">
-  <strong>Returns the value from the previous render</strong>
+  <strong>Returns the previous distinct value (the value from the last render it changed)</strong>
 </p>
 
 <p align="center">
@@ -33,7 +33,7 @@
 
 ## Overview
 
-`usePrevious` is part of the [@usefy](https://www.npmjs.com/org/usefy) ecosystem — a collection of production-ready, TypeScript-first, SSR-safe React hooks. Returns the value from the previous render.
+`usePrevious` is part of the [@usefy](https://www.npmjs.com/org/usefy) ecosystem — a collection of production-ready, TypeScript-first, SSR-safe React hooks. It returns the previous **distinct** value: the value from the last render in which it actually changed (compared with `Object.is` by default), not simply the value one render ago. If a value is unchanged across a re-render, the returned "previous" does not advance — the behavior change-detection logic usually wants. Pass a custom comparator to treat referentially-different-but-equal values as unchanged.
 
 ## Features
 
@@ -73,7 +73,7 @@ const prev = usePrevious(count); // undefined, then the previous value
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-previous/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **4 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-previous/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **6 tests**, 100% statement coverage.
 
 ## License
 

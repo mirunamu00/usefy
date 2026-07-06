@@ -45,7 +45,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mirunamu00/usefy.git",
-    "directory": "packages/use-debounce"
+    "directory": "packages/hooks/use-debounce"
   },
   "license": "MIT",
   "keywords": [

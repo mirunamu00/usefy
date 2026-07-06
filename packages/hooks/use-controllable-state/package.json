@@ -45,7 +45,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mirunamu00/usefy.git",
-    "directory": "packages/use-controllable-state"
+    "directory": "packages/hooks/use-controllable-state"
   },
   "license": "MIT",
   "keywords": [

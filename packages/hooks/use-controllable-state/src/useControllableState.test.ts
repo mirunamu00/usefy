@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import { describe, it, expect, vi } from "vitest";
 import { act, renderHook } from "@testing-library/react";
 import { useControllableState } from "./useControllableState";
@@ -198,6 +199,56 @@ describe("useControllableState", () => {
 
       act(() => result.current[1](1));
       expect(result.current[1]).toBe(first);
+    });
+
+    it("keeps a stable setter identity in controlled mode as the value prop changes", () => {
+      const onChange = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ value }) => useControllableState({ value, onChange }),
+        { initialProps: { value: "a" } }
+      );
+      const first = result.current[1];
+
+      rerender({ value: "b" });
+      expect(result.current[1]).toBe(first);
+
+      rerender({ value: "c" });
+      expect(result.current[1]).toBe(first);
+
+      // Still resolves against the freshest prop despite the stable identity.
+      act(() => result.current[1]("d"));
+      expect(onChange).toHaveBeenCalledWith("d");
+    });
+
+    it("keeps a stable setter identity across a controlled/uncontrolled switch", () => {
+      const { result, rerender } = renderHook(
+        ({ value }: { value?: number }) =>
+          useControllableState({ value, defaultValue: 0 }),
+        { initialProps: { value: undefined as number | undefined } }
+      );
+      const first = result.current[1];
+
+      rerender({ value: 5 });
+      expect(result.current[1]).toBe(first);
+
+      rerender({ value: undefined });
+      expect(result.current[1]).toBe(first);
+    });
+  });
+
+  describe("StrictMode", () => {
+    it("fires onChange exactly once on a real uncontrolled change", () => {
+      const onChange = vi.fn();
+      const { result } = renderHook(
+        () => useControllableState({ defaultValue: "a", onChange }),
+        { wrapper: StrictMode }
+      );
+
+      expect(onChange).not.toHaveBeenCalled();
+
+      act(() => result.current[1]("b"));
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenCalledWith("b");
     });
   });
 });

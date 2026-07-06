@@ -75,6 +75,26 @@ describe("usePreferredColorScheme", () => {
     expect(result.current).toBe("dark");
   });
 
+  it("defaults to 'light' when matchMedia is unavailable and no default is given", () => {
+    vi.stubGlobal("matchMedia", undefined);
+    const { result } = renderHook(() => usePreferredColorScheme());
+    expect(result.current).toBe("light");
+  });
+
+  it("defers the real read to a post-commit effect when initializeWithValue is false", () => {
+    const renders: string[] = [];
+    setupMatchMedia(true); // system prefers dark
+    renderHook(() => {
+      const value = usePreferredColorScheme({ initializeWithValue: false });
+      renders.push(value);
+      return value;
+    });
+    // First client render uses the default ("light") to match SSR, the effect
+    // then flips it to the real value ("dark").
+    expect(renders[0]).toBe("light");
+    expect(renders[renders.length - 1]).toBe("dark");
+  });
+
   it("uses addListener/removeListener when addEventListener is absent", () => {
     const listeners = new Set<Listener>();
     let matches = false;

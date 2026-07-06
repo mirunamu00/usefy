@@ -40,4 +40,16 @@ describe("useEventCallback", () => {
     );
     expect(result.current(2, 3)).toBe(5);
   });
+
+  it("throws if the returned callback is invoked during render", () => {
+    // Before the layout effect commits, ref.current is the guard that throws —
+    // this locks in the documented "cannot call while rendering" contract.
+    expect(() =>
+      renderHook(() => {
+        const cb = useEventCallback(() => "nope");
+        cb();
+        return cb;
+      })
+    ).toThrow("useEventCallback: cannot call the callback while rendering.");
+  });
 });

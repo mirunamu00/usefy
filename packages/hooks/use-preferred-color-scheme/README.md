@@ -68,11 +68,14 @@ const scheme = usePreferredColorScheme(); // "light" | "dark"
 
 ## API
 
-`usePreferredColorScheme(options?): "light" | "dark"` — `options.defaultScheme` sets the SSR fallback (default `"light"`).
+`usePreferredColorScheme(options?): "light" | "dark"`
+
+- `options.defaultScheme` — scheme returned on the server / when `matchMedia` is unavailable (default `"light"`).
+- `options.initializeWithValue` — when `true` (default), the real preference is read synchronously on the first client render. Set to `false` to render `defaultScheme` on the first client render and defer the real read to a post-commit effect, avoiding a hydration mismatch when the server rendered `defaultScheme`.
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-preferred-color-scheme/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **6 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-preferred-color-scheme/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **8 tests**, 100% statement coverage.
 
 ## License
 
