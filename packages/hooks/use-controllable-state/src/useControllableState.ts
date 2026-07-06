@@ -96,15 +96,23 @@ export function useControllableState<T>(
     }
   }, [uncontrolledValue, isControlled, handleChange]);
 
+  // Mirror the mode and the current controlled prop into refs so the setter can
+  // read the freshest values without listing them as deps — that keeps its
+  // identity permanent even in controlled mode where `controlledValue` changes
+  // every render (the Radix pattern). handleChange is already permanently stable.
+  const isControlledRef = useRef(isControlled);
+  isControlledRef.current = isControlled;
+  const controlledValueRef = useRef(controlledValue);
+  controlledValueRef.current = controlledValue;
+
   const setValue = useCallback<Dispatch<SetStateAction<T>>>(
     (next) => {
-      if (isControlled) {
+      if (isControlledRef.current) {
         // Controlled: resolve against the current prop, notify only on a real
         // change, and let the parent own the update.
-        const resolved = isUpdater(next)
-          ? next(controlledValue as T)
-          : next;
-        if (!Object.is(resolved, controlledValue)) {
+        const current = controlledValueRef.current as T;
+        const resolved = isUpdater(next) ? next(current) : next;
+        if (!Object.is(resolved, current)) {
           handleChange(resolved);
         }
       } else {
@@ -114,7 +122,7 @@ export function useControllableState<T>(
         setUncontrolledValue(next as SetStateAction<T | undefined>);
       }
     },
-    [isControlled, controlledValue, handleChange]
+    [handleChange]
   );
 
   return [value, setValue] as const;

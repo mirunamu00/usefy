@@ -69,11 +69,14 @@ const reduced = useReducedMotion();
 
 ## API
 
-`useReducedMotion(options?): boolean` — `options.defaultValue` sets the SSR fallback (default `false`).
+`useReducedMotion(options?): boolean`
+
+- `options.defaultValue` — value returned on the server / when `matchMedia` is unavailable (default `false`).
+- `options.initializeWithValue` — when `true` (default), the real preference is read synchronously on the first client render. Set to `false` to render `defaultValue` on the first client render and defer the real read to a post-commit effect, avoiding a hydration mismatch when the server rendered `defaultValue`.
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-reduced-motion/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **6 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-reduced-motion/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **9 tests**, 100% statement coverage.
 
 ## License
 

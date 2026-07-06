@@ -73,7 +73,7 @@ const { isDark, toggle } = useDarkMode();
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-dark-mode/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **18 tests**, 96% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-dark-mode/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **21 tests**, 94.8% statement coverage.
 
 ## License
 

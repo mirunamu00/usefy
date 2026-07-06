@@ -14,6 +14,15 @@ export interface UsePreferredColorSchemeOptions {
    * @default "light"
    */
   defaultScheme?: ColorScheme;
+  /**
+   * When `true` (default), the real `matchMedia` value is read synchronously on
+   * the first client render. Set to `false` to render `defaultScheme` on the
+   * first client render too and defer the real read to a post-commit effect —
+   * this avoids a React hydration mismatch when the server rendered
+   * `defaultScheme` but the user's system preference differs.
+   * @default true
+   */
+  initializeWithValue?: boolean;
 }
 
 const DARK_QUERY = "(prefers-color-scheme: dark)";
@@ -32,7 +41,7 @@ function isSupported(): boolean {
  * This is the primitive that reflects the *system* preference; for a full
  * theme with manual override and persistence use `useDarkMode`.
  *
- * @param options - Configuration (SSR default scheme)
+ * @param options - Configuration (`defaultScheme`, `initializeWithValue`)
  * @returns `"light"` or `"dark"`
  *
  * @example
@@ -44,10 +53,10 @@ function isSupported(): boolean {
 export function usePreferredColorScheme(
   options: UsePreferredColorSchemeOptions = {}
 ): ColorScheme {
-  const { defaultScheme = "light" } = options;
+  const { defaultScheme = "light", initializeWithValue = true } = options;
 
   const [scheme, setScheme] = useState<ColorScheme>(() => {
-    if (!isSupported()) {
+    if (!initializeWithValue || !isSupported()) {
       return defaultScheme;
     }
     return window.matchMedia(DARK_QUERY).matches ? "dark" : "light";

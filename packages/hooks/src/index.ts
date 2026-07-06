@@ -339,13 +339,13 @@ export {
 } from "@usefy/use-reduced-motion";
 
 // useDarkMode
+// Note: the generic `isBrowser`/`readStoredMode`/`writeStoredMode` helpers are
+// intentionally kept package-only — they must not pollute the umbrella namespace
+// or collide with future packages (same policy as useIdle above).
 export {
   useDarkMode,
-  isBrowser,
   prefersDark,
   resolveIsDark,
-  readStoredMode,
-  writeStoredMode,
   applyTheme,
   type DarkModeMode,
   type UseDarkModeOptions,

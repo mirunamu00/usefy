@@ -9,12 +9,16 @@ import { useRef } from "react";
 export type UsePreviousComparator<T> = (previous: T, current: T) => boolean;
 
 /**
- * Returns the value from the previous render.
+ * Returns the previous **distinct** value — the value from the last render in
+ * which it actually changed, not simply the value from the render before this
+ * one.
  *
  * On the first render there is no previous value, so it returns `undefined`.
  * By default values are compared with `Object.is`, so a value that never
- * changes keeps `undefined` as its "previous" — the hook tracks the previous
- * *distinct* value, which is what change-detection logic usually wants.
+ * changes keeps `undefined` as its "previous". This "previous distinct value"
+ * semantic is what change-detection logic usually wants, but it differs from a
+ * naive "value one render ago": if `value` is unchanged across a re-render, the
+ * returned previous does **not** advance.
  *
  * Pass a custom `isEqual` to ignore changes that are referentially different
  * but semantically equal (e.g. new object literals with the same fields).

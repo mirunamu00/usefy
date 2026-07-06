@@ -73,6 +73,42 @@ describe("useReducedMotion", () => {
     expect(result.current).toBe(true);
   });
 
+  it("defaults defaultValue to false when matchMedia is unavailable", () => {
+    vi.stubGlobal("matchMedia", undefined);
+    const { result } = renderHook(() => useReducedMotion());
+    expect(result.current).toBe(false);
+  });
+
+  it("defers the real read to a post-commit effect when initializeWithValue is false", () => {
+    const renders: boolean[] = [];
+    setupMatchMedia(true); // user prefers reduced motion
+    renderHook(() => {
+      const value = useReducedMotion({ initializeWithValue: false });
+      renders.push(value);
+      return value;
+    });
+    // First client render uses the default (false) to match SSR, the effect
+    // then flips it to the real value (true).
+    expect(renders[0]).toBe(false);
+    expect(renders[renders.length - 1]).toBe(true);
+  });
+
+  it("never leaks a non-boolean matches value (coerces to a strict boolean)", () => {
+    // A malformed environment/polyfill can report `undefined` for `matches`.
+    window.matchMedia = vi.fn(
+      () =>
+        ({
+          matches: undefined,
+          addEventListener: () => {},
+          removeEventListener: () => {},
+        }) as unknown as MediaQueryList
+    ) as unknown as typeof window.matchMedia;
+
+    const { result } = renderHook(() => useReducedMotion());
+    expect(result.current).toBe(false);
+    expect(typeof result.current).toBe("boolean");
+  });
+
   it("uses addListener/removeListener when addEventListener is absent", () => {
     const listeners = new Set<Listener>();
     let matches = false;
