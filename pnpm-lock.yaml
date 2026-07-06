@@ -144,6 +144,12 @@ importers:
       '@usefy/use-hover':
         specifier: workspace:*
         version: link:../../packages/hooks/use-hover
+      '@usefy/use-idle':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-idle
+      '@usefy/use-infinite-scroll':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-infinite-scroll
       '@usefy/use-init':
         specifier: workspace:*
         version: link:../../packages/hooks/use-init
@@ -195,12 +201,24 @@ importers:
       '@usefy/use-mutation-observer':
         specifier: workspace:*
         version: link:../../packages/hooks/use-mutation-observer
+      '@usefy/use-network-state':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-network-state
       '@usefy/use-object-state':
         specifier: workspace:*
         version: link:../../packages/hooks/use-object-state
       '@usefy/use-on-click-outside':
         specifier: workspace:*
         version: link:../../packages/hooks/use-on-click-outside
+      '@usefy/use-page-visibility':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-page-visibility
+      '@usefy/use-pagination':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-pagination
+      '@usefy/use-permission':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-permission
       '@usefy/use-polling':
         specifier: workspace:*
         version: link:../../packages/hooks/use-polling
@@ -222,6 +240,9 @@ importers:
       '@usefy/use-resize-observer':
         specifier: workspace:*
         version: link:../../packages/hooks/use-resize-observer
+      '@usefy/use-script':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-script
       '@usefy/use-scroll-lock':
         specifier: workspace:*
         version: link:../../packages/hooks/use-scroll-lock
@@ -427,6 +448,12 @@ importers:
       '@usefy/use-hover':
         specifier: workspace:*
         version: link:use-hover
+      '@usefy/use-idle':
+        specifier: workspace:*
+        version: link:use-idle
+      '@usefy/use-infinite-scroll':
+        specifier: workspace:*
+        version: link:use-infinite-scroll
       '@usefy/use-init':
         specifier: workspace:*
         version: link:use-init
@@ -478,12 +505,24 @@ importers:
       '@usefy/use-mutation-observer':
         specifier: workspace:*
         version: link:use-mutation-observer
+      '@usefy/use-network-state':
+        specifier: workspace:*
+        version: link:use-network-state
       '@usefy/use-object-state':
         specifier: workspace:*
         version: link:use-object-state
       '@usefy/use-on-click-outside':
         specifier: workspace:*
         version: link:use-on-click-outside
+      '@usefy/use-page-visibility':
+        specifier: workspace:*
+        version: link:use-page-visibility
+      '@usefy/use-pagination':
+        specifier: workspace:*
+        version: link:use-pagination
+      '@usefy/use-permission':
+        specifier: workspace:*
+        version: link:use-permission
       '@usefy/use-polling':
         specifier: workspace:*
         version: link:use-polling
@@ -502,6 +541,9 @@ importers:
       '@usefy/use-reduced-motion':
         specifier: workspace:*
         version: link:use-reduced-motion
+      '@usefy/use-script':
+        specifier: workspace:*
+        version: link:use-script
       '@usefy/use-scroll-lock':
         specifier: workspace:*
         version: link:use-scroll-lock
@@ -1259,6 +1301,76 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
+  packages/hooks/use-idle:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
+  packages/hooks/use-infinite-scroll:
+    dependencies:
+      '@usefy/use-intersection-observer':
+        specifier: workspace:*
+        version: link:../use-intersection-observer
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
   packages/hooks/use-init:
     devDependencies:
       '@testing-library/jest-dom':
@@ -1828,6 +1940,39 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
+  packages/hooks/use-network-state:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
   packages/hooks/use-object-state:
     devDependencies:
       '@testing-library/jest-dom':
@@ -1887,6 +2032,112 @@ importers:
       react:
         specifier: ^19.0.0
         version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
+  packages/hooks/use-page-visibility:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
+  packages/hooks/use-pagination:
+    dependencies:
+      '@usefy/use-controllable-state':
+        specifier: workspace:*
+        version: link:../use-controllable-state
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@testing-library/user-event':
+        specifier: ^14.6.1
+        version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
+  packages/hooks/use-permission:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.7)
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.3(react@19.2.3)
       rimraf:
         specifier: ^6.0.1
         version: 6.1.2
@@ -2129,6 +2380,36 @@ importers:
       '@testing-library/user-event':
         specifier: ^14.6.1
         version: 14.6.1(@testing-library/dom@10.4.1)
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      jsdom:
+        specifier: ^27.3.0
+        version: 27.3.0
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.0.0
+        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.0.0
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
+  packages/hooks/use-script:
+    devDependencies:
+      '@testing-library/jest-dom':
+        specifier: ^6.9.1
+        version: 6.9.1
+      '@testing-library/react':
+        specifier: ^16.3.1
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@types/react':
         specifier: ^19.0.0
         version: 19.2.7

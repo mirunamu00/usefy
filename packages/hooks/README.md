@@ -169,6 +169,13 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-object-state" target="_blank" rel="noopener noreferrer">@usefy/use-object-state</a> | Object state with immutable partial updates (patch/merge) and reset | <a href="https://www.npmjs.com/package/@usefy/use-object-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-object-state.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-stack" target="_blank" rel="noopener noreferrer">@usefy/use-stack</a> | LIFO stack state with push/pop/peek and immutable updates | <a href="https://www.npmjs.com/package/@usefy/use-stack" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-stack.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-selection" target="_blank" rel="noopener noreferrer">@usefy/use-selection</a> | Multi/single selection state for lists and tables — Set-based, checkbox-ready with indeterminate support | <a href="https://www.npmjs.com/package/@usefy/use-selection" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-selection.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-infinite-scroll" target="_blank" rel="noopener noreferrer">@usefy/use-infinite-scroll</a> | Sentinel-driven infinite loading built on IntersectionObserver — fires `loadMore` once per intersection, respects `hasMore`/`loading`/`enabled` | <a href="https://www.npmjs.com/package/@usefy/use-infinite-scroll" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-infinite-scroll.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-pagination" target="_blank" rel="noopener noreferrer">@usefy/use-pagination</a> | Headless pagination state machine — controlled/uncontrolled current page, derived `pageCount`, a slice-ready 0-based `range`, and an ellipsis-aware `items` pager model | <a href="https://www.npmjs.com/package/@usefy/use-pagination" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-pagination.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-network-state" target="_blank" rel="noopener noreferrer">@usefy/use-network-state</a> | Online/offline status + Network Information API (`effectiveType`, `downlink`, `saveData`), SSR-safe via useSyncExternalStore | <a href="https://www.npmjs.com/package/@usefy/use-network-state" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-network-state.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![95%](https://img.shields.io/badge/coverage-95%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-page-visibility" target="_blank" rel="noopener noreferrer">@usefy/use-page-visibility</a> | Track tab/window visibility (foreground vs. background) via the Page Visibility API, with optional `onChange` and SSR support | <a href="https://www.npmjs.com/package/@usefy/use-page-visibility" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-page-visibility.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![92%](https://img.shields.io/badge/coverage-92%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-idle" target="_blank" rel="noopener noreferrer">@usefy/use-idle</a> | Report user inactivity after a timeout, with throttled activity listeners, visibility awareness, and SSR support | <a href="https://www.npmjs.com/package/@usefy/use-idle" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-idle.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-permission" target="_blank" rel="noopener noreferrer">@usefy/use-permission</a> | Read Permissions API status with live updates — `{ state, status, isSupported, error }`, keyed on descriptor contents, SSR-safe, accepts any permission name | <a href="https://www.npmjs.com/package/@usefy/use-permission" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-permission.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-script" target="_blank" rel="noopener noreferrer">@usefy/use-script</a> | Load an external script with `idle/loading/ready/error` status, `<script>` deduplication across components, and ref-counted cleanup — SSR-safe and StrictMode-safe | <a href="https://www.npmjs.com/package/@usefy/use-script" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-script.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -196,6 +203,11 @@ import {
   useHistoryState,
   useStep,
   useWindowSize,
+  useNetworkState,
+  usePageVisibility,
+  useIdle,
+  usePermission,
+  useScript,
   useSignal,
   useUnmount,
   useInit,
@@ -230,6 +242,8 @@ import {
   useObjectState,
   useStack,
   useSelection,
+  useInfiniteScroll,
+  usePagination,
 } from "@usefy/hooks";
 
 function App() {
@@ -1062,6 +1076,131 @@ Real-time width/height with debounce/throttle, SSR-safe initial values, no-op re
 </details>
 
 <details>
+<summary><strong>useNetworkState</strong> — Online/offline + Network Information API (effectiveType, downlink, saveData)</summary>
+
+```tsx
+import { useNetworkState } from "@usefy/use-network-state";
+
+// Online/offline banner
+const { online } = useNetworkState();
+if (!online) return <div role="alert">You are offline.</div>;
+
+// Adapt to connection quality
+const { effectiveType, saveData } = useNetworkState();
+const lowData = saveData || effectiveType === "slow-2g" || effectiveType === "2g";
+return lowData ? <LowResImage /> : <HighResImage />;
+
+// Full snapshot
+const { online, since, downlink, rtt, type } = useNetworkState();
+```
+
+Combines `navigator.onLine` (window `online`/`offline` events) with the Network Information API (`navigator.connection` `change` event, plus `mozConnection`/`webkitConnection` fallbacks). Built on `useSyncExternalStore` for tear-free, SSR-safe reads (`{ online: true }` on the server). Every Network Information field degrades to `undefined` on browsers without the API (Firefox, Safari) — `online` always works.
+
+</details>
+
+<details>
+<summary><strong>usePageVisibility</strong> — Tab/window visibility (foreground vs. background) via the Page Visibility API</summary>
+
+```tsx
+import { usePageVisibility } from "@usefy/use-page-visibility";
+
+// Boolean-first: true when the tab is in the foreground
+const visible = usePageVisibility();
+
+// Pause work while hidden
+useEffect(() => {
+  if (!visible) return; // don't poll in the background
+  const id = setInterval(fetchUpdates, 5000);
+  return () => clearInterval(id);
+}, [visible]);
+
+// React to transitions with an onChange callback
+usePageVisibility((visible) => {
+  if (visible) video.play();
+  else video.pause();
+});
+```
+
+Reports whether the page is visible through the document `visibilitychange` event. Built on `useSyncExternalStore` for tear-free, SSR-safe reads (returns `true` on the server, no hydration mismatch). The optional `onChange` callback fires on each transition and is read through a ref, so replacing it never re-subscribes the listener. The listener is cleaned up on unmount.
+
+</details>
+
+<details>
+<summary><strong>useIdle</strong> — Report user inactivity after a timeout, with throttled activity listeners</summary>
+
+```tsx
+import { useIdle } from "@usefy/use-idle";
+
+// Boolean-first: true once the user has been inactive for the timeout
+const idle = useIdle(60_000); // one minute
+
+// Log the user out after 5 minutes of inactivity
+const idle = useIdle(5 * 60_000);
+useEffect(() => {
+  if (idle) logout();
+}, [idle]);
+
+// Only listen to keyboard activity, start in the idle state
+const idle = useIdle(30_000, {
+  events: ["keydown"],
+  initialState: true,
+});
+```
+
+Returns `false` while the user is active and flips to `true` once no listened activity (mouse, keyboard, touch, wheel, resize, tab focus) has occurred for `timeout` ms; the next activity flips it back. Activity is throttled to a leading-edge timer reset at most once every ~200ms, so high-frequency events (`mousemove`, `wheel`, `resize`) never thrash React state. `visibilitychange` is handled specially: returning to a backgrounded tab counts as activity, while backgrounding does not reset the timer (the user is allowed to fall idle) — the `react-use`/`@mantine/hooks` convention. SSR-safe (no listeners on the server, returns `initialState` inertly) and leak-free (every listener + timer is cleaned up on unmount or when `timeout`/`events`/`element` change).
+
+</details>
+
+<details>
+<summary><strong>usePermission</strong> — Permissions API status with live updates</summary>
+
+```tsx
+import { usePermission } from "@usefy/use-permission";
+
+// Destructure the field you need
+const { state } = usePermission({ name: "camera" });
+// state: 'granted' | 'denied' | 'prompt' | null
+
+// Full surface: cover the async + unsupported/error edges
+const { state, status, isSupported, error } = usePermission({
+  name: "geolocation",
+});
+// status: 'idle' | 'pending' | 'granted' | 'denied' | 'prompt' | 'unsupported' | 'error'
+
+// Descriptors with extra fields typecheck too
+usePermission({ name: "push", userVisibleOnly: true });
+usePermission({ name: "midi", sysex: true });
+```
+
+Calls `navigator.permissions.query(descriptor)` and subscribes to the returned `PermissionStatus`'s `change` event, so `state` updates live when the user grants or revokes the permission — no polling, no re-mount. Returns a rich object rather than a bare `PermissionState` so the async and unavailable paths are explicit: `isSupported` is `false` during SSR and in browsers without the Permissions API (`status: 'unsupported'`), and a rejected query (some browsers throw for unknown names) surfaces as `status: 'error'` with the `error`. The effect is keyed on the descriptor's **serialized contents**, not its object identity, so an inline `usePermission({ name: 'camera' })` literal does not re-query on every render — no caller-side `useMemo` needed. SSR-safe and StrictMode/concurrent-safe: the async query is race-guarded (stale resolutions after unmount are ignored) and the change listener is removed on cleanup.
+
+</details>
+
+<details>
+<summary><strong>useScript</strong> — Load an external script with idle/loading/ready/error status and tag deduplication</summary>
+
+```tsx
+import { useScript } from "@usefy/use-script";
+
+// Bare status string — `const status = useScript(src)` reads true.
+const status = useScript("https://js.stripe.com/v3");
+// 'idle' | 'loading' | 'ready' | 'error'
+
+// Conditional loading — null/undefined src stays idle and injects nothing.
+const status = useScript(consented ? "https://cdn.example.com/analytics.js" : null);
+
+// Options: attributes on the created tag + ref-counted removal on unmount.
+const status = useScript("https://maps.googleapis.com/maps/api/js", {
+  attributes: { id: "gmaps", async: "" },
+  removeOnUnmount: true,
+});
+```
+
+All state lives in a **module-level registry keyed by `src`**, so multiple components calling `useScript(sameSrc)` share **one** `<script>` tag and one status — the first to mount injects it (or adopts a matching tag already in the DOM), and every subscriber re-renders together when it fires `load`/`error`. Pass `null`/`undefined` (or `shouldPreventLoad`) to stay `idle` for conditional loading. Cleanup is ref-counted: with `removeOnUnmount`, the DOM node is removed only when the last subscriber unmounts (removing a script does not un-run its side effects — documented caveat). Built on `useSyncExternalStore`: returns `idle` deterministically on the server (never touches `document`), and a StrictMode double-mount converges to a single tag with no leaked listeners. `getScriptStatus(src)` reads the shared status imperatively.
+
+</details>
+
+<details>
 <summary><strong>useMeasure</strong> — Reactive element bounds (size + viewport position) via ResizeObserver</summary>
 
 ```tsx
@@ -1151,6 +1290,65 @@ useScrollLock({ enabled: open });
 ```
 
 Sets `overflow: hidden` + scrollbar-width `padding-right` on the body (no layout shift), and on iOS pins the body with `position: fixed` and restores the scroll position on unlock. A shared module-level reference counter means N stacked locks apply the body styles once and restore only on the last release. Per-instance idempotent, StrictMode-safe (unmount always releases), and SSR-safe.
+
+</details>
+
+<details>
+<summary><strong>useInfiniteScroll</strong> — Sentinel-driven infinite loading built on IntersectionObserver</summary>
+
+```tsx
+import { useInfiniteScroll } from "@usefy/use-infinite-scroll";
+
+const sentinelRef = useInfiniteScroll(loadMore, { hasMore, loading });
+
+return (
+  <ul>
+    {items.map((item) => (
+      <li key={item.id}>{item.title}</li>
+    ))}
+    {/* Attach the ref to a sentinel at the end of the list. */}
+    {hasMore && <li ref={sentinelRef} aria-hidden />}
+  </ul>
+);
+```
+
+Turns "load the next page when the user reaches the bottom" into a one-liner. Attach the returned callback ref to a small sentinel element; when it scrolls into view, `loadMore` fires — **once per intersection**, never while a load is already in flight. Respects `hasMore` (stops observing once exhausted), `loading`, and an `enabled` master switch; supports `rootMargin` for prefetch, a custom scroll-container `root`, and `threshold`. `loadMore` may be sync or async — an internal in-flight guard on top of the `loading` flag prevents overlapping loads. Built on `useIntersectionObserver`, so it is SSR-safe (inert no-op ref on the server) and StrictMode-safe.
+
+</details>
+
+<details>
+<summary><strong>usePagination</strong> — Headless pagination state: page count, slice-ready range, and an ellipsis-aware pager model</summary>
+
+```tsx
+import { usePagination } from "@usefy/use-pagination";
+
+const { page, pageCount, range, items, setPage, next, prev, canNext, canPrev } =
+  usePagination({ total: users.length, pageSize: 10 });
+
+const visible = users.slice(range.start, range.end);
+
+return (
+  <nav>
+    <button onClick={prev} disabled={!canPrev}>‹</button>
+    {items.map((item, i) =>
+      item.type === "ellipsis" ? (
+        <span key={`gap-${i}`}>…</span>
+      ) : (
+        <button
+          key={item.page}
+          aria-current={item.selected ? "page" : undefined}
+          onClick={() => setPage(item.page!)}
+        >
+          {item.page}
+        </button>
+      )
+    )}
+    <button onClick={next} disabled={!canNext}>›</button>
+  </nav>
+);
+```
+
+Owns pagination state only — you render the pager however you like. Derives `pageCount` from `total`/`pageSize`, keeps the current page clamped in `[1, pageCount]` (so a shrinking dataset never leaves you on a dangling page), and gives you a slice-ready 0-based `range` (`{ start, end }`, end exclusive) plus the ellipsis-aware `items` model (page numbers + `"ellipsis"` tokens, MUI/Mantine-style) driven by `siblingCount`/`boundaryCount`. Works **controlled** (`page` + `onChange`) or **uncontrolled** (`defaultPage`) via `useControllableState`; controls are identity-stable and skip no-op moves. Pure state and math, so it is fully SSR-safe.
 
 </details>
 
