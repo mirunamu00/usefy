@@ -89,12 +89,14 @@ function App() {
 - `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
 - `useLocalStorage`, `useSessionStorage`, `useCookie` — Persistent storage (localStorage, sessionStorage, cookies)
 - `useEventListener`, `useOnClickOutside`, `useHover`, `useLongPress`, `useScrollLock`, `useFocusTrap`, `useFocusWithin` — DOM events, gestures & modal accessibility
+- `useInfiniteScroll` — Sentinel-driven infinite loading built on IntersectionObserver
+- `usePagination` — Headless pagination state (page count, slice-ready range, ellipsis-aware pager model)
 - `useKeyPress`, `useHotkeys` — Keyboard shortcuts, combinations, and sequences
 - `useMap`, `useSet`, `useList`, `useQueue`, `useStack` — Map / Set / array / FIFO queue / LIFO stack data structure state management
 - `useSelection` — Multi/single selection state for lists and tables (Set-based, checkbox-ready)
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
-- `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useScrollPosition`, `useGeolocation`, `useWindowSize` — Browser APIs & element measurement
+- `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useScrollPosition`, `useGeolocation`, `useWindowSize`, `useNetworkState`, `usePageVisibility`, `useIdle`, `usePermission`, `useScript` — Browser APIs & element measurement
 - `useAsyncFn`, `useAsync`, `usePolling` — Async lifecycle tracking (manual-trigger / auto-run / interval polling with backoff and AbortController cancellation)
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
@@ -276,6 +278,13 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `useRafState` | A drop-in `useState` that batches updates to `requestAnimationFrame` — rapid scroll/resize/pointer/animation updates coalesce to at most one commit per frame |
 | `useObjectState` | Object state with immutable partial updates (patch/merge) and reset |
 | `useSelection` | Multi/single selection state for lists and tables — Set-based, checkbox-ready with indeterminate support |
+| `useInfiniteScroll` | Sentinel-driven infinite loading built on IntersectionObserver — fires `loadMore` once per intersection, respects `hasMore`/`loading`/`enabled` |
+| `usePagination` | Headless pagination state machine — controlled/uncontrolled current page, derived `pageCount`, a slice-ready 0-based `range`, and an ellipsis-aware `items` pager model |
+| `useNetworkState` | Online/offline status + Network Information API (`effectiveType`, `downlink`, `saveData`), SSR-safe |
+| `usePageVisibility` | Track tab/window visibility (foreground vs. background) via the Page Visibility API, with optional `onChange` and SSR support |
+| `useIdle` | Report user inactivity after a timeout, with throttled activity listeners, visibility awareness, and SSR support |
+| `usePermission` | Read Permissions API status with live updates — `{ state, status, isSupported, error }`, SSR-safe, accepts any permission name |
+| `useScript` | Load an external script with `idle/loading/ready/error` status, `<script>` deduplication across components, and ref-counted cleanup — SSR-safe |
 
 ### Kits (`@usefy/kits`)
 

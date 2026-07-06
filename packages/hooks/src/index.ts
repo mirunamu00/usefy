@@ -237,6 +237,47 @@ export {
   type UseStepReturn,
 } from "@usefy/use-step";
 
+// useNetworkState
+export {
+  useNetworkState,
+  getNetworkState,
+  isNetworkInformationSupported,
+  areNetworkStatesEqual,
+  SERVER_NETWORK_STATE,
+  type NetworkState,
+  type UseNetworkStateReturn,
+  type EffectiveConnectionType,
+  type ConnectionType,
+  type NetworkInformationLike,
+} from "@usefy/use-network-state";
+
+// usePageVisibility
+export {
+  usePageVisibility,
+  getPageVisibility,
+  getVisibilityState,
+  isPageVisibilitySupported,
+  SERVER_PAGE_VISIBILITY,
+  type PageVisibilityState,
+  type OnVisibilityChange,
+  type UsePageVisibilityReturn,
+} from "@usefy/use-page-visibility";
+
+// useIdle — report user inactivity after a timeout, with throttled activity
+// listeners and visibility awareness. `const idle = useIdle(60_000)` returns a
+// boolean that flips to `true` after `timeout` ms without activity and back to
+// `false` on the next activity. Only the hook's public surface is re-exported;
+// the generic SSR guards (`isBrowser`, `isDocumentAvailable`, `resolveIdleTarget`)
+// stay package-only to avoid umbrella name collisions.
+export {
+  useIdle,
+  DEFAULT_IDLE_EVENTS,
+  ACTIVITY_THROTTLE_MS,
+  type IdleEventTarget,
+  type UseIdleOptions,
+  type UseIdleReturn,
+} from "@usefy/use-idle";
+
 // useWindowSize
 export {
   useWindowSize,
@@ -518,3 +559,70 @@ export {
   type SameSite,
   type InitialValue as CookieInitialValue,
 } from "@usefy/use-cookie";
+
+// useInfiniteScroll — sentinel-driven infinite loading built on
+// useIntersectionObserver. `const ref = useInfiniteScroll(loadMore, { hasMore,
+// loading })`: attach the returned callback ref to a sentinel at the end of the
+// list and `loadMore` fires once per intersection while `hasMore` is true,
+// `loading` is false, and the hook is `enabled` (with an internal in-flight
+// guard for async loads). Only the hook's own public surface is re-exported;
+// the underlying `useIntersectionObserver` API is already exported above.
+export {
+  useInfiniteScroll,
+  type LoadMoreFn,
+  type UseInfiniteScrollOptions,
+  type UseInfiniteScrollRef,
+} from "@usefy/use-infinite-scroll";
+
+// usePagination — headless pagination state machine. Controlled/uncontrolled
+// current page (composes @usefy/use-controllable-state), derived `pageCount`, a
+// slice-ready 0-based `range` ({ start, end } — end exclusive, clamped to
+// total), and an ellipsis-aware `items` model (page numbers + "ellipsis" tokens,
+// MUI/Mantine-style) driven by siblingCount/boundaryCount. Controls are
+// identity-stable and skip no-op moves. Pagination-specific helpers
+// (getPageCount, buildPaginationRange) are re-exported; the generic `clampPage`
+// stays package-only to avoid umbrella name collisions.
+export {
+  usePagination,
+  getPageCount,
+  buildPaginationRange,
+  type UsePaginationOptions,
+  type UsePaginationReturn,
+  type PaginationItem,
+  type PaginationItemType,
+  type PaginationRange,
+  type BuildPaginationRangeParams,
+} from "@usefy/use-pagination";
+
+// usePermission — Permissions API status with live updates.
+// `const { state } = usePermission({ name: 'camera' })` returns
+// `{ state, status, isSupported, error }`: `state` is the raw PermissionState
+// ('granted'|'denied'|'prompt') or null; `status` is a coarse lifecycle union
+// ('idle'|'pending'|'granted'|'denied'|'prompt'|'unsupported'|'error'). The
+// effect is keyed on a serialized descriptor so inline literals don't re-query
+// every render; the change listener drives live updates. Note: the DOM
+// `PermissionState` type is NOT re-exported here — `@usefy/use-geolocation`
+// already exports a `PermissionState` name from the umbrella. The generic
+// `serializeDescriptor` helper stays package-only to avoid umbrella collisions.
+export {
+  usePermission,
+  isPermissionsSupported,
+  type UsePermissionStatus,
+  type UsePermissionDescriptor,
+  type UsePermissionReturn,
+} from "@usefy/use-permission";
+
+// useScript — load an external script with idle/loading/ready/error status,
+// deduplicating the <script> tag across every component that requests the same
+// src via a shared module-level registry. `const status = useScript(src)` returns
+// the bare status string; pass `null`/`undefined` (or `shouldPreventLoad`) to stay
+// idle. `getScriptStatus(src)` reads the shared status imperatively. The generic
+// SSR guard/registry internals stay package-only to avoid umbrella collisions.
+export {
+  useScript,
+  getScriptStatus,
+  type ScriptStatus,
+  type UseScriptSource,
+  type UseScriptOptions,
+  type UseScriptReturn,
+} from "@usefy/use-script";

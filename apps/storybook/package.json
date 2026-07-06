@@ -43,6 +43,9 @@
     "@usefy/use-history-state": "workspace:*",
     "@usefy/use-step": "workspace:*",
     "@usefy/use-window-size": "workspace:*",
+    "@usefy/use-network-state": "workspace:*",
+    "@usefy/use-page-visibility": "workspace:*",
+    "@usefy/use-idle": "workspace:*",
     "@usefy/use-is-client": "workspace:*",
     "@usefy/use-isomorphic-layout-effect": "workspace:*",
     "@usefy/use-previous": "workspace:*",
@@ -75,6 +78,10 @@
     "@usefy/use-stack": "workspace:*",
     "@usefy/use-selection": "workspace:*",
     "@usefy/use-cookie": "workspace:*",
+    "@usefy/use-infinite-scroll": "workspace:*",
+    "@usefy/use-pagination": "workspace:*",
+    "@usefy/use-permission": "workspace:*",
+    "@usefy/use-script": "workspace:*",
     "recharts": "^3.6.0"
   },
   "devDependencies": {
