@@ -1,5 +1,12 @@
 # @usefy/use-infinite-scroll
 
+## 0.21.0
+
+### Patch Changes
+
+- Updated dependencies [ba7c5da]
+  - @usefy/use-intersection-observer@0.21.0
+
 ## 0.20.0
 
 ### Minor Changes

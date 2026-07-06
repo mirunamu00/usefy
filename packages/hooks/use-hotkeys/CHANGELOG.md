@@ -1,5 +1,13 @@
 # @usefy/use-hotkeys
 
+## 0.21.0
+
+### Patch Changes
+
+- Updated dependencies [ba7c5da]
+  - @usefy/use-event-listener@0.21.0
+  - @usefy/use-latest@0.21.0
+
 ## 0.20.0
 
 ### Patch Changes

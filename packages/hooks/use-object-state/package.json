@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-object-state",
-  "version": "0.20.0",
+  "version": "0.21.0",
   "description": "A React hook for object state with immutable partial updates (patch/merge) and reset",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

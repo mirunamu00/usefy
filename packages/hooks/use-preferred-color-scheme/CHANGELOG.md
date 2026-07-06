@@ -1,5 +1,11 @@
 # @usefy/use-preferred-color-scheme
 
+## 0.21.0
+
+### Minor Changes
+
+- 547ac84: Add an `initializeWithValue` option to `usePreferredColorScheme` (default `true`, matching `useMediaQuery`). Set it to `false` to render `defaultScheme` on the first client render and defer the real `matchMedia` read to a post-commit effect, avoiding a React hydration mismatch when the server rendered `defaultScheme` but the user's system preference differs.
+
 ## 0.20.0
 
 ## 0.19.0
