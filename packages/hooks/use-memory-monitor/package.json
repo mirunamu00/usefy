@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-memory-monitor",
-  "version": "0.19.0",
+  "version": "0.20.0",
   "description": "A React hook for real-time browser memory monitoring with leak detection",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

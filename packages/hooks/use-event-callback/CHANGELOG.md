@@ -1,5 +1,7 @@
 # @usefy/use-event-callback
 
+## 0.20.0
+
 ## 0.19.0
 
 ## 0.18.0

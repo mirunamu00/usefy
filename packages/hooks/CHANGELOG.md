@@ -1,5 +1,141 @@
 # @usefy/usefy
 
+## 0.20.0
+
+### Minor Changes
+
+- 65b754f: Add `useIdle` — report user inactivity after a timeout. `const idle = useIdle(60_000)` returns `false` while the user is active and flips to `true` once no listened activity (mouse, keyboard, touch, wheel, resize, tab focus) has occurred for `timeout` ms; the next activity flips it back. Activity is throttled with a leading-edge guard so the timer resets at most once every ~200ms, keeping high-frequency events (`mousemove`/`wheel`/`resize`) from thrashing React state. `visibilitychange` is handled specially: returning to a backgrounded tab counts as activity while backgrounding does not reset the timer (the `react-use`/`@mantine/hooks` convention). Configurable `events`, `initialState`, and target `element`; SSR-safe and StrictMode/concurrent-safe with full listener + timer cleanup. Re-exported from the `@usefy/hooks` umbrella.
+- 65b754f: Add `useInfiniteScroll` — sentinel-driven infinite loading built on `IntersectionObserver`. Attach the returned callback ref to a sentinel element and `loadMore` fires once per intersection while `hasMore` is true, `loading` is false, and the hook is `enabled`. Composes `@usefy/use-intersection-observer`, adds a latest-callback pattern (changing `loadMore` never re-subscribes), an internal in-flight guard for async loads, `rootMargin`/`threshold`/`root` passthrough, and SSR/StrictMode safety. Re-exported from the `@usefy/hooks` umbrella.
+- 65b754f: feat(use-page-visibility): add usePageVisibility hook for tab focus/blur via the Page Visibility API
+
+  Adds `@usefy/use-page-visibility`, a hook that reports whether the page (tab/window)
+  is currently visible to the user:
+
+  - Boolean-first API — `const visible = usePageVisibility()` returns a plain
+    `boolean` (`true` = foreground, `false` = hidden), updated on the document
+    `visibilitychange` event.
+  - Optional `onChange` callback — `usePageVisibility((visible) => …)` fires on
+    each transition (never on mount) and is read through a ref, so replacing it
+    never re-subscribes the listener.
+  - Built on `useSyncExternalStore` — tear-free under concurrent rendering and
+    SSR-safe (returns `true` on the server, no hydration mismatch).
+  - Leak-free: the `visibilitychange` listener is registered once and removed on
+    unmount.
+  - Exports the `PageVisibilityState`, `OnVisibilityChange`, and
+    `UsePageVisibilityReturn` types plus helpers (`getPageVisibility`,
+    `getVisibilityState`, `isPageVisibilitySupported`, `SERVER_PAGE_VISIBILITY`).
+  - Re-exported from the `@usefy/hooks` umbrella.
+
+- 65b754f: feat(use-pagination): add usePagination hook for headless pagination state
+
+  A headless pagination state machine: controlled/uncontrolled current page (built on `@usefy/use-controllable-state`), a derived `pageCount`, a slice-ready 0-based `range` (`{ start, end }`, end exclusive and clamped to `total`), and an ellipsis-aware `items` pager model (page numbers + `"ellipsis"` tokens) driven by `siblingCount`/`boundaryCount`. The page is clamped into `[1, pageCount]` everywhere; `setPage`/`next`/`prev`/`first`/`last` are identity-stable and skip no-op moves (no wasted renders, no spurious `onChange`). Exports `usePagination` plus the `getPageCount` and `buildPaginationRange` helpers.
+
+- 65b754f: feat(use-permission): add usePermission hook for Permissions API status with live updates
+
+  - `usePermission(descriptor)` returns `{ state, status, isSupported, error }` — `state` is the raw `PermissionState` (or null), `status` is a coarse union (`idle`/`pending`/`granted`/`denied`/`prompt`/`unsupported`/`error`).
+  - Subscribes to the `PermissionStatus` `change` event for live updates; race-safe async query and listener cleanup on unmount.
+  - Accepts a superset of `PermissionDescriptor` so all permission names (`camera`, `microphone`, `push`, `midi`, …) typecheck.
+  - Effect keyed on the descriptor's serialized contents, so inline literals don't re-query every render. SSR-safe (`unsupported` on the server).
+
+- 65b754f: feat(use-network-state): add useNetworkState hook for online/offline + Network Information
+
+  Adds `@usefy/use-network-state`, a hook that combines `navigator.onLine` with the
+  Network Information API (`navigator.connection`) into one reactive snapshot:
+  `{ online, since, downlink, downlinkMax, effectiveType, rtt, saveData, type }`.
+
+  - Built on `useSyncExternalStore` — tear-free under concurrent rendering and
+    SSR-safe (returns `{ online: true }` on the server, no hydration mismatch).
+  - Subscribes to the window `online`/`offline` events and the connection `change`
+    event, with `mozConnection`/`webkitConnection` fallbacks.
+  - Degrades gracefully: every Network Information field is `undefined` where the
+    API is unsupported (Firefox, Safari); `online` always works and it never throws.
+  - Exports the `NetworkState` return type plus the `EffectiveConnectionType` and
+    `ConnectionType` unions, and helpers (`getNetworkState`, `getConnection`,
+    `isNetworkInformationSupported`, `areNetworkStatesEqual`, `SERVER_NETWORK_STATE`).
+  - Re-exported from the `@usefy/hooks` umbrella.
+
+- 65b754f: feat(use-script): add useScript hook for loading external scripts with status, dedup, and cleanup
+
+  `const status = useScript(src, options?)` returns a bare `idle | loading | ready | error` status. A module-level registry keyed by `src` deduplicates the `<script>` tag so multiple components sharing a source load it once and re-render together; pass `null`/`undefined` or `shouldPreventLoad` to stay idle, `attributes` to configure the created tag, and `removeOnUnmount` for ref-counted DOM cleanup. Adopts pre-existing tags, exposes `getScriptStatus(src)`, and is SSR-safe + StrictMode-safe via `useSyncExternalStore`.
+
+### Patch Changes
+
+- Updated dependencies [65b754f]
+- Updated dependencies [65b754f]
+- Updated dependencies [65b754f]
+- Updated dependencies [65b754f]
+- Updated dependencies [65b754f]
+- Updated dependencies [65b754f]
+- Updated dependencies [65b754f]
+  - @usefy/use-idle@0.20.0
+  - @usefy/use-infinite-scroll@0.20.0
+  - @usefy/use-page-visibility@0.20.0
+  - @usefy/use-pagination@0.20.0
+  - @usefy/use-permission@0.20.0
+  - @usefy/use-network-state@0.20.0
+  - @usefy/use-script@0.20.0
+  - @usefy/use-async@0.20.0
+  - @usefy/use-async-fn@0.20.0
+  - @usefy/use-click-any-where@0.20.0
+  - @usefy/use-controllable-state@0.20.0
+  - @usefy/use-cookie@0.20.0
+  - @usefy/use-copy-to-clipboard@0.20.0
+  - @usefy/use-counter@0.20.0
+  - @usefy/use-dark-mode@0.20.0
+  - @usefy/use-debounce@0.20.0
+  - @usefy/use-debounce-callback@0.20.0
+  - @usefy/use-disclosure@0.20.0
+  - @usefy/use-document-title@0.20.0
+  - @usefy/use-event-callback@0.20.0
+  - @usefy/use-event-listener@0.20.0
+  - @usefy/use-focus-trap@0.20.0
+  - @usefy/use-focus-within@0.20.0
+  - @usefy/use-geolocation@0.20.0
+  - @usefy/use-history-state@0.20.0
+  - @usefy/use-hotkeys@0.20.0
+  - @usefy/use-hover@0.20.0
+  - @usefy/use-init@0.20.0
+  - @usefy/use-intersection-observer@0.20.0
+  - @usefy/use-is-client@0.20.0
+  - @usefy/use-is-first-render@0.20.0
+  - @usefy/use-isomorphic-layout-effect@0.20.0
+  - @usefy/use-key-press@0.20.0
+  - @usefy/use-latest@0.20.0
+  - @usefy/use-list@0.20.0
+  - @usefy/use-local-storage@0.20.0
+  - @usefy/use-long-press@0.20.0
+  - @usefy/use-map@0.20.0
+  - @usefy/use-measure@0.20.0
+  - @usefy/use-media-query@0.20.0
+  - @usefy/use-memory-monitor@0.20.0
+  - @usefy/use-merged-refs@0.20.0
+  - @usefy/use-mount@0.20.0
+  - @usefy/use-mutation-observer@0.20.0
+  - @usefy/use-object-state@0.20.0
+  - @usefy/use-on-click-outside@0.20.0
+  - @usefy/use-polling@0.20.0
+  - @usefy/use-preferred-color-scheme@0.20.0
+  - @usefy/use-previous@0.20.0
+  - @usefy/use-queue@0.20.0
+  - @usefy/use-raf-state@0.20.0
+  - @usefy/use-reduced-motion@0.20.0
+  - @usefy/use-scroll-lock@0.20.0
+  - @usefy/use-scroll-position@0.20.0
+  - @usefy/use-selection@0.20.0
+  - @usefy/use-session-storage@0.20.0
+  - @usefy/use-set@0.20.0
+  - @usefy/use-signal@0.20.0
+  - @usefy/use-stack@0.20.0
+  - @usefy/use-step@0.20.0
+  - @usefy/use-throttle@0.20.0
+  - @usefy/use-throttle-callback@0.20.0
+  - @usefy/use-timeout@0.20.0
+  - @usefy/use-timer@0.20.0
+  - @usefy/use-toggle@0.20.0
+  - @usefy/use-unmount@0.20.0
+  - @usefy/use-update-effect@0.20.0
+  - @usefy/use-window-size@0.20.0
+
 ## 0.19.0
 
 ### Minor Changes

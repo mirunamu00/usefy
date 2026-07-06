@@ -1,5 +1,13 @@
 # @usefy/use-polling
 
+## 0.20.0
+
+### Patch Changes
+
+- @usefy/use-async@0.20.0
+- @usefy/use-async-fn@0.20.0
+- @usefy/use-latest@0.20.0
+
 ## 0.19.0
 
 ### Patch Changes
