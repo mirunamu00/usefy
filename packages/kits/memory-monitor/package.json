@@ -70,13 +70,13 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/usefy/usefy.git",
-    "directory": "packages/components/memory-monitor"
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/kits/memory-monitor"
   },
   "bugs": {
-    "url": "https://github.com/usefy/usefy/issues"
+    "url": "https://github.com/mirunamu00/usefy/issues"
   },
-  "homepage": "https://github.com/usefy/usefy/tree/main/packages/components/memory-monitor#readme",
+  "homepage": "https://github.com/mirunamu00/usefy/tree/master/packages/kits/memory-monitor#readme",
   "publishConfig": {
     "access": "public"
   }

@@ -45,7 +45,7 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mirunamu00/usefy.git",
-    "directory": "packages/use-merged-refs"
+    "directory": "packages/hooks/use-merged-refs"
   },
   "license": "MIT",
   "keywords": [
