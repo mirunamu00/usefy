@@ -51,7 +51,7 @@
 - **TypeScript First** — Full type safety with exported interfaces
 - **Conditional Activation** — Enable/disable via the `enabled` option
 - **Event Capture Support** — Choose between capture and bubble phase
-- **Passive Listeners** — Performance-optimized with passive listeners by default
+- **Non-Intrusive Defaults** — Uses the browser's default (non-passive) listener, so `event.preventDefault()` keeps working; opt into `passive` only when you need it
 - **Handler Stability** — No re-registration when handler changes
 - **SSR Compatible** — Works seamlessly with Next.js, Remix, and other SSR frameworks
 - **Lightweight** — Minimal bundle footprint (~200B minified + gzipped)
@@ -123,11 +123,11 @@ A hook that listens for document-wide click events.
 
 #### Options
 
-| Option    | Type      | Default | Description                                |
-| --------- | --------- | ------- | ------------------------------------------ |
-| `enabled` | `boolean` | `true`  | Whether the event listener is active       |
-| `capture` | `boolean` | `false` | Use event capture phase instead of bubble  |
-| `passive` | `boolean` | `true`  | Use passive event listener for performance |
+| Option    | Type      | Default                        | Description                                                                                                        |
+| --------- | --------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `enabled` | `boolean` | `true`                         | Whether the event listener is active                                                                               |
+| `capture` | `boolean` | `false`                        | Use event capture phase instead of bubble                                                                          |
+| `passive` | `boolean` | `undefined` (browser default)  | Mark the listener as passive. A passive listener **cannot** call `event.preventDefault()`. Left unset by default (non-passive) — there is no performance benefit for `click`, so only set it if you specifically want passive semantics. |
 
 #### Returns
 
@@ -349,7 +349,9 @@ const handleClick: ClickAnyWhereHandler = (event) => {
 const options: UseClickAnyWhereOptions = {
   enabled: true,
   capture: false,
-  passive: true,
+  // `passive` is optional and defaults to the browser default (non-passive).
+  // Only set it if you specifically need passive semantics — note it disables
+  // event.preventDefault().
 };
 
 useClickAnyWhere(handleClick, options);

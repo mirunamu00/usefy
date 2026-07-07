@@ -135,7 +135,7 @@ A hook that detects hover state on elements using mouseenter/mouseleave events.
 | ---------------- | --------------------------------------------------- | ------- | ------------------------------------------------------------------------------ |
 | `enabled`        | `boolean`                                           | `true`  | Enable/disable hover detection. When false, isHovered is always false          |
 | `delay`          | `number \| { enter?: number; leave?: number }`      | `0`     | Delay in ms before hover state changes. Can be separate for enter/leave        |
-| `onChange`       | `(isHovered: boolean, event?: MouseEvent) => void`  | —       | Callback fired when hover state changes                                        |
+| `onChange`       | `(isHovered: boolean, event?: MouseEvent \| TouchEvent) => void` | —       | Callback fired when hover state changes                             |
 | `initialHovered` | `boolean`                                           | `false` | Initial hover state (useful for SSR)                                           |
 | `detectTouch`    | `boolean`                                           | `false` | Whether to detect touch events (touchstart/touchend) for hybrid devices        |
 
@@ -429,9 +429,10 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Files
 
-- `useHover.test.ts` — 60 tests for hook behavior and utilities
+- `useHover.test.ts` — 65 tests for hook behavior and utilities
+- `useHover.types.test.tsx` — 3 tests for typed tuple/object destructuring
 
-**Total: 60 tests**
+**Total: 68 tests**
 
 ---
 

@@ -224,6 +224,56 @@ describe("useSet", () => {
       expect(result.current[0].has("b")).toBe(false);
     });
 
+    it("is a no-op (stable reference) when the set already equals the initial", () => {
+      const { result } = renderHook(() => useSet(["a", "b"]));
+      const before = result.current[0];
+
+      act(() => {
+        result.current[1].reset();
+      });
+
+      expect(result.current[0]).toBe(before);
+    });
+
+    it("is a no-op after mutating and returning to the initial members", () => {
+      const { result } = renderHook(() => useSet(["a", "b"]));
+
+      // Mutate away from the initial...
+      act(() => {
+        result.current[1].add("c");
+      });
+      // ...then restore the exact initial membership by hand.
+      act(() => {
+        result.current[1].remove("c");
+      });
+
+      const before = result.current[0];
+      act(() => {
+        result.current[1].reset();
+      });
+
+      // State already equals the initial, so reset keeps the same reference.
+      expect(result.current[0]).toBe(before);
+      expect(result.current[0].size).toBe(2);
+    });
+
+    it("allocates a new set when state differs from the initial", () => {
+      const { result } = renderHook(() => useSet(["a"]));
+
+      act(() => {
+        result.current[1].add("b");
+      });
+      const before = result.current[0];
+
+      act(() => {
+        result.current[1].reset();
+      });
+
+      expect(result.current[0]).not.toBe(before);
+      expect(result.current[0].size).toBe(1);
+      expect(result.current[0].has("a")).toBe(true);
+    });
+
     it("does not let post-reset mutations leak into the stored initial", () => {
       const { result } = renderHook(() => useSet(["a"]));
 

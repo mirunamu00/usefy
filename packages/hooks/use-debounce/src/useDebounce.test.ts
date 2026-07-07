@@ -1,5 +1,6 @@
 import { renderHook, act, waitFor } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import * as React from "react";
 import { useDebounce } from "./useDebounce";
 
 describe("useDebounce", () => {
@@ -154,13 +155,16 @@ describe("useDebounce", () => {
 
       expect(result.current).toBe("initial");
 
-      // First change - won't trigger leading because lastCallTime is 0
+      // First change triggers the leading edge immediately: lastCallTime is
+      // undefined, so shouldInvoke returns true and leadingEdge invokes at once.
       rerender({ value: "first" });
+      expect(result.current).toBe("first");
 
       act(() => {
         vi.advanceTimersByTime(500);
       });
 
+      // Trailing edge fires with the same latest value — still "first".
       expect(result.current).toBe("first");
 
       // Wait for delay to pass
@@ -961,6 +965,73 @@ describe("useDebounce", () => {
 
       expect(result1.current).toBe("a1");
       expect(result2.current).toBe("b1");
+    });
+  });
+
+  describe("StrictMode", () => {
+    const strictWrapper = ({ children }: { children: React.ReactNode }) =>
+      React.createElement(React.StrictMode, null, children);
+
+    it("should invoke the leading edge exactly once (no double-invoke) under StrictMode", () => {
+      const committed: string[] = [];
+
+      const { result, rerender } = renderHook(
+        ({ value }) => {
+          const debounced = useDebounce(value, 500, { leading: true });
+          React.useEffect(() => {
+            committed.push(debounced);
+          }, [debounced]);
+          return debounced;
+        },
+        {
+          wrapper: strictWrapper,
+          initialProps: { value: "initial" },
+        }
+      );
+
+      // Ignore the (double-invoked) mount commits.
+      committed.length = 0;
+
+      // A single value change must fire the leading edge exactly once, even
+      // though StrictMode double-invokes mount effects.
+      rerender({ value: "first" });
+
+      expect(result.current).toBe("first");
+      expect(committed.filter((v) => v === "first")).toHaveLength(1);
+
+      // No stray trailing update duplicates the value either.
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+      expect(committed.filter((v) => v === "first")).toHaveLength(1);
+    });
+
+    it("should not fire any update from StrictMode's double-invoked mount effect", () => {
+      const committed: string[] = [];
+
+      const { result } = renderHook(
+        ({ value }) => {
+          const debounced = useDebounce(value, 500, { leading: true });
+          React.useEffect(() => {
+            committed.push(debounced);
+          }, [debounced]);
+          return debounced;
+        },
+        {
+          wrapper: strictWrapper,
+          initialProps: { value: "initial" },
+        }
+      );
+
+      // Advance well past the delay without ever changing the value.
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      // The skip-initial-render guard must prevent the double-invoked mount
+      // effect from consuming the leading edge — the value never changes.
+      expect(result.current).toBe("initial");
+      expect(committed.every((v) => v === "initial")).toBe(true);
     });
   });
 });

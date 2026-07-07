@@ -36,11 +36,11 @@ export interface UseQueueActions<T> {
    * `undefined` when the queue is empty (in which case it is a no-op and does
    * not trigger a re-render).
    *
-   * The returned value reflects the front of the queue at call time. When
-   * `remove` is called multiple times synchronously within the same event
-   * (before React re-renders), each call returns the same front snapshot even
-   * though the underlying state correctly advances — read the returned `queue`
-   * array after the render for the settled state.
+   * The queue advances synchronously, so calling `remove` multiple times in a
+   * row within the same event (before React re-renders) dequeues successive
+   * items: the first call returns the current front, the second returns the
+   * next item, and so on. The returned `queue` array reflects the settled state
+   * after the render.
    */
   remove: () => T | undefined;
 

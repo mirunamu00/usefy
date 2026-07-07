@@ -51,6 +51,7 @@
 - **TypeScript First** — Full type safety with automatic event type inference
 - **Multiple Targets** — Support for window, document, HTMLElement, and RefObject
 - **Automatic Cleanup** — Event listeners are removed on unmount
+- **Late-mounted Refs** — Attaches automatically when a conditionally rendered `RefObject` target appears (or re-appears) after the initial render
 - **Handler Stability** — No re-registration when handler changes
 - **Conditional Activation** — Enable/disable via the `enabled` option
 - **Performance Options** — Support for `passive`, `capture`, and `once` options
@@ -139,7 +140,7 @@ type EventTargetType<T extends HTMLElement = HTMLElement> =
   | Window // window object
   | Document // document object
   | HTMLElement // any HTML element
-  | React.RefObject<T> // React ref
+  | React.RefObject<T | null> // React ref
   | null // no listener
   | undefined; // defaults to window
 ```

@@ -1,5 +1,7 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { StrictMode, createElement, type ReactNode } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { useTimeout } from "./useTimeout";
 
 describe("useTimeout", () => {
@@ -263,6 +265,49 @@ describe("useTimeout", () => {
 
       expect(result.current.reset).toBe(initialReset);
     });
+
+    it("should be stable across a delay change", () => {
+      const callback = vi.fn();
+
+      const { result, rerender } = renderHook(
+        ({ delay }) => useTimeout(callback, delay),
+        { initialProps: { delay: 1000 } }
+      );
+
+      const initialReset = result.current.reset;
+
+      rerender({ delay: 2000 });
+
+      expect(result.current.reset).toBe(initialReset);
+    });
+
+    it("should use the latest delay when reset is called after a delay change", () => {
+      const callback = vi.fn();
+
+      const { result, rerender } = renderHook(
+        ({ delay }) => useTimeout(callback, delay),
+        { initialProps: { delay: 1000 } }
+      );
+
+      // Change delay to 5000ms, then reset
+      rerender({ delay: 5000 });
+
+      act(() => {
+        result.current.reset();
+      });
+
+      // 1000ms should NOT be enough anymore (reset uses the latest 5000ms)
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(callback).not.toHaveBeenCalled();
+
+      // Remaining 4000ms completes the 5000ms window
+      act(() => {
+        vi.advanceTimersByTime(4000);
+      });
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
   });
 
   // ============ 6. Clear Function ============
@@ -375,6 +420,36 @@ describe("useTimeout", () => {
 
       expect(result.current.isPending).toBe(false);
     });
+
+    it("should report true on the very first committed render for an active delay", () => {
+      const callback = vi.fn();
+      const observed: boolean[] = [];
+
+      renderHook(() => {
+        const timeout = useTimeout(callback, 1000);
+        observed.push(timeout.isPending);
+        return timeout;
+      });
+
+      // Lazy initialization means the first committed value is already true,
+      // so isPending is never observed as false for an active delay.
+      expect(observed[0]).toBe(true);
+      expect(observed).not.toContain(false);
+    });
+
+    it("should not cause an extra render for an active delay (lazy init)", () => {
+      const callback = vi.fn();
+      let renderCount = 0;
+
+      renderHook(() => {
+        renderCount += 1;
+        return useTimeout(callback, 1000);
+      });
+
+      // Without lazy init, the mount effect flips isPending false -> true and
+      // forces a second render. Lazy init eliminates that extra render.
+      expect(renderCount).toBe(1);
+    });
   });
 
   // ============ 8. Callback Change ============
@@ -462,12 +537,77 @@ describe("useTimeout", () => {
 
   // ============ 10. SSR Environment ============
   describe("SSR environment", () => {
-    it("should not throw error when setTimeout is available", () => {
+    it("should not throw when rendered client-side with a valid delay", () => {
       const callback = vi.fn();
 
       expect(() => {
         renderHook(() => useTimeout(callback, 1000));
       }).not.toThrow();
+    });
+
+    it("should render to a string without scheduling a timer on the server", () => {
+      const callback = vi.fn();
+      const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+
+      function SsrComponent() {
+        const { isPending } = useTimeout(callback, 1000);
+        return createElement("div", null, isPending ? "pending" : "idle");
+      }
+
+      let html = "";
+      expect(() => {
+        html = renderToStaticMarkup(createElement(SsrComponent));
+      }).not.toThrow();
+
+      // Scheduling lives entirely in an effect, which never runs on the server,
+      // so no timer is created and the callback is never invoked.
+      expect(setTimeoutSpy).not.toHaveBeenCalled();
+      expect(callback).not.toHaveBeenCalled();
+
+      // Server markup reflects the lazily-initialized (active) pending state,
+      // matching the client's first committed render.
+      expect(html).toContain("pending");
+    });
+  });
+
+  // ============ 11. StrictMode (double-invoke) ============
+  describe("StrictMode", () => {
+    const strictWrapper = ({ children }: { children: ReactNode }) =>
+      createElement(StrictMode, null, children);
+
+    it("should fire the callback exactly once under StrictMode double-invoke", () => {
+      const callback = vi.fn();
+
+      const { result } = renderHook(() => useTimeout(callback, 1000), {
+        wrapper: strictWrapper,
+      });
+
+      expect(result.current.isPending).toBe(true);
+
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+
+      // Despite StrictMode mounting/unmounting/remounting the effect, only one
+      // timer survives, so the callback runs a single time.
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(result.current.isPending).toBe(false);
+    });
+
+    it("should leave exactly one pending timer under StrictMode", () => {
+      const callback = vi.fn();
+      const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+      const clearTimeoutSpy = vi.spyOn(globalThis, "clearTimeout");
+
+      renderHook(() => useTimeout(callback, 1000), {
+        wrapper: strictWrapper,
+      });
+
+      // StrictMode schedules on the first mount, clears on the simulated
+      // unmount, then schedules again on remount — netting a single live timer.
+      const scheduled = setTimeoutSpy.mock.calls.length;
+      const cleared = clearTimeoutSpy.mock.calls.length;
+      expect(scheduled - cleared).toBe(1);
     });
   });
 

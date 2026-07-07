@@ -351,11 +351,11 @@ const debouncedFilters = useDebounce<Filters>(filters, 300);
 
 ## Testing
 
-This package maintains comprehensive test coverage to ensure reliability and stability.
+This package is covered by **49 tests** holding **92% statement coverage**, exercising leading/trailing edges, `maxWait`, option changes, StrictMode double-invocation, cleanup, and edge cases.
 
 ### Test Coverage
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-debounce/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-debounce/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **49 tests**, 92% statement coverage.
 
 ### Test Categories
 

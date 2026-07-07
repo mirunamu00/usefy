@@ -16,13 +16,34 @@ function resolveInitial<K, V>(initial?: MapInitializer<K, V>): Map<K, V> {
 }
 
 /**
+ * Shallow structural equality for two maps: same size and every key present in
+ * `a` maps to the same value (by `Object.is`) in `b`. Used to skip a needless
+ * re-render when a `reset` would produce an identical map.
+ */
+function mapsEqual<K, V>(a: ReadonlyMap<K, V>, b: ReadonlyMap<K, V>): boolean {
+  if (a === b) {
+    return true;
+  }
+  if (a.size !== b.size) {
+    return false;
+  }
+  for (const [key, value] of a) {
+    if (!b.has(key) || !Object.is(b.get(key), value)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
  * A React hook for managing `Map` state with immutable, ergonomic updates.
  *
  * Returns a tuple of the current (read-only) map and a stable set of actions.
  * Every mutation produces a brand-new `Map` so React re-renders correctly and
  * the previous state is never mutated in place. Updates that would not change
  * anything (removing an absent key, clearing an empty map, setting a key to the
- * value it already holds) are skipped to avoid needless re-renders.
+ * value it already holds, resetting a map that already equals its initial
+ * entries) are skipped to avoid needless re-renders.
  *
  * Features:
  * - Immutable updates (`new Map` on every change) with a `ReadonlyMap` return type
@@ -114,7 +135,11 @@ export function useMap<K, V>(
   }, []);
 
   const reset = useCallback(() => {
-    setMap(new Map(initialRef.current as Map<K, V>));
+    setMap((prev) => {
+      const initial = initialRef.current as Map<K, V>;
+      // Skip re-render when the current map already matches the initial.
+      return mapsEqual(prev, initial) ? prev : new Map(initial);
+    });
   }, []);
 
   const clear = useCallback(() => {

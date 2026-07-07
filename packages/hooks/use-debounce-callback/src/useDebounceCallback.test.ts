@@ -319,6 +319,54 @@ describe("useDebounceCallback", () => {
       expect(callback).toHaveBeenCalledWith("third");
     });
 
+    it("should invoke synchronously when maxWait elapses during a tight synchronous call loop", () => {
+      // This exercises the maxing branch inside the debounced function
+      // (a pending timer already exists AND shouldInvoke() is true because of
+      // maxWait) by advancing wall-clock time via a stubbed Date.now WITHOUT
+      // advancing vitest's fake timers, so the trailing timer never fires.
+      const callback = vi.fn((x: string) => x);
+      let nowValue = 1000;
+      const nowSpy = vi.spyOn(Date, "now").mockImplementation(() => nowValue);
+
+      const { result } = renderHook(() =>
+        useDebounceCallback(callback, 500, { maxWait: 1000 })
+      );
+
+      const call = (arg: string): string | undefined => {
+        let ret: string | undefined;
+        act(() => {
+          ret = result.current(arg);
+        });
+        return ret;
+      };
+
+      // t=1000: first call schedules the trailing timer, no leading invoke.
+      call("a");
+      expect(callback).not.toHaveBeenCalled();
+
+      // Frequent calls (<500ms apart) so the trailing delay never elapses since
+      // the last call; timers are never advanced either.
+      nowValue = 1300;
+      call("b");
+      nowValue = 1600;
+      call("c");
+      nowValue = 1900;
+      call("d");
+      expect(callback).not.toHaveBeenCalled();
+
+      // t=2000: 1000ms since the last invoke -> crosses the maxWait boundary.
+      // Only 100ms since the previous call, so the delay path is NOT the trigger;
+      // this is purely the maxWait synchronous-invoke branch.
+      nowValue = 2000;
+      const ret = call("e");
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("e");
+      expect(ret).toBe("e");
+
+      nowSpy.mockRestore();
+    });
+
     it("should reset maxWait timer after invocation", () => {
       const callback = vi.fn();
       const { result } = renderHook(() =>

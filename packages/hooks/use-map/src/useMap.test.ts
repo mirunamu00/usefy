@@ -179,6 +179,59 @@ describe("useMap", () => {
       expect(map.has("b")).toBe(false);
     });
 
+    it("is a no-op (stable reference) when already at the initial state", () => {
+      const { result } = renderHook(() => useMap([["a", 1], ["b", 2]]));
+      const before = result.current[0];
+
+      act(() => {
+        result.current[1].reset();
+      });
+
+      // Nothing changed vs. initial -> same reference (no re-render / no new Map).
+      expect(result.current[0]).toBe(before);
+    });
+
+    it("is a no-op when a mutation is immediately reverted back to initial", () => {
+      const { result } = renderHook(() => useMap([["a", 1]]));
+
+      act(() => {
+        result.current[1].set("b", 2);
+      });
+      const afterSet = result.current[0];
+      expect(afterSet.has("b")).toBe(true);
+
+      act(() => {
+        result.current[1].remove("b");
+      });
+      const afterRemove = result.current[0];
+      expect(afterRemove.has("b")).toBe(false);
+
+      act(() => {
+        result.current[1].reset();
+      });
+
+      // Map already equals the initial, so reset must return the same reference.
+      expect(result.current[0]).toBe(afterRemove);
+    });
+
+    it("still re-renders (new reference) when the map differs from initial", () => {
+      const { result } = renderHook(() => useMap([["a", 1]]));
+
+      act(() => {
+        result.current[1].set("b", 2);
+      });
+      const before = result.current[0];
+
+      act(() => {
+        result.current[1].reset();
+      });
+
+      const after = result.current[0];
+      expect(after).not.toBe(before);
+      expect(after.size).toBe(1);
+      expect(after.has("b")).toBe(false);
+    });
+
     it("does not let post-reset mutations leak into the stored initial", () => {
       const { result } = renderHook(() => useMap([["a", 1]]));
 

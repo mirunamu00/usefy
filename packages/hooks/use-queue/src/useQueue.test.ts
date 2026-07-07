@@ -157,11 +157,12 @@ describe("useQueue", () => {
       expect(result.current[0]).toEqual([]);
     });
 
-    it("advances state correctly when called multiple times in one batch", () => {
+    it("returns successive items when called multiple times in one batch", () => {
       const { result } = renderHook(() => useQueue<number>([1, 2, 3]));
 
-      // Two synchronous removes before a re-render: the returned snapshots are
-      // both the pre-render front, but the settled state advances by two.
+      // Regression: two synchronous removes before a re-render must return
+      // successive fronts (1 then 2), not the same stale snapshot. The mirror
+      // ref advances synchronously so the second call reads the true next item.
       let first: number | undefined;
       let second: number | undefined;
       act(() => {
@@ -170,8 +171,39 @@ describe("useQueue", () => {
       });
 
       expect(first).toBe(1);
-      expect(second).toBe(1); // documented batching caveat: same front snapshot
-      expect(result.current[0]).toEqual([3]); // but state removed both 1 and 2
+      expect(second).toBe(2);
+      expect(result.current[0]).toEqual([3]);
+    });
+
+    it("drains the whole queue across synchronous calls in one batch", () => {
+      const { result } = renderHook(() => useQueue<number>([1, 2, 3]));
+
+      const order: (number | undefined)[] = [];
+      act(() => {
+        order.push(result.current[1].remove());
+        order.push(result.current[1].remove());
+        order.push(result.current[1].remove());
+        order.push(result.current[1].remove()); // one past the end
+      });
+
+      expect(order).toEqual([1, 2, 3, undefined]);
+      expect(result.current[0]).toEqual([]);
+    });
+
+    it("returns fresh fronts when add and remove interleave synchronously", () => {
+      const { result } = renderHook(() => useQueue<number>([1]));
+
+      let a: number | undefined;
+      let b: number | undefined;
+      act(() => {
+        a = result.current[1].remove(); // 1, queue -> []
+        result.current[1].add(2, 3); // queue -> [2, 3]
+        b = result.current[1].remove(); // 2, queue -> [3]
+      });
+
+      expect(a).toBe(1);
+      expect(b).toBe(2);
+      expect(result.current[0]).toEqual([3]);
     });
   });
 
@@ -242,6 +274,35 @@ describe("useQueue", () => {
         result.current[1].reset();
       });
 
+      expect(result.current[0]).toEqual(["a", "b"]);
+    });
+
+    it("is a no-op (stable reference) when already equal to the initial value", () => {
+      const { result } = renderHook(() => useQueue<string>(["a", "b"]));
+      const before = result.current[0];
+
+      act(() => {
+        result.current[1].reset();
+      });
+
+      // Already at the initial value: no new array, no re-render.
+      expect(result.current[0]).toBe(before);
+      expect(result.current[0]).toEqual(["a", "b"]);
+    });
+
+    it("restores the initial after the queue has diverged from it", () => {
+      const { result } = renderHook(() => useQueue<string>(["a", "b"]));
+
+      act(() => {
+        result.current[1].remove();
+      });
+      const diverged = result.current[0];
+
+      act(() => {
+        result.current[1].reset();
+      });
+
+      expect(result.current[0]).not.toBe(diverged);
       expect(result.current[0]).toEqual(["a", "b"]);
     });
 

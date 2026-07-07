@@ -1,5 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, vi } from "vitest";
+import { useEffect } from "react";
 import { useToggle } from "./useToggle";
 
 describe("useToggle", () => {
@@ -557,6 +558,99 @@ describe("useToggle", () => {
 
       expect(result.current.value).toBe(initialValue);
       expect(result.current.value).toBe(false);
+    });
+  });
+
+  describe("render skipping (no-op updates)", () => {
+    // Uses a `useEffect([value])` spy rather than a raw render counter:
+    // React may still re-invoke the component once before bailing out of a
+    // same-value setState, but a value-keyed effect will not re-run unless the
+    // value actually changed — making it a reliable signal for skipped work.
+    it("should not re-run a value-dependent effect when setTrue is a no-op", () => {
+      const effectSpy = vi.fn();
+      const { result } = renderHook(() => {
+        const toggle = useToggle(true);
+        useEffect(() => {
+          effectSpy(toggle.value);
+        }, [toggle.value]);
+        return toggle;
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        result.current.setTrue();
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(1);
+      expect(result.current.value).toBe(true);
+    });
+
+    it("should not re-run a value-dependent effect when setFalse is a no-op", () => {
+      const effectSpy = vi.fn();
+      const { result } = renderHook(() => {
+        const toggle = useToggle(false);
+        useEffect(() => {
+          effectSpy(toggle.value);
+        }, [toggle.value]);
+        return toggle;
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        result.current.setFalse();
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(1);
+      expect(result.current.value).toBe(false);
+    });
+
+    it("should not re-run a value-dependent effect when setValue matches the current value", () => {
+      const effectSpy = vi.fn();
+      const { result } = renderHook(() => {
+        const toggle = useToggle(true);
+        useEffect(() => {
+          effectSpy(toggle.value);
+        }, [toggle.value]);
+        return toggle;
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        result.current.setValue(true);
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(1);
+      expect(result.current.value).toBe(true);
+    });
+
+    it("should re-run a value-dependent effect exactly once when the value actually changes", () => {
+      const effectSpy = vi.fn();
+      const { result } = renderHook(() => {
+        const toggle = useToggle(false);
+        useEffect(() => {
+          effectSpy(toggle.value);
+        }, [toggle.value]);
+        return toggle;
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(1);
+
+      act(() => {
+        result.current.setTrue();
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(2);
+      expect(effectSpy).toHaveBeenLastCalledWith(true);
+
+      // A follow-up no-op setTrue must not schedule the effect again.
+      act(() => {
+        result.current.setTrue();
+      });
+
+      expect(effectSpy).toHaveBeenCalledTimes(2);
     });
   });
 

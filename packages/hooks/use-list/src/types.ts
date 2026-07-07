@@ -22,7 +22,7 @@ export interface UseListActions<T> {
    * setters, the updater is unambiguous here because the argument is the whole
    * array, never a single element.)
    */
-  set: (next: T[] | ((prev: readonly T[]) => T[])) => void;
+  set: (next: readonly T[] | ((prev: readonly T[]) => readonly T[])) => void;
 
   /**
    * Append one or more items to the end of the list.

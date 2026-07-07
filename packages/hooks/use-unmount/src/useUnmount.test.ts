@@ -1,5 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { useUnmount } from "./useUnmount";
 
 describe("useUnmount", () => {
@@ -168,19 +170,19 @@ describe("useUnmount", () => {
         { initialProps: { enabled: true } }
       );
 
-      // When enabled changes to false, the previous effect cleans up
+      // Toggling enabled to false while still mounted must NOT fire the
+      // callback - the "runs on unmount" contract means the callback only
+      // ever fires when the component actually unmounts.
       rerender({ enabled: false });
+      expect(callback).not.toHaveBeenCalled();
 
-      // Callback should have been called once (cleanup from disabling)
-      expect(callback).toHaveBeenCalledTimes(1);
-
-      // On final unmount, callback should not be called again
+      // On final unmount, the latest enabled value (false) is honored, so the
+      // callback is skipped.
       unmount();
-
-      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).not.toHaveBeenCalled();
     });
 
-    it("should handle multiple enabled toggles", () => {
+    it("should not fire while mounted and skip on unmount when finally disabled", () => {
       const callback = vi.fn();
 
       const { rerender, unmount } = renderHook(
@@ -188,21 +190,59 @@ describe("useUnmount", () => {
         { initialProps: { enabled: true } }
       );
 
-      // Disable - triggers cleanup
+      // Flip enabled off while mounted.
       rerender({ enabled: false });
-      expect(callback).toHaveBeenCalledTimes(1);
 
-      // Enable again
-      rerender({ enabled: true });
-      expect(callback).toHaveBeenCalledTimes(1);
+      // The callback must stay silent - nothing has unmounted yet.
+      expect(callback).not.toHaveBeenCalled();
 
-      // Disable again - triggers cleanup
-      rerender({ enabled: false });
-      expect(callback).toHaveBeenCalledTimes(2);
-
-      // Final unmount - no additional call since disabled
+      // Unmount while disabled: callback is skipped because enabled is false.
       unmount();
-      expect(callback).toHaveBeenCalledTimes(2);
+      expect(callback).not.toHaveBeenCalled();
+    });
+
+    it("should honor the latest enabled value at unmount time", () => {
+      const callback = vi.fn();
+
+      const { rerender, unmount } = renderHook(
+        ({ enabled }) => useUnmount(callback, { enabled }),
+        { initialProps: { enabled: false } }
+      );
+
+      // Disabled -> enabled -> disabled -> enabled, all while mounted.
+      rerender({ enabled: true });
+      rerender({ enabled: false });
+      rerender({ enabled: true });
+
+      // No premature calls during any of the toggles.
+      expect(callback).not.toHaveBeenCalled();
+
+      // At unmount the latest value is enabled (true), so it fires exactly once.
+      unmount();
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+
+    it("should handle multiple enabled toggles without firing until unmount", () => {
+      const callback = vi.fn();
+
+      const { rerender, unmount } = renderHook(
+        ({ enabled }) => useUnmount(callback, { enabled }),
+        { initialProps: { enabled: true } }
+      );
+
+      // None of these mid-mount toggles should fire the callback.
+      rerender({ enabled: false });
+      expect(callback).not.toHaveBeenCalled();
+
+      rerender({ enabled: true });
+      expect(callback).not.toHaveBeenCalled();
+
+      rerender({ enabled: false });
+      expect(callback).not.toHaveBeenCalled();
+
+      // Final unmount while disabled - callback is skipped.
+      unmount();
+      expect(callback).not.toHaveBeenCalled();
     });
   });
 
@@ -411,6 +451,41 @@ describe("useUnmount", () => {
       const { result } = renderHook(() => useUnmount(() => {}));
 
       expect(result.current).toBeUndefined();
+    });
+  });
+
+  describe("SSR safety", () => {
+    it("should render on the server without throwing and not call the callback", () => {
+      const callback = vi.fn();
+
+      function ServerComponent() {
+        useUnmount(callback);
+        return createElement("div", null, "server");
+      }
+
+      let html = "";
+      expect(() => {
+        html = renderToStaticMarkup(createElement(ServerComponent));
+      }).not.toThrow();
+
+      // The effect (and therefore its cleanup) never runs during SSR, so the
+      // callback must not fire on the server.
+      expect(html).toContain("server");
+      expect(callback).not.toHaveBeenCalled();
+    });
+
+    it("should not call the callback on the server even when enabled is true", () => {
+      const callback = vi.fn();
+
+      function ServerComponent() {
+        useUnmount(callback, { enabled: true });
+        return createElement("div", null, "ssr");
+      }
+
+      expect(() =>
+        renderToStaticMarkup(createElement(ServerComponent))
+      ).not.toThrow();
+      expect(callback).not.toHaveBeenCalled();
     });
   });
 });

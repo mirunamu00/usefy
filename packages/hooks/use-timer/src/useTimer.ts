@@ -136,11 +136,13 @@ export function useTimer(
   // Track initial time for reset
   const initialTimeRef = useRef(safeInitialTime);
 
-  // Store if autoStart has been triggered
-  const autoStartTriggeredRef = useRef(false);
-
   // Track previous initialTimeMs to detect actual prop changes
   const prevInitialTimeMsRef = useRef(safeInitialTime);
+
+  // Mirror of `status` so control callbacks can read the latest status without
+  // listing it as a dependency — this keeps their identities stable across
+  // status transitions (start -> pause, etc.).
+  const statusRef = useRef<TimerStatus>(status);
 
   // Callback refs for latest values without causing re-renders
   const onCompleteRef = useRef(onComplete);
@@ -154,7 +156,6 @@ export function useTimer(
   const loopRef = useRef(loop);
   const intervalRef = useRef(interval);
   const useRAFRef = useRef(useRAF);
-  const formatRef = useRef(format);
 
   // ============ Update Refs ============
   useEffect(() => {
@@ -167,7 +168,7 @@ export function useTimer(
     loopRef.current = loop;
     intervalRef.current = interval;
     useRAFRef.current = useRAF;
-    formatRef.current = format;
+    statusRef.current = status;
   });
 
   // Re-compute formattedTime when format option changes
@@ -298,25 +299,25 @@ export function useTimer(
   // ============ Control Functions ============
   const start = useCallback(() => {
     // Don't start if already running or finished
-    if (status === "running" || status === "finished") {
+    if (statusRef.current === "running" || statusRef.current === "finished") {
       return;
     }
 
     setStatus("running");
     onStartRef.current?.();
     startTimerLoop();
-  }, [status, startTimerLoop]);
+  }, [startTimerLoop]);
 
   const pause = useCallback(() => {
     // Only pause if running
-    if (status !== "running") {
+    if (statusRef.current !== "running") {
       return;
     }
 
     clearTimer();
     setStatus("paused");
     onPauseRef.current?.();
-  }, [status, clearTimer]);
+  }, [clearTimer]);
 
   const stop = useCallback(() => {
     clearTimer();
@@ -349,12 +350,13 @@ export function useTimer(
   }, [clearTimer, updateTime, startTimerLoop]);
 
   const toggle = useCallback(() => {
-    if (isRunning) {
+    const current = statusRef.current;
+    if (current === "running") {
       pause();
-    } else if (isPaused || isIdle) {
+    } else if (current === "paused" || current === "idle") {
       start();
     }
-  }, [isRunning, isPaused, isIdle, start, pause]);
+  }, [start, pause]);
 
   // ============ Time Manipulation ============
   const addTime = useCallback(
@@ -364,11 +366,11 @@ export function useTimer(
       updateTime(newTimeMs);
 
       // If timer was finished and we add time, it's no longer finished
-      if (status === "finished" && newTimeMs > 0) {
+      if (statusRef.current === "finished" && newTimeMs > 0) {
         setStatus("idle");
       }
     },
-    [status, updateTime]
+    [updateTime]
   );
 
   const subtractTime = useCallback(
@@ -378,11 +380,11 @@ export function useTimer(
       updateTime(newTimeMs);
 
       // If time reaches 0, mark as finished
-      if (newTimeMs <= 0 && status === "running") {
+      if (newTimeMs <= 0 && statusRef.current === "running") {
         handleComplete();
       }
     },
-    [status, handleComplete, updateTime]
+    [handleComplete, updateTime]
   );
 
   const setTimeValue = useCallback(
@@ -392,25 +394,39 @@ export function useTimer(
       updateTime(safeTime);
 
       // Update finished state based on new time
-      if (safeTime === 0 && status === "running") {
+      if (safeTime === 0 && statusRef.current === "running") {
         handleComplete();
-      } else if (safeTime > 0 && status === "finished") {
+      } else if (safeTime > 0 && statusRef.current === "finished") {
         setStatus("idle");
       }
     },
-    [status, handleComplete, updateTime]
+    [handleComplete, updateTime]
   );
 
   // ============ Effects ============
-  // Handle autoStart
+  // Handle autoStart.
+  //
+  // Self-cleaning: the effect starts the loop on setup and clears it on
+  // teardown. Under React StrictMode's dev-only double invoke
+  // (setup -> cleanup -> setup) this re-establishes the interval on the second
+  // setup, instead of a persistent "already triggered" ref latching after the
+  // first run and leaving a "running" timer with no live interval (frozen).
+  // Deps are intentionally just [autoStart] so later re-renders (e.g. a new
+  // `initialTimeMs` or option identity) don't re-trigger autoStart.
   useEffect(() => {
-    if (autoStart && !autoStartTriggeredRef.current && safeInitialTime > 0) {
-      autoStartTriggeredRef.current = true;
-      setStatus("running");
-      onStartRef.current?.();
-      startTimerLoop();
+    if (!autoStart || safeInitialTime <= 0) {
+      return;
     }
-  }, [autoStart, safeInitialTime, startTimerLoop]);
+
+    setStatus("running");
+    onStartRef.current?.();
+    startTimerLoop();
+
+    return () => {
+      clearTimer();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autoStart]);
 
   // Handle initialTimeMs changes when not running
   // Only react to actual prop changes, not status changes
@@ -449,7 +465,7 @@ export function useTimer(
     let hiddenTime = 0;
 
     const handleVisibilityChange = () => {
-      if (status !== "running") return;
+      if (statusRef.current !== "running") return;
 
       if (document.hidden) {
         // Tab became hidden, record the time
@@ -461,16 +477,9 @@ export function useTimer(
         remainingTimeRef.current = newRemaining;
         lastTickTimeRef.current = performance.now();
 
-        // Force update formatted time
-        const newFormatted = formatRef.current
-          ? typeof formatRef.current === "function"
-            ? formatRef.current(newRemaining)
-            : formatTime(newRemaining, formatRef.current as TimeFormat)
-          : formatTime(newRemaining, "MM:SS");
-        if (newFormatted !== prevFormattedTimeRef.current) {
-          prevFormattedTimeRef.current = newFormatted;
-          setFormattedTime(newFormatted);
-        }
+        // updateTime keeps timeRef.current in sync (so `progress` reflects the
+        // drift) and skips the render when the formatted value is unchanged.
+        updateTime(newRemaining);
 
         if (newRemaining <= 0) {
           handleComplete();
@@ -483,7 +492,7 @@ export function useTimer(
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [status, handleComplete]);
+  }, [handleComplete, updateTime]);
 
   // Cleanup on unmount
   useEffect(() => {

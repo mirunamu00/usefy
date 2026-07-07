@@ -191,4 +191,4 @@ function useTimeout(
 
 - 모든 모던 브라우저 지원
 - setTimeout API 사용 (IE6+)
-- SSR 환경에서 안전하게 동작 (typeof window 체크)
+- SSR 환경에서 안전하게 동작 (타이머 예약이 `useEffect` 내부에서만 일어나며, 서버에서는 effect가 실행되지 않으므로 서버 렌더링 중에는 타이머가 생성되지 않음)

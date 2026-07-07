@@ -185,8 +185,11 @@ export function useGeolocation(
   }, []);
 
   // ============ Success Handler ============
+  // Builds the plain GeoPosition once, updates state, fires onSuccess, and
+  // returns the constructed object so callers (e.g. watch mode) can reuse the
+  // same reference instead of re-allocating it.
   const handleSuccess = useCallback(
-    (nativePosition: globalThis.GeolocationPosition) => {
+    (nativePosition: globalThis.GeolocationPosition): GeoPosition => {
       setLoading(false);
       setError(null);
 
@@ -206,6 +209,8 @@ export function useGeolocation(
 
       setPosition(geoPosition);
       onSuccessRef.current?.(geoPosition);
+
+      return geoPosition;
     },
     []
   );
@@ -260,24 +265,15 @@ export function useGeolocation(
     setLoading(true);
     setError(null);
 
-    // Success handler for watch includes onPositionChange callback
-    const handleWatchSuccess = (nativePosition: globalThis.GeolocationPosition) => {
-      handleSuccess(nativePosition);
-
-      // Convert to plain object for callback
-      const geoPosition: GeoPosition = {
-        coords: {
-          latitude: nativePosition.coords.latitude,
-          longitude: nativePosition.coords.longitude,
-          altitude: nativePosition.coords.altitude,
-          accuracy: nativePosition.coords.accuracy,
-          altitudeAccuracy: nativePosition.coords.altitudeAccuracy,
-          heading: nativePosition.coords.heading,
-          speed: nativePosition.coords.speed,
-        },
-        timestamp: nativePosition.timestamp,
-      };
-
+    // Success handler for watch. Reuse the single GeoPosition built by
+    // handleSuccess for the onPositionChange callback instead of allocating a
+    // second, identical object per tick.
+    // Contract: onSuccess fires on every successful acquisition (including each
+    // watch update); onPositionChange fires additionally on each watch update.
+    const handleWatchSuccess = (
+      nativePosition: globalThis.GeolocationPosition
+    ) => {
+      const geoPosition = handleSuccess(nativePosition);
       onPositionChangeRef.current?.(geoPosition);
     };
 
@@ -312,12 +308,19 @@ export function useGeolocation(
       return;
     }
 
+    // Guard against the async query resolving after unmount (StrictMode /
+    // concurrent). `active` is captured by both the resolve handler and the
+    // cleanup so we never call setState post-unmount or leak a listener.
+    let active = true;
     let permissionStatus: PermissionStatus | null = null;
     let changeHandler: (() => void) | null = null;
 
     navigator.permissions
       .query({ name: "geolocation" as PermissionName })
       .then((status) => {
+        // Effect was cleaned up before the query resolved — do nothing.
+        if (!active) return;
+
         permissionStatus = status;
         setPermission(status.state as PermissionState);
 
@@ -331,10 +334,12 @@ export function useGeolocation(
       })
       .catch(() => {
         // Permissions API not supported or query failed
+        if (!active) return;
         setPermission("unavailable");
       });
 
     return () => {
+      active = false;
       if (permissionStatus && changeHandler) {
         permissionStatus.removeEventListener("change", changeHandler);
       }
@@ -342,12 +347,14 @@ export function useGeolocation(
   }, []);
 
   // ============ Immediate Fetch on Mount ============
+  // Skip the one-shot fetch when watching: watch mode already delivers the
+  // first position, so an extra getCurrentPosition would be a redundant request.
   useEffect(() => {
-    if (immediate && isSupported) {
+    if (immediate && !watch && isSupported) {
       getCurrentPosition();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [immediate, isSupported]);
+  }, [immediate, watch, isSupported]);
   // getCurrentPosition is intentionally omitted to run only once on mount
 
   // ============ Watch on Mount ============

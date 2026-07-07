@@ -1,1 +1,7 @@
-export { useInit, type UseInitOptions, type UseInitResult } from "./useInit";
+export {
+  useInit,
+  type UseInitOptions,
+  type UseInitResult,
+  type InitCallback,
+  type CleanupFn,
+} from "./useInit";

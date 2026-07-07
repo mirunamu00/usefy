@@ -91,9 +91,17 @@ export interface UseOnClickOutsideOptions {
 }
 
 /**
+ * Time window (ms) during which an emulated mouse event that trails a touch
+ * interaction is suppressed. Touch devices synthesize `mousedown`/`click`
+ * events after `touchstart`/`touchend`, which would otherwise fire the handler
+ * a second time for the same tap.
+ */
+const TOUCH_MOUSE_DEDUPE_WINDOW_MS = 700;
+
+/**
  * Normalizes ref input to always return an array of refs
  */
-function normalizeRefs<T extends HTMLElement>(
+export function normalizeRefs<T extends HTMLElement>(
   ref: RefTarget<T>
 ): Array<React.RefObject<HTMLElement | null>> {
   return Array.isArray(ref) ? ref : [ref];
@@ -102,7 +110,7 @@ function normalizeRefs<T extends HTMLElement>(
 /**
  * Checks if a click event occurred outside of all specified elements
  */
-function isClickOutside(
+export function isClickOutside(
   event: ClickOutsideEvent,
   refs: Array<React.RefObject<HTMLElement | null>>,
   excludeRefs: Array<React.RefObject<HTMLElement | null>>,
@@ -252,6 +260,10 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
   // Store ref in a ref to avoid re-registering when array is passed inline
   const refRef = useRef(ref);
 
+  // Timestamp of the most recent touch interaction, used to suppress the
+  // emulated mouse events that touch devices dispatch after a tap.
+  const lastTouchTimeRef = useRef(0);
+
   // Update refs when values change
   handlerRef.current = handler;
   shouldExcludeRef.current = shouldExclude;
@@ -269,18 +281,26 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
       return;
     }
 
-    // Normalize refs to array (use refRef.current to get latest value)
-    const normalizedRefs = normalizeRefs(refRef.current);
-
     // Get the event target (default to document)
     const target = eventTarget ?? document;
 
     // Internal handler for mouse events
     const handleMouseEvent = (event: Event) => {
+      // Suppress the emulated mouse event that trails a touch tap so the
+      // handler fires once per interaction, not twice, on touch devices.
+      if (
+        detectTouch &&
+        Date.now() - lastTouchTimeRef.current < TOUCH_MOUSE_DEDUPE_WINDOW_MS
+      ) {
+        return;
+      }
+
+      // Normalize refs at event time so the latest ref target(s) are used
+      // even when the ref identity changes without re-subscribing.
       if (
         isClickOutside(
           event as MouseEvent,
-          normalizedRefs,
+          normalizeRefs(refRef.current),
           excludeRefsRef.current,
           shouldExcludeRef.current
         )
@@ -291,10 +311,14 @@ export function useOnClickOutside<T extends HTMLElement = HTMLElement>(
 
     // Internal handler for touch events
     const handleTouchEvent = (event: Event) => {
+      // Record the interaction time first so the trailing mouse event is
+      // suppressed regardless of whether this tap was an outside click.
+      lastTouchTimeRef.current = Date.now();
+
       if (
         isClickOutside(
           event as TouchEvent,
-          normalizedRefs,
+          normalizeRefs(refRef.current),
           excludeRefsRef.current,
           shouldExcludeRef.current
         )

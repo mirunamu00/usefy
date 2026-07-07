@@ -21,7 +21,7 @@
   <a href="https://github.com/mirunamu00/usefy/blob/master/LICENSE">
     <img src="https://img.shields.io/npm/l/@usefy/use-memory-monitor.svg?style=flat-square&color=007acc" alt="license" />
   </a>
-  <img src="https://img.shields.io/badge/coverage-90%25-brightgreen?style=flat-square" alt="coverage" />
+  <img src="https://img.shields.io/badge/coverage-95%25-brightgreen?style=flat-square" alt="coverage" />
 </p>
 
 <p align="center">
@@ -51,14 +51,14 @@
 
 - **Real-time Monitoring** — Track heap usage, total heap, and memory limits in real-time
 - **Leak Detection** — Automatic memory leak detection using linear regression analysis
-- **Threshold Alerts** — Configure custom thresholds for low/medium/high/critical severity levels
-- **Memory Snapshots** — Take snapshots and compare memory usage between different points in time
+- **Threshold Alerts** — Configure custom `warning`/`critical` severity thresholds
+- **Memory Snapshots** — Take named snapshots and compare memory usage between points in time
 - **History Tracking** — Maintain a circular buffer of historical memory data with trend analysis
-- **Tab Visibility Optimization** — Automatically pauses monitoring when tab is hidden
+- **Tab Visibility Optimization** — Automatically pauses monitoring when tab is hidden (and resumes only work it paused)
 - **TypeScript First** — Full type safety with comprehensive exported interfaces
 - **SSR Compatible** — Safe to use with Next.js, Remix, and other SSR frameworks
 - **Browser Fallbacks** — Graceful degradation in browsers without full API support
-- **Well Tested** — Comprehensive test coverage (175 tests) with Vitest
+- **Well Tested** — Comprehensive test coverage (242 tests) with Vitest
 
 ---
 
@@ -138,21 +138,21 @@ function MemoryMonitor() {
 
 ### Browser Detection
 
-The hook automatically detects browser capabilities and adjusts functionality:
+The hook automatically detects browser capabilities and exposes them as return
+values. Use the `onUnsupported` callback to learn *why* monitoring is unavailable:
 
 ```tsx
-const { isSupported, getUnsupportedInfo, getBrowserSupport } = useMemoryMonitor();
+const { isSupported, supportLevel, availableMetrics } = useMemoryMonitor({
+  onUnsupported: (info) => {
+    console.log("Reason:", info.reason); // 'no-api' | 'server-side' | 'insecure-context' | 'browser-restriction'
+    console.log("Browser:", info.browser);
+    console.log("Fallbacks:", info.availableFallbacks); // ('none' | 'estimation' | 'dom-only')[]
+  },
+});
 
-if (!isSupported) {
-  const info = getUnsupportedInfo();
-  console.log("Reason:", info.reason); // 'no-api' | 'browser-restriction' | etc.
-  console.log("Browser:", info.browser);
-  console.log("Fallbacks:", info.availableFallbacks);
-}
-
-const support = getBrowserSupport();
-console.log("Support level:", support.level); // 'full' | 'partial' | 'none'
-console.log("Available metrics:", support.availableMetrics);
+console.log("Supported:", isSupported);
+console.log("Support level:", supportLevel); // 'full' | 'partial' | 'none'
+console.log("Available metrics:", availableMetrics); // ('heapUsed' | 'domNodes' | ...)[]
 ```
 
 ---
@@ -171,90 +171,116 @@ A hook that monitors browser memory usage in real-time with leak detection and t
 
 #### Options (`UseMemoryMonitorOptions`)
 
-| Option               | Type                    | Default  | Description                                      |
-| -------------------- | ----------------------- | -------- | ------------------------------------------------ |
-| `interval`           | `number`                | `1000`   | Polling interval in milliseconds                 |
-| `autoStart`          | `boolean`               | `true`   | Start monitoring automatically on mount          |
-| `enabled`            | `boolean`               | `true`   | Enable/disable the hook                          |
-| `enableHistory`      | `boolean`               | `true`   | Track memory history                             |
-| `historySize`        | `number`                | `50`     | Maximum number of history entries                |
-| `thresholds`         | `ThresholdOptions`      | See below | Memory usage thresholds                          |
-| `leakDetection`      | `LeakDetectionOptions`  | See below | Leak detection configuration                     |
-| `pauseWhenHidden`    | `boolean`               | `true`   | Pause monitoring when tab is hidden              |
-| `onThresholdChange`  | `(severity) => void`    | -        | Callback when severity level changes             |
-| `onMemoryUpdate`     | `(memory) => void`      | -        | Callback on each memory update                   |
-| `onLeakDetected`     | `(analysis) => void`    | -        | Callback when memory leak is detected            |
-| `onUnsupported`      | `(info) => void`        | -        | Callback when memory API is not supported        |
+| Option                 | Type                    | Default     | Description                                              |
+| ---------------------- | ----------------------- | ----------- | ------------------------------------------------------- |
+| `interval`             | `number`                | `5000`      | Polling interval in milliseconds                        |
+| `autoStart`            | `boolean`               | `true`      | Start monitoring automatically on mount                 |
+| `enabled`              | `boolean`               | `true`      | Enable/disable the hook                                 |
+| `enableHistory`        | `boolean`               | `false`     | Record memory history into a circular buffer            |
+| `historySize`          | `number`                | `50`        | Maximum number of history entries                       |
+| `thresholds`           | `ThresholdOptions`      | See below   | Warning/critical usage thresholds                       |
+| `leakDetection`        | `LeakDetectionOptions`  | See below   | Leak detection configuration                            |
+| `devMode`              | `boolean`               | `false`     | Enable development-mode features                        |
+| `trackDOMNodes`        | `boolean`               | `false`     | Track the document's DOM node count                     |
+| `trackEventListeners`  | `boolean`               | `false`     | Estimate the event listener count                       |
+| `logToConsole`         | `boolean`               | `false`     | Log updates to the console (with `devMode`)             |
+| `disableInProduction`  | `boolean`               | `false`     | Disable monitoring in production builds                 |
+| `fallbackStrategy`     | `FallbackStrategy`      | `"dom-only"`| Fallback for browsers without the heap API              |
+| `onUpdate`             | `(memory) => void`      | -           | Called on each memory update                            |
+| `onWarning`            | `(data) => void`        | -           | Called when the warning threshold is exceeded           |
+| `onCritical`           | `(data) => void`        | -           | Called when the critical threshold is exceeded          |
+| `onLeakDetected`       | `(analysis) => void`    | -           | Called when a memory leak is detected                   |
+| `onUnsupported`        | `(info) => void`        | -           | Called when memory monitoring is not supported          |
 
-##### Default Thresholds
+##### Default Thresholds (`ThresholdOptions`)
 
 ```typescript
 {
-  medium: 60,    // Yellow alert at 60% usage
-  high: 80,      // Orange alert at 80% usage
-  critical: 90,  // Red alert at 90% usage
+  warning: 70,   // severity becomes "warning" at 70% of the heap limit
+  critical: 90,  // severity becomes "critical" at 90% of the heap limit
 }
 ```
 
-##### Default Leak Detection
+##### Default Leak Detection (`LeakDetectionOptions`)
 
 ```typescript
 {
-  enabled: true,
+  enabled: false,         // opt in to enable leak analysis
   sensitivity: "medium",  // 'low' | 'medium' | 'high'
-  sampleSize: 10,
-  minDuration: 30000,     // 30 seconds
+  windowSize: 20,         // number of recent samples to analyze
+  threshold: undefined,   // optional custom growth threshold (bytes/sample)
 }
 ```
+
+> Leak detection requires `enableHistory: true` so there are samples to analyze.
 
 #### Returns `UseMemoryMonitorReturn`
 
-| Property               | Type                                 | Description                                  |
-| ---------------------- | ------------------------------------ | -------------------------------------------- |
-| `memory`               | `MemoryInfo \| null`                 | Current memory information                   |
-| `heapUsed`             | `number \| null`                     | Used heap size in bytes                      |
-| `heapTotal`            | `number \| null`                     | Total heap size in bytes                     |
-| `heapLimit`            | `number \| null`                     | Heap size limit in bytes                     |
-| `isSupported`          | `boolean`                            | Whether memory monitoring is supported       |
-| `isMonitoring`         | `boolean`                            | Whether currently monitoring                 |
-| `isLeakDetected`       | `boolean`                            | Whether memory leak is detected              |
-| `severity`             | `Severity`                           | Current severity level                       |
-| `history`              | `MemoryInfo[]`                       | Historical memory data                       |
-| `trend`                | `Trend`                              | Memory usage trend                           |
-| `formatted`            | `FormattedMemory`                    | Human-readable formatted values              |
-| `start`                | `() => void`                         | Start monitoring                             |
-| `stop`                 | `() => void`                         | Stop monitoring                              |
-| `takeSnapshot`         | `(id: string) => MemorySnapshot \| null` | Take a memory snapshot                       |
-| `compareSnapshots`     | `(id1, id2) => MemoryDifference \| null` | Compare two snapshots                        |
-| `clearSnapshots`       | `() => void`                         | Clear all snapshots                          |
-| `getAllSnapshots`      | `() => MemorySnapshot[]`             | Get all snapshots                            |
-| `clearHistory`         | `() => void`                         | Clear history buffer                         |
-| `requestGC`            | `() => void`                         | Request garbage collection (hint only)       |
-| `getLeakAnalysis`      | `() => LeakAnalysis \| null`         | Get current leak analysis                    |
-| `getBrowserSupport`    | `() => BrowserSupport`               | Get browser support information              |
-| `getUnsupportedInfo`   | `() => UnsupportedInfo`              | Get info about why monitoring is unsupported |
+| Property           | Type                                        | Description                                       |
+| ------------------ | ------------------------------------------- | ------------------------------------------------- |
+| `memory`           | `MemoryInfo \| null`                        | Current memory information                        |
+| `heapUsed`         | `number \| null`                            | Used heap size in bytes                           |
+| `heapTotal`        | `number \| null`                            | Total heap size in bytes                          |
+| `heapLimit`        | `number \| null`                            | Heap size limit in bytes                          |
+| `usagePercentage`  | `number \| null`                            | Heap usage as a percentage of the limit           |
+| `domNodes`         | `number \| null`                            | DOM node count (when `trackDOMNodes` is enabled)  |
+| `eventListeners`   | `number \| null`                            | Estimated listener count (when tracking)          |
+| `isSupported`      | `boolean`                                   | Whether memory monitoring is supported            |
+| `isMonitoring`     | `boolean`                                   | Whether monitoring is currently active            |
+| `isLeakDetected`   | `boolean`                                   | Whether a memory leak is currently detected       |
+| `severity`         | `Severity`                                  | Current severity level                            |
+| `supportLevel`     | `SupportLevel`                              | `'full' \| 'partial' \| 'none'`                   |
+| `availableMetrics` | `readonly AvailableMetric[]`                | Metrics available in this browser                 |
+| `history`          | `readonly MemoryInfo[]`                     | Historical memory data (empty if history is off)  |
+| `trend`            | `Trend`                                     | Memory usage trend                                |
+| `leakProbability`  | `number`                                    | Current leak probability (0–100)                  |
+| `formatted`        | `FormattedMemory`                           | Human-readable formatted values                   |
+| `start`            | `() => void`                                | Start monitoring                                  |
+| `stop`             | `() => void`                                | Stop monitoring                                   |
+| `takeSnapshot`     | `(id: string) => MemorySnapshot \| null`    | Take a named memory snapshot                      |
+| `compareSnapshots` | `(id1: string, id2: string) => SnapshotDiff \| null` | Compare two named snapshots              |
+| `clearHistory`     | `() => void`                                | Clear the history buffer                          |
+| `requestGC`        | `() => void`                                | Request garbage collection (hint only)            |
 
 ### Types
 
 #### `Severity`
 ```typescript
-type Severity = "low" | "medium" | "high" | "critical";
+type Severity = "normal" | "warning" | "critical";
 ```
 
 #### `Trend`
 ```typescript
-type Trend = "increasing" | "stable" | "decreasing";
+type Trend = "stable" | "increasing" | "decreasing";
 ```
 
 #### `MemoryInfo`
 ```typescript
 interface MemoryInfo {
-  heapUsed: number | null;
-  heapTotal: number | null;
-  heapLimit: number | null;
+  /** Used JS heap size in bytes */
+  heapUsed: number;
+  /** Total JS heap size in bytes */
+  heapTotal: number;
+  /** JS heap size limit in bytes */
+  heapLimit: number;
+  /** Timestamp when this measurement was taken */
   timestamp: number;
-  domNodes?: number | null;
-  eventListeners?: number | null;
+}
+```
+
+#### `SnapshotDiff`
+```typescript
+interface SnapshotDiff {
+  /** Difference in heap usage (bytes) */
+  heapDelta: number;
+  /** Percentage change in heap usage */
+  heapPercentChange: number;
+  /** Difference in DOM node count (if tracked) */
+  domNodesDelta?: number;
+  /** Difference in event listener count (if tracked) */
+  eventListenersDelta?: number;
+  /** Time elapsed between snapshots (ms) */
+  timeDelta: number;
 }
 ```
 
@@ -305,24 +331,22 @@ function BasicMonitor() {
 import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 
 function LeakDetector() {
-  const { isLeakDetected, getLeakAnalysis, formatted } = useMemoryMonitor({
+  const { isLeakDetected, leakProbability, formatted } = useMemoryMonitor({
     interval: 1000,
+    enableHistory: true, // required so there are samples to analyze
     leakDetection: {
       enabled: true,
       sensitivity: "high",
-      sampleSize: 15,
-      minDuration: 20000, // 20 seconds
+      windowSize: 15,
     },
     onLeakDetected: (analysis) => {
       console.warn("Memory leak detected!", {
         probability: analysis.probability,
         confidence: analysis.confidence,
-        slope: analysis.slope,
+        averageGrowth: analysis.averageGrowth,
       });
     },
   });
-
-  const analysis = getLeakAnalysis();
 
   return (
     <div>
@@ -330,8 +354,7 @@ function LeakDetector() {
       {isLeakDetected && (
         <div className="alert">
           ⚠️ Memory leak detected!
-          <p>Probability: {(analysis?.probability ?? 0).toFixed(2)}%</p>
-          <p>Confidence: {analysis?.confidence}</p>
+          <p>Probability: {leakProbability.toFixed(0)}%</p>
         </div>
       )}
       <p>Current Usage: {formatted.heapUsed}</p>
@@ -437,27 +460,23 @@ interface LeakAnalysis {
 import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 
 function ThresholdMonitor() {
-  const { severity, heapUsed, heapLimit, formatted } = useMemoryMonitor({
+  const { severity, usagePercentage, formatted } = useMemoryMonitor({
     interval: 1000,
     thresholds: {
-      medium: 50,
-      high: 75,
-      critical: 90,
+      warning: 70,   // severity becomes "warning" at 70%
+      critical: 90,  // severity becomes "critical" at 90%
     },
-    onThresholdChange: (newSeverity) => {
-      if (newSeverity === "critical") {
-        alert("Critical memory usage!");
-      }
+    onWarning: (data) => {
+      console.warn(`Memory warning at ${data.usagePercentage.toFixed(1)}%`);
+    },
+    onCritical: () => {
+      alert("Critical memory usage!");
     },
   });
 
-  const usagePercent = heapUsed && heapLimit
-    ? (heapUsed / heapLimit) * 100
-    : 0;
-
   return (
     <div>
-      <h2>Memory Usage: {usagePercent.toFixed(1)}%</h2>
+      <h2>Memory Usage: {usagePercentage?.toFixed(1) ?? "0"}%</h2>
       <div className={`alert alert-${severity}`}>
         Severity: {severity}
       </div>
@@ -474,31 +493,32 @@ import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 import { useState } from "react";
 
 function SnapshotComparison() {
-  const {
-    takeSnapshot,
-    compareSnapshots,
-    getAllSnapshots,
-    clearSnapshots,
-    formatted,
-  } = useMemoryMonitor({ interval: 1000 });
+  const { takeSnapshot, compareSnapshots, formatted } = useMemoryMonitor({
+    interval: 1000,
+  });
 
-  const [snapshots, setSnapshots] = useState<string[]>([]);
+  // The hook stores snapshots internally by id; keep the ids you care about
+  // in local state so you can render and compare them.
+  const [snapshotIds, setSnapshotIds] = useState<string[]>([]);
 
   const handleSnapshot = () => {
     const snapshot = takeSnapshot(`snapshot-${Date.now()}`);
     if (snapshot) {
-      setSnapshots([...snapshots, snapshot.id]);
+      setSnapshotIds((prev) => [...prev, snapshot.id]);
     }
   };
 
   const handleCompare = () => {
-    if (snapshots.length >= 2) {
-      const diff = compareSnapshots(snapshots[0], snapshots[snapshots.length - 1]);
+    if (snapshotIds.length >= 2) {
+      const diff = compareSnapshots(
+        snapshotIds[0],
+        snapshotIds[snapshotIds.length - 1]
+      );
       if (diff) {
         console.log("Memory difference:", {
-          heapUsed: (diff.heapUsed / 1024 / 1024).toFixed(2) + " MB",
-          heapTotal: (diff.heapTotal / 1024 / 1024).toFixed(2) + " MB",
-          duration: (diff.duration / 1000).toFixed(1) + " seconds",
+          heapDelta: (diff.heapDelta / 1024 / 1024).toFixed(2) + " MB",
+          heapPercentChange: diff.heapPercentChange.toFixed(1) + "%",
+          duration: (diff.timeDelta / 1000).toFixed(1) + " seconds",
         });
       }
     }
@@ -506,20 +526,18 @@ function SnapshotComparison() {
 
   return (
     <div>
-      <h2>Snapshots ({snapshots.length})</h2>
+      <h2>Snapshots ({snapshotIds.length})</h2>
       <p>Current: {formatted.heapUsed}</p>
 
       <button onClick={handleSnapshot}>Take Snapshot</button>
-      <button onClick={handleCompare} disabled={snapshots.length < 2}>
+      <button onClick={handleCompare} disabled={snapshotIds.length < 2}>
         Compare First & Last
       </button>
-      <button onClick={clearSnapshots}>Clear All</button>
+      <button onClick={() => setSnapshotIds([])}>Clear List</button>
 
       <ul>
-        {getAllSnapshots().map((snapshot) => (
-          <li key={snapshot.id}>
-            {snapshot.id}: {(snapshot.data.heapUsed || 0) / 1024 / 1024} MB
-          </li>
+        {snapshotIds.map((id) => (
+          <li key={id}>{id}</li>
         ))}
       </ul>
     </div>
@@ -580,37 +598,32 @@ function HistoryTracker() {
 ```tsx
 import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 
+import { useState } from "react";
+import type { UnsupportedInfo } from "@usefy/use-memory-monitor";
+
 function SupportDetection() {
-  const { isSupported, getUnsupportedInfo, getBrowserSupport } = useMemoryMonitor();
+  const [info, setInfo] = useState<UnsupportedInfo | null>(null);
+
+  const { isSupported, supportLevel, availableMetrics } = useMemoryMonitor({
+    onUnsupported: setInfo,
+  });
 
   if (!isSupported) {
-    const info = getUnsupportedInfo();
     return (
       <div>
         <h2>Limited Support</h2>
-        <p>Reason: {info.reason}</p>
-        <p>Browser: {info.browser || "Unknown"}</p>
-        <p>Available fallbacks: {info.availableFallbacks.join(", ")}</p>
+        <p>Reason: {info?.reason}</p>
+        <p>Browser: {info?.browser || "Unknown"}</p>
+        <p>Available fallbacks: {info?.availableFallbacks.join(", ")}</p>
       </div>
     );
   }
 
-  const support = getBrowserSupport();
-
   return (
     <div>
       <h2>Browser Support</h2>
-      <p>Level: {support.level}</p>
-      <p>Available metrics: {support.availableMetrics.join(", ")}</p>
-      <p>Secure context: {support.isSecureContext ? "Yes" : "No"}</p>
-      <p>Cross-origin isolated: {support.isCrossOriginIsolated ? "Yes" : "No"}</p>
-      {support.limitations.length > 0 && (
-        <ul>
-          {support.limitations.map((limitation, i) => (
-            <li key={i}>{limitation}</li>
-          ))}
-        </ul>
-      )}
+      <p>Level: {supportLevel}</p>
+      <p>Available metrics: {availableMetrics.join(", ")}</p>
     </div>
   );
 }
@@ -661,7 +674,7 @@ google-chrome --js-flags="--expose-gc"
 
 ### Optimizations
 
-1. **Tab Visibility**: Automatically pauses monitoring when tab is hidden (configurable with `pauseWhenHidden`)
+1. **Tab Visibility**: Automatically pauses monitoring when the tab is hidden and resumes only work it paused (never work you manually stopped)
 2. **Circular Buffer**: Uses efficient circular buffer for history storage (O(1) operations)
 3. **Stable References**: All callback functions are memoized with `useCallback`
 4. **useSyncExternalStore**: React 18+ concurrent mode safe state management
@@ -714,17 +727,18 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Categories
 
-**225 tests passed** covering:
+**242 tests passed** covering:
 
 - **Initialization & Lifecycle**: Mount, unmount, start/stop behavior
 - **Memory Tracking**: Polling, history, trend analysis
 - **Leak Detection**: Linear regression, sensitivity levels, analysis
-- **Thresholds**: Severity calculation, callbacks
-- **Snapshots**: Create, compare, clear operations
-- **Browser Detection**: API availability, fallback strategies
-- **Edge Cases**: SSR, unsupported browsers, invalid inputs
+- **Thresholds**: Severity calculation, `onWarning`/`onCritical` callbacks
+- **Snapshots**: Take and compare named snapshots
+- **Tab Visibility**: Pause on hide, resume without overriding manual stop
+- **Browser Detection**: API availability, fallback strategies, `onUnsupported`
+- **Edge Cases**: SSR server render, unsupported browsers, StrictMode safety
 - **Store Management**: State updates, subscribers, batch operations
-- **Memory APIs**: Performance.memory, DOM nodes, event listeners
+- **Memory APIs**: performance.memory, DOM nodes, event listeners
 
 ---
 

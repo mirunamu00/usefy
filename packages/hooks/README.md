@@ -622,6 +622,41 @@ Perfect for countdown timers, Pomodoro apps, kitchen timers, and time-based UIs 
 
 </details>
 
+<details>
+<summary><strong>useTimeout</strong> — Declarative setTimeout with reset/clear controls</summary>
+
+```tsx
+import { useTimeout } from "@usefy/use-timeout";
+
+const { reset, clear, isPending } = useTimeout(() => {
+  console.log("fired");
+}, 3000);
+
+// Pass null to disable; reset() restarts, clear() cancels.
+```
+
+Automatic cleanup on unmount, latest-callback ref, and conditional execution via a `null` delay.
+
+</details>
+
+<details>
+<summary><strong>useInterval</strong> — Declarative setInterval with start/stop/toggle</summary>
+
+```tsx
+import { useInterval } from "@usefy/use-interval";
+
+const { start, stop, toggle, isRunning } = useInterval(() => {
+  tick();
+}, 1000);
+
+// Pass null to disable; { immediate: true } fires once immediately;
+// { autoStart: false } starts stopped.
+```
+
+StrictMode-safe (no leaked/duplicate timers), latest-callback ref, and automatic cleanup on unmount.
+
+</details>
+
 ### 💾 Storage
 
 <details>
@@ -990,6 +1025,25 @@ const { ref, inView } = useIntersectionObserver({
 ```
 
 Perfect for lazy loading, infinite scroll, scroll animations, progress tracking, and any visibility-based interactions with smart re-render optimization.
+
+</details>
+
+<details>
+<summary><strong>useResizeObserver</strong> — Track an element's size with ResizeObserver</summary>
+
+```tsx
+import { useResizeObserver } from "@usefy/use-resize-observer";
+
+const { ref, width, height, entry } = useResizeObserver({
+  box: "content-box",
+  debounceMs: 100,
+  onResize: ({ width, height }) => console.log(width, height),
+});
+
+// <div ref={ref}>…</div>
+```
+
+Content/border/device-pixel box support, debounce/throttle, callbacks, and an SSR-safe inert fallback. StrictMode-safe.
 
 </details>
 

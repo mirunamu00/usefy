@@ -1,7 +1,11 @@
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import React from "react";
-import { useOnClickOutside } from "./useOnClickOutside";
+import {
+  useOnClickOutside,
+  isClickOutside,
+  normalizeRefs,
+} from "./useOnClickOutside";
 
 describe("useOnClickOutside", () => {
   let container: HTMLDivElement;
@@ -730,6 +734,223 @@ describe("useOnClickOutside", () => {
         expect.any(Function),
         { capture: true }
       );
+    });
+
+    it("should call handler for clicks dispatched on a custom eventTarget", () => {
+      const handler = vi.fn();
+      const ref = { current: targetElement };
+      const customTarget = document.createElement("div");
+      const innerElement = document.createElement("div");
+      customTarget.appendChild(innerElement);
+      document.body.appendChild(customTarget);
+
+      renderHook(() =>
+        useOnClickOutside(ref, handler, { eventTarget: customTarget })
+      );
+
+      // Click inside the custom target but outside the watched ref
+      innerElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(customTarget);
+    });
+  });
+
+  // Regression: ref identity changes must be picked up (refs resolved at event time)
+  describe("ref identity changes", () => {
+    it("should use the latest ref target after the ref identity changes", () => {
+      const handler = vi.fn();
+
+      const { rerender } = renderHook(
+        ({ watched }) => useOnClickOutside(watched, handler),
+        { initialProps: { watched: { current: targetElement } } }
+      );
+
+      // outsideElement is outside targetElement -> handler fires
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      // Swap the watched ref to a brand-new ref object pointing at outsideElement
+      rerender({ watched: { current: outsideElement } });
+
+      // Now outsideElement is "inside" the watched ref -> handler must NOT fire
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should reflect a new inline array of refs passed on each render", () => {
+      const handler = vi.fn();
+      const a = document.createElement("div");
+      const b = document.createElement("div");
+      container.appendChild(a);
+      container.appendChild(b);
+
+      const { rerender } = renderHook(
+        ({ refs }) => useOnClickOutside(refs, handler),
+        { initialProps: { refs: [{ current: a }] } }
+      );
+
+      // b is outside the only watched ref (a) -> handler fires
+      b.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      // New inline array now includes b as an inside ref
+      rerender({ refs: [{ current: a }, { current: b }] });
+
+      // b is now inside -> handler must NOT fire again
+      b.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // Regression: touch devices emit an emulated mouse event after a tap
+  describe("touch/mouse deduplication", () => {
+    it("should fire the handler once per tap (touchstart + emulated mousedown)", () => {
+      const handler = vi.fn();
+      const ref = { current: targetElement };
+
+      renderHook(() => useOnClickOutside(ref, handler));
+
+      // A single tap on a touch device: touchstart followed by the emulated mousedown
+      outsideElement.dispatchEvent(
+        new TouchEvent("touchstart", { bubbles: true, cancelable: true })
+      );
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true, cancelable: true })
+      );
+
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should still fire mouse events when detectTouch is false", () => {
+      const handler = vi.fn();
+      const ref = { current: targetElement };
+
+      renderHook(() =>
+        useOnClickOutside(ref, handler, { detectTouch: false })
+      );
+
+      // No touch listener registered, so no suppression should occur
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("latest option refs after update", () => {
+    it("should use the latest shouldExclude after update", () => {
+      const handler = vi.fn();
+      const ref = { current: targetElement };
+
+      const { rerender } = renderHook(
+        ({ fn }: { fn: (target: Node) => boolean }) =>
+          useOnClickOutside(ref, handler, { shouldExclude: fn }),
+        {
+          initialProps: {
+            fn: (() => false) as (target: Node) => boolean,
+          },
+        }
+      );
+
+      // Initial shouldExclude returns false -> handler fires
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      // Update to a shouldExclude that excludes everything
+      rerender({ fn: () => true });
+
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      // Latest shouldExclude excludes the click -> handler must NOT fire again
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+
+    it("should use the latest excludeRefs after update", () => {
+      const handler = vi.fn();
+      const ref = { current: targetElement };
+      const excludeRef = { current: outsideElement };
+
+      const { rerender } = renderHook(
+        ({ exclude }: { exclude: Array<React.RefObject<HTMLElement | null>> }) =>
+          useOnClickOutside(ref, handler, { excludeRefs: exclude }),
+        { initialProps: { exclude: [] as Array<React.RefObject<HTMLElement | null>> } }
+      );
+
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      // Now exclude the outside element
+      rerender({ exclude: [excludeRef] });
+
+      outsideElement.dispatchEvent(
+        new MouseEvent("mousedown", { bubbles: true })
+      );
+      expect(handler).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // Unit-test the pure predicate directly (covers the SSR-safe core logic
+  // without a DOM host — the enterprise-bar branches).
+  describe("isClickOutside (pure predicate)", () => {
+    it("returns false for a null target", () => {
+      const event = { target: null } as unknown as MouseEvent;
+      expect(isClickOutside(event, [], [])).toBe(false);
+    });
+
+    it("returns false for a disconnected target", () => {
+      const detached = document.createElement("div");
+      const event = { target: detached } as unknown as MouseEvent;
+      expect(isClickOutside(event, [], [])).toBe(false);
+    });
+
+    it("returns false when shouldExclude returns true", () => {
+      const event = { target: outsideElement } as unknown as MouseEvent;
+      expect(isClickOutside(event, [], [], () => true)).toBe(false);
+    });
+
+    it("returns false when the target is inside an exclude ref", () => {
+      const event = { target: outsideElement } as unknown as MouseEvent;
+      expect(
+        isClickOutside(event, [], [{ current: outsideElement }])
+      ).toBe(false);
+    });
+
+    it("returns false when the target is inside a watched ref", () => {
+      const event = { target: targetElement } as unknown as MouseEvent;
+      expect(isClickOutside(event, [{ current: targetElement }], [])).toBe(
+        false
+      );
+    });
+
+    it("returns true for a connected outside target", () => {
+      const event = { target: outsideElement } as unknown as MouseEvent;
+      expect(isClickOutside(event, [{ current: targetElement }], [])).toBe(
+        true
+      );
+    });
+  });
+
+  describe("normalizeRefs (pure helper)", () => {
+    it("wraps a single ref into an array", () => {
+      const ref = { current: targetElement };
+      expect(normalizeRefs(ref)).toEqual([ref]);
+    });
+
+    it("returns an array of refs unchanged", () => {
+      const refs = [{ current: targetElement }, { current: outsideElement }];
+      expect(normalizeRefs(refs)).toBe(refs);
     });
   });
 });

@@ -406,6 +406,8 @@ import {
   useInit,
   type UseInitOptions,
   type UseInitResult,
+  type InitCallback,
+  type CleanupFn,
 } from "@usefy/use-init";
 
 // Basic usage with type inference
@@ -467,6 +469,11 @@ When `timeout` is set:
 - If timeout expires first, an `InitTimeoutError` is thrown
 - For sync callbacks, timeout is cleared immediately after execution
 
+> **Note:** If an async callback loses the race but later resolves with a cleanup
+> function, that cleanup would otherwise be orphaned (the hook has already moved on
+> to retry or failure). `useInit` guards against this by invoking such a
+> late-arriving cleanup immediately, so the resource it holds is still released.
+
 ### Cleanup Functions
 
 If the callback returns a cleanup function:
@@ -487,7 +494,7 @@ If the callback returns a cleanup function:
 
 ## Testing
 
-This package maintains comprehensive test coverage to ensure reliability and stability.
+This package maintains comprehensive test coverage to ensure reliability and stability. The suite (39 tests) covers **100% of statements and lines**, **95% of branches**, and **92% of functions**, including StrictMode double-invocation and throwing-cleanup safety.
 
 ### Test Coverage
 
@@ -495,90 +502,107 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Categories
 
-<details>
-<summary><strong>Basic Initialization Tests</strong></summary>
+The following categories map directly to the `describe` blocks in [`useInit.test.ts`](./src/useInit.test.ts):
 
-- Run callback once on mount
-- Not run callback again on re-render
-- Support synchronous callbacks
-- Support asynchronous callbacks
-- Track initialization state correctly
+<details>
+<summary><strong>Initialization</strong></summary>
+
+- Returns the correct result shape
+- Runs the callback once on mount (sync and async)
+- Runs only once across re-renders
 
 </details>
 
 <details>
-<summary><strong>Cleanup Function Tests</strong></summary>
+<summary><strong>Cleanup</strong></summary>
 
-- Call cleanup function on unmount
-- Call cleanup function before re-initialization
-- Support synchronous cleanup functions
-- Support asynchronous cleanup functions
-- Handle cleanup function errors gracefully
-- Not call cleanup if callback doesn't return one
+- Calls the cleanup function on unmount (sync and async)
+- Releases a cleanup that arrives after unmount (async)
+- Calls the previous cleanup before re-initialization
 
 </details>
 
 <details>
-<summary><strong>Conditional Execution Tests</strong></summary>
+<summary><strong>Conditional execution (<code>when</code>)</strong></summary>
 
-- Not run when `when` is false
-- Run when `when` changes from false to true
-- Not run again if already initialized
-- Respect `when` condition in `reinitialize()`
-
-</details>
-
-<details>
-<summary><strong>Retry Logic Tests</strong></summary>
-
-- Retry on failure with correct number of attempts
-- Wait correct delay between retries
-- Stop retrying after successful attempt
-- Store final error after all retries fail
-- Not retry if component unmounts during retry
+- Does not run when `when` is `false`
+- Runs when `when` is `true`
+- Runs when `when` changes from `false` to `true`
+- Does not run again after a `true → false → true` toggle once initialized
 
 </details>
 
 <details>
-<summary><strong>Timeout Tests</strong></summary>
+<summary><strong>Retry</strong></summary>
 
-- Timeout async callbacks that exceed timeout
-- Not timeout sync callbacks
-- Clear timeout after successful execution
-- Throw InitTimeoutError on timeout
-- Handle timeout with retry logic
+- Retries on failure and succeeds within the attempt budget
+- Fails after exhausting retries
+- Respects `retryDelay` between attempts
 
 </details>
 
 <details>
-<summary><strong>Manual Re-initialization Tests</strong></summary>
+<summary><strong>Timeout</strong></summary>
 
-- Reinitialize when `reinitialize()` is called
-- Respect `when` condition in `reinitialize()`
-- Clean up previous initialization before re-running
-- Update state correctly after re-initialization
-
-</details>
-
-<details>
-<summary><strong>State Management Tests</strong></summary>
-
-- Track `isInitializing` state correctly
-- Track `isInitialized` state correctly
-- Track `error` state correctly
-- Update state only when component is mounted
-- Handle rapid state changes correctly
+- Times out a callback that takes too long
+- Succeeds when the callback completes before the timeout
+- Leaves sync callbacks unaffected by the `timeout` option
 
 </details>
 
 <details>
-<summary><strong>Edge Cases Tests</strong></summary>
+<summary><strong>Reinitialize</strong></summary>
 
-- Handle component unmount during initialization
-- Handle component unmount during retry
-- Prevent concurrent initializations
-- Handle callback reference changes
-- Handle undefined/null errors gracefully
+- Allows manual reinitialize
+- Respects the `when` condition on reinitialize
+- Keeps a stable `reinitialize` reference
+
+</details>
+
+<details>
+<summary><strong>Edge cases</strong></summary>
+
+- Handles errors in sync and async callbacks
+- Converts non-`Error` throws to `Error`
+- Maintains separate state across multiple instances
+- Does not update state after unmount
+
+</details>
+
+<details>
+<summary><strong>Combined options</strong></summary>
+
+- Works with `retry` and `timeout` together
+- Works with `when` and `retry` together
+
+</details>
+
+<details>
+<summary><strong>StrictMode</strong></summary>
+
+- Keeps a sync cleanup subscription active after a StrictMode double-mount
+- Does not double-invoke an async callback under StrictMode
+
+</details>
+
+<details>
+<summary><strong>Resilience</strong></summary>
+
+- Does not wedge the hook when the cleanup throws on reinitialize
+- Does not throw on unmount when the cleanup throws
+- Ignores reinitialize calls while an init is already in progress
+- Invokes the latest callback on reinitialize after the prop changes
+- Keeps a stable `reinitialize` identity when `when` or options change
+- Stops retrying and does not update state after unmount during a retry
+- Releases a cleanup returned by a callback that resolves after the timeout
+
+</details>
+
+<details>
+<summary><strong>Initial state</strong></summary>
+
+- Reports `isInitializing` on the first commit when `when` is `true`
+- Reports not initializing on the first commit when `when` is `false`
 
 </details>
 

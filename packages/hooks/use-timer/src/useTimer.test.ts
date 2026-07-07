@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useTimer, ms } from "./useTimer";
@@ -954,6 +955,195 @@ describe("useTimer", () => {
 
       expect(timer1.current.time).toBe("01:00");
       expect(timer2.current.time).toBe("00:35");
+    });
+  });
+
+  // ============ StrictMode ============
+  describe("StrictMode", () => {
+    it("should keep the autoStart timer running (not frozen) under StrictMode", async () => {
+      // Regression: the old `autoStartTriggeredRef` latch left the timer in a
+      // "running" status with no live interval after StrictMode's dev-only
+      // mount -> unmount -> mount cycle. The self-cleaning effect must
+      // re-establish the interval so the countdown actually advances.
+      const { result } = renderHook(
+        () => useTimer(10000, { autoStart: true, interval: 100 }),
+        { wrapper: StrictMode }
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(0);
+      });
+
+      expect(result.current.isRunning).toBe(true);
+      expect(result.current.time).toBe("00:10");
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(3000);
+      });
+
+      // The interval survived the StrictMode double-invoke: time decreased.
+      expect(result.current.time).toBe("00:07");
+      expect(result.current.isRunning).toBe(true);
+      expect(result.current.progress).toBeGreaterThan(0);
+    });
+  });
+
+  // ============ Control Identity Stability Across Transitions ============
+  describe("control identity stability across status transitions", () => {
+    it("should keep control identities stable across a start -> pause transition", () => {
+      // Regression: control callbacks used to depend on `status`, so their
+      // identities changed on every status transition (breaking the README's
+      // "stable references" guarantee and any effect deps that included them).
+      const { result } = renderHook(() => useTimer(60000, { interval: 100 }));
+
+      const before = {
+        start: result.current.start,
+        pause: result.current.pause,
+        toggle: result.current.toggle,
+        addTime: result.current.addTime,
+        subtractTime: result.current.subtractTime,
+        setTime: result.current.setTime,
+      };
+
+      act(() => {
+        result.current.start();
+      });
+      expect(result.current.status).toBe("running");
+
+      act(() => {
+        result.current.pause();
+      });
+      expect(result.current.status).toBe("paused");
+
+      expect(result.current.start).toBe(before.start);
+      expect(result.current.pause).toBe(before.pause);
+      expect(result.current.toggle).toBe(before.toggle);
+      expect(result.current.addTime).toBe(before.addTime);
+      expect(result.current.subtractTime).toBe(before.subtractTime);
+      expect(result.current.setTime).toBe(before.setTime);
+    });
+  });
+
+  // ============ Background Tab (Visibility) Drift ============
+  describe("background tab visibility drift", () => {
+    const setHidden = (value: boolean) => {
+      Object.defineProperty(document, "hidden", {
+        configurable: true,
+        get: () => value,
+      });
+    };
+
+    afterEach(() => {
+      // Remove the own override so the prototype `hidden` getter is restored.
+      Reflect.deleteProperty(document, "hidden");
+    });
+
+    it("should compensate for elapsed time while the tab was hidden", () => {
+      setHidden(false);
+      // A very coarse interval means no regular tick fires during the window,
+      // isolating the visibility handler's drift compensation.
+      const { result } = renderHook(() =>
+        useTimer(5000, { interval: 100000 })
+      );
+
+      act(() => {
+        result.current.start();
+      });
+      expect(result.current.time).toBe("00:05");
+
+      // Move the clock so the recorded hidden timestamp is > 0.
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+
+      setHidden(true);
+      act(() => {
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+
+      // 3s pass while hidden — the coarse interval never ticks.
+      act(() => {
+        vi.advanceTimersByTime(3000);
+      });
+
+      setHidden(false);
+      act(() => {
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+
+      // 5000 - 3000 = 2000ms remaining, and progress reflects the drift too.
+      expect(result.current.time).toBe("00:02");
+      expect(result.current.progress).toBe(60);
+    });
+
+    it("should complete if drift compensation drops remaining time to zero", () => {
+      setHidden(false);
+      const onComplete = vi.fn();
+      const { result } = renderHook(() =>
+        useTimer(2000, { interval: 100000, onComplete })
+      );
+
+      act(() => {
+        result.current.start();
+      });
+
+      act(() => {
+        vi.advanceTimersByTime(1);
+      });
+
+      setHidden(true);
+      act(() => {
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+
+      // Stay hidden long past completion.
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+
+      setHidden(false);
+      act(() => {
+        document.dispatchEvent(new Event("visibilitychange"));
+      });
+
+      expect(result.current.time).toBe("00:00");
+      expect(result.current.isFinished).toBe(true);
+      expect(onComplete).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  // ============ useRAF Countdown ============
+  describe("useRAF countdown", () => {
+    it("should count down across animation frames and complete", () => {
+      const onTick = vi.fn();
+      const onComplete = vi.fn();
+      const { result } = renderHook(() =>
+        useTimer(2000, { useRAF: true, onTick, onComplete })
+      );
+
+      act(() => {
+        result.current.start();
+      });
+      expect(result.current.isRunning).toBe(true);
+
+      // The test's mocked requestAnimationFrame fires every 16ms.
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+
+      expect(onTick).toHaveBeenCalled();
+      // Second frame (t=32ms): 2000 - 16 = 1984ms remaining.
+      expect(onTick).toHaveBeenCalledWith(1984);
+      expect(result.current.isRunning).toBe(true);
+
+      // Run the clock out — the RAF loop drives it to completion.
+      act(() => {
+        vi.advanceTimersByTime(2000);
+      });
+
+      expect(result.current.isFinished).toBe(true);
+      expect(result.current.time).toBe("00:00");
+      expect(onComplete).toHaveBeenCalledTimes(1);
     });
   });
 });

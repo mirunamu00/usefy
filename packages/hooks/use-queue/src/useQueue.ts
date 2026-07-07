@@ -90,30 +90,53 @@ export function useQueue<T>(
     ...(initialRef.current as T[]),
   ]);
 
-  // Mirror the latest queue so `remove`/`peek` can be stable callbacks that
-  // still read fresh state.
+  // The mirror ref is the single source of truth for every mutator: each action
+  // reads and advances it synchronously (in event handlers only, never during
+  // render) so returned values and multi-call interleaving stay consistent even
+  // before React commits the next render. We intentionally use plain-value
+  // `setQueue` (not an updater) so the ref and committed state never diverge.
   const queueStateRef = useRef(queue);
-  queueStateRef.current = queue;
 
   const add = useCallback((...items: T[]) => {
-    setQueue((prev) => (items.length === 0 ? prev : [...prev, ...items]));
+    if (items.length === 0) return; // no-op: keep the same reference
+    const next = [...queueStateRef.current, ...items];
+    queueStateRef.current = next;
+    setQueue(next);
   }, []);
 
   const remove = useCallback((): T | undefined => {
-    // Capture the front from the mirrored state so we can return it.
-    const front = queueStateRef.current[0];
-    setQueue((prev) => (prev.length === 0 ? prev : prev.slice(1)));
+    const cur = queueStateRef.current;
+    if (cur.length === 0) return undefined; // no-op when empty
+    const front = cur[0];
+    const next = cur.slice(1);
+    queueStateRef.current = next;
+    setQueue(next);
     return front;
   }, []);
 
   const peek = useCallback((): T | undefined => queueStateRef.current[0], []);
 
   const clear = useCallback(() => {
-    setQueue((prev) => (prev.length === 0 ? prev : []));
+    if (queueStateRef.current.length === 0) return; // no-op when already empty
+    const next: T[] = [];
+    queueStateRef.current = next;
+    setQueue(next);
   }, []);
 
   const reset = useCallback(() => {
-    setQueue([...(initialRef.current as T[])]);
+    const initial = initialRef.current as T[];
+    const cur = queueStateRef.current;
+    // Bail when the queue already equals the initial value: no new array, no
+    // re-render.
+    if (
+      cur.length === initial.length &&
+      cur.every((v, i) => Object.is(v, initial[i]))
+    ) {
+      return;
+    }
+    const next = [...initial];
+    queueStateRef.current = next;
+    setQueue(next);
   }, []);
 
   const actions = useMemo<UseQueueActions<T>>(

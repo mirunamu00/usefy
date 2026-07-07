@@ -97,15 +97,23 @@ export function useTimeout(
   callback: UseTimeoutCallback,
   delay: TimeoutDelay
 ): UseTimeoutReturn {
-  const [isPending, setIsPending] = useState<boolean>(false);
+  // Lazily initialize so an active numeric delay reports `isPending` on the
+  // first committed render — avoids an extra mount render and a one-frame-stale
+  // value, and keeps the client's initial value consistent with the server.
+  const [isPending, setIsPending] = useState<boolean>(
+    () => delay !== null && delay !== undefined
+  );
 
   const timeoutIdRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const callbackRef = useRef<UseTimeoutCallback>(callback);
+  const delayRef = useRef<TimeoutDelay>(delay);
 
-  // Always keep the latest callback reference
+  // Always keep the latest callback and delay references so that `reset` can
+  // read the current delay without depending on it (keeps `reset` stable).
   useEffect(() => {
     callbackRef.current = callback;
-  }, [callback]);
+    delayRef.current = delay;
+  }, [callback, delay]);
 
   // Clear timeout helper
   const clearTimeoutHelper = useCallback(() => {
@@ -141,13 +149,15 @@ export function useTimeout(
     [clearTimeoutHelper]
   );
 
-  // Reset function (exposed)
+  // Reset function (exposed). Reads the delay through a ref so its identity
+  // stays stable even when `delay` changes.
   const reset = useCallback(() => {
-    if (delay === null || delay === undefined) {
+    const currentDelay = delayRef.current;
+    if (currentDelay === null || currentDelay === undefined) {
       return;
     }
-    setTimeoutHelper(delay);
-  }, [delay, setTimeoutHelper]);
+    setTimeoutHelper(currentDelay);
+  }, [setTimeoutHelper]);
 
   // Effect: setup/cleanup timeout when delay changes
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useThrottleCallback } from "./useThrottleCallback";
 
@@ -928,6 +929,136 @@ describe("useThrottleCallback", () => {
       });
 
       expect(callback).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("runtime option changes affect behavior", () => {
+    it("should honor an updated delay after a rerender (not the initial one)", () => {
+      const callback = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ delay }) =>
+          useThrottleCallback(callback, delay, {
+            leading: false,
+            trailing: true,
+          }),
+        { initialProps: { delay: 200 } }
+      );
+
+      // Change the delay BEFORE invoking so the timer is scheduled with the new value.
+      rerender({ delay: 1000 });
+
+      act(() => {
+        result.current("x");
+      });
+
+      // With the ORIGINAL 200ms delay the trailing call would already have fired.
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+      expect(callback).not.toHaveBeenCalled();
+
+      // It fires only after the NEW 1000ms delay elapses.
+      act(() => {
+        vi.advanceTimersByTime(800);
+      });
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("x");
+    });
+
+    it("should honor an updated leading option after a rerender", () => {
+      const callback = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ leading }) =>
+          useThrottleCallback(callback, 500, { leading, trailing: true }),
+        { initialProps: { leading: true } }
+      );
+
+      // Flip leading edge OFF before the first invocation.
+      rerender({ leading: false });
+
+      act(() => {
+        result.current("z");
+      });
+
+      // With the initial leading:true the callback would have fired immediately.
+      expect(callback).not.toHaveBeenCalled();
+
+      // It fires on the trailing edge instead, per the new option.
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("z");
+    });
+
+    it("should honor an updated trailing option after a rerender", () => {
+      const callback = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ trailing }) =>
+          useThrottleCallback(callback, 500, { leading: true, trailing }),
+        { initialProps: { trailing: true } }
+      );
+
+      // Turn the trailing edge OFF at runtime.
+      rerender({ trailing: false });
+
+      act(() => {
+        result.current("a");
+        result.current("b");
+      });
+
+      // Leading edge still fires with the first args.
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(callback).toHaveBeenCalledWith("a");
+
+      // With trailing now disabled, the queued "b" must NOT fire after the delay.
+      act(() => {
+        vi.advanceTimersByTime(500);
+      });
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("flush return value", () => {
+    it("should return the result of the flushed invocation", () => {
+      const callback = vi.fn((n: number) => n * 2);
+      const { result } = renderHook(() =>
+        useThrottleCallback(callback, 500, { leading: false, trailing: true })
+      );
+
+      act(() => {
+        result.current(21);
+      });
+
+      let flushed: number | undefined;
+      act(() => {
+        flushed = result.current.flush();
+      });
+
+      expect(flushed).toBe(42);
+      expect(callback).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("server-side rendering", () => {
+    it("should render to a string without throwing (SSR smoke test)", () => {
+      // renderToStaticMarkup is synchronous and does not use timers.
+      vi.useRealTimers();
+
+      function SsrComponent() {
+        const throttled = useThrottleCallback(() => {
+          /* noop */
+        }, 200);
+        return <button onClick={throttled}>Save</button>;
+      }
+
+      let html = "";
+      expect(() => {
+        html = renderToStaticMarkup(<SsrComponent />);
+      }).not.toThrow();
+      expect(html).toContain("Save");
+
+      vi.useFakeTimers();
     });
   });
 });

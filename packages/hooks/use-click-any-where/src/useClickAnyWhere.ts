@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { isDocumentAvailable } from "./utils";
 
 /**
  * Options for useClickAnyWhere hook
@@ -15,8 +16,14 @@ export interface UseClickAnyWhereOptions {
    */
   capture?: boolean;
   /**
-   * Whether to use passive event listener
-   * @default true
+   * Whether to use a passive event listener.
+   *
+   * A passive listener cannot call `event.preventDefault()`. This offers no
+   * performance benefit for `click` events, so it is left unset by default and
+   * the browser default (non-passive) applies. Only pass this if you
+   * specifically need passive semantics.
+   *
+   * @default undefined (browser default — non-passive)
    */
   passive?: boolean;
 }
@@ -73,7 +80,7 @@ export function useClickAnyWhere(
   handler: ClickAnyWhereHandler,
   options: UseClickAnyWhereOptions = {}
 ): void {
-  const { enabled = true, capture = false, passive = true } = options;
+  const { enabled = true, capture = false, passive } = options;
 
   // Store handler in ref to avoid re-registering event listener
   const handlerRef = useRef<ClickAnyWhereHandler>(handler);
@@ -82,8 +89,8 @@ export function useClickAnyWhere(
   handlerRef.current = handler;
 
   useEffect(() => {
-    // SSR check
-    if (typeof document === "undefined") {
+    // SSR check — skip attaching listeners when there is no document
+    if (!isDocumentAvailable()) {
       return;
     }
 
@@ -97,8 +104,16 @@ export function useClickAnyWhere(
       handlerRef.current(event);
     };
 
+    // Build event listener options. Only set `passive` when explicitly
+    // provided so the browser default (non-passive) applies otherwise —
+    // forcing passive would silently break event.preventDefault().
+    const eventOptions: AddEventListenerOptions = { capture };
+    if (passive !== undefined) {
+      eventOptions.passive = passive;
+    }
+
     // Add event listener
-    document.addEventListener("click", internalHandler, { capture, passive });
+    document.addEventListener("click", internalHandler, eventOptions);
 
     // Cleanup
     return () => {

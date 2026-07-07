@@ -22,6 +22,7 @@ describe("useCopyToClipboard", () => {
   afterEach(() => {
     vi.useRealTimers();
     vi.restoreAllMocks();
+    vi.unstubAllGlobals();
 
     Object.defineProperty(navigator, "clipboard", {
       value: originalClipboard,
@@ -303,6 +304,51 @@ describe("useCopyToClipboard", () => {
       expect(onError).toHaveBeenCalledTimes(1);
       expect(onError.mock.calls[0][0]).toBeInstanceOf(Error);
     });
+
+    // Regression: the latest-callback pattern (render-time refs) must invoke the
+    // most recently rendered callback, not the one captured at mount.
+    it("should call the latest onSuccess after the callback prop changes", async () => {
+      const fn1 = vi.fn();
+      const fn2 = vi.fn();
+
+      const { result, rerender } = renderHook(
+        ({ onSuccess }) => useCopyToClipboard({ onSuccess }),
+        { initialProps: { onSuccess: fn1 } }
+      );
+
+      rerender({ onSuccess: fn2 });
+
+      await act(async () => {
+        await result.current[1]("Latest");
+      });
+
+      expect(fn2).toHaveBeenCalledWith("Latest");
+      expect(fn2).toHaveBeenCalledTimes(1);
+      expect(fn1).not.toHaveBeenCalled();
+    });
+
+    it("should call the latest onError after the callback prop changes", async () => {
+      mockWriteText.mockRejectedValue(new Error("Copy failed"));
+      const mockExecCommand = vi.fn().mockReturnValue(false);
+      document.execCommand = mockExecCommand;
+
+      const onError1 = vi.fn();
+      const onError2 = vi.fn();
+
+      const { result, rerender } = renderHook(
+        ({ onError }) => useCopyToClipboard({ onError }),
+        { initialProps: { onError: onError1 } }
+      );
+
+      rerender({ onError: onError2 });
+
+      await act(async () => {
+        await result.current[1]("Test");
+      });
+
+      expect(onError2).toHaveBeenCalledTimes(1);
+      expect(onError1).not.toHaveBeenCalled();
+    });
   });
 
   describe("function reference stability", () => {
@@ -524,6 +570,132 @@ describe("useCopyToClipboard", () => {
       });
 
       expect(result.current[0]).toBe(multilineText);
+    });
+  });
+
+  describe("SSR / unsupported environment", () => {
+    it("should return false and call onError when window is undefined", async () => {
+      const onError = vi.fn();
+      const { result } = renderHook(() => useCopyToClipboard({ onError }));
+
+      // Simulate a server / no-window environment for the copy() call.
+      vi.stubGlobal("window", undefined);
+
+      // The SSR guard returns before any state update, so no act() is needed.
+      const success = await result.current[1]("SSR text");
+
+      vi.unstubAllGlobals();
+
+      expect(success).toBe(false);
+      expect(onError).toHaveBeenCalledTimes(1);
+      expect(onError.mock.calls[0][0]).toBeInstanceOf(Error);
+      expect(onError.mock.calls[0][0].message).toBe(
+        "Clipboard is not available in this environment"
+      );
+    });
+  });
+
+  describe("async-after-unmount safety", () => {
+    // Regression: a copy() resolving after unmount must not set state, fire
+    // onSuccess, or schedule a reset timer the cleanup can no longer clear.
+    it("should not touch state or leak a timer when unmounted while writeText is pending", async () => {
+      const consoleSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => {});
+
+      let resolveWrite: () => void = () => {};
+      mockWriteText.mockReturnValue(
+        new Promise<void>((resolve) => {
+          resolveWrite = () => resolve(undefined);
+        })
+      );
+
+      const onSuccess = vi.fn();
+      const { result, unmount } = renderHook(() =>
+        useCopyToClipboard({ onSuccess })
+      );
+
+      let copyPromise: Promise<boolean> = Promise.resolve(false);
+      act(() => {
+        copyPromise = result.current[1]("Pending");
+      });
+
+      // Unmount while the clipboard write is still pending.
+      unmount();
+
+      // Now resolve the write — the success path runs post-unmount.
+      await act(async () => {
+        resolveWrite();
+        await copyPromise;
+      });
+
+      // onSuccess must not fire after unmount.
+      expect(onSuccess).not.toHaveBeenCalled();
+
+      // Any leaked reset timer would fire a setState on an unmounted component.
+      act(() => {
+        vi.advanceTimersByTime(5000);
+      });
+
+      expect(consoleSpy).not.toHaveBeenCalled();
+      consoleSpy.mockRestore();
+    });
+
+    // Regression: overlapping un-awaited copy() calls must not leave a stray
+    // reset timer from an earlier copy that prematurely clears fresh state.
+    it("should not leak a stray reset timer across overlapping copies", async () => {
+      let resolveA: () => void = () => {};
+      let resolveB: () => void = () => {};
+      mockWriteText
+        .mockReturnValueOnce(
+          new Promise<void>((resolve) => {
+            resolveA = () => resolve(undefined);
+          })
+        )
+        .mockReturnValueOnce(
+          new Promise<void>((resolve) => {
+            resolveB = () => resolve(undefined);
+          })
+        );
+
+      const { result } = renderHook(() => useCopyToClipboard({ timeout: 2000 }));
+
+      let pA: Promise<boolean> = Promise.resolve(false);
+      let pB: Promise<boolean> = Promise.resolve(false);
+      act(() => {
+        pA = result.current[1]("A");
+        pB = result.current[1]("B");
+      });
+
+      // Resolve A first: schedules A's reset timer (fires at t=2000).
+      await act(async () => {
+        resolveA();
+        await pA;
+      });
+      expect(result.current[0]).toBe("A");
+
+      // Advance to t=1000, then resolve B: schedules B's timer (fires at t=3000)
+      // and must supersede A's still-pending timer.
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      await act(async () => {
+        resolveB();
+        await pB;
+      });
+      expect(result.current[0]).toBe("B");
+
+      // At t=2000 A's timer WOULD fire and null the fresh "B" state if leaked.
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(result.current[0]).toBe("B");
+
+      // At t=3000 B's single reset timer fires.
+      act(() => {
+        vi.advanceTimersByTime(1000);
+      });
+      expect(result.current[0]).toBeNull();
     });
   });
 });

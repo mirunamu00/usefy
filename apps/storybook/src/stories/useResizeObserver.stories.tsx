@@ -1034,28 +1034,42 @@ export const MultipleElements: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Observe multiple elements with a single hook instance using onResize callback.",
+        story:
+          "Track several elements independently by giving each its own useResizeObserver instance and ref. Every hook manages its own width/height state, and a shared enabled flag can pause/resume them all at once.",
       },
       source: {
         code: `
-const [sizes, setSizes] = useState({});
+function MultipleElements() {
+  const [enabled, setEnabled] = useState(true);
 
-const { observe, disconnect } = useResizeObserver({
-  onResize: (entry) => {
-    const id = entry.target.dataset.id;
-    setSizes(prev => ({
-      ...prev,
-      [id]: {
-        w: Math.round(entry.contentRect.width),
-        h: Math.round(entry.contentRect.height),
-      },
-    }));
-  },
-});
+  // One independent hook instance per element.
+  const boxA = useResizeObserver({ enabled });
+  const boxB = useResizeObserver({ enabled });
+  const boxC = useResizeObserver({ enabled });
 
-// Observe multiple elements
-<div ref={(el) => { if (el) observe(el); }} data-id="A">A</div>
-<div ref={(el) => { if (el) observe(el); }} data-id="B">B</div>
+  const boxes = [
+    { id: "A", hook: boxA },
+    { id: "B", hook: boxB },
+    { id: "C", hook: boxC },
+  ];
+
+  return (
+    <>
+      {boxes.map(({ id, hook }) => (
+        <div key={id} ref={hook.ref} style={{ resize: "both", overflow: "auto" }}>
+          {id}: {hook.width ?? "-"} x {hook.height ?? "-"}
+        </div>
+      ))}
+
+      <button onClick={() => setEnabled(false)} disabled={!enabled}>
+        Disconnect All
+      </button>
+      <button onClick={() => setEnabled(true)} disabled={enabled}>
+        Reconnect All
+      </button>
+    </>
+  );
+}
         `,
         language: "tsx",
       },

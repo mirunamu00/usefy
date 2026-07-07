@@ -191,4 +191,4 @@ function useTimeout(
 
 - All modern browsers supported
 - Uses setTimeout API (IE6+)
-- Safe operation in SSR environment (typeof window check)
+- Safe operation in SSR environment (scheduling happens only inside `useEffect`, which never runs on the server, so no timer is created during server rendering)

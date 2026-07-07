@@ -47,7 +47,7 @@
 
 ### Why use-throttle-callback?
 
-- **Zero Dependencies** — Pure React implementation (uses @usefy/use-debounce-callback internally)
+- **Lean Dependencies** — One tiny internal dependency (`@usefy/use-debounce-callback`), no third-party runtime deps
 - **TypeScript First** — Full type safety with generics and exported interfaces
 - **Full Control** — `cancel()`, `flush()`, and `pending()` methods
 - **Flexible Options** — Leading edge and trailing edge support
@@ -147,7 +147,7 @@ A hook that returns a throttled version of the provided callback function.
 | ----------- | --------------- | --------------------------------------------------- |
 | `(...args)` | `ReturnType<T>` | The throttled function (same signature as original) |
 | `cancel`    | `() => void`    | Cancels any pending invocation                      |
-| `flush`     | `() => void`    | Immediately invokes any pending invocation          |
+| `flush`     | `() => ReturnType<T> \| undefined` | Immediately invokes any pending invocation and returns its result |
 | `pending`   | `() => boolean` | Returns `true` if there's a pending invocation      |
 
 ---
@@ -389,7 +389,7 @@ const throttledFn = useThrottleCallback((x: number, y: number) => {
 
 // throttledFn(number, number) => { x: number, y: number } | undefined
 // throttledFn.cancel() => void
-// throttledFn.flush() => void
+// throttledFn.flush() => { x: number, y: number } | undefined
 // throttledFn.pending() => boolean
 ```
 

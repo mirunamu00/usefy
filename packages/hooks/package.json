@@ -44,6 +44,7 @@
     "@usefy/use-resize-observer": "workspace:*",
     "@usefy/use-memory-monitor": "workspace:*",
     "@usefy/use-timeout": "workspace:*",
+    "@usefy/use-interval": "workspace:*",
     "@usefy/use-hover": "workspace:*",
     "@usefy/use-key-press": "workspace:*",
     "@usefy/use-map": "workspace:*",

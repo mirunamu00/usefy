@@ -229,6 +229,7 @@ const [step, controls]: UseStepReturn = useStep(4);
 
 - **0-based** — `currentStep` runs from `0` to `count - 1`. `useStep(4)` yields steps `0, 1, 2, 3`.
 - **Range-safe** — `goToNextStep`/`goToPrevStep` never move out of range; `setStep` floors and clamps its target.
+- **Non-finite-safe** — A `NaN`/`Infinity` `initialStep` or `setStep` target never corrupts the index: a bad `initialStep` falls back to `0`, and a bad `setStep` target keeps the current step.
 - **No-op skipping** — Moving past the first/last step doesn't allocate new state or trigger a re-render.
 - **Stable controls** — The navigation functions keep the same identity for the component's lifetime; the controls object's identity changes only when `canGoToNextStep` / `canGoToPrevStep` flips.
 - **Dynamic `count`** — If `count` shrinks below the current step, `currentStep` is clamped back into range on the next render.
@@ -246,9 +247,9 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Files
 
-- `useStep.test.ts` — 17 tests for navigation, clamping, dynamic count, and stability
+- `useStep.test.ts` — 24 tests for navigation, clamping, non-finite targets, dynamic count, and stability
 
-**Total: 17 tests**
+**Total: 24 tests**
 
 ---
 

@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { KeyPressTarget, UseKeyPressOptions } from "./types";
 import {
   createMatcher,
@@ -7,11 +14,25 @@ import {
   resolveTarget,
 } from "./utils";
 
+// SSR-safe layout effect: sync refs before paint on the client, fall back to
+// useEffect on the server (mirrors the house useEventListener pattern).
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
+/** The four modifier flags tracked for a held trigger. */
+type ModifierFlag = "ctrl" | "shift" | "alt" | "meta";
+
 /**
- * `event.key` values that represent modifier keys. Releasing any of these ends
- * a held combination even if the primary key is still down.
+ * Maps a modifier key's `event.key` value to the {@link ModifierFlag} it toggles.
+ * Used on key-up to decide whether the released modifier was actually part of
+ * the held trigger (releasing an unrelated modifier must not end the press).
  */
-const MODIFIER_KEY_NAMES = new Set(["Control", "Shift", "Alt", "Meta"]);
+const MODIFIER_KEY_TO_FLAG: Record<string, ModifierFlag> = {
+  Control: "ctrl",
+  Shift: "shift",
+  Alt: "alt",
+  Meta: "meta",
+};
 
 /**
  * A React hook for detecting keyboard key presses, shortcuts, and combinations.
@@ -118,6 +139,9 @@ export function useKeyPress(
   const pressedRef = useRef(false);
   // The lower-cased `event.key` that established the current pressed state.
   const triggerKeyRef = useRef<string | null>(null);
+  // Snapshot of the modifier state at the moment the trigger keydown matched.
+  // Only modifiers that were held here should end the press when released.
+  const triggerModifiersRef = useRef<Record<ModifierFlag, boolean> | null>(null);
 
   // Build the matcher once per distinct configuration. String/array targets are
   // parsed here; function targets are used as-is.
@@ -141,7 +165,21 @@ export function useKeyPress(
     onPress,
     onRelease,
   });
-  configRef.current = {
+  // Sync the latest config in a layout effect (not during render) so we never
+  // mutate a ref while rendering — a render may be thrown away under concurrent
+  // rendering / StrictMode. Listeners read `configRef.current` at event time.
+  useIsomorphicLayoutEffect(() => {
+    configRef.current = {
+      matcher,
+      eventType,
+      preventDefault,
+      stopPropagation,
+      ignoreRepeat,
+      ignoreInputElements,
+      onPress,
+      onRelease,
+    };
+  }, [
     matcher,
     eventType,
     preventDefault,
@@ -150,19 +188,29 @@ export function useKeyPress(
     ignoreInputElements,
     onPress,
     onRelease,
-  };
+  ]);
 
   const setPressedState = useCallback((next: boolean) => {
     pressedRef.current = next;
     setPressed((prev) => (prev === next ? prev : next));
   }, []);
 
-  const resetPressed = useCallback(() => {
-    triggerKeyRef.current = null;
-    if (pressedRef.current) {
-      setPressedState(false);
-    }
-  }, [setPressedState]);
+  // Clears any held state. When `releaseEvent` is supplied (window blur), fires
+  // `onRelease` so onPress/onRelease stay balanced; when omitted (disable /
+  // unsupported / unmount) it silently resets — see the onRelease JSDoc.
+  const resetPressed = useCallback(
+    (releaseEvent?: KeyboardEvent) => {
+      triggerKeyRef.current = null;
+      triggerModifiersRef.current = null;
+      if (pressedRef.current) {
+        setPressedState(false);
+        if (releaseEvent) {
+          configRef.current.onRelease?.(releaseEvent);
+        }
+      }
+    },
+    [setPressedState]
+  );
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
@@ -188,6 +236,14 @@ export function useKeyPress(
       // In keyup-only mode the pressed state is driven by key releases.
       if (config.eventType !== "keyup") {
         triggerKeyRef.current = event.key.toLowerCase();
+        // Capture which modifiers were actually held when the trigger matched,
+        // so key-up can tell a bare-key press from a modifier combination.
+        triggerModifiersRef.current = {
+          ctrl: event.ctrlKey,
+          shift: event.shiftKey,
+          alt: event.altKey,
+          meta: event.metaKey,
+        };
         setPressedState(true);
       }
     },
@@ -217,21 +273,42 @@ export function useKeyPress(
         return;
       }
 
-      // "both" mode: release the held state when the primary key, or any
-      // modifier that was part of the combination, is released.
+      // "both" mode: release the held state when the primary key, or a modifier
+      // that was actually part of the held trigger, is released. Releasing an
+      // unrelated modifier (e.g. Shift while holding a bare "a") must NOT reset.
       if (!pressedRef.current) {
         return;
       }
       const released = event.key.toLowerCase();
-      const isModifierRelease = MODIFIER_KEY_NAMES.has(event.key);
-      if (released === triggerKeyRef.current || isModifierRelease) {
+      const modifierFlag = MODIFIER_KEY_TO_FLAG[event.key];
+      const isTriggerModifierRelease =
+        modifierFlag !== undefined &&
+        triggerModifiersRef.current?.[modifierFlag] === true;
+      if (released === triggerKeyRef.current || isTriggerModifierRelease) {
         triggerKeyRef.current = null;
+        triggerModifiersRef.current = null;
         setPressedState(false);
         config.onRelease?.(event);
       }
     },
     [setPressedState]
   );
+
+  // Focus left the window while a key was held: keyup will never arrive, so
+  // reset. Fire onRelease with a synthetic keyup so onPress/onRelease stay
+  // balanced instead of leaking a dangling press. Registered directly on the
+  // blur event, so it must NOT be `resetPressed` (which would receive the raw
+  // blur Event and mistake it for a KeyboardEvent).
+  const handleBlur = useCallback(() => {
+    if (!pressedRef.current) {
+      return;
+    }
+    const synthetic =
+      typeof KeyboardEvent !== "undefined"
+        ? new KeyboardEvent("keyup")
+        : undefined;
+    resetPressed(synthetic);
+  }, [resetPressed]);
 
   useEffect(() => {
     if (!isKeyPressSupported() || !enabled) {
@@ -258,7 +335,7 @@ export function useKeyPress(
     // Reset on blur so a key held while focus leaves the window/tab does not
     // remain "pressed" forever (keyup is never delivered in that case).
     const win = typeof window !== "undefined" ? window : null;
-    win?.addEventListener("blur", resetPressed);
+    win?.addEventListener("blur", handleBlur);
 
     return () => {
       if (listenDown) {
@@ -267,9 +344,17 @@ export function useKeyPress(
       if (listenUp) {
         element.removeEventListener("keyup", handleKeyUp as EventListener);
       }
-      win?.removeEventListener("blur", resetPressed);
+      win?.removeEventListener("blur", handleBlur);
     };
-  }, [enabled, eventTarget, eventType, handleKeyDown, handleKeyUp, resetPressed]);
+  }, [
+    enabled,
+    eventTarget,
+    eventType,
+    handleKeyDown,
+    handleKeyUp,
+    handleBlur,
+    resetPressed,
+  ]);
 
   return pressed;
 }

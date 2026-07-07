@@ -16,7 +16,7 @@ import styles from "./HistoryChart.module.scss";
 
 export interface HistoryChartProps {
   /** Memory history data */
-  history: MemoryInfo[];
+  history: readonly MemoryInfo[];
   /** Warning threshold percentage */
   warningThreshold?: number;
   /** Critical threshold percentage */

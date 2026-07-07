@@ -16,7 +16,7 @@ export {
 } from "@usefy/use-copy-to-clipboard";
 
 // useCounter
-export { useCounter } from "@usefy/use-counter";
+export { useCounter, type UseCounterReturn } from "@usefy/use-counter";
 
 // useSignal
 export {
@@ -181,6 +181,16 @@ export {
   type UseTimeoutCallback,
   type UseTimeoutReturn,
 } from "@usefy/use-timeout";
+
+// useInterval — declarative setInterval with start/stop/toggle controls,
+// latest-callback ref, null-delay disable, and SSR safety.
+export {
+  useInterval,
+  type IntervalDelay,
+  type UseIntervalCallback,
+  type UseIntervalOptions,
+  type UseIntervalReturn,
+} from "@usefy/use-interval";
 
 // useHover
 export {

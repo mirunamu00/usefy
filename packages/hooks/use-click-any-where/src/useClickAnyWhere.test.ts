@@ -1,6 +1,12 @@
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useClickAnyWhere } from "./useClickAnyWhere";
+import * as utils from "./utils";
+import { isDocumentAvailable } from "./utils";
+
+// Keep the real implementations but make the exports spyable so the SSR path
+// can be forced while `document` still exists for react-dom to render into.
+vi.mock("./utils", { spy: true });
 
 describe("useClickAnyWhere", () => {
   let addEventListenerSpy: ReturnType<typeof vi.spyOn>;
@@ -12,6 +18,7 @@ describe("useClickAnyWhere", () => {
   });
 
   afterEach(() => {
+    vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
 
@@ -67,7 +74,7 @@ describe("useClickAnyWhere", () => {
       expect(addEventListenerSpy).toHaveBeenCalledWith(
         "click",
         expect.any(Function),
-        { capture: false, passive: true }
+        { capture: false }
       );
     });
   });
@@ -134,7 +141,7 @@ describe("useClickAnyWhere", () => {
       expect(addEventListenerSpy).toHaveBeenCalledWith(
         "click",
         expect.any(Function),
-        { capture: true, passive: true }
+        { capture: true }
       );
     });
 
@@ -145,7 +152,7 @@ describe("useClickAnyWhere", () => {
       expect(addEventListenerSpy).toHaveBeenCalledWith(
         "click",
         expect.any(Function),
-        { capture: false, passive: true }
+        { capture: false }
       );
     });
 
@@ -166,9 +173,26 @@ describe("useClickAnyWhere", () => {
   });
 
   describe("passive option", () => {
-    it("should register with passive true by default", () => {
+    it("should not force passive by default (respects browser default)", () => {
       const handler = vi.fn();
       renderHook(() => useClickAnyWhere(handler));
+
+      // Passive must NOT be forced on — a passive click listener silently
+      // breaks event.preventDefault() with no performance upside.
+      expect(addEventListenerSpy).toHaveBeenCalledWith(
+        "click",
+        expect.any(Function),
+        { capture: false }
+      );
+
+      const passedOptions = addEventListenerSpy.mock
+        .calls[0][2] as AddEventListenerOptions;
+      expect(passedOptions).not.toHaveProperty("passive");
+    });
+
+    it("should register with passive true only when explicitly requested", () => {
+      const handler = vi.fn();
+      renderHook(() => useClickAnyWhere(handler, { passive: true }));
 
       expect(addEventListenerSpy).toHaveBeenCalledWith(
         "click",
@@ -186,6 +210,23 @@ describe("useClickAnyWhere", () => {
         expect.any(Function),
         { capture: false, passive: false }
       );
+    });
+
+    it("should allow the handler to call preventDefault by default", () => {
+      // With no forced passive listener, preventDefault must take effect.
+      const handler = vi.fn((event: MouseEvent) => {
+        event.preventDefault();
+      });
+      renderHook(() => useClickAnyWhere(handler));
+
+      const clickEvent = new MouseEvent("click", {
+        bubbles: true,
+        cancelable: true,
+      });
+      document.dispatchEvent(clickEvent);
+
+      expect(handler).toHaveBeenCalledTimes(1);
+      expect(clickEvent.defaultPrevented).toBe(true);
     });
   });
 
@@ -347,6 +388,51 @@ describe("useClickAnyWhere", () => {
       expect(handler).toHaveBeenCalledTimes(1);
 
       document.body.removeChild(button);
+    });
+  });
+
+  // SSR / unsupported environment. `isDocumentAvailable` is the SSR-safety
+  // boundary: with no `document` the hook must attach nothing on the server.
+  describe("SSR / unsupported environment", () => {
+    it("isDocumentAvailable returns true in a jsdom environment", () => {
+      expect(isDocumentAvailable()).toBe(true);
+    });
+
+    it("isDocumentAvailable returns false when document is undefined (SSR)", () => {
+      vi.stubGlobal("document", undefined);
+      expect(isDocumentAvailable()).toBe(false);
+    });
+
+    it("should not throw and should not attach a listener on the SSR path", () => {
+      // Force the SSR branch while a real `document` still exists so react-dom
+      // can render the hook — this exercises the effect's early return.
+      vi.mocked(isDocumentAvailable).mockReturnValue(false);
+
+      try {
+        const handler = vi.fn();
+        expect(() =>
+          renderHook(() => useClickAnyWhere(handler))
+        ).not.toThrow();
+
+        expect(addEventListenerSpy).not.toHaveBeenCalled();
+
+        // A click must not reach the handler — no listener was attached.
+        document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+        expect(handler).not.toHaveBeenCalled();
+      } finally {
+        // Restore the real implementation for the remaining tests.
+        vi.mocked(isDocumentAvailable).mockRestore();
+      }
+    });
+
+    it("should attach the listener once the environment supports document again", () => {
+      // Sanity: the spy defaults back to the real implementation between tests.
+      const handler = vi.fn();
+      renderHook(() => useClickAnyWhere(handler));
+
+      expect(addEventListenerSpy).toHaveBeenCalledTimes(1);
+      document.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      expect(handler).toHaveBeenCalledTimes(1);
     });
   });
 });

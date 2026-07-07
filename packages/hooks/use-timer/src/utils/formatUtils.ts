@@ -42,9 +42,10 @@ export function formatTime(ms: number, format: TimeFormat): string {
     case "HH:MM:SS.SSS":
       return `${padNumber(hours, 2)}:${padNumber(minutes, 2)}:${padNumber(seconds, 2)}.${padNumber(milliseconds, 3)}`;
 
-    default:
+    default: {
       // Default to MM:SS format
       const defaultTotalMinutes = hours * 60 + minutes;
       return `${padNumber(defaultTotalMinutes, 2)}:${padNumber(seconds, 2)}`;
+    }
   }
 }

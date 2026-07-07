@@ -1,9 +1,20 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { StepUpdater, UseStepControls, UseStepReturn } from "./types";
 
 /** Clamp `value` into the inclusive range `[min, max]`. */
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(value, max));
+}
+
+/**
+ * Normalize a candidate step target to a valid in-range index. The value is
+ * floored and clamped to `[0, lastIndex]`; non-finite results (e.g. `NaN`,
+ * `Infinity` that floors to a non-finite value) fall back to `fallback`,
+ * guaranteeing `currentStep` is never corrupted by a bad target.
+ */
+function sanitizeStep(next: number, lastIndex: number, fallback: number): number {
+  const floored = Math.floor(next);
+  return Number.isFinite(floored) ? clamp(floored, 0, lastIndex) : fallback;
 }
 
 /**
@@ -76,10 +87,11 @@ export function useStep(count: number, initialStep = 0): UseStepReturn {
   const lastIndexRef = useRef(lastIndex);
   lastIndexRef.current = lastIndex;
 
-  // Resolve and remember the initial step once (for `reset`).
+  // Resolve and remember the initial step once (for `reset`). A non-finite
+  // `initialStep` (e.g. `NaN`) falls back to `0` rather than corrupting state.
   const initialRef = useRef<number | null>(null);
   if (initialRef.current === null) {
-    initialRef.current = clamp(Math.floor(initialStep), 0, lastIndex);
+    initialRef.current = sanitizeStep(initialStep, lastIndex, 0);
   }
 
   const [rawStep, setRawStep] = useState<number>(
@@ -88,6 +100,15 @@ export function useStep(count: number, initialStep = 0): UseStepReturn {
 
   // Keep the exposed step within the current range (handles a shrinking count).
   const currentStep = clamp(rawStep, 0, lastIndex);
+
+  // When `count` shrinks below the stored raw step, normalize the underlying
+  // state down to the clamped index. `currentStep` already reflects the clamp
+  // during render; this keeps `rawStep` in sync so a subsequent edge move is a
+  // true no-op (no wasted render). The functional updater bails out when the
+  // value is already in range, so this is idempotent and StrictMode-safe.
+  useEffect(() => {
+    setRawStep((prev) => clamp(prev, 0, lastIndex));
+  }, [lastIndex]);
 
   const goToNextStep = useCallback(() => {
     setRawStep((prev) => {
@@ -109,7 +130,9 @@ export function useStep(count: number, initialStep = 0): UseStepReturn {
       const li = lastIndexRef.current;
       const cur = clamp(prev, 0, li);
       const next = typeof step === "function" ? step(cur) : step;
-      return clamp(Math.floor(next), 0, li);
+      // A non-finite target (e.g. `NaN`) keeps the current step instead of
+      // corrupting `currentStep`.
+      return sanitizeStep(next, li, cur);
     });
   }, []);
 
@@ -139,5 +162,5 @@ export function useStep(count: number, initialStep = 0): UseStepReturn {
     ]
   );
 
-  return [currentStep, controls];
+  return [currentStep, controls] as const;
 }
