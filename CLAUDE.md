@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**usefy** is a pnpm + Turbo monorepo of production-ready React hooks and feature kits, published to npm under the `@usefy/*` namespace. Each hook/component ships as its own independently-versioned package, and two umbrella packages (`@usefy/hooks`, `@usefy/kits`) re-export everything for convenient single-import consumption.
+**usefy** is a pnpm + Turbo monorepo of production-ready React hooks and standalone feature components, published to npm under the `@usefy/*` namespace. Each hook/component ships as its own independently-versioned package. Hooks additionally roll up into a single umbrella package (`@usefy/hooks`) that re-exports every hook for convenient single-import consumption. Feature components (e.g. `@usefy/memory-monitor`) are **not** bundled behind an umbrella — each is installed on its own.
 
 ## Common Commands
 
@@ -23,7 +23,7 @@ pnpm clean              # Remove dist + node_modules
 
 ### Running a subset of tests
 
-Root `pnpm test` runs `vitest --config vitest.packages.config.ts`, a **single central config** that globs `packages/hooks/*/src/**/*.test.{ts,tsx}` and `packages/components/*/src/**` — it does NOT go through Turbo. To scope tests:
+Root `pnpm test` runs `vitest --config vitest.packages.config.ts`, a **single central config** that globs `packages/hooks/*/src/**/*.test.{ts,tsx}` and `packages/*/src/**/*.test.{ts,tsx}` (the latter covers top-level component packages like `memory-monitor`) — it does NOT go through Turbo. To scope tests:
 
 ```bash
 # Single file / directory (from repo root, using the central config)
@@ -49,22 +49,24 @@ packages/
 │   ├── src/index.ts            # @usefy/hooks umbrella — re-exports every hook package
 │   ├── package.json            # depends on all @usefy/use-* via workspace:*
 │   └── use-<name>/             # individual @usefy/use-<name> packages (the real hooks)
-├── kits/
-│   ├── src/index.ts            # @usefy/kits umbrella — re-exports component kits
-│   └── memory-monitor/         # published as @usefy/memory-monitor (a React component, not a hook)
+├── memory-monitor/             # @usefy/memory-monitor — standalone component (not a hook, no umbrella)
+└── <package>/                  # future top-level packages sit here too — another umbrella, or another standalone package
 apps/
 ├── storybook/                  # @usefy/storybook — interactive docs (:6006)
 └── playground/                 # @usefy/playground — Vite sandbox app
 ```
 
-Note the naming split: the **hook** package `@usefy/use-memory-monitor` (`packages/hooks/use-memory-monitor`) vs. the **component** package `@usefy/memory-monitor` (`packages/kits/memory-monitor`), which consumes the hook.
+The **top level of `packages/`** is a flat set of independent packages, one directory each — that layout **is** the classification, not any imposed category. `hooks/` happens to be an umbrella that bundles a whole family (`@usefy/hooks` + `use-*`); `memory-monitor/` is a single standalone package. Future additions — another umbrella, or another standalone UI package — sit at this same level as their own directory. The `pnpm-workspace.yaml` glob `packages/*` picks them up automatically — drop a new directory in and it's a workspace, no config edit needed.
 
-### Umbrella packages — keep in sync
+Note the naming split: the **hook** package `@usefy/use-memory-monitor` (`packages/hooks/use-memory-monitor`) vs. the **component** package `@usefy/memory-monitor` (`packages/memory-monitor`), which consumes the hook.
 
-`@usefy/hooks` and `@usefy/kits` are aggregators. When you add a new hook/component package you MUST wire it in three places or it won't ship in the umbrella:
+### The @usefy/hooks umbrella — keep in sync
+
+`@usefy/hooks` is the one aggregator package (component packages have none). When you add a new **hook** package you MUST wire it in two places or it won't ship in the umbrella:
 1. Add the `@usefy/use-<name>: "workspace:*"` dependency in `packages/hooks/package.json`.
 2. Add the `export { ... } from "@usefy/use-<name>"` block in `packages/hooks/src/index.ts` (re-export the hook **and all its public types/helpers** — see existing entries for the full-surface pattern).
-3. Add the package under the correct `pnpm-workspace.yaml` glob (already covered by `packages/hooks/*`).
+
+(The `pnpm-workspace.yaml` glob `packages/hooks/*` already covers a new hook directory.) Standalone component packages need no umbrella wiring — they are published and consumed on their own.
 
 ### Individual hook package structure
 

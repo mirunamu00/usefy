@@ -45,3 +45,5 @@ lodash.js
 tsconfig.tsbuildinfo
 
 desktop.ini
+# vitest scratch files
+*.tmp.*

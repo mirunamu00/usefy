@@ -26,7 +26,7 @@ function CodeBlock({ code, title }: { code: string; title?: string }) {
 // ============================================================================
 
 const meta: Meta<typeof MemoryMonitor> = {
-  title: "Kits/MemoryMonitor",
+  title: "Components/MemoryMonitor",
   component: MemoryMonitor,
   parameters: {
     layout: "fullscreen",

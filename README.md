@@ -41,12 +41,12 @@
 
 ## Overview
 
-**usefy** is a monorepo containing production-ready React utilities. The ecosystem is divided into two main categories:
+**usefy** is a monorepo of production-ready React packages published under `@usefy/*`. Each package under `packages/` stands on its own — install exactly what you need. Some are umbrellas that bundle a whole family (`@usefy/hooks`); others are single-purpose packages (`@usefy/memory-monitor`). New packages — another umbrella, or a standalone UI package — simply drop in at the same level.
 
-| Category | Package | Description |
-| -------- | ------- | ----------- |
-| **Hooks** | `@usefy/hooks` | Lightweight React hooks for common patterns |
-| **Kits** | `@usefy/kits` | Feature-complete UI components with built-in functionality |
+| Package | Description |
+| ------- | ----------- |
+| `@usefy/hooks` | 70+ lightweight React hooks (umbrella — each hook is also published on its own as `@usefy/use-*`) |
+| `@usefy/memory-monitor` | Real-time browser memory monitoring component |
 
 ---
 
@@ -64,7 +64,7 @@
   <img src="https://img.shields.io/bundlephobia/minzip/@usefy/hooks?style=flat-square&color=007acc" alt="bundle size" />
 </a>
 
-A collection of **20+ lightweight React hooks** for common patterns like state management, timing, storage, events, and more.
+A collection of **70+ lightweight React hooks** for common patterns like state management, timing, storage, events, and more.
 
 ```bash
 pnpm add @usefy/hooks
@@ -108,26 +108,27 @@ function App() {
 
 ---
 
-### @usefy/kits — Feature Kits Collection
+### @usefy/memory-monitor
 
-<a href="https://www.npmjs.com/package/@usefy/kits" target="_blank" rel="noopener noreferrer">
-  <img src="https://img.shields.io/npm/v/@usefy/kits.svg?style=flat-square&color=007acc" alt="npm version" />
+<a href="https://www.npmjs.com/package/@usefy/memory-monitor" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/memory-monitor.svg?style=flat-square&color=007acc" alt="npm version" />
 </a>
-<a href="https://www.npmjs.com/package/@usefy/kits" target="_blank" rel="noopener noreferrer">
-  <img src="https://img.shields.io/npm/dm/@usefy/kits.svg?style=flat-square&color=007acc" alt="npm downloads" />
+<a href="https://www.npmjs.com/package/@usefy/memory-monitor" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/memory-monitor.svg?style=flat-square&color=007acc" alt="npm downloads" />
 </a>
-<a href="https://bundlephobia.com/package/@usefy/kits" target="_blank" rel="noopener noreferrer">
-  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/kits?style=flat-square&color=007acc" alt="bundle size" />
+<a href="https://bundlephobia.com/package/@usefy/memory-monitor" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/memory-monitor?style=flat-square&color=007acc" alt="bundle size" />
 </a>
 
-A collection of **feature-complete UI components** with built-in state management, styling, and functionality. Drop them into your app with minimal configuration.
+Real-time memory monitoring panel with leak detection, snapshots, and reports
+(built on `@usefy/use-memory-monitor`).
 
 ```bash
-pnpm add @usefy/kits
+pnpm add @usefy/memory-monitor
 ```
 
 ```tsx
-import { MemoryMonitor } from "@usefy/kits";
+import { MemoryMonitor } from "@usefy/memory-monitor";
 
 function App() {
   return (
@@ -143,10 +144,7 @@ function App() {
 }
 ```
 
-**Available Kits:**
-- `MemoryMonitor` — Real-time memory monitoring panel (built on `@usefy/use-memory-monitor`)
-
-<a href="./packages/kits/README.md"><strong>View full documentation →</strong></a>
+<a href="./packages/memory-monitor/README.md"><strong>View full documentation →</strong></a>
 
 ---
 
@@ -157,9 +155,8 @@ function App() {
 | Need | Install | Import |
 | ---- | ------- | ------ |
 | All hooks | `pnpm add @usefy/hooks` | `import { useToggle } from "@usefy/hooks"` |
-| All kits | `pnpm add @usefy/kits` | `import { MemoryMonitor } from "@usefy/kits"` |
 | Single hook | `pnpm add @usefy/use-toggle` | `import { useToggle } from "@usefy/use-toggle"` |
-| Single kit | `pnpm add @usefy/memory-monitor` | `import { MemoryMonitor } from "@usefy/memory-monitor"` |
+| Memory monitor | `pnpm add @usefy/memory-monitor` | `import { MemoryMonitor } from "@usefy/memory-monitor"` |
 
 ### Peer Dependencies
 
@@ -173,7 +170,7 @@ All packages require React 18 or 19:
 }
 ```
 
-Some kits may have additional peer dependencies (check individual package docs).
+Some packages may have additional peer dependencies (check individual package docs).
 
 ---
 
@@ -192,10 +189,10 @@ Some kits may have additional peer dependencies (check individual package docs).
 </td>
 <td width="50%">
 
-### Kits
-- Complete solutions
+### Complete packages
+- Self-contained solutions
 - Built-in UI with customization
-- Feature-rich components
+- Feature-rich, installed on their own
 - Ready to use out of the box
 
 </td>
@@ -215,7 +212,7 @@ Some kits may have additional peer dependencies (check individual package docs).
 
 ## Packages
 
-### Hooks (`@usefy/hooks`)
+### @usefy/hooks
 
 | Hook | Description |
 | ---- | ----------- |
@@ -286,10 +283,10 @@ Some kits may have additional peer dependencies (check individual package docs).
 | `usePermission` | Read Permissions API status with live updates — `{ state, status, isSupported, error }`, SSR-safe, accepts any permission name |
 | `useScript` | Load an external script with `idle/loading/ready/error` status, `<script>` deduplication across components, and ref-counted cleanup — SSR-safe |
 
-### Kits (`@usefy/kits`)
+### @usefy/memory-monitor
 
-| Kit | Description |
-| --- | ----------- |
+| Export | Description |
+| ------ | ----------- |
 | `MemoryMonitor` | Real-time memory monitoring panel with leak detection, snapshots, and reports |
 
 ---

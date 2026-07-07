@@ -49,7 +49,7 @@ importers:
     dependencies:
       '@usefy/memory-monitor':
         specifier: workspace:*
-        version: link:../../packages/kits/memory-monitor
+        version: link:../../packages/memory-monitor
       '@usefy/use-memory-monitor':
         specifier: workspace:*
         version: link:../../packages/hooks/use-memory-monitor
@@ -83,7 +83,7 @@ importers:
     dependencies:
       '@usefy/memory-monitor':
         specifier: workspace:*
-        version: link:../../packages/kits/memory-monitor
+        version: link:../../packages/memory-monitor
       '@usefy/use-async':
         specifier: workspace:*
         version: link:../../packages/hooks/use-async
@@ -2973,39 +2973,11 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@1.21.7)(jsdom@27.3.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
-  packages/kits:
-    dependencies:
-      '@usefy/memory-monitor':
-        specifier: workspace:*
-        version: link:memory-monitor
-      react:
-        specifier: ^18.0.0 || ^19.0.0
-        version: 19.2.3
-      react-dom:
-        specifier: ^18.0.0 || ^19.0.0
-        version: 19.2.3(react@19.2.3)
-    devDependencies:
-      '@types/react':
-        specifier: ^19.0.0
-        version: 19.2.7
-      '@types/react-dom':
-        specifier: ^19.0.0
-        version: 19.2.3(@types/react@19.2.7)
-      rimraf:
-        specifier: ^6.0.1
-        version: 6.1.2
-      tsup:
-        specifier: ^8.0.0
-        version: 8.5.1(@swc/core@1.15.7)(jiti@1.21.7)(postcss@8.5.6)(typescript@5.9.3)(yaml@2.8.2)
-      typescript:
-        specifier: ^5.0.0
-        version: 5.9.3
-
-  packages/kits/memory-monitor:
+  packages/memory-monitor:
     dependencies:
       '@usefy/use-memory-monitor':
         specifier: workspace:*
-        version: link:../../hooks/use-memory-monitor
+        version: link:../hooks/use-memory-monitor
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
