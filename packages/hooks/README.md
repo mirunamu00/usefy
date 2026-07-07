@@ -1870,7 +1870,7 @@ All packages are comprehensively tested using Vitest to ensure reliability and s
 
 - 📦 <a href="https://www.npmjs.com/org/usefy" target="_blank" rel="noopener noreferrer">npm Organization</a>
 - 🐙 <a href="https://github.com/mirunamu00/usefy" target="_blank" rel="noopener noreferrer">GitHub Repository</a>
-- 📝 <a href="https://github.com/mirunamu00/usefy/blob/master/packages/usefy/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog</a>
+- 📝 <a href="https://github.com/mirunamu00/usefy/blob/master/packages/hooks/CHANGELOG.md" target="_blank" rel="noopener noreferrer">Changelog</a>
 - 🐛 <a href="https://github.com/mirunamu00/usefy/issues" target="_blank" rel="noopener noreferrer">Issue Tracker</a>
 
 ---

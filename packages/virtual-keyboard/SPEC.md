@@ -2,7 +2,7 @@
 
 ## Overview
 
-**Package Name:** `@usefy/virtual-keyboard` (kit) — built on `@usefy/use-virtual-keyboard` (headless hook)
+**Package Name:** `@usefy/virtual-keyboard` (component) — built on `@usefy/use-virtual-keyboard` (headless hook)
 **Version:** `0.1.0`
 **Status:** Draft
 **Created:** 2026-07-07
@@ -325,7 +325,7 @@ export interface ComposerResult {
 ### 4.5 Exported surface
 
 ```typescript
-// Kit: @usefy/virtual-keyboard
+// Component: @usefy/virtual-keyboard
 export { VirtualKeyboard } from './VirtualKeyboard';
 export type { VirtualKeyboardProps } from './VirtualKeyboard';
 
@@ -374,15 +374,15 @@ export {
 @usefy/use-virtual-keyboard   (packages/hooks/use-virtual-keyboard)  ← headless engine
         ▲  consumed by
         │
-@usefy/virtual-keyboard       (packages/kits/virtual-keyboard)       ← styled component
+@usefy/virtual-keyboard       (packages/virtual-keyboard)           ← styled component
 ```
 
-Mirrors `@usefy/use-memory-monitor` → `@usefy/memory-monitor`. The hook holds the layout engine, modifier state, value/caret logic, and the `Composer` seam; the kit is presentation + interaction only.
+Mirrors `@usefy/use-memory-monitor` → `@usefy/memory-monitor`. The hook holds the layout engine, modifier state, value/caret logic, and the `Composer` seam; the component is presentation + interaction only.
 
-### 5.2 Kit file structure
+### 5.2 Component file structure
 
 ```
-packages/kits/virtual-keyboard/
+packages/virtual-keyboard/
 ├── src/
 │   ├── index.ts                     # public exports (re-exports hook surface)
 │   ├── VirtualKeyboard.tsx          # main component (consumes the hook)
@@ -466,9 +466,9 @@ Caret handling: in ref-bound mode the hook reads `selectionStart/End` from the t
 - [ ] `useVirtualKeyboard` with all three input modes + prop-getters.
 - [ ] 90%+ coverage; umbrella wiring; story; READMEs; changeset.
 
-### Phase 2 — Styled kit MVP (`@usefy/virtual-keyboard`)
+### Phase 2 — Styled component MVP (`@usefy/virtual-keyboard`)
 
-- [ ] Package scaffold (via `add-usefy-kit`, SCSS-modules tsup).
+- [ ] Package scaffold (via `add-usefy-component`, SCSS-modules tsup).
 - [ ] `Key`, `Row`, keyboard container; CSS-var theming + light/dark.
 - [ ] Pointer/touch press feedback; responsive sizing (44px targets).
 - [ ] `inline` variant; controlled/uncontrolled/ref-bound wired through.
@@ -541,7 +541,7 @@ describe('applyKey', () => {
 - All handlers/getters `useCallback`-stable; a stable actions object for effect-dep safety.
 - Pointer events over synthetic re-renders; a single delegated handler where feasible.
 - No layout thrash on caret restore (single `useLayoutEffect`).
-- Target bundle: **< 15KB gzipped** for the kit (excluding React); engine **< 6KB**.
+- Target bundle: **< 15KB gzipped** for the component (excluding React); engine **< 6KB**.
 
 ---
 
@@ -566,7 +566,7 @@ describe('applyKey', () => {
 
 ## 11. Documentation Requirements
 
-- **README** (kit): install, the search-box quick start, all three input modes, custom-layout recipe, theming vars, a11y notes.
+- **README** (component): install, the search-box quick start, all three input modes, custom-layout recipe, theming vars, a11y notes.
 - **README** (hook): headless quick start + prop-getter usage.
 - **Storybook**: the demos in §7.4 with real, copy-pasteable "Show code".
 - **JSDoc**: every exported type/function with a runnable `@example`.
@@ -584,17 +584,17 @@ describe('applyKey', () => {
 
 ### 12.2 Non-functional
 
-- [ ] Engine 90%+ coverage; kit tested per `pnpm --filter`.
+- [ ] Engine 90%+ coverage; component tested (central config or `pnpm --filter`).
 - [ ] WCAG 2.1 AA; verified keyboard + screen-reader operability.
 - [ ] SSR-safe; React 18 **and** 19; TypeScript strict.
-- [ ] Kit < 15KB gz, engine < 6KB gz.
+- [ ] Component < 15KB gz, engine < 6KB gz.
 - [ ] Zero required peer deps beyond React.
 
 ---
 
 ## 13. Resolved Decisions
 
-1. **Package naming** — `@usefy/virtual-keyboard` (kit) + `@usefy/use-virtual-keyboard` (engine). ✅ Confirmed.
+1. **Package naming** — `@usefy/virtual-keyboard` (component) + `@usefy/use-virtual-keyboard` (engine). ✅ Confirmed.
 2. **Enter default** — insert newline by default; `submitOnEnter` opt-in fires `onEnter` instead. ✅ Confirmed.
 3. **Variants popup** — long-press to open **and** a visible corner indicator (a small dot) on keys that have variants, so pointer users without press-and-hold discover them; a right-click / secondary-tap also opens the popup. ✅ Confirmed.
 4. **Composer packaging** — future concrete composers (Hangul 두벌식, …) ship as **subpath exports of the engine** (`@usefy/use-virtual-keyboard/hangul`), tree-shakeable and opt-in; the `Composer` interface stays in the main entry. ✅ Confirmed.
@@ -607,8 +607,8 @@ describe('applyKey', () => {
 
 ### A. Related packages
 
-- `@usefy/use-virtual-keyboard` — headless engine (this kit's core).
-- `@usefy/memory-monitor` — the reference kit for build/SCSS/tsup parity.
+- `@usefy/use-virtual-keyboard` — headless engine (this component's core).
+- `@usefy/memory-monitor` — the reference component for build/SCSS/tsup parity.
 
 ### B. References
 

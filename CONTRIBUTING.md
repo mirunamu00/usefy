@@ -47,9 +47,9 @@ pnpm storybook    # 스토리북 실행
 ### 1. 패키지 폴더 생성
 
 ```bash
-# packages 폴더에 새 훅 폴더 생성
-mkdir packages/use-my-hook
-cd packages/use-my-hook
+# packages/hooks 폴더에 새 훅 폴더 생성
+mkdir packages/hooks/use-my-hook
+cd packages/hooks/use-my-hook
 ```
 
 ### 2. package.json 생성
@@ -97,7 +97,7 @@ cd packages/use-my-hook
   "repository": {
     "type": "git",
     "url": "https://github.com/mirunamu00/usefy.git",
-    "directory": "packages/use-my-hook"
+    "directory": "packages/hooks/use-my-hook"
   },
   "license": "MIT",
   "keywords": ["react", "hooks"]
@@ -188,7 +188,7 @@ describe("useMyHook", () => {
 
 ### 5. 통합 패키지에 추가
 
-**packages/usefy/package.json:**
+**packages/hooks/package.json:**
 
 ```json
 {
@@ -198,7 +198,7 @@ describe("useMyHook", () => {
 }
 ```
 
-**packages/usefy/src/index.ts:**
+**packages/hooks/src/index.ts:**
 
 ```ts
 export { useMyHook } from "@usefy/use-my-hook";

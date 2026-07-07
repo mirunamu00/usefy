@@ -71,12 +71,12 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/mirunamu00/usefy.git",
-    "directory": "packages/kits/memory-monitor"
+    "directory": "packages/memory-monitor"
   },
   "bugs": {
     "url": "https://github.com/mirunamu00/usefy/issues"
   },
-  "homepage": "https://github.com/mirunamu00/usefy/tree/master/packages/kits/memory-monitor#readme",
+  "homepage": "https://github.com/mirunamu00/usefy/tree/master/packages/memory-monitor#readme",
   "publishConfig": {
     "access": "public"
   }
