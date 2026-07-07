@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-reduced-motion",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "A React hook for the user's reduced-motion preference (prefers-reduced-motion)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-mount",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "A React hook that runs a callback once when the component mounts",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

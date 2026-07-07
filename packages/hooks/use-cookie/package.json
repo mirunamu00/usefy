@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-cookie",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "A React hook for reading and writing browser cookies as React state, SSR-aware",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
