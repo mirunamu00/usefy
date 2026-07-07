@@ -1,4 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
+import { StrictMode } from "react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { useLocalStorage } from "./useLocalStorage";
 import { clearAllListeners, getListenerCount } from "./store";
@@ -819,6 +820,61 @@ describe("useLocalStorage", () => {
       );
 
       removeEventListenerSpy.mockRestore();
+    });
+  });
+
+  describe("audit regression fixes", () => {
+    it("corrupt value with an object initial does not infinite-loop and returns a stable reference", () => {
+      window.localStorage.setItem("k", "{ not valid json");
+      const onError = vi.fn();
+      const { result, rerender } = renderHook(() =>
+        useLocalStorage("k", { a: 1 }, { onError })
+      );
+      const first = result.current[0];
+      expect(first).toEqual({ a: 1 });
+      rerender();
+      rerender();
+      // Same reference across renders — a fresh fallback each render would loop.
+      expect(result.current[0]).toBe(first);
+    });
+
+    it("fires onError exactly once for a corrupt read across multiple renders", () => {
+      window.localStorage.setItem("k", "{ not valid json");
+      const onError = vi.fn();
+      const { rerender } = renderHook(() =>
+        useLocalStorage("k", { a: 1 }, { onError })
+      );
+      rerender();
+      rerender();
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not double-fire onError under StrictMode", () => {
+      window.localStorage.setItem("k", "{ not valid json");
+      const onError = vi.fn();
+      renderHook(() => useLocalStorage("k", { a: 1 }, { onError }), {
+        wrapper: StrictMode,
+      });
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+
+    it("skips the write and notify when setValue receives an unchanged value", () => {
+      const { result } = renderHook(() => useLocalStorage("k", "v"));
+      act(() => result.current[1]("hello"));
+      const writesAfterFirst = localStorageMock.setItem.mock.calls.length;
+      act(() => result.current[1]("hello"));
+      expect(localStorageMock.setItem.mock.calls.length).toBe(writesAfterFirst);
+    });
+
+    it("resets to the initial value when another tab calls localStorage.clear() (storage event key=null)", () => {
+      window.localStorage.setItem("k", JSON.stringify("stored"));
+      const { result } = renderHook(() => useLocalStorage("k", "init"));
+      expect(result.current[0]).toBe("stored");
+      act(() => {
+        localStorageMock.clear();
+        dispatchStorageEvent(null as unknown as string, null);
+      });
+      expect(result.current[0]).toBe("init");
     });
   });
 });

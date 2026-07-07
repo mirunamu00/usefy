@@ -1,4 +1,4 @@
-import { useCallback, useRef, useSyncExternalStore } from "react";
+import { useCallback, useEffect, useRef, useSyncExternalStore } from "react";
 import { subscribe, notifyListeners } from "./store";
 
 /**
@@ -169,6 +169,26 @@ export function useLocalStorage<T>(
     null
   );
 
+  // Read errors are recorded here from the (pure) getSnapshot and flushed to
+  // onError from a post-commit effect, so the user callback never fires during
+  // render (which would double-fire under StrictMode).
+  const readErrorRef = useRef<{ rawValue: string | null; error: Error } | null>(
+    null
+  );
+
+  // Memoized server/initial snapshot so getServerSnapshot returns a stable
+  // reference across calls (a fresh object each call triggers React's
+  // "getServerSnapshot should be cached" infinite-loop warning).
+  const serverSnapshotRef = useRef<{ value: T } | null>(null);
+  const readServerSnapshot = useCallback((): T => {
+    if (!serverSnapshotRef.current) {
+      serverSnapshotRef.current = {
+        value: resolveInitialValue(initialValueRef.current),
+      };
+    }
+    return serverSnapshotRef.current.value;
+  }, []);
+
   // SSR check
   const isClient = typeof window !== "undefined";
 
@@ -184,7 +204,9 @@ export function useLocalStorage<T>(
 
       if (isClient && syncTabs) {
         handleStorageEvent = (event: StorageEvent) => {
-          if (event.key === key) {
+          // event.key === null is fired by localStorage.clear() and must also
+          // reset this hook to its initial value.
+          if (event.key === key || event.key === null) {
             onStoreChange();
           }
         };
@@ -202,44 +224,54 @@ export function useLocalStorage<T>(
     [key, syncTabs, isClient]
   );
 
-  // getSnapshot: Read current value from localStorage with caching
+  // getSnapshot: Read current value from localStorage with caching.
+  // MUST be pure and return a stable reference when the underlying raw string
+  // is unchanged — otherwise useSyncExternalStore loops forever.
   const getSnapshot = useCallback((): T => {
     if (!isClient) {
-      return resolveInitialValue(initialValueRef.current);
+      return readServerSnapshot();
+    }
+
+    // Read the raw string first; key the cache on the ACTUAL value so a corrupt
+    // entry still produces a stable cache hit on the next read.
+    let rawValue: string | null;
+    try {
+      rawValue = window.localStorage.getItem(key);
+    } catch (error) {
+      if (cacheRef.current && cacheRef.current.rawValue === null) {
+        return cacheRef.current.parsedValue;
+      }
+      const fallbackValue = resolveInitialValue(initialValueRef.current);
+      cacheRef.current = { rawValue: null, parsedValue: fallbackValue };
+      readErrorRef.current = { rawValue: null, error: error as Error };
+      return fallbackValue;
+    }
+
+    // Cache hit: same raw string as last read → return the same reference.
+    if (cacheRef.current && cacheRef.current.rawValue === rawValue) {
+      return cacheRef.current.parsedValue;
     }
 
     try {
-      const rawValue = window.localStorage.getItem(key);
-
-      // Check cache: if rawValue is the same, return cached parsed value
-      if (cacheRef.current && cacheRef.current.rawValue === rawValue) {
-        return cacheRef.current.parsedValue;
-      }
-
-      // Parse new value
-      let parsedValue: T;
-      if (rawValue !== null) {
-        parsedValue = deserializerRef.current(rawValue);
-      } else {
-        parsedValue = resolveInitialValue(initialValueRef.current);
-      }
-
-      // Update cache
+      const parsedValue =
+        rawValue !== null
+          ? deserializerRef.current(rawValue)
+          : resolveInitialValue(initialValueRef.current);
       cacheRef.current = { rawValue, parsedValue };
-
       return parsedValue;
     } catch (error) {
-      onErrorRef.current?.(error as Error);
+      // Corrupt value: cache the fallback keyed on the REAL rawValue so the next
+      // getSnapshot is a cache hit (caching null here would loop forever). Record
+      // the error for the post-commit flush instead of calling onError in render.
       const fallbackValue = resolveInitialValue(initialValueRef.current);
-      cacheRef.current = { rawValue: null, parsedValue: fallbackValue };
+      cacheRef.current = { rawValue, parsedValue: fallbackValue };
+      readErrorRef.current = { rawValue, error: error as Error };
       return fallbackValue;
     }
-  }, [key, isClient]);
+  }, [key, isClient, readServerSnapshot]);
 
-  // getServerSnapshot: Return initial value for SSR
-  const getServerSnapshot = useCallback((): T => {
-    return resolveInitialValue(initialValueRef.current);
-  }, []);
+  // getServerSnapshot: stable initial value for SSR.
+  const getServerSnapshot = readServerSnapshot;
 
   // Use useSyncExternalStore for synchronized state
   const storedValue = useSyncExternalStore(
@@ -248,39 +280,57 @@ export function useLocalStorage<T>(
     getServerSnapshot
   );
 
+  // Flush read errors after commit (getSnapshot stays pure). Deduped by raw
+  // value so onError fires once per distinct corrupt entry, not once per render.
+  const reportedErrorRawRef = useRef<string | null | undefined>(undefined);
+  useEffect(() => {
+    const pending = readErrorRef.current;
+    if (pending && reportedErrorRawRef.current !== pending.rawValue) {
+      reportedErrorRawRef.current = pending.rawValue;
+      onErrorRef.current?.(pending.error);
+    }
+  });
+
   // setValue - stable reference that updates localStorage and notifies listeners
   const setValue = useCallback<React.Dispatch<React.SetStateAction<T>>>(
     (value) => {
       try {
-        // Get current value for functional updates
-        const currentValue = (() => {
-          try {
-            const item = window.localStorage.getItem(key);
-            if (item !== null) {
-              return deserializerRef.current(item);
-            }
-            return resolveInitialValue(initialValueRef.current);
-          } catch {
-            return resolveInitialValue(initialValueRef.current);
-          }
-        })();
-
-        const valueToStore =
-          value instanceof Function ? value(currentValue) : value;
-
-        if (typeof window !== "undefined") {
-          const serialized = serializerRef.current(valueToStore);
-          window.localStorage.setItem(key, serialized);
-
-          // Invalidate cache so next getSnapshot reads fresh value
-          cacheRef.current = {
-            rawValue: serialized,
-            parsedValue: valueToStore,
-          };
-
-          // Notify all same-tab listeners
-          notifyListeners(key);
+        if (typeof window === "undefined") {
+          return;
         }
+
+        let valueToStore: T;
+        if (value instanceof Function) {
+          // Only read/deserialize the current value for functional updates.
+          const currentValue = (() => {
+            try {
+              const item = window.localStorage.getItem(key);
+              return item !== null
+                ? deserializerRef.current(item)
+                : resolveInitialValue(initialValueRef.current);
+            } catch {
+              return resolveInitialValue(initialValueRef.current);
+            }
+          })();
+          valueToStore = (value as (prev: T) => T)(currentValue);
+        } else {
+          valueToStore = value;
+        }
+
+        const serialized = serializerRef.current(valueToStore);
+
+        // No-op skip: unchanged serialized value → no write, no re-render churn.
+        if (serialized === window.localStorage.getItem(key)) {
+          return;
+        }
+
+        window.localStorage.setItem(key, serialized);
+
+        // Prime the cache so the next getSnapshot returns this exact reference.
+        cacheRef.current = { rawValue: serialized, parsedValue: valueToStore };
+
+        // Notify all same-tab listeners
+        notifyListeners(key);
       } catch (error) {
         onErrorRef.current?.(error as Error);
       }

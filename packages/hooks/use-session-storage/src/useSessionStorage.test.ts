@@ -1,4 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
+import { StrictMode } from "react";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { useSessionStorage } from "./useSessionStorage";
 import { clearAllListeners, getListenerCount } from "./store";
@@ -685,6 +686,51 @@ describe("useSessionStorage", () => {
       });
 
       expect(result.current[0]).toBe("same");
+    });
+  });
+
+  describe("audit regression fixes", () => {
+    it("corrupt value with an object initial does not infinite-loop and returns a stable reference", () => {
+      window.sessionStorage.setItem("k", "{ not valid json");
+      const onError = vi.fn();
+      const { result, rerender } = renderHook(() =>
+        useSessionStorage("k", { a: 1 }, { onError })
+      );
+      const first = result.current[0];
+      expect(first).toEqual({ a: 1 });
+      rerender();
+      rerender();
+      expect(result.current[0]).toBe(first);
+    });
+
+    it("fires onError exactly once for a corrupt read across multiple renders", () => {
+      window.sessionStorage.setItem("k", "{ not valid json");
+      const onError = vi.fn();
+      const { rerender } = renderHook(() =>
+        useSessionStorage("k", { a: 1 }, { onError })
+      );
+      rerender();
+      rerender();
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not double-fire onError under StrictMode", () => {
+      window.sessionStorage.setItem("k", "{ not valid json");
+      const onError = vi.fn();
+      renderHook(() => useSessionStorage("k", { a: 1 }, { onError }), {
+        wrapper: StrictMode,
+      });
+      expect(onError).toHaveBeenCalledTimes(1);
+    });
+
+    it("skips the write and notify when setValue receives an unchanged value", () => {
+      const { result } = renderHook(() => useSessionStorage("k", "v"));
+      act(() => result.current[1]("hello"));
+      const writesAfterFirst = sessionStorageMock.setItem.mock.calls.length;
+      act(() => result.current[1]("hello"));
+      expect(sessionStorageMock.setItem.mock.calls.length).toBe(
+        writesAfterFirst
+      );
     });
   });
 });
