@@ -541,6 +541,9 @@ importers:
       '@usefy/use-reduced-motion':
         specifier: workspace:*
         version: link:use-reduced-motion
+      '@usefy/use-resize-observer':
+        specifier: workspace:*
+        version: link:use-resize-observer
       '@usefy/use-script':
         specifier: workspace:*
         version: link:use-script

@@ -41,6 +41,7 @@
     "@usefy/use-init": "workspace:*",
     "@usefy/use-geolocation": "workspace:*",
     "@usefy/use-intersection-observer": "workspace:*",
+    "@usefy/use-resize-observer": "workspace:*",
     "@usefy/use-memory-monitor": "workspace:*",
     "@usefy/use-timeout": "workspace:*",
     "@usefy/use-hover": "workspace:*",
