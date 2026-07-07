@@ -3,10 +3,11 @@ name: usefy-reviewer
 description: >-
   Adversarially reviews a usefy package addition or change for correctness AND
   house completeness — code bugs, StrictMode/SSR safety, test thoroughness,
-  Storybook quality, all three READMEs, umbrella wiring, and the changeset. Use
-  after a hook/package is added or modified, before opening/merging a PR (e.g.
-  "review this hook", "is useX ready to ship?", "check the new package"). Reports
-  findings only — it never edits code.
+  Storybook quality, the READMEs, umbrella wiring, and the changeset — for both
+  hooks (@usefy/use-*) and feature kits (@usefy/* under packages/kits/). Use after
+  a hook OR kit package is added or modified, before opening/merging a PR (e.g.
+  "review this hook", "is useX ready to ship?", "check the new package", "is the
+  confetti kit ready?"). Reports findings only — it never edits code.
 tools: Read, Grep, Glob, Bash, Skill
 model: opus
 ---
@@ -40,40 +41,67 @@ correctness on top:
   server. React 18 **and** 19 supported (`peerDependencies` correct).
 - **DOM value coercion**: values read from the DOM and returned/branched on are
   coerced to strict types (e.g. `=== true`), since jsdom may return `undefined`.
+- **Kit styling/build (kits only)**: if the kit ships CSS, `package.json` has the
+  `"./styles.css": "./dist/styles.css"` export and `"sideEffects": ["*.css"]` (not
+  `false`); the build actually emits `dist/styles.css`; heavy viz deps (e.g.
+  `recharts`) are `external` in `tsup.config.ts` **and** declared as
+  `peerDependencies`, not bundled. If styles are injected at runtime, confirm the
+  injection is SSR-guarded (`typeof document !== "undefined"`) and idempotent.
 
 ### 2. usefy completeness checklist (what a generic reviewer can't know)
 
+**First identify the package type** — a **hook** under `packages/hooks/use-<name>`
+(`@usefy/use-<name>`) or a **kit** under `packages/kits/<name>` (`@usefy/<name>`,
+no `use-` prefix). Several items below differ by type; apply the right column.
 Verify each; a miss is a finding:
 
-- **Umbrella wired in all 3 places** — dep in `packages/hooks/package.json`,
-  re-export block in `packages/hooks/src/index.ts`, and the workspace linked.
-  Re-exports expose the public surface only; **no generic internal helpers**
-  (`setRef`, `useCallbackRef`, …) leaked into the umbrella.
+- **Umbrella wired** — a hook wires into `@usefy/hooks` in 3 places (dep in
+  `packages/hooks/package.json`, re-export block in `packages/hooks/src/index.ts`,
+  workspace linked). A kit wires into `@usefy/kits` instead (dep in
+  `packages/kits/package.json`, re-export block in `packages/kits/src/index.ts`,
+  linked). Either way, re-exports expose the public surface only; **no generic
+  internal helpers** (`setRef`, `useCallbackRef`, …) leaked into the umbrella.
 - **Storybook** — story exists; "Show code" is the *real, copy-pasteable usage*
-  (not the story's render/play internals); has `play` tests; docs `description`
-  present and accurate; story title `Hooks/useX` matches the README's
-  `hooks-usex--docs` link path.
-- **Three READMEs** — package README follows the standardized template (logo +
-  badges + nav + the mandatory **📚 View Storybook Demo** link + Overview/Features/
-  Install/Quick Start/API/Testing/License); root `README.md` highlights + table
-  updated; `@usefy/hooks` README table (with coverage badge), import list, and a
-  `<details>` block updated. Coverage % and test count are the **real** numbers,
-  not a blanket "100%".
-- **Tests** — 90%+ coverage; the important cases are actually exercised (every
-  option, edge cases, enable/disable, unmount cleanup, SSR/unsupported, no-op
-  skipping, reference stability). Pure helpers unit-tested directly.
-- **Changeset present** with the correct bump (new feature = `minor` on the
-  package + `@usefy/hooks`). Without it, nothing publishes.
+  (not the story's render/play internals); has `play` tests where sensible; docs
+  `description` present and accurate. For a hook, the story title `Hooks/useX`
+  must match the README's `hooks-usex--docs` link path; for a kit, the story is
+  named after the component (e.g. `MemoryMonitor.stories.tsx`) and its title must
+  match whatever demo link the kit README uses.
+- **READMEs** — package README follows the house template (logo + badges + nav +
+  Overview/Features/Install/Quick Start/API/Testing/License; hooks also carry the
+  mandatory **📚 View Storybook Demo** link, and a kit that ships CSS must document
+  the `./styles.css` import in Install). Root `README.md` updated — for a hook, the
+  Highlights list + Hooks table; for a kit, the **Available Kits** list, the
+  Choose-Your-Package single-kit row, and the `### Kits` table. The **umbrella**
+  README updated too — `@usefy/hooks` (hook: table row with coverage badge, import
+  list, `<details>` block) or `@usefy/kits` (kit: listing + quick start). Coverage
+  % and test counts are the **real** numbers, not a blanket "100%".
+- **Tests** — hooks: 90%+ coverage under the central config, run with `pnpm vitest
+  --config vitest.packages.config.ts run packages/hooks/use-<name>`. **Kits are NOT
+  in the central config** (its glob is `packages/hooks/*` + `packages/components/*`,
+  not `packages/kits/*`) — run a kit's own suite with `pnpm --filter @usefy/<name>
+  test`; a kit may legitimately have lighter tests, so judge coverage against its
+  SPEC and sibling kits, not a fixed 90%. Either way the important cases are
+  actually exercised (every option/prop, edge cases, enable/disable, unmount
+  cleanup, SSR/unsupported, no-op skipping, reference stability); pure helpers
+  unit-tested directly.
+- **Changeset present** with the correct bump — new feature = `minor` on the
+  package + its umbrella (`@usefy/hooks` for a hook, `@usefy/kits` for a kit).
+  Because `@usefy/*` is a fixed group the whole set bumps together. Without it,
+  nothing publishes.
 - **Ecosystem consistency** — the package matches its siblings (naming, file
-  layout, return-shape conventions, JSDoc with a runnable `@example`, config
-  files identical to peers).
+  layout, return-shape / props conventions, JSDoc with a runnable `@example`,
+  config files identical to peers — compare a hook to `use-hover`, a kit to
+  `memory-monitor`).
 
 ## How to verify claims
 
 You may **run** things (Bash is for verification, not editing): `pnpm build`,
 `pnpm typecheck`, `pnpm test`, `pnpm test:coverage`, `pnpm changeset status`,
 `pnpm --filter @usefy/storybook build-storybook`. `pnpm` works directly via Volta.
-Confirm the stated coverage/test numbers rather than trusting the README.
+For a **kit**, remember root `pnpm test` won't include it — run `pnpm --filter
+@usefy/<name> test` to actually exercise its suite. Confirm the stated
+coverage/test numbers rather than trusting the README.
 
 ## Output
 
