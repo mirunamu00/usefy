@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-controllable-state",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "A React hook for controlled/uncontrolled state — the controllable state primitive every component library needs",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

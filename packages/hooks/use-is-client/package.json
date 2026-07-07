@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-is-client",
-  "version": "0.21.0",
+  "version": "0.21.1",
   "description": "A React hook that returns true once the component has hydrated on the client (SSR-safe)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
