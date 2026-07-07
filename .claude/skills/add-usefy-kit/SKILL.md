@@ -38,6 +38,57 @@ So a full "MemoryMonitor-style" feature often means **two** packages: build the 
 
 Naming: directory `confetti` → package `@usefy/confetti` → component `Confetti` (PascalCase) + `ConfettiProps` type.
 
+## Compose existing usefy hooks — don't reinvent (core principle)
+
+A kit is a **UI layer**, and this monorepo already ships 60+ production hooks
+under `packages/hooks/use-*`. **Before writing any bespoke state/effect logic in a
+kit, check whether a `@usefy/use-*` hook already does it, and compose that hook
+instead.** This is the single biggest quality lever for a kit: it's the difference
+between reimplementing (and re-bugging) outside-click / focus-trap / controllable-
+state for the Nth time versus reusing the battle-tested, SSR-safe, StrictMode-safe
+hook the repo already tests to 90%+. It also keeps kits thin and consistent.
+
+Run `ls packages/hooks | grep '^use-'` to see the current catalog. The common
+kit-UI concerns and their hooks:
+
+| Kit concern | Reuse this hook |
+|---|---|
+| Controlled **and** uncontrolled value / open state (`value`+`defaultValue`+`onChange`) | `use-controllable-state` |
+| Show/hide, open/close (panels, popovers, floating, drawers) | `use-disclosure` |
+| Dismiss on outside click | `use-on-click-outside` (or `use-click-any-where`) |
+| Focus containment / focus state (modals, menus, panels) | `use-focus-trap`, `use-focus-within` |
+| Merge a forwarded ref with an internal one | `use-merged-refs` |
+| Keyboard shortcuts / single-key handling | `use-hotkeys`, `use-key-press` |
+| Press-and-hold (auto-repeat, long-press context popups) | `use-long-press` |
+| Theme: dark mode / system preference | `use-dark-mode`, `use-preferred-color-scheme` |
+| Respect `prefers-reduced-motion` before animating | `use-reduced-motion` |
+| Persist settings/state across sessions | `use-local-storage`, `use-session-storage` |
+| SSR/client guard & isomorphic layout effect | `use-is-client`, `use-isomorphic-layout-effect` |
+| Always-fresh callback without re-subscribing listeners | `use-event-callback`, `use-latest` |
+| Attach DOM event listeners with clean teardown | `use-event-listener` |
+| Measure / observe element size, window size | `use-measure`, `use-resize-observer`, `use-window-size` |
+| Responsive breakpoints | `use-media-query` |
+| Copy to clipboard | `use-copy-to-clipboard` |
+| Timers / animation-frame state | `use-interval`, `use-timeout`, `use-raf-state` |
+| Track the previous value | `use-previous` |
+
+Rules of thumb:
+
+1. **Reuse first.** Every generic concern above should be a composed hook, not
+   inline `useEffect`. `memory-monitor` is the model — it consumes
+   `@usefy/use-memory-monitor` and keeps its own local hooks only for genuinely
+   kit-specific glue.
+2. **Each reused hook is a `workspace:*` dependency** — add it to the kit's
+   `package.json` (Phase 2) so it links. Import from the individual package
+   (`@usefy/use-disclosure`), not the `@usefy/hooks` umbrella, to keep the
+   dependency graph precise.
+3. **If a needed concern has NO hook yet**, prefer **extracting it into a new
+   `@usefy/use-*` hook via `add-usefy-hook`** over burying it in the kit — that
+   makes the logic reusable and independently tested. Only keep logic local when
+   it's truly specific to this one component.
+4. **Don't reach for external deps** for anything a usefy hook covers (no
+   `react-use`, `usehooks-ts`, ad-hoc clipboard libs, etc.).
+
 ## Monorepo facts you need
 
 - Package manager is **pnpm** (workspace protocol). Never npm/yarn.
@@ -55,7 +106,11 @@ accessibility) so the implementation is a translation, not an invention. If the
 kit has an existing hook counterpart, the SPEC references it.
 
 Then **build the component in the normal conversation against the SPEC** — this
-skill resumes at Phase 2 once the implementation exists.
+skill resumes at Phase 2 once the implementation exists. While building, apply the
+**"compose existing usefy hooks"** principle above: map each generic concern in
+the SPEC to an existing `@usefy/use-*` hook first, and only hand-write what's
+genuinely kit-specific. A good SPEC even names the hooks it will compose (the
+virtual-keyboard SPEC's dependency section is a model).
 
 ## Phase 2 — Package config (clone from memory-monitor, adapt)
 
@@ -67,7 +122,7 @@ version), `description`, `keywords`, `repository.directory`, `homepage`, and the
 Kit `package.json` differs from a hook's in ways that matter:
 
 - **`@usefy/<name>`** — no `use-` prefix.
-- **Real runtime `dependencies`** are normal (e.g. `clsx`, the paired `@usefy/use-<name>` hook). Extra **peerDependencies** for heavy viz libs (memory-monitor peers `recharts`) so the consumer owns the version.
+- **Real runtime `dependencies`** are normal (e.g. `clsx`, the paired `@usefy/use-<name>` hook). **List every `@usefy/use-*` hook the component composes here as `"workspace:*"`** (see the "Compose existing usefy hooks" principle) — a kit that imports `@usefy/use-disclosure`/`use-controllable-state`/etc. must declare each one. Extra **peerDependencies** for heavy viz libs (memory-monitor peers `recharts`) so the consumer owns the version.
 - **If the kit ships CSS**: add a `"./styles.css": "./dist/styles.css"` entry to `exports`, and set `"sideEffects": ["*.css"]` (NOT `false` — CSS has side effects). A CSS-less kit keeps `"sideEffects": false`.
 - Scripts mirror memory-monitor: `build`/`dev`/`test`/`test:watch`/`typecheck`/`clean` (+ any kit-specific ones).
 
@@ -154,8 +209,10 @@ notes for the full detail.
 
 ## Definition of done
 
-Component implemented against its SPEC · package config cloned + adapted (CSS
-`exports`/`sideEffects` correct if it ships styles) · `@usefy/kits` umbrella wired
+Component implemented against its SPEC · **generic concerns composed from existing
+`@usefy/use-*` hooks (not reinvented inline), each declared as a `workspace:*`
+dependency** · package config cloned + adapted (CSS `exports`/`sideEffects`
+correct if it ships styles) · `@usefy/kits` umbrella wired
 in both places · `pnpm build && pnpm test && pnpm typecheck` clean · Storybook
 story compiles · README (new kit) + root README (3 spots) + umbrella README
 updated · changeset present and `pnpm changeset status` shows the expected bump ·
