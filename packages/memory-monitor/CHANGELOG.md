@@ -1,5 +1,12 @@
 # @usefy/memory-monitor
 
+## 0.25.1
+
+### Patch Changes
+
+- 89e484e: Docs: fix the "View Storybook Demo" link. The standalone component stories now sit at the top level of the Storybook sidebar (mirroring their top-level `packages/` directory) instead of under a "Components" group, so the demo URLs changed (`virtual-keyboard--…`, `memory-monitor--…`).
+  - @usefy/use-memory-monitor@0.25.1
+
 ## 0.25.0
 
 ### Patch Changes

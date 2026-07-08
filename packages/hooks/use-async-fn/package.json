@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-async-fn",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "description": "A React hook for running a manual-trigger async function with idle/pending/success/error lifecycle tracking and race-safe stale-response guarding",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
