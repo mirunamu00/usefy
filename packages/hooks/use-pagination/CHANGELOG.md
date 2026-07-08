@@ -1,5 +1,11 @@
 # @usefy/use-pagination
 
+## 0.22.0
+
+### Patch Changes
+
+- @usefy/use-controllable-state@0.22.0
+
 ## 0.21.1
 
 ### Patch Changes

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-queue",
-  "version": "0.21.1",
+  "version": "0.22.0",
   "description": "A React hook for managing FIFO queue state with immutable updates",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

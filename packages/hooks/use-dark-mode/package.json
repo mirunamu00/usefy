@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-dark-mode",
-  "version": "0.21.1",
+  "version": "0.22.0",
   "description": "A React hook for dark mode with system detection, persistence, and DOM class/attribute",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
