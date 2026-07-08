@@ -47,6 +47,7 @@
 | ------- | ----------- |
 | `@usefy/hooks` | 70+ lightweight React hooks (umbrella — each hook is also published on its own as `@usefy/use-*`) |
 | `@usefy/memory-monitor` | Real-time browser memory monitoring component |
+| `@usefy/virtual-keyboard` | On-screen virtual keyboard with a declarative layout engine and headless hook |
 
 ---
 
@@ -148,6 +149,44 @@ function App() {
 
 ---
 
+### @usefy/virtual-keyboard
+
+<a href="https://www.npmjs.com/package/@usefy/virtual-keyboard" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/virtual-keyboard.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/virtual-keyboard" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/virtual-keyboard.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/virtual-keyboard" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/virtual-keyboard?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+On-screen (virtual) keyboard for kiosks, PIN pads, and D-pad UIs — a declarative
+layout engine, a headless `useVirtualKeyboard` hook, and enterprise a11y.
+
+```bash
+pnpm add @usefy/virtual-keyboard
+```
+
+```tsx
+import { useRef } from "react";
+import { VirtualKeyboard, qwertyLayout } from "@usefy/virtual-keyboard";
+
+function Search() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <input ref={inputRef} placeholder="Search…" />
+      <VirtualKeyboard inputRef={inputRef} layouts={qwertyLayout} submitOnEnter />
+    </>
+  );
+}
+```
+
+<a href="./packages/virtual-keyboard/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -157,6 +196,7 @@ function App() {
 | All hooks | `pnpm add @usefy/hooks` | `import { useToggle } from "@usefy/hooks"` |
 | Single hook | `pnpm add @usefy/use-toggle` | `import { useToggle } from "@usefy/use-toggle"` |
 | Memory monitor | `pnpm add @usefy/memory-monitor` | `import { MemoryMonitor } from "@usefy/memory-monitor"` |
+| Virtual keyboard | `pnpm add @usefy/virtual-keyboard` | `import { VirtualKeyboard } from "@usefy/virtual-keyboard"` |
 
 ### Peer Dependencies
 
@@ -291,6 +331,18 @@ Some packages may have additional peer dependencies (check individual package do
 | Export | Description |
 | ------ | ----------- |
 | `MemoryMonitor` | Real-time memory monitoring panel with leak detection, snapshots, and reports |
+
+### @usefy/virtual-keyboard
+
+| Export | Description |
+| ------ | ----------- |
+| `VirtualKeyboard` | On-screen keyboard component (inline / docked / floating, with an optional trigger) bound to any input |
+| `useVirtualKeyboard` | Headless engine — modifier state, layout engine, caret-aware editing, prop-getters |
+| `qwertyLayout`, `numericLayout`, `phoneLayout`, `emailLayout` | Built-in data-driven layouts |
+| `createLayout`, `resolveLayout`, `randomizeLayout` | Author a custom layout / resolve one against modifiers / shuffle char-key positions (seedable) |
+| `identityComposer` | Default 1:1 composer (IME seam) |
+
+Also ships a `@usefy/virtual-keyboard/headless` entry (hook + engine + types, no CSS) and an opt-in `@usefy/virtual-keyboard/styles.css`.
 
 ---
 
