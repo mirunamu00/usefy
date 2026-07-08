@@ -1,5 +1,11 @@
 # @usefy/use-scroll-lock
 
+## 0.23.0
+
+### Patch Changes
+
+- @usefy/use-isomorphic-layout-effect@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

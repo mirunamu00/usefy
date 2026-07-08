@@ -1,5 +1,7 @@
 # @usefy/use-copy-to-clipboard
 
+## 0.23.0
+
 ## 0.22.0
 
 ## 0.21.1

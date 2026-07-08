@@ -1,5 +1,12 @@
 # @usefy/use-focus-trap
 
+## 0.23.0
+
+### Patch Changes
+
+- @usefy/use-isomorphic-layout-effect@0.23.0
+- @usefy/use-latest@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes
