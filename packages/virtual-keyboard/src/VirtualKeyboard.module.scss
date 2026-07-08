@@ -42,6 +42,28 @@
   width: 100%;
 }
 
+// IME composition preview — the in-progress block (e.g. a forming Hangul
+// syllable), shown underlined until it commits. Rendered only while composing.
+.composing {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--usefy-vk-key-min-size) * 0.6);
+  padding: 0 calc(var(--usefy-vk-gap) * 1.5);
+  color: var(--usefy-vk-key-color);
+  font-size: 1.125rem;
+  line-height: 1.4;
+  background-color: var(--usefy-vk-key-bg);
+  border: 1px solid var(--usefy-vk-key-border);
+  border-radius: var(--usefy-vk-radius);
+}
+
+.composingText {
+  text-decoration: underline;
+  text-decoration-color: var(--usefy-vk-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
 // Fixed to the bottom of the viewport as a full-width bar.
 .docked {
   position: fixed;

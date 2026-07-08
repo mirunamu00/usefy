@@ -166,10 +166,17 @@ export function useVirtualKeyboard(
 
   // The caret to restore into a bound input after the value commits.
   const pendingCaretRef = useRef<Caret | null>(null);
-  // Composer working state (identity in the MVP).
+  // Composer working state.
   const composerStateRef = useRef<ComposerState>(
     (currentLayout.composer ?? identityComposer).reset()
   );
+  // Composing text (IME): the in-progress block shown but not yet committed to
+  // `value`. `composingStartRef` anchors where it sits inside `value`, so the
+  // displayed string is `value[0..start] + composing + value[start..]`.
+  const [composing, setComposing] = useState("");
+  const composingRef = useRef("");
+  composingRef.current = composing;
+  const composingStartRef = useRef(0);
 
   const isControlled = controlledValue !== undefined;
   const canSeedRef = useRef(!isControlled && defaultValue === undefined);
@@ -186,6 +193,7 @@ export function useVirtualKeyboard(
         seedStartedRef.current = true;
         if (value === "" && el.value) {
           awaitingSeedRef.current = el.value;
+          composingStartRef.current = el.value.length;
           setValueRaw(el.value);
           return;
         }
@@ -200,19 +208,31 @@ export function useVirtualKeyboard(
           return;
         }
       }
-      if (el.value !== value) el.value = value;
+      // The element shows committed `value` with the in-progress composition
+      // spliced in at its anchor; `value`/`onChange` stay composition-free.
+      const start = composingStartRef.current;
+      const displayed =
+        composing === "" ? value : value.slice(0, start) + composing + value.slice(start);
+      if (el.value !== displayed) el.value = displayed;
       const pending = pendingCaretRef.current;
       if (pending && typeof el.setSelectionRange === "function") {
         el.setSelectionRange(pending.start, pending.end);
       }
     }
     pendingCaretRef.current = null;
-  }, [value]);
+  }, [value, composing]);
 
   // --- shared editing helpers -----------------------------------------------
   const getEditState = useCallback((): EditState => {
-    const el = inputRefRef.current?.current;
     const v = valueRef.current;
+    // While composing, edits anchor at the composition start (value-space); the
+    // element's caret lives in the displayed string (value + composing), which
+    // we keep pinned to the end of the composing block.
+    if (composingRef.current !== "") {
+      const s = composingStartRef.current;
+      return { value: v, selectionStart: s, selectionEnd: s };
+    }
+    const el = inputRefRef.current?.current;
     if (el) {
       const start = el.selectionStart ?? v.length;
       const end = el.selectionEnd ?? v.length;
@@ -234,32 +254,87 @@ export function useVirtualKeyboard(
     [setValueRaw]
   );
 
-  const setLayout = useCallback((name: string) => {
-    if (!layoutMapRef.current.has(name)) return;
-    if (name === layoutNameRef.current) return;
-    setLayoutName(name);
+  /**
+   * Commit any pending composition into value-space and reset the composer.
+   * Returns the post-flush edit state (value + collapsed caret). Does not itself
+   * write `value` — the caller commits the final result exactly once.
+   */
+  const mergeComposing = useCallback((): EditState => {
+    const comp = composingRef.current;
+    if (comp === "") return getEditState();
+    const v = valueRef.current;
+    const start = composingStartRef.current;
+    const caret = start + comp.length;
     composerStateRef.current = (
-      layoutMapRef.current.get(name)?.composer ?? identityComposer
+      currentLayoutRef.current.composer ?? identityComposer
     ).reset();
-    onLayoutChangeRef.current?.(name);
+    composingRef.current = "";
+    composingStartRef.current = caret;
+    setComposing("");
+    return {
+      value: v.slice(0, start) + comp + v.slice(start),
+      selectionStart: caret,
+      selectionEnd: caret,
+    };
+  }, [getEditState]);
+
+  /** Delete one composing unit (a jamo) from the pending block; commits nothing. */
+  const applyComposerBackspace = useCallback(() => {
+    const composer = currentLayoutRef.current.composer ?? identityComposer;
+    const res = composer.backspace
+      ? composer.backspace(composerStateRef.current)
+      : { committed: "", composing: "", next: composer.reset() };
+    composerStateRef.current = res.next;
+    composingRef.current = res.composing;
+    const caret = composingStartRef.current + res.composing.length;
+    pendingCaretRef.current = { start: caret, end: caret };
+    setComposing(res.composing);
   }, []);
+
+  const setLayout = useCallback(
+    (name: string) => {
+      if (!layoutMapRef.current.has(name)) return;
+      if (name === layoutNameRef.current) return;
+      // Commit whatever is composing before swapping the (possibly different) composer.
+      const base = mergeComposing();
+      if (base.value !== valueRef.current) commit(base);
+      setLayoutName(name);
+      composerStateRef.current = (
+        layoutMapRef.current.get(name)?.composer ?? identityComposer
+      ).reset();
+      onLayoutChangeRef.current?.(name);
+    },
+    [mergeComposing, commit]
+  );
 
   const toggleShift = useCallback(() => setShift((s) => !s), []);
   const toggleCapsLock = useCallback(() => setCapsLock((c) => !c), []);
   const toggleLayer = useCallback(() => setLayer((l) => !l), []);
 
+  /** Reset the composer + composing buffer, anchoring future composition at `caret`. */
+  const resetComposition = useCallback((caret: number) => {
+    composerStateRef.current = (
+      currentLayoutRef.current.composer ?? identityComposer
+    ).reset();
+    composingRef.current = "";
+    composingStartRef.current = caret;
+    setComposing("");
+  }, []);
+
   const setValue = useCallback(
     (next: string) => {
+      resetComposition(next.length);
       const caret = next.length;
       pendingCaretRef.current = { start: caret, end: caret };
       setValueRaw(next);
     },
-    [setValueRaw]
+    [resetComposition, setValueRaw]
   );
 
   const insert = useCallback(
     (text: string) => {
       if (!text) return;
+      const base = mergeComposing();
       const synthetic: ResolvedKey = {
         key: text,
         type: "char",
@@ -268,16 +343,26 @@ export function useVirtualKeyboard(
       };
       const result = applyKey(
         synthetic,
-        getEditState(),
+        base,
         modifiersRef.current,
         optionsRef.current
       );
-      if (result.changed) commit(result);
+      if (result.changed) {
+        composingStartRef.current = result.selectionStart;
+        commit(result);
+      } else if (base.value !== valueRef.current) {
+        composingStartRef.current = base.selectionStart;
+        commit(base);
+      }
     },
-    [getEditState, commit]
+    [mergeComposing, commit]
   );
 
   const backspace = useCallback(() => {
+    if (composingRef.current !== "") {
+      applyComposerBackspace();
+      return;
+    }
     const synthetic: ResolvedKey = {
       key: "Backspace",
       type: "action",
@@ -291,17 +376,18 @@ export function useVirtualKeyboard(
       modifiersRef.current,
       optionsRef.current
     );
-    if (result.changed) commit(result);
-  }, [getEditState, commit]);
+    if (result.changed) {
+      composingStartRef.current = result.selectionStart;
+      commit(result);
+    }
+  }, [getEditState, commit, applyComposerBackspace]);
 
   const clear = useCallback(() => {
-    composerStateRef.current = (
-      currentLayoutRef.current.composer ?? identityComposer
-    ).reset();
+    resetComposition(0);
     if (valueRef.current === "") return;
     pendingCaretRef.current = { start: 0, end: 0 };
     setValueRaw("");
-  }, [setValueRaw]);
+  }, [resetComposition, setValueRaw]);
 
   const press = useCallback(
     (rawKey: KeyDefinition) => {
@@ -337,16 +423,75 @@ export function useVirtualKeyboard(
           break;
       }
 
-      // Text actions. Character insertions route through the layout's composer.
-      // MVP ships the identity composer, which commits every key immediately, so
-      // only `committed` is consumed here. A future IME composer would also need
-      // `res.composing` rendered and `composer.flush()` called on structural
-      // keys (space/enter/blur) — that wiring lands with the first real composer.
-      let insertKey = resolved;
       const isCharInsert = resolved.type === "char" && !action;
+      const composer = currentLayoutRef.current.composer ?? identityComposer;
+      const useComposer = composer !== identityComposer;
+
+      // Backspace while composing deletes one jamo/unit from the pending block.
+      if (action === "backspace" && composingRef.current !== "") {
+        applyComposerBackspace();
+        emit();
+        if (mods.shift) setShift(false);
+        return;
+      }
+
+      // Character insertion through a real IME composer: the press splits into
+      // `committed` (frozen into value) + `composing` (shown underlined).
+      if (isCharInsert && useComposer) {
+        const prevState = composerStateRef.current;
+        const res = composer.input(prevState, resolved.effectiveValue);
+
+        // Anchor the composition in value-space.
+        let selStart: number;
+        let selEnd: number;
+        if (composingRef.current === "") {
+          const es = getEditState();
+          selStart = es.selectionStart;
+          selEnd = es.selectionEnd;
+        } else {
+          selStart = selEnd = composingStartRef.current;
+        }
+
+        const baseValue = valueRef.current;
+        const proposed = res.committed
+          ? baseValue.slice(0, selStart) + res.committed + baseValue.slice(selEnd)
+          : baseValue;
+        const opts = optionsRef.current;
+        // Enforce maxLength against the *displayed* length (committed value plus
+        // the pending block) so a composition can't overflow when it flushes.
+        const withinMax =
+          opts.maxLength == null ||
+          proposed.length + res.composing.length <= opts.maxLength;
+        const allowed =
+          !res.committed || !opts.keyFilter || opts.keyFilter(res.committed, proposed);
+        if (!withinMax || !allowed) {
+          // Rejected — undo the composer step so nothing (incl. Shift) burns.
+          composerStateRef.current = prevState;
+          emit();
+          return;
+        }
+        const nextValue = proposed;
+        const start = res.committed ? selStart + res.committed.length : selStart;
+
+        composerStateRef.current = res.next;
+        composingRef.current = res.composing;
+        composingStartRef.current = start;
+        const caret = start + res.composing.length;
+        pendingCaretRef.current = { start: caret, end: caret };
+        setComposing(res.composing);
+        if (nextValue !== valueRef.current) setValueRaw(nextValue);
+
+        emit();
+        if (mods.shift) setShift(false);
+        return;
+      }
+
+      // Everything else (identity char insert; space/enter/tab/clear; plain
+      // backspace): commit any pending composition first, then apply the key.
+      const base = composingRef.current !== "" ? mergeComposing() : getEditState();
+      let insertKey = resolved;
       if (isCharInsert) {
-        const composer = currentLayoutRef.current.composer ?? identityComposer;
-        const res = composer.input(
+        const res = identityComposer.input(
           composerStateRef.current,
           resolved.effectiveValue
         );
@@ -354,18 +499,20 @@ export function useVirtualKeyboard(
         insertKey = { ...resolved, effectiveValue: res.committed };
       }
 
-      const result = applyKey(
-        insertKey,
-        getEditState(),
-        mods,
-        optionsRef.current
-      );
+      const result = applyKey(insertKey, base, mods, optionsRef.current);
 
       if (result.submit) {
-        onEnterRef.current?.(valueRef.current);
+        // `result.value` reflects a just-flushed composition; `valueRef` may
+        // still hold the pre-flush value until the state update lands.
+        onEnterRef.current?.(result.value);
       }
       if (result.changed) {
+        composingStartRef.current = result.selectionStart;
         commit(result);
+      } else if (base.value !== valueRef.current) {
+        // The flush changed value even though the action itself was a no-op.
+        composingStartRef.current = base.selectionStart;
+        commit(base);
       }
       onKeyPressRef.current?.(rawKey, result.event);
 
@@ -373,7 +520,16 @@ export function useVirtualKeyboard(
       // key rejected by maxLength/keyFilter (or a no-op) must not burn it.
       if (mods.shift && (result.changed || result.submit)) setShift(false);
     },
-    [getEditState, commit, setLayout, toggleShift, toggleCapsLock, toggleLayer]
+    [
+      getEditState,
+      mergeComposing,
+      applyComposerBackspace,
+      commit,
+      setLayout,
+      toggleShift,
+      toggleCapsLock,
+      toggleLayer,
+    ]
   );
 
   // --- resolved layout to render --------------------------------------------
@@ -411,6 +567,7 @@ export function useVirtualKeyboard(
 
   return {
     value,
+    composing,
     layout,
     layoutNames,
     modifiers,

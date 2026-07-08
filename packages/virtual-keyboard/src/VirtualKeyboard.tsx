@@ -38,7 +38,7 @@ const DEFAULT_Z_INDEX = 1000;
 
 /** Per-part class overrides for {@link VirtualKeyboard}. */
 export type VirtualKeyboardClassNames = Partial<
-  Record<"root" | "row" | "key" | "keyActive", string>
+  Record<"root" | "row" | "key" | "keyActive" | "composing", string>
 >;
 
 /** Props for {@link VirtualKeyboard}. Extends every {@link UseVirtualKeyboardOptions}. */
@@ -375,6 +375,16 @@ export function VirtualKeyboard(props: VirtualKeyboardProps) {
       )}
       style={rootStyle}
     >
+      {kb.composing !== "" && (
+        <div
+          className={clsx(styles.composing, classNames?.composing)}
+          data-vk-composing=""
+          role="status"
+        >
+          <span className={styles.composingText}>{kb.composing}</span>
+        </div>
+      )}
+
       {kb.layout.rows.map((row, rowIndex) => (
         <Row
           key={rowIndex}

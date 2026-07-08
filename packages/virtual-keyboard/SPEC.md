@@ -499,9 +499,9 @@ Caret handling: in ref-bound mode the hook reads `selectionStart/End` from the t
 
 ### Phase 4 — Layout catalog & composition
 
-- [ ] Latin layout catalog: AZERTY, QWERTZ, Dvorak, Colemak.
-- [ ] Ship a concrete `Composer` (Hangul 두벌식) as a **separate** entry/export; docs.
-- [ ] Composing-text rendering (underline pending composition).
+- [x] Latin layout catalog: AZERTY, QWERTZ, Dvorak, Colemak.
+- [x] Ship a concrete `Composer` (Hangul 두벌식) as a **separate** entry/export; docs.
+- [x] Composing-text rendering (underline pending composition).
 
 ---
 

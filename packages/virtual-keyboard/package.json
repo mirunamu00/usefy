@@ -16,6 +16,11 @@
       "import": "./dist/headless.mjs",
       "require": "./dist/headless.js"
     },
+    "./hangul": {
+      "types": "./dist/hangul.d.ts",
+      "import": "./dist/hangul.mjs",
+      "require": "./dist/hangul.js"
+    },
     "./styles.css": "./dist/styles.css"
   },
   "files": [

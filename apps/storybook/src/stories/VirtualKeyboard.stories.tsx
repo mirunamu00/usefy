@@ -5,8 +5,13 @@ import {
   VirtualKeyboard,
   qwertyLayout,
   numericLayout,
+  azertyLayout,
+  qwertzLayout,
+  dvorakLayout,
+  colemakLayout,
   createLayout,
 } from "@usefy/virtual-keyboard";
+import { hangulLayout } from "@usefy/virtual-keyboard/hangul";
 import { storyTheme } from "../styles/storyTheme";
 
 // A small demo-only Arabic subset (story-local — the full RTL catalog is Phase 4).
@@ -136,6 +141,128 @@ function PinDemo() {
 }
 
 // ============================================================================
+// Demo — Latin layout catalog (QWERTY / AZERTY / QWERTZ / Dvorak / Colemak)
+// ============================================================================
+
+const LATIN_LAYOUTS = [
+  qwertyLayout,
+  azertyLayout,
+  qwertzLayout,
+  dvorakLayout,
+  colemakLayout,
+] as const;
+
+function LayoutCatalogDemo() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [value, setValue] = useState("");
+  const [active, setActive] = useState(0);
+  const layout = LATIN_LAYOUTS[active];
+
+  return (
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>Layout catalog</h2>
+      <p className={storyTheme.subtitle}>
+        Five Latin arrangements — the same 26 letters, rearranged. Pick one and
+        type; long-press a vowel (é, ü, …) for accent variants.
+      </p>
+
+      <div className="flex flex-wrap gap-2 mb-4" data-testid="layout-picker">
+        {LATIN_LAYOUTS.map((l, i) => (
+          <button
+            key={l.name}
+            type="button"
+            aria-pressed={i === active}
+            className={
+              i === active ? storyTheme.buttonPrimary : storyTheme.buttonSecondary
+            }
+            onClick={() => setActive(i)}
+          >
+            {l.label}
+          </button>
+        ))}
+      </div>
+
+      <input
+        ref={inputRef}
+        className={`${storyTheme.input} mb-4`}
+        placeholder="Type with the keyboard below…"
+        onChange={(e) => setValue(e.target.value)}
+        data-testid="catalog-input"
+      />
+
+      <VirtualKeyboard
+        inputRef={inputRef}
+        layouts={layout}
+        enableVariants
+        onChange={setValue}
+      />
+
+      <div className={`${storyTheme.statBox} mt-5`}>
+        <p className={storyTheme.statLabel}>
+          layout:{" "}
+          <span className={storyTheme.statValue} data-testid="catalog-layout">
+            {layout.name}
+          </span>
+        </p>
+        <p className={storyTheme.statLabel}>
+          value:{" "}
+          <span className={storyTheme.statValue} data-testid="catalog-value">
+            {value || "—"}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
+// Demo — Korean 두벌식 IME (composing text, underlined until committed)
+// ============================================================================
+
+function HangulDemo() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [value, setValue] = useState("");
+
+  return (
+    <div className={storyTheme.container}>
+      <h2 className={storyTheme.title}>Korean IME (두벌식)</h2>
+      <p className={storyTheme.subtitle}>
+        Jamo assemble into syllable blocks. The forming block shows{" "}
+        <u>underlined</u> above the keys and commits on the next block, Space, or
+        Enter — try <code>ㅇ ㅏ ㄴ ㄴ ㅕ ㅇ</code> → 안녕.
+      </p>
+
+      <label className={storyTheme.label} htmlFor="vk-hangul">
+        입력
+      </label>
+      <input
+        id="vk-hangul"
+        ref={inputRef}
+        className={`${storyTheme.input} mb-4`}
+        placeholder="키보드로 입력하세요…"
+        onChange={(e) => setValue(e.target.value)}
+        data-testid="hangul-input"
+      />
+
+      <VirtualKeyboard
+        inputRef={inputRef}
+        layouts={hangulLayout}
+        onChange={setValue}
+      />
+
+      <div className={`${storyTheme.statBox} mt-5`}>
+        <p className={storyTheme.statLabel}>
+          committed value:{" "}
+          <span className={storyTheme.statValue} data-testid="hangul-value">
+            {value || "—"}
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
+// ============================================================================
 // Meta
 // ============================================================================
 
@@ -150,9 +277,10 @@ const meta: Meta<typeof VirtualKeyboard> = {
 
 ## Features
 - **Three input modes** — event-emit, controlled/uncontrolled \`value\`, or ref-bound to a real \`<input>\` with caret tracking
-- **Declarative layouts** — QWERTY / numeric / phone / email built in, plus a \`createLayout\` API
+- **Declarative layouts** — QWERTY / AZERTY / QWERTZ / Dvorak / Colemak / numeric / phone / email built in, plus a \`createLayout\` API
 - **Modifiers** — one-shot Shift, sticky Caps Lock, and a symbol layer
 - **A11y** — \`role="group"\`, real \`<button>\` keys, \`aria-pressed\` modifiers, roving-tabindex arrow-key navigation, 44px targets
+- **IME composition** — opt-in Korean 두벌식 composer (\`@usefy/virtual-keyboard/hangul\`); the forming block renders underlined and \`value\` stays composition-free
 - **Themeable** — \`--usefy-vk-*\` CSS variables, light/dark, SSR-safe
 
 ## Basic Usage
@@ -283,6 +411,133 @@ function PinPad() {
     await waitFor(() =>
       expect(canvas.getByText(/Enter 4 more/)).toBeInTheDocument()
     );
+  },
+};
+
+export const LayoutCatalog: Story = {
+  render: () => <LayoutCatalogDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The built-in Latin catalog: **QWERTY**, **AZERTY** (French), **QWERTZ** (German), **Dvorak**, and **Colemak**. Each is a `KeyboardLayout` you pass straight to `layouts` — the same 26 letters rearranged, with a shared `?123` symbol layer and accent long-press variants.",
+      },
+      source: {
+        language: "tsx",
+        code: `import { useRef, useState } from "react";
+import {
+  VirtualKeyboard,
+  qwertyLayout,
+  azertyLayout,
+  qwertzLayout,
+  dvorakLayout,
+  colemakLayout,
+} from "@usefy/virtual-keyboard";
+
+const LAYOUTS = [
+  qwertyLayout,
+  azertyLayout,
+  qwertzLayout,
+  dvorakLayout,
+  colemakLayout,
+];
+
+function LayoutPicker() {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [active, setActive] = useState(0);
+
+  return (
+    <>
+      {LAYOUTS.map((l, i) => (
+        <button key={l.name} onClick={() => setActive(i)}>
+          {l.label}
+        </button>
+      ))}
+      <input ref={inputRef} />
+      <VirtualKeyboard inputRef={inputRef} layouts={LAYOUTS[active]} enableVariants />
+    </>
+  );
+}`,
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+
+    // Defaults to QWERTY — the top-left key is "q".
+    let group = canvas.getByRole("group", { name: "On-screen keyboard" });
+    await expect(within(group).getByRole("button", { name: "q" })).toBeVisible();
+
+    // Switch to AZERTY — the top-left letter becomes "a".
+    await userEvent.click(canvas.getByRole("button", { name: "AZERTY" }));
+    await waitFor(() =>
+      expect(canvas.getByTestId("catalog-layout")).toHaveTextContent("azerty")
+    );
+    group = canvas.getByRole("group", { name: "On-screen keyboard" });
+    await userEvent.click(within(group).getByRole("button", { name: "a" }));
+    await waitFor(() =>
+      expect(canvas.getByTestId("catalog-value")).toHaveTextContent("a")
+    );
+
+    // Switch to Dvorak — the home row leads with "a", "o", "e".
+    await userEvent.click(canvas.getByRole("button", { name: "Dvorak" }));
+    await waitFor(() =>
+      expect(canvas.getByTestId("catalog-layout")).toHaveTextContent("dvorak")
+    );
+    group = canvas.getByRole("group", { name: "On-screen keyboard" });
+    await expect(within(group).getByRole("button", { name: "o" })).toBeVisible();
+  },
+};
+
+export const KoreanIme: Story = {
+  render: () => <HangulDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The opt-in Korean **두벌식** IME from `@usefy/virtual-keyboard/hangul`. Jamo assemble into full syllable blocks — including compound vowels (ㅗ+ㅏ→ㅘ), compound finals (ㄱ+ㅅ→ㄳ), and final→initial migration (강+ㅏ → 가+…). The forming block renders underlined (`role=\"status\"`) and commits on the next block, Space, or Enter; `value`/`onChange` stay composition-free (read `composing` from the hook for the pending block).",
+      },
+      source: {
+        language: "tsx",
+        code: `import { useRef } from "react";
+import { VirtualKeyboard } from "@usefy/virtual-keyboard";
+import { hangulLayout } from "@usefy/virtual-keyboard/hangul";
+
+function KoreanInput() {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  return (
+    <>
+      <input ref={inputRef} placeholder="키보드로 입력하세요…" />
+      <VirtualKeyboard inputRef={inputRef} layouts={hangulLayout} />
+    </>
+  );
+}`,
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const group = canvas.getByRole("group");
+    const input = canvas.getByTestId("hangul-input") as HTMLInputElement;
+
+    // No composition preview until a jamo is pressed.
+    await expect(canvas.queryByRole("status")).not.toBeInTheDocument();
+
+    // ㅎ + ㅏ → the block "하" forms and shows underlined.
+    await userEvent.click(within(group).getByRole("button", { name: "ㅎ" }));
+    await userEvent.click(within(group).getByRole("button", { name: "ㅏ" }));
+    await waitFor(() =>
+      expect(canvas.getByRole("status")).toHaveTextContent("하")
+    );
+    await expect(input).toHaveValue("하");
+
+    // Space commits the block and dismisses the preview.
+    await userEvent.click(within(group).getByRole("button", { name: "Space" }));
+    await waitFor(() =>
+      expect(canvas.queryByRole("status")).not.toBeInTheDocument()
+    );
+    await expect(canvas.getByTestId("hangul-value")).toHaveTextContent("하");
   },
 };
 

@@ -6,6 +6,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { VirtualKeyboard, __resetDevWarnings } from "./VirtualKeyboard";
 import { numericLayout } from "./layouts/numeric";
 import { qwertyLayout } from "./layouts/qwerty";
+import { hangulLayout } from "./layouts/hangul";
 import { createLayout } from "./engine/createLayout";
 
 function BoundSearch({ onChange }: { onChange?: (v: string) => void }) {
@@ -1174,5 +1175,49 @@ describe("VirtualKeyboard — RTL", () => {
     // ArrowDown → same logical column, next row (unchanged by RTL).
     await user.keyboard("{ArrowDown}");
     expect(screen.getByRole("button", { name: "e" })).toHaveFocus();
+  });
+});
+
+describe("VirtualKeyboard — IME composition rendering", () => {
+  it("renders the pending Hangul block underlined and commits it", async () => {
+    const user = userEvent.setup();
+    const onChange = vi.fn();
+
+    function BoundHangul() {
+      const inputRef = useRef<HTMLInputElement>(null);
+      return (
+        <div>
+          <input ref={inputRef} aria-label="korean" defaultValue="" />
+          <VirtualKeyboard
+            inputRef={inputRef}
+            layouts={hangulLayout}
+            onChange={onChange}
+          />
+        </div>
+      );
+    }
+
+    render(<BoundHangul />);
+    const group = screen.getByRole("group");
+    const input = screen.getByLabelText("korean") as HTMLInputElement;
+
+    // No composition preview until a jamo is pressed.
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+
+    await user.click(within(group).getByRole("button", { name: "ㄱ" }));
+    await user.click(within(group).getByRole("button", { name: "ㅏ" }));
+
+    // The preview shows the forming block; the bound input mirrors it.
+    const preview = screen.getByRole("status");
+    expect(preview).toHaveTextContent("가");
+    expect(input.value).toBe("가");
+    // Not yet committed to the reported value.
+    expect(onChange).not.toHaveBeenCalledWith("가");
+
+    // Space flushes: the block commits and the preview disappears.
+    await user.click(within(group).getByRole("button", { name: "Space" }));
+    expect(screen.queryByRole("status")).not.toBeInTheDocument();
+    expect(input.value).toBe("가 ");
+    expect(onChange).toHaveBeenLastCalledWith("가 ");
   });
 });
