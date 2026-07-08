@@ -34,7 +34,7 @@
 </p>
 
 <p align="center">
-  <a href="https://mirunamu00.github.io/usefy/?path=/story/components-memorymonitor--overview" target="_blank" rel="noopener noreferrer">
+  <a href="https://mirunamu00.github.io/usefy/?path=/story/memory-monitor--overview" target="_blank" rel="noopener noreferrer">
     <strong>📚 View Storybook Demo</strong>
   </a>
 </p>
