@@ -328,6 +328,9 @@ Set the theme explicitly or follow the OS:
   id). Provide `triggerLabel` for an icon-only trigger.
 - **Escape** blurs the focused key; for `docked`/`floating` it also closes the
   keyboard and **returns focus to the trigger** (WAI-ARIA disclosure).
+- **Outside click** — a `docked`/`floating` panel also closes when a pointer
+  press lands outside it (the `trigger` and a bound `inputRef` are excluded).
+  Disable with `closeOnClickOutside={false}`.
 - **Accent-variants popup** — a `role="menu"` of `role="menuitem"` buttons
   (WAI-ARIA APG). Focus moves in on open; Arrow keys / Home / End navigate;
   Enter/Space select; Escape closes the popup only (the keyboard stays open);
@@ -347,7 +350,8 @@ Extends every [`useVirtualKeyboard` option](#usevirtualkeyboard-options), plus:
 | `variant` | `"inline" \| "docked" \| "floating"` | Placement: `inline` (in flow, always visible — default); `docked` (fixed full-width bar at the bottom of the viewport); `floating` (elevated floating panel above the bottom edge). |
 | `open` | `boolean` | Controlled open state for `docked`/`floating` (ignored by `inline`). |
 | `defaultOpen` | `boolean` | Uncontrolled initial open state. Defaults to closed when a `trigger` is present, otherwise open. |
-| `onOpenChange` | `(open: boolean) => void` | Fired when the open state changes (trigger click, Escape). |
+| `onOpenChange` | `(open: boolean) => void` | Fired when the open state changes (trigger click, Escape, outside click). |
+| `closeOnClickOutside` | `boolean` | Close `docked`/`floating` on a pointer press outside the panel. Defaults to `true` when a `trigger` is present, otherwise `false` (a trigger-less panel would have no way to reopen). The `trigger` and a bound `inputRef` are always excluded; `inline` ignores it. |
 | `trigger` | `ReactNode` | The "keyboard icon" affordance. Wrapped in an accessible toggle button; content must be **non-interactive**. |
 | `triggerLabel` | `string` | Accessible name for an icon-only `trigger` (visible text is preferred when present). |
 | `zIndex` | `number` | Stacking for the fixed `docked`/`floating` variants (default `1000`). |

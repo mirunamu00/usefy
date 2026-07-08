@@ -42,8 +42,11 @@ export const dvorakLayout = createLayout({
       ck("n", ")"),
       ck("s", "?"),
     ],
+    // Dvorak's bottom letter row has 9 keys; with Shift + Backspace that would be
+    // 11 keys — one more than the other layouts and wide enough to overflow the
+    // container. Backspace stays top-right (where it is expected) and Shift joins
+    // the mode keys on the bottom row, keeping every row at ≤ 10 keys.
     [
-      SHIFT_KEY,
       ck("q", "*"),
       ck("j", '"'),
       ck("k", ":"),
@@ -55,6 +58,6 @@ export const dvorakLayout = createLayout({
       ck("z", "~"),
       BACKSPACE_KEY,
     ],
-    [LAYER_KEY, SPACE_KEY, ENTER_KEY],
+    [SHIFT_KEY, LAYER_KEY, SPACE_KEY, ENTER_KEY],
   ],
 });

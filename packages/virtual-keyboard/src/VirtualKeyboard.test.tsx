@@ -269,6 +269,91 @@ describe("VirtualKeyboard — open/close (docked/floating)", () => {
     expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("closes on a pointer press outside the keyboard", async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <div data-testid="outside">outside</div>
+        <VirtualKeyboard
+          variant="floating"
+          trigger={<span>KB</span>}
+          layouts={numericLayout}
+        />
+      </div>
+    );
+    const trigger = screen.getByRole("button", { name: TRIGGER_NAME });
+    await user.click(trigger);
+    expect(screen.getByRole("group")).toBeInTheDocument();
+
+    // A click outside the panel (and off the trigger) dismisses it.
+    await user.click(screen.getByTestId("outside"));
+    expect(screen.queryByRole("group")).not.toBeInTheDocument();
+    expect(trigger).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("does not close when clicking a key or a bound input", async () => {
+    const user = userEvent.setup();
+    function Bound() {
+      const inputRef = useRef<HTMLInputElement>(null);
+      return (
+        <div>
+          <input ref={inputRef} aria-label="field" />
+          <VirtualKeyboard
+            variant="floating"
+            inputRef={inputRef}
+            trigger={<span>KB</span>}
+            layouts={numericLayout}
+          />
+        </div>
+      );
+    }
+    render(<Bound />);
+    await user.click(screen.getByRole("button", { name: TRIGGER_NAME }));
+    const group = screen.getByRole("group");
+
+    // Clicking a key stays open (inside the panel).
+    await user.click(within(group).getByRole("button", { name: "1" }));
+    expect(screen.getByRole("group")).toBeInTheDocument();
+
+    // Clicking the bound input stays open (excluded).
+    await user.click(screen.getByLabelText("field"));
+    expect(screen.getByRole("group")).toBeInTheDocument();
+  });
+
+  it("closeOnClickOutside={false} keeps the keyboard open on an outside press", async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <div data-testid="outside">outside</div>
+        <VirtualKeyboard
+          variant="floating"
+          closeOnClickOutside={false}
+          trigger={<span>KB</span>}
+          layouts={numericLayout}
+        />
+      </div>
+    );
+    await user.click(screen.getByRole("button", { name: TRIGGER_NAME }));
+    expect(screen.getByRole("group")).toBeInTheDocument();
+
+    await user.click(screen.getByTestId("outside"));
+    expect(screen.getByRole("group")).toBeInTheDocument();
+  });
+
+  it("a trigger-less panel is not dismissed by an outside press (would strand it)", async () => {
+    const user = userEvent.setup();
+    render(
+      <div>
+        <div data-testid="outside">outside</div>
+        {/* No trigger → defaults open, and outside-click dismissal defaults off. */}
+        <VirtualKeyboard variant="floating" layouts={numericLayout} />
+      </div>
+    );
+    expect(screen.getByRole("group")).toBeInTheDocument();
+    await user.click(screen.getByTestId("outside"));
+    expect(screen.getByRole("group")).toBeInTheDocument();
+  });
+
   it("has exactly one tabbable key after opening via the trigger (floating)", async () => {
     const user = userEvent.setup();
     render(

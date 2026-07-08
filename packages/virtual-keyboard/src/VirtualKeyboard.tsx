@@ -9,6 +9,7 @@ import React, {
 } from "react";
 import { clsx } from "clsx";
 import { useControllableState } from "@usefy/use-controllable-state";
+import { useOnClickOutside } from "@usefy/use-on-click-outside";
 import { useVirtualKeyboard } from "./useVirtualKeyboard";
 import { useRovingFocus } from "./hooks/useRovingFocus";
 import { useKeyFeedback } from "./hooks/useKeyFeedback";
@@ -86,8 +87,16 @@ export interface VirtualKeyboardProps extends UseVirtualKeyboardOptions {
    * when a {@link VirtualKeyboardProps.trigger} is provided, otherwise open.
    */
   defaultOpen?: boolean;
-  /** Called when the open state changes (trigger click, Escape). */
+  /** Called when the open state changes (trigger click, Escape, outside click). */
   onOpenChange?: (open: boolean) => void;
+  /**
+   * Close `docked`/`floating` when a pointer press lands outside the keyboard.
+   * The `trigger` (which toggles) and a bound `inputRef` are always excluded, so
+   * clicking either does not dismiss. Defaults to `true` **when a `trigger` is
+   * present** (otherwise `false`, so a trigger-less panel can't be dismissed with
+   * no way to reopen it); `inline` ignores it.
+   */
+  closeOnClickOutside?: boolean;
   /**
    * The "keyboard icon" affordance. When provided (with `docked`/`floating`), it
    * is wrapped in an accessible toggle button (`aria-expanded` + `aria-controls`)
@@ -225,6 +234,7 @@ export function VirtualKeyboard(props: VirtualKeyboardProps) {
     open,
     defaultOpen,
     onOpenChange,
+    closeOnClickOutside,
     trigger,
     triggerLabel,
     zIndex,
@@ -331,6 +341,19 @@ export function VirtualKeyboard(props: VirtualKeyboardProps) {
     closeOnEscape,
     isRtl
   );
+
+  // Dismiss a docked/floating panel on an outside pointer press. The trigger
+  // (which toggles) and a bound input are excluded so clicking either never
+  // closes the keyboard. Focus is left where the user clicked (unlike Escape,
+  // which returns focus to the trigger).
+  const boundInputRef = hookOptions.inputRef;
+  // Default on only when there's a trigger to reopen with — a trigger-less panel
+  // dismissed by an outside click would otherwise be stranded.
+  const dismissOnOutside = closeOnClickOutside ?? hasTrigger;
+  useOnClickOutside(containerRef, () => setOpen(false), {
+    enabled: !isInline && isOpen && dismissOnOutside,
+    excludeRefs: boundInputRef ? [triggerRef, boundInputRef] : [triggerRef],
+  });
 
   // Dev-only, once: warn that `open`/`defaultOpen` do nothing for inline.
   useEffect(() => {

@@ -554,7 +554,8 @@ function FloatingDemo() {
       <h2 className={storyTheme.title}>Floating variant</h2>
       <p className={storyTheme.subtitle}>
         Click the keyboard button to open a floating panel bound to the input.
-        Press <strong>Escape</strong> (while a key is focused) to close it.
+        Click anywhere outside it — or press <strong>Escape</strong> while a key
+        is focused — to close it.
       </p>
 
       <label className={storyTheme.label} htmlFor="vk-floating">
@@ -598,7 +599,7 @@ export const Floating: Story = {
     docs: {
       description: {
         story:
-          "A floating keyboard panel toggled by a `trigger` button. The trigger is an accessible control (`aria-expanded` + `aria-controls`); Escape closes the panel.",
+          "A floating keyboard panel toggled by a `trigger` button. The trigger is an accessible control (`aria-expanded` + `aria-controls`). Dismiss it by clicking outside the panel (the trigger and a bound `inputRef` are excluded) or with Escape while a key is focused; opt out with `closeOnClickOutside={false}`.",
       },
       source: {
         language: "tsx",
