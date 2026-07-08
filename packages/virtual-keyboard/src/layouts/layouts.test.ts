@@ -122,6 +122,18 @@ describe("built-in layouts", () => {
     expect(home).toBe("arstdhneio");
   });
 
+  it.each(LATIN_CATALOG)(
+    "%s keeps every row within 10 keys so it fits the container",
+    (_name, layout) => {
+      // Every Latin-catalog layout caps rows at 10 keys; a wider row overflows
+      // the container at typical widths (regression guard: Dvorak's bottom row
+      // once had 11 keys — Shift + 9 letters + Backspace).
+      for (const row of layout.rows) {
+        expect(row.length).toBeLessThanOrEqual(10);
+      }
+    }
+  );
+
   it("Latin layouts resolve number glyphs on the symbol layer", () => {
     for (const [, layout] of LATIN_CATALOG) {
       const layered = resolveLayout(layout, { ...NONE, layer: true });
