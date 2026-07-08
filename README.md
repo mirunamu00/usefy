@@ -338,11 +338,11 @@ Some packages may have additional peer dependencies (check individual package do
 | ------ | ----------- |
 | `VirtualKeyboard` | On-screen keyboard component (inline / docked / floating, with an optional trigger) bound to any input |
 | `useVirtualKeyboard` | Headless engine — modifier state, layout engine, caret-aware editing, prop-getters |
-| `qwertyLayout`, `numericLayout`, `phoneLayout`, `emailLayout` | Built-in data-driven layouts |
+| `qwertyLayout`, `azertyLayout`, `qwertzLayout`, `dvorakLayout`, `colemakLayout`, `numericLayout`, `phoneLayout`, `emailLayout` | Built-in data-driven layouts (5 Latin + numeric / phone / email) |
 | `createLayout`, `resolveLayout`, `randomizeLayout` | Author a custom layout / resolve one against modifiers / shuffle char-key positions (seedable) |
 | `identityComposer` | Default 1:1 composer (IME seam) |
 
-Also ships a `@usefy/virtual-keyboard/headless` entry (hook + engine + types, no CSS) and an opt-in `@usefy/virtual-keyboard/styles.css`.
+Also ships a `@usefy/virtual-keyboard/headless` entry (hook + engine + types, no CSS), an opt-in `@usefy/virtual-keyboard/hangul` entry (`hangulComposer` + `hangulLayout` — Korean 두벌식 IME), and an opt-in `@usefy/virtual-keyboard/styles.css`.
 
 ---
 

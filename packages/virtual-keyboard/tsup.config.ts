@@ -130,7 +130,7 @@ function scssModulesPlugin(srcDir: string): Plugin {
 }
 
 export default defineConfig({
-  entry: ["src/index.ts", "src/headless.ts"],
+  entry: ["src/index.ts", "src/headless.ts", "src/hangul.ts"],
   format: ["cjs", "esm"],
   dts: true,
   clean: true,

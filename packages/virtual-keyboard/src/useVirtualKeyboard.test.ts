@@ -4,6 +4,7 @@ import { act, renderHook } from "@testing-library/react";
 import { useVirtualKeyboard } from "./useVirtualKeyboard";
 import { numericLayout } from "./layouts/numeric";
 import { qwertyLayout } from "./layouts/qwerty";
+import { hangulLayout } from "./layouts/hangul";
 import { createLayout } from "./engine/createLayout";
 import type { KeyDefinition } from "./types";
 
@@ -336,5 +337,162 @@ describe("useVirtualKeyboard — prop getters", () => {
     const props = result.current.getKeyProps(shiftKey);
     expect(props["aria-pressed"]).toBe(true);
     expect(props.type).toBe("button");
+  });
+});
+
+describe("useVirtualKeyboard — composition (IME)", () => {
+  const JAMO = (key: string): KeyDefinition => ({ key, type: "char" });
+
+  it("identity layouts never expose composing text", () => {
+    const { result } = renderHook(() => useVirtualKeyboard());
+    act(() => result.current.press(CHAR("a")));
+    expect(result.current.value).toBe("a");
+    expect(result.current.composing).toBe("");
+  });
+
+  it("assembles jamo into a composing block, keeping value committed-only", () => {
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout })
+    );
+
+    act(() => result.current.press(JAMO("ㄱ")));
+    expect(result.current.composing).toBe("ㄱ");
+    expect(result.current.value).toBe("");
+
+    act(() => result.current.press(JAMO("ㅏ")));
+    expect(result.current.composing).toBe("가");
+    expect(result.current.value).toBe("");
+
+    act(() => result.current.press(JAMO("ㅁ")));
+    expect(result.current.composing).toBe("감");
+    expect(result.current.value).toBe("");
+  });
+
+  it("commits the previous block when a final migrates to a new syllable", () => {
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout, onChange: vi.fn() })
+    );
+    // 간 + ㅏ → commit 가, compose 나
+    ["ㄱ", "ㅏ", "ㄴ", "ㅏ"].forEach((j) =>
+      act(() => result.current.press(JAMO(j)))
+    );
+    expect(result.current.value).toBe("가");
+    expect(result.current.composing).toBe("나");
+  });
+
+  it("Space flushes the pending block into the value", () => {
+    const onChange = vi.fn();
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout, onChange })
+    );
+    ["ㄱ", "ㅏ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    expect(result.current.value).toBe("");
+
+    act(() => result.current.press(SPACE));
+    expect(result.current.value).toBe("가 ");
+    expect(result.current.composing).toBe("");
+    expect(onChange).toHaveBeenLastCalledWith("가 ");
+  });
+
+  it("Enter flushes the pending block and can submit", () => {
+    const onEnter = vi.fn();
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout, submitOnEnter: true, onEnter })
+    );
+    ["ㅎ", "ㅏ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    act(() => result.current.press(ENTER));
+    expect(result.current.value).toBe("하");
+    expect(result.current.composing).toBe("");
+    expect(onEnter).toHaveBeenCalledWith("하");
+  });
+
+  it("Backspace deletes one jamo from the composing block before the value", () => {
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout })
+    );
+    ["ㄱ", "ㅏ", "ㅁ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    expect(result.current.composing).toBe("감");
+
+    act(() => result.current.press(BACKSPACE));
+    expect(result.current.composing).toBe("가");
+    act(() => result.current.press(BACKSPACE));
+    expect(result.current.composing).toBe("ㄱ");
+    act(() => result.current.press(BACKSPACE));
+    expect(result.current.composing).toBe("");
+    expect(result.current.value).toBe("");
+  });
+
+  it("ref-bound: displays value + composing and pins the caret past it", () => {
+    const input = document.createElement("input");
+    document.body.appendChild(input);
+    const inputRef = { current: input };
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ inputRef, layouts: hangulLayout })
+    );
+
+    act(() => result.current.press(JAMO("ㄱ")));
+    expect(input.value).toBe("ㄱ");
+    act(() => result.current.press(JAMO("ㅏ")));
+    expect(input.value).toBe("가");
+    expect(input.selectionStart).toBe(1);
+
+    // ㄱㅏㅂㅅ → 값, then ㅣ migrates ㅅ: commit 갑, compose 시.
+    ["ㅂ", "ㅅ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    expect(input.value).toBe("값");
+    act(() => result.current.press(JAMO("ㅣ")));
+    expect(result.current.value).toBe("갑");
+    expect(input.value).toBe("갑시");
+    expect(input.selectionStart).toBe(2);
+
+    document.body.removeChild(input);
+  });
+
+  it("switching layouts flushes the pending composition", () => {
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: [hangulLayout, qwertyLayout] })
+    );
+    ["ㄱ", "ㅏ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    expect(result.current.composing).toBe("가");
+
+    act(() => result.current.setLayout("qwerty"));
+    expect(result.current.value).toBe("가");
+    expect(result.current.composing).toBe("");
+  });
+
+  it("clear() drops both the value and the pending composition", () => {
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout })
+    );
+    ["ㄱ", "ㅏ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    act(() => result.current.clear());
+    expect(result.current.value).toBe("");
+    expect(result.current.composing).toBe("");
+  });
+
+  it("respects maxLength across the value + pending composition", () => {
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout, maxLength: 1 })
+    );
+    // A block composes within the limit (displayed length 1).
+    ["ㄱ", "ㅏ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    expect(result.current.composing).toBe("가");
+    // Space would push the flushed value past maxLength=1, so it is rejected.
+    act(() => result.current.press(SPACE));
+    expect(result.current.value).toBe("가");
+    expect(result.current.composing).toBe("");
+  });
+
+  it("blocks starting a new composition once value is at maxLength", () => {
+    const { result } = renderHook(() =>
+      useVirtualKeyboard({ layouts: hangulLayout, maxLength: 1 })
+    );
+    // Commit a first block up to the limit (Space flush retains "가").
+    ["ㄱ", "ㅏ"].forEach((j) => act(() => result.current.press(JAMO(j))));
+    act(() => result.current.press(SPACE));
+    expect(result.current.value).toBe("가");
+    // Value is at maxLength=1, so a new jamo would overflow (1 + 1) → rejected.
+    act(() => result.current.press(JAMO("ㄴ")));
+    expect(result.current.value).toBe("가");
+    expect(result.current.composing).toBe("");
   });
 });

@@ -29,6 +29,11 @@ export { qwertyLayout } from "./layouts/qwerty";
 export { numericLayout } from "./layouts/numeric";
 export { phoneLayout } from "./layouts/phone";
 export { emailLayout } from "./layouts/email";
+export { azertyLayout } from "./layouts/azerty";
+export { qwertzLayout } from "./layouts/qwertz";
+export { dvorakLayout } from "./layouts/dvorak";
+export { colemakLayout } from "./layouts/colemak";
+export { LATIN_VARIANTS } from "./layouts/latin";
 
 // --- constants / helpers ---
 export {

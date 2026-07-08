@@ -28,7 +28,9 @@
   <a href="#installation">Installation</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#input-modes">Input Modes</a> •
+  <a href="#built-in-layouts">Built-in Layouts</a> •
   <a href="#custom-layouts">Custom Layouts</a> •
+  <a href="#korean--ime-composition">IME Composition</a> •
   <a href="#theming">Theming</a> •
   <a href="#accessibility">Accessibility</a> •
   <a href="#api">API</a>
@@ -60,14 +62,14 @@ scenarios. The styled `VirtualKeyboard` component sits on top of the headless
 ### Features
 
 - **Three input modes** — event-emit (BYO input), controlled/uncontrolled `value`, or **ref-bound** to a real `<input>`/`<textarea>` with caret & selection tracking.
-- **Declarative layout engine** — layouts are data (`rows` of key definitions). Built-ins: **QWERTY, numeric, phone, email**, plus a first-class `createLayout` API.
+- **Declarative layout engine** — layouts are data (`rows` of key definitions). Built-ins: **QWERTY, AZERTY, QWERTZ, Dvorak, Colemak, numeric, phone, email**, plus a first-class `createLayout` API.
 - **Modifiers** — one-shot **Shift**, sticky **Caps Lock**, and a **symbol layer**.
 - **Gestures** — inline / docked / floating placement with an optional trigger, long-press **accent variants**, Backspace **auto-repeat**, and a per-mount **randomized** secure PIN pad.
 - **Enterprise a11y** — `role="group"`, real `<button>` keys with accessible names, `aria-pressed` on active modifiers, **roving-tabindex arrow-key navigation** (mirrored under RTL), `Escape` to blur/close, 44×44px targets.
 - **Themeable & RTL** — `--usefy-vk-*` CSS variables, light/dark, responsive, and `direction: "rtl"` layouts render mirrored; styles are injected at import (no CSS import required).
 - **Optional feedback** — opt-in `sound` (synthesized Web Audio click, no asset) and `haptics` (`navigator.vibrate`).
 - **SSR-safe** — no `window`/`document` at import; renders inertly on the server.
-- **Composition-ready** — a pluggable `Composer` seam (default 1:1) so future IME layouts drop in without an API break.
+- **IME composition** — a pluggable `Composer` seam with a ready-made Korean **두벌식** composer (`@usefy/virtual-keyboard/hangul`): jamo assemble into syllable blocks, the pending block renders underlined, and `value` stays composition-free.
 
 ---
 
@@ -181,6 +183,30 @@ function CustomKeyboard() {
 
 ---
 
+## Built-in Layouts
+
+Import any built-in layout and pass it straight to `layouts`:
+
+| Layout | Import | Notes |
+| --- | --- | --- |
+| QWERTY | `qwertyLayout` | US-QWERTY with a `?123` symbol layer + accent variants. |
+| AZERTY | `azertyLayout` | French — `A`/`Z` on the top row, `M` on the home row. |
+| QWERTZ | `qwertzLayout` | German — `Y`/`Z` swapped, umlaut + ß variants. |
+| Dvorak | `dvorakLayout` | Ergonomic — `aoeuidhtns` home row. |
+| Colemak | `colemakLayout` | Ergonomic — `arstdhneio` home row, QWERTY bottom row. |
+| Numeric | `numericLayout` | 3×3 + zero PIN pad with Clear. |
+| Phone | `phoneLayout` | Dial pad with `*`, `#`, `+`. |
+| Email | `emailLayout` | QWERTY with `@` and `.com` convenience keys. |
+
+The five Latin layouts share the same 26 letters, `?123` symbol layer, and
+long-press accent variants — only the key arrangement differs.
+
+```tsx
+import { VirtualKeyboard, azertyLayout } from "@usefy/virtual-keyboard";
+
+<VirtualKeyboard layouts={azertyLayout} enableVariants />;
+```
+
 ## Custom Layouts
 
 A layout is just data. Bare strings are expanded into character keys; full key
@@ -214,6 +240,43 @@ the `setLayout` action:
 ```tsx
 <VirtualKeyboard layouts={[qwertyLayout, numericLayout]} defaultLayout="qwerty" />
 ```
+
+---
+
+## Korean & IME Composition
+
+For scripts that assemble characters from smaller units (an **IME**), a layout can
+carry a `Composer`. The opt-in subpath `@usefy/virtual-keyboard/hangul` ships a
+ready-made Korean **두벌식 (dubeolsik)** composer and its layout — import it only
+when you need it (it is tree-shakeable and adds no CSS):
+
+```tsx
+import { VirtualKeyboard } from "@usefy/virtual-keyboard";
+import { hangulLayout } from "@usefy/virtual-keyboard/hangul";
+
+<VirtualKeyboard layouts={hangulLayout} />;
+```
+
+Jamo assemble into full syllable blocks — including compound vowels (ㅗ+ㅏ→ㅘ),
+compound finals (ㄱ+ㅅ→ㄳ), and final→initial migration (강+ㅏ → 가+…). The
+**in-progress block renders underlined** and commits on the next block, Space,
+Enter, or a layout switch; Backspace deletes one jamo at a time. Throughout,
+`value`/`onChange` report **committed text only** — read `composing` from the
+hook for the pending block:
+
+```tsx
+import { useVirtualKeyboard } from "@usefy/virtual-keyboard";
+import { hangulComposer } from "@usefy/virtual-keyboard/hangul";
+
+// Attach the composer to any custom layout, or drive it directly:
+const kb = useVirtualKeyboard({ layouts: hangulLayout });
+kb.value;     // committed text, e.g. "안녕"
+kb.composing; // the block still forming, e.g. "하"
+```
+
+Any layout can supply its own `composer` (implement `input`/`flush`/`reset`, plus
+an optional `backspace` for composition-aware deletion) — Hangul is just the
+built-in one.
 
 ---
 
@@ -323,16 +386,21 @@ Extends every [`useVirtualKeyboard` option](#usevirtualkeyboard-options), plus:
 
 ### `useVirtualKeyboard` returns
 
-`value`, `layout`, `layoutNames`, `modifiers`, and the stable actions
+`value` (committed text), `composing` (the pending IME block, empty without a
+`Composer`), `layout`, `layoutNames`, `modifiers`, and the stable actions
 `press`, `insert`, `backspace`, `clear`, `setValue`, `setLayout`, `toggleShift`,
 `toggleCapsLock`, plus prop-getters `getKeyboardProps`, `getRowProps`,
 `getKeyProps`.
 
-Also exported: `qwertyLayout`, `numericLayout`, `phoneLayout`, `emailLayout`,
-`createLayout`, `resolveLayout`, `randomizeLayout`, `identityComposer`, and all
-types. `randomizeLayout(layout, rng?)` is a pure, seedable Fisher–Yates shuffle
+Also exported: `qwertyLayout`, `azertyLayout`, `qwertzLayout`, `dvorakLayout`,
+`colemakLayout`, `numericLayout`, `phoneLayout`, `emailLayout`, `LATIN_VARIANTS`
+(the shared accent map), `createLayout`, `resolveLayout`, `randomizeLayout`,
+`identityComposer`, and all types. `randomizeLayout(layout, rng?)` is a pure, seedable Fisher–Yates shuffle
 of a layout's char-key positions — inject an RNG for a deterministic /
 reproducible pad.
+
+The opt-in **`@usefy/virtual-keyboard/hangul`** subpath adds `hangulComposer` and
+`hangulLayout` (Korean 두벌식) — see [IME Composition](#korean--ime-composition).
 
 ---
 

@@ -143,8 +143,14 @@ export interface KeyboardModifiers {
 export interface Composer {
   /** Apply a key to the current composing buffer. */
   input(state: ComposerState, key: string): ComposerResult;
-  /** Flush any pending composition (e.g. on space/enter/blur). */
+  /** Flush any pending composition (e.g. on space/enter). */
   flush(state: ComposerState): ComposerResult;
+  /**
+   * Delete the last unit of the pending composition (e.g. drop one jamo from a
+   * Hangul block). Optional — when absent, Backspace on active composition falls
+   * back to clearing the whole composing buffer. Commits nothing.
+   */
+  backspace?(state: ComposerState): ComposerResult;
   /** Produce a fresh, empty composer state. */
   reset(): ComposerState;
 }
@@ -208,8 +214,15 @@ export interface UseVirtualKeyboardOptions {
 
 /** Return value of {@link useVirtualKeyboard}. */
 export interface UseVirtualKeyboardReturn {
-  /** Current string value (controlled or internal). */
+  /** Current committed string value (controlled or internal; composition-free). */
   value: string;
+  /**
+   * The in-progress IME composition — the block being assembled but not yet
+   * committed to {@link UseVirtualKeyboardReturn.value} (e.g. a forming Hangul
+   * syllable). Empty unless the active layout has a {@link Composer}. Render it
+   * appended to `value` (underlined) to show the pending composition.
+   */
+  composing: string;
   /** Current resolved layout to render. */
   layout: ResolvedLayout;
   /** All registered layout names. */

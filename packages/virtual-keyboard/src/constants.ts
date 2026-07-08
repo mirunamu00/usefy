@@ -9,6 +9,10 @@ export const LAYOUT_NAMES = {
   numeric: "numeric",
   phone: "phone",
   email: "email",
+  azerty: "azerty",
+  qwertz: "qwertz",
+  dvorak: "dvorak",
+  colemak: "colemak",
 } as const;
 
 /** Actions that toggle a modifier (and therefore expose `aria-pressed`). */
