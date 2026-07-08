@@ -1,5 +1,24 @@
 # @usefy/virtual-keyboard
 
+## 0.24.0
+
+### Minor Changes
+
+- 71982f3: Add Korean **두벌식 (dubeolsik) IME composition** and composing-text rendering.
+
+  - New opt-in subpath `@usefy/virtual-keyboard/hangul` exporting `hangulComposer` (a full 한글 오토마타 — jamo assembly, compound vowels/finals, and final→initial migration) and `hangulLayout` (the 두벌식 layout, pre-wired with the composer). Tree-shakeable and style-free; the main entry is unchanged if you don't import it.
+  - `useVirtualKeyboard` now exposes `composing` (the in-progress block, committed-free) and drives any layout's `composer`: character presses split into committed + composing, structural keys (Space/Enter/layout-switch) and `clear()` flush the pending block, and Backspace deletes one jamo at a time. `value`/`onChange` stay composition-free.
+  - `VirtualKeyboard` renders the pending composition as an underlined `role="status"` preview while composing.
+  - `Composer` gains an optional `backspace(state)` method for composition-aware deletion (non-breaking; `identityComposer` is unaffected).
+
+- 71982f3: Add the Latin layout catalog: **AZERTY** (French), **QWERTZ** (German), **Dvorak**, and **Colemak** built-in layouts (`azertyLayout`, `qwertzLayout`, `dvorakLayout`, `colemakLayout`), plus a shared `LATIN_VARIANTS` accent map. Each ships the same 26 letters, `?123` symbol layer, and long-press accent variants as `qwertyLayout` — only the key arrangement differs.
+
+### Patch Changes
+
+- @usefy/use-controllable-state@0.24.0
+- @usefy/use-long-press@0.24.0
+- @usefy/use-on-click-outside@0.24.0
+
 ## 0.23.0
 
 ### Minor Changes

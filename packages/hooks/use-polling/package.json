@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-polling",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "A React hook to poll an async function on an interval — non-overlapping self-scheduling ticks, pause/resume, an enabled gate, and exponential backoff",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
