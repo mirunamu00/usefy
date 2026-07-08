@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useKeyPress } from "./useKeyPress";
@@ -8,6 +9,7 @@ import {
   createMatcher,
   isEditableElement,
   isApplePlatform,
+  isKeyPressSupported,
   resolveTarget,
 } from "./utils";
 import type { ParsedShortcut } from "./types";
@@ -517,6 +519,164 @@ describe("useKeyPress", () => {
       unmount();
       expect(removeSpy).toHaveBeenCalledWith("keydown", expect.any(Function));
       expect(removeSpy).toHaveBeenCalledWith("keyup", expect.any(Function));
+    });
+  });
+
+  // ============ Utils: isKeyPressSupported ============
+  describe("isKeyPressSupported", () => {
+    it("returns true in a jsdom (browser-like) environment", () => {
+      expect(isKeyPressSupported()).toBe(true);
+    });
+  });
+
+  // ============ Hook: stopPropagation ============
+  describe("stopPropagation", () => {
+    it("stops propagation on a match", () => {
+      const spy = vi.spyOn(KeyboardEvent.prototype, "stopPropagation");
+      renderHook(() => useKeyPress("ctrl+s", { stopPropagation: true }));
+      fireKey("keydown", { key: "s", ctrlKey: true });
+      expect(spy).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not stop propagation on a non-match", () => {
+      const spy = vi.spyOn(KeyboardEvent.prototype, "stopPropagation");
+      renderHook(() => useKeyPress("ctrl+s", { stopPropagation: true }));
+      fireKey("keydown", { key: "x", ctrlKey: true });
+      expect(spy).not.toHaveBeenCalled();
+    });
+  });
+
+  // ============ Hook: unrelated modifier release (regression) ============
+  describe("unrelated modifier release", () => {
+    it("does not clear a held bare key when an unrelated modifier is released", () => {
+      const { result } = renderHook(() => useKeyPress("a"));
+
+      // Hold a bare "a" (no modifiers were part of the trigger).
+      fireKey("keydown", { key: "a" });
+      expect(result.current).toBe(true);
+
+      // Releasing Shift/Control/Alt/Meta must NOT end the held bare key.
+      fireKey("keyup", { key: "Shift" });
+      expect(result.current).toBe(true);
+      fireKey("keyup", { key: "Control" });
+      expect(result.current).toBe(true);
+      fireKey("keyup", { key: "Alt" });
+      expect(result.current).toBe(true);
+      fireKey("keyup", { key: "Meta" });
+      expect(result.current).toBe(true);
+
+      // The primary key still ends the press.
+      fireKey("keyup", { key: "a" });
+      expect(result.current).toBe(false);
+    });
+
+    it("still releases when a modifier that WAS part of the trigger is lifted", () => {
+      const { result } = renderHook(() =>
+        useKeyPress("ctrl+s", { exactModifiers: false })
+      );
+
+      // Trigger held with both Ctrl and Shift down.
+      fireKey("keydown", { key: "s", ctrlKey: true, shiftKey: true });
+      expect(result.current).toBe(true);
+
+      // Shift was part of the held trigger snapshot, so releasing it ends it.
+      fireKey("keyup", { key: "Shift" });
+      expect(result.current).toBe(false);
+    });
+  });
+
+  // ============ Hook: onRelease across eventType modes ============
+  describe("onRelease across eventType modes", () => {
+    it("fires onRelease on keyup in 'both' mode", () => {
+      const onRelease = vi.fn();
+      renderHook(() => useKeyPress("a", { eventType: "both", onRelease }));
+
+      fireKey("keydown", { key: "a" });
+      expect(onRelease).not.toHaveBeenCalled();
+      fireKey("keyup", { key: "a" });
+      expect(onRelease).toHaveBeenCalledTimes(1);
+    });
+
+    it("never fires onRelease in 'keydown' mode (no keyup listener)", () => {
+      const onRelease = vi.fn();
+      const { result } = renderHook(() =>
+        useKeyPress("a", { eventType: "keydown", onRelease })
+      );
+
+      fireKey("keydown", { key: "a" });
+      expect(result.current).toBe(true);
+      fireKey("keyup", { key: "a" });
+      expect(onRelease).not.toHaveBeenCalled();
+    });
+
+    it("fires onRelease on the matching keyup in 'keyup' mode", () => {
+      const onRelease = vi.fn();
+      renderHook(() => useKeyPress("a", { eventType: "keyup", onRelease }));
+
+      fireKey("keydown", { key: "a" });
+      expect(onRelease).not.toHaveBeenCalled();
+      fireKey("keyup", { key: "a" });
+      expect(onRelease).toHaveBeenCalledTimes(1);
+      expect(onRelease.mock.calls[0][0]).toBeInstanceOf(KeyboardEvent);
+    });
+  });
+
+  // ============ Hook: blur fires onRelease (regression) ============
+  describe("blur onRelease pairing", () => {
+    it("fires onRelease with a synthetic keyup when focus is lost while held", () => {
+      const onPress = vi.fn();
+      const onRelease = vi.fn();
+      const { result } = renderHook(() =>
+        useKeyPress("a", { onPress, onRelease })
+      );
+
+      fireKey("keydown", { key: "a" });
+      expect(onPress).toHaveBeenCalledTimes(1);
+      expect(result.current).toBe(true);
+
+      act(() => {
+        window.dispatchEvent(new Event("blur"));
+      });
+
+      expect(result.current).toBe(false);
+      // onPress/onRelease stay balanced even though no real keyup arrived.
+      expect(onRelease).toHaveBeenCalledTimes(1);
+      expect(onRelease.mock.calls[0][0]).toBeInstanceOf(KeyboardEvent);
+      expect(onRelease.mock.calls[0][0].type).toBe("keyup");
+    });
+
+    it("does not fire onRelease on blur when nothing was held", () => {
+      const onRelease = vi.fn();
+      renderHook(() => useKeyPress("a", { onRelease }));
+
+      act(() => {
+        window.dispatchEvent(new Event("blur"));
+      });
+      expect(onRelease).not.toHaveBeenCalled();
+    });
+  });
+
+  // ============ Hook: StrictMode safety ============
+  describe("StrictMode", () => {
+    it("tracks presses and uses the latest callback under StrictMode", () => {
+      const first = vi.fn();
+      const second = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ cb }) => useKeyPress("a", { onPress: cb }),
+        { initialProps: { cb: first }, wrapper: StrictMode }
+      );
+
+      fireKey("keydown", { key: "a" });
+      expect(result.current).toBe(true);
+      expect(first).toHaveBeenCalledTimes(1);
+      fireKey("keyup", { key: "a" });
+      expect(result.current).toBe(false);
+
+      // A config-only change must not re-attach listeners or lose the latest cb.
+      rerender({ cb: second });
+      fireKey("keydown", { key: "a" });
+      expect(second).toHaveBeenCalledTimes(1);
+      expect(first).toHaveBeenCalledTimes(1);
     });
   });
 });

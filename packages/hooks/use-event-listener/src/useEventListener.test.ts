@@ -1,6 +1,11 @@
+import { StrictMode } from "react";
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { useEventListener } from "./useEventListener";
+import {
+  useEventListener,
+  getTargetElement,
+  isRefObject,
+} from "./useEventListener";
 
 describe("useEventListener", () => {
   let addEventListenerSpy: ReturnType<typeof vi.spyOn>;
@@ -1187,6 +1192,164 @@ describe("useEventListener", () => {
       expect(handler).toHaveBeenCalledTimes(1);
 
       document.body.removeChild(img);
+    });
+  });
+
+  // Regression: a RefObject whose `.current` populates AFTER the first render
+  // (conditional / late mount) must still get a listener. Depending on the ref
+  // object's (stable) identity would never re-run the effect, so the listener
+  // would silently never attach. Depending on the resolved element fixes it.
+  describe("late-mounted ref target", () => {
+    it("attaches the listener when a ref populates after the initial render", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const elementAddSpy = vi.spyOn(element, "addEventListener");
+      const handler = vi.fn();
+      const ref: { current: HTMLDivElement | null } = { current: null };
+
+      const { rerender } = renderHook(() =>
+        useEventListener("click", handler, ref)
+      );
+
+      // Ref is empty on the first render -> nothing attached yet.
+      expect(elementAddSpy).not.toHaveBeenCalled();
+
+      // The element mounts, the ref populates, and the component re-renders.
+      ref.current = element;
+      rerender();
+
+      expect(elementAddSpy).toHaveBeenCalledWith(
+        "click",
+        expect.any(Function),
+        expect.any(Object)
+      );
+
+      element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(element);
+    });
+
+    it("re-subscribes when a ref target changes to a different element", () => {
+      const first = document.createElement("div");
+      const second = document.createElement("div");
+      document.body.appendChild(first);
+      document.body.appendChild(second);
+      const firstRemoveSpy = vi.spyOn(first, "removeEventListener");
+      const secondAddSpy = vi.spyOn(second, "addEventListener");
+      const handler = vi.fn();
+      const ref: { current: HTMLDivElement | null } = { current: first };
+
+      const { rerender } = renderHook(() =>
+        useEventListener("click", handler, ref)
+      );
+
+      // Point the ref at a different element (e.g. after a remount) and re-render.
+      ref.current = second;
+      rerender();
+
+      // Old element's listener is torn down; new element gets one.
+      expect(firstRemoveSpy).toHaveBeenCalledTimes(1);
+      expect(secondAddSpy).toHaveBeenCalledTimes(1);
+
+      first.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      expect(handler).not.toHaveBeenCalled();
+
+      second.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      expect(handler).toHaveBeenCalledTimes(1);
+
+      document.body.removeChild(first);
+      document.body.removeChild(second);
+    });
+
+    it("removes the listener when a populated ref target clears to null", () => {
+      const element = document.createElement("div");
+      document.body.appendChild(element);
+      const removeSpy = vi.spyOn(element, "removeEventListener");
+      const handler = vi.fn();
+      const ref: { current: HTMLDivElement | null } = { current: element };
+
+      const { rerender } = renderHook(() =>
+        useEventListener("click", handler, ref)
+      );
+
+      ref.current = null;
+      rerender();
+
+      expect(removeSpy).toHaveBeenCalledTimes(1);
+
+      element.dispatchEvent(new MouseEvent("click", { bubbles: true }));
+      expect(handler).not.toHaveBeenCalled();
+
+      document.body.removeChild(element);
+    });
+  });
+
+  // The latest handler is synced in a layout effect (not during render), so it
+  // must stay correct through StrictMode's mount/unmount/mount double-invoke
+  // without leaking listeners.
+  describe("StrictMode / concurrent safety", () => {
+    it("invokes the latest handler and attaches exactly once under StrictMode", () => {
+      const handler1 = vi.fn();
+      const handler2 = vi.fn();
+
+      const { rerender } = renderHook(
+        ({ handler }) => useEventListener("resize", handler),
+        { initialProps: { handler: handler1 }, wrapper: StrictMode }
+      );
+
+      rerender({ handler: handler2 });
+
+      window.dispatchEvent(new Event("resize"));
+
+      expect(handler1).not.toHaveBeenCalled();
+      expect(handler2).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not leak listeners after unmount under StrictMode", () => {
+      const handler = vi.fn();
+
+      const { unmount } = renderHook(() => useEventListener("resize", handler), {
+        wrapper: StrictMode,
+      });
+
+      unmount();
+
+      window.dispatchEvent(new Event("resize"));
+
+      expect(handler).not.toHaveBeenCalled();
+    });
+  });
+
+  // SSR / no-window branch. getTargetElement is the SSR-safety boundary: with no
+  // `window` it must resolve the default (undefined) target to null so the hook
+  // attaches nothing on the server.
+  describe("SSR / no-window environment", () => {
+    it("getTargetElement returns null when window is undefined and no target given", () => {
+      vi.stubGlobal("window", undefined);
+      try {
+        expect(getTargetElement(undefined)).toBeNull();
+      } finally {
+        vi.unstubAllGlobals();
+      }
+    });
+
+    it("getTargetElement resolves targets in a browser environment", () => {
+      const element = document.createElement("div");
+      const ref = { current: element };
+
+      expect(getTargetElement(undefined)).toBe(window);
+      expect(getTargetElement(null)).toBeNull();
+      expect(getTargetElement(element)).toBe(element);
+      expect(getTargetElement(ref)).toBe(element);
+      expect(getTargetElement({ current: null })).toBeNull();
+    });
+
+    it("isRefObject distinguishes RefObjects from raw targets", () => {
+      expect(isRefObject({ current: null })).toBe(true);
+      expect(isRefObject(document.createElement("div"))).toBe(false);
+      expect(isRefObject(null)).toBe(false);
+      expect(isRefObject(undefined)).toBe(false);
     });
   });
 });

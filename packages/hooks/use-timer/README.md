@@ -56,7 +56,8 @@
 - **Loop Mode** — Automatically restart the timer when it completes
 - **TypeScript First** — Full type safety with comprehensive type definitions
 - **Zero Dependencies** — Pure React implementation
-- **Well Tested** — 123 tests with comprehensive coverage
+- **StrictMode Safe** — Works correctly under React StrictMode, including `autoStart`
+- **Well Tested** — 127 tests with comprehensive coverage
 
 ---
 
@@ -126,7 +127,7 @@ A hook that manages countdown timer state with comprehensive controls.
 
 | Option       | Type                          | Default   | Description                                      |
 | ------------ | ----------------------------- | --------- | ------------------------------------------------ |
-| `interval`   | `number`                      | `1`       | Update interval in milliseconds                  |
+| `interval`   | `number`                      | `1`       | Update interval in ms. Coarse formats re-render at most once per second, so prefer a larger value (e.g. `250`) for them and reserve `1` for millisecond-precision formats. |
 | `format`     | `TimeFormat \| TimeFormatter` | `"MM:SS"` | Time display format or custom formatter function |
 | `autoStart`  | `boolean`                     | `false`   | Start timer automatically on mount               |
 | `loop`       | `boolean`                     | `false`   | Restart timer automatically when it completes    |
@@ -454,11 +455,11 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Files
 
-- `useTimer.test.ts` — 67 tests for hook behavior
+- `useTimer.test.ts` — 71 tests for hook behavior
 - `formatUtils.test.ts` — 24 tests for time formatting
 - `timeUtils.test.ts` — 32 tests for time utilities
 
-**Total: 123 tests**
+**Total: 127 tests**
 
 ---
 

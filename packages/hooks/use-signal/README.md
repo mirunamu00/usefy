@@ -179,15 +179,15 @@ interface SignalOptions {
 
 ```typescript
 interface SignalInfo<T = unknown> {
-  name: string; // Signal name
-  subscriberCount: number; // Active subscribers
-  timestamp: number; // Last emit timestamp
-  emitCount: number; // Total emit count
-  data: T | undefined; // Data passed with last emit
+  readonly name: string; // Signal name
+  readonly subscriberCount: number; // Active subscribers
+  readonly timestamp: number; // Last emit timestamp
+  readonly emitCount: number; // Total emit count
+  readonly data: T | undefined; // Data passed with last emit
 }
 ```
 
-> **Note:** `info` is a stable reference (ref-based) that doesn't trigger re-renders. Use `signal` in dependency arrays to react to changes, and access the latest `info.data` inside `useEffect`.
+> **Note:** `info` is a stable object whose fields are **read-on-render snapshots, not reactive state**. Reading a field (including `info.subscriberCount`) does _not_ subscribe the component to changes in that value — it only reflects new data on renders that happen for another reason (e.g. after `signal` changes). In particular, `info.subscriberCount` will look stale if you bind it to UI (like a badge or button label) in a component that isn't itself re-rendering when other subscribers mount/unmount. Drive live UI from the `signal` version, and read the latest `info.data` inside a `useEffect` keyed on `signal`.
 
 ---
 
@@ -200,13 +200,9 @@ import { useSignal } from "@usefy/use-signal";
 import { useEffect, useState } from "react";
 
 function RefreshButton() {
-  const { emit, info } = useSignal("dashboard-refresh");
+  const { emit } = useSignal("dashboard-refresh");
 
-  return (
-    <button onClick={emit}>
-      Refresh All ({info.subscriberCount} widgets)
-    </button>
-  );
+  return <button onClick={emit}>Refresh All</button>;
 }
 
 function SalesChart() {
@@ -384,7 +380,9 @@ function SmartEmitter() {
   const { emit, info } = useSignal("notification");
 
   const handleClick = () => {
-    // Only emit if there are subscribers
+    // Reading info in an event handler is the correct pattern: it samples the
+    // current value at click time. (Don't rely on info.subscriberCount in JSX
+    // for a live count — it won't re-render on its own; see the API note.)
     if (info.subscriberCount > 0) {
       emit();
     } else {
@@ -392,11 +390,7 @@ function SmartEmitter() {
     }
   };
 
-  return (
-    <button onClick={handleClick}>
-      Notify ({info.subscriberCount} listeners)
-    </button>
-  );
+  return <button onClick={handleClick}>Notify</button>;
 }
 ```
 
@@ -508,7 +502,7 @@ useEffect(() => {
 
 ## Testing
 
-This package maintains comprehensive test coverage to ensure reliability and stability.
+This package maintains **98%+ test coverage** (51 tests) to ensure reliability and stability, including StrictMode double-invoke, store eviction, SSR, and debounce edge cases.
 
 ### Test Categories
 
@@ -569,6 +563,33 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 - Emit function stability
 - Info object stability
 - Values update with stable reference
+- Changing `onEmit` identity does not resubscribe
+
+</details>
+
+<details>
+<summary><strong>StrictMode & SSR Tests</strong></summary>
+
+- `emitOnMount` fires exactly once under `React.StrictMode`
+- No double-subscription under StrictMode
+- Server snapshot renders `0` without touching the store
+
+</details>
+
+<details>
+<summary><strong>Store Eviction Tests</strong></summary>
+
+- Entry is evicted once the last subscriber unmounts
+- Version / emitCount reset for a fresh mount of the same name
+- Entry survives while at least one subscriber remains
+
+</details>
+
+<details>
+<summary><strong>Edge Case Tests</strong></summary>
+
+- Dynamic `enabled` toggle subscribes / unsubscribes correctly
+- Pending debounced emit is cancelled when `name` changes mid-flight
 
 </details>
 

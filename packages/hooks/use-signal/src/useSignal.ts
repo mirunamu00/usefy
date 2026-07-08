@@ -16,19 +16,29 @@ import {
 } from "./store";
 
 /**
- * Signal metadata object for debugging and monitoring
+ * Signal metadata object for debugging and monitoring.
+ *
+ * @remarks
+ * `info` is a stable object whose fields are backed by getters that read the
+ * store **on access**. The values are therefore render-time snapshots, not
+ * reactive state — reading `info.subscriberCount` (or any other field) does
+ * **not** subscribe the component to changes in that value. A field only
+ * reflects new data on renders that happen for another reason (e.g. after the
+ * `signal` version changes). Do not bind UI that must update live (such as a
+ * subscriber count badge) to these fields expecting them to re-render on their
+ * own; drive such UI from the `signal` version instead.
  */
 export interface SignalInfo<T = unknown> {
   /** Signal subscription name */
-  name: string;
-  /** Current number of active subscribers */
-  subscriberCount: number;
+  readonly name: string;
+  /** Current number of active subscribers (read-on-access, not reactive) */
+  readonly subscriberCount: number;
   /** Timestamp of last emit (Date.now()) */
-  timestamp: number;
+  readonly timestamp: number;
   /** Total number of times this signal has been emitted */
-  emitCount: number;
+  readonly emitCount: number;
   /** Data passed with the last emit */
-  data: T | undefined;
+  readonly data: T | undefined;
 }
 
 /**
@@ -237,18 +247,28 @@ export function useSignal<T = unknown>(
     };
   }, [baseEmit, debounce]);
 
-  // Cleanup debounce timer on unmount
+  // Cancel any pending debounced emit when the timing or the target channel
+  // changes (and on unmount). Keying on [name, debounce] ensures a timer
+  // scheduled for a previous `name` never fires against the new channel — it is
+  // cleared before the debounced `emit` closure is recreated for the new name.
   useEffect(() => {
     return () => {
       if (debounceTimerRef.current) {
         clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+        pendingDataRef.current = undefined;
       }
     };
-  }, []);
+  }, [name, debounce]);
 
-  // Emit on mount if option is set
+  // Emit on mount if option is set.
+  // Guarded by a ref so React 18/19 StrictMode's mount → unmount → remount
+  // double-invoke fires the mount emit exactly once (the ref persists across
+  // the remount of the same component instance).
+  const didEmitOnMountRef = useRef(false);
   useEffect(() => {
-    if (emitOnMount) {
+    if (emitOnMount && !didEmitOnMountRef.current) {
+      didEmitOnMountRef.current = true;
       baseEmit();
     }
   }, [emitOnMount, baseEmit]);

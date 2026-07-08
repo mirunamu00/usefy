@@ -920,8 +920,8 @@ function Example() {
     // Mount again
     await userEvent.click(canvas.getByTestId("toggle-visibility-button"));
 
-    // Disable cleanup - this triggers the previous cleanup due to effect re-run
-    // (enabled is in the dependency array, so changing it calls the old cleanup)
+    // Disable cleanup while the component is still mounted. Because useUnmount
+    // only fires on real unmount, toggling `enabled` must NOT run the callback.
     await userEvent.click(canvas.getByTestId("toggle-enabled-button"));
 
     await waitFor(() => {
@@ -930,21 +930,21 @@ function Example() {
       );
     });
 
-    // Count is now 2 because changing enabled from true->false
-    // triggers the previous effect's cleanup function
+    // Count stays at 1 - flipping `enabled` off does not fire the callback.
     await waitFor(() => {
       expect(canvas.getByTestId("conditional-unmount-count")).toHaveTextContent(
-        "2"
+        "1"
       );
     });
 
-    // Unmount with cleanup disabled - no additional cleanup should run
+    // Unmount with cleanup disabled - the callback is skipped because the
+    // latest `enabled` value at unmount time is false.
     await userEvent.click(canvas.getByTestId("toggle-visibility-button"));
 
-    // Count should still be 2 (no new cleanup was registered when enabled=false)
+    // Count should still be 1 (unmount was skipped while disabled).
     await waitFor(() => {
       expect(canvas.getByTestId("conditional-unmount-count")).toHaveTextContent(
-        "2"
+        "1"
       );
     });
   },

@@ -1,14 +1,13 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import {
   isResizeObserverSupported,
+  isDevicePixelContentBoxSupported,
   toResizeEntry,
   extractSize,
   createInitialResizeEntry,
   createNoopRef,
   validateOptions,
   hasSizeChanged,
-  debounceFunction,
-  throttleFunction,
 } from "./utils";
 import { createMockResizeEntry } from "../vitest.setup";
 
@@ -405,146 +404,45 @@ describe("utils", () => {
     });
   });
 
-  // ============ debounceFunction ============
-  describe("debounceFunction", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
+  // ============ isDevicePixelContentBoxSupported ============
+  describe("isDevicePixelContentBoxSupported", () => {
+    it("should return true when observe accepts the device-pixel-content-box mode", () => {
+      // Regression: the previous implementation read a flag set inside the
+      // observer callback (which fires asynchronously) and could therefore
+      // never return true. The synchronous probe returns true when observe
+      // does not throw.
+      expect(isDevicePixelContentBoxSupported()).toBe(true);
     });
 
-    afterEach(() => {
-      vi.useRealTimers();
+    it("should return false when ResizeObserver is unavailable", () => {
+      const originalRO = window.ResizeObserver;
+      // @ts-expect-error - intentionally removing ResizeObserver
+      delete window.ResizeObserver;
+
+      const result = isDevicePixelContentBoxSupported();
+
+      window.ResizeObserver = originalRO;
+      expect(result).toBe(false);
     });
 
-    it("should debounce function calls", () => {
-      const fn = vi.fn();
-      const { debouncedFn } = debounceFunction(fn, 100);
+    it("should return false when observe throws for the box mode", () => {
+      const originalRO = window.ResizeObserver;
 
-      debouncedFn();
-      debouncedFn();
-      debouncedFn();
+      class ThrowingResizeObserver {
+        constructor(_cb: ResizeObserverCallback) {}
+        observe(): void {
+          throw new TypeError("device-pixel-content-box not supported");
+        }
+        unobserve(): void {}
+        disconnect(): void {}
+      }
 
-      expect(fn).not.toHaveBeenCalled();
+      vi.stubGlobal("ResizeObserver", ThrowingResizeObserver);
 
-      vi.advanceTimersByTime(100);
+      const result = isDevicePixelContentBoxSupported();
 
-      expect(fn).toHaveBeenCalledTimes(1);
-    });
-
-    it("should reset timer on each call", () => {
-      const fn = vi.fn();
-      const { debouncedFn } = debounceFunction(fn, 100);
-
-      debouncedFn();
-      vi.advanceTimersByTime(50);
-      debouncedFn();
-      vi.advanceTimersByTime(50);
-      debouncedFn();
-      vi.advanceTimersByTime(50);
-
-      expect(fn).not.toHaveBeenCalled();
-
-      vi.advanceTimersByTime(50);
-
-      expect(fn).toHaveBeenCalledTimes(1);
-    });
-
-    it("should cancel pending call", () => {
-      const fn = vi.fn();
-      const { debouncedFn, cancel } = debounceFunction(fn, 100);
-
-      debouncedFn();
-      cancel();
-
-      vi.advanceTimersByTime(100);
-
-      expect(fn).not.toHaveBeenCalled();
-    });
-
-    it("should pass arguments to function", () => {
-      const fn = vi.fn();
-      const { debouncedFn } = debounceFunction(fn, 100);
-
-      debouncedFn("arg1", "arg2");
-
-      vi.advanceTimersByTime(100);
-
-      expect(fn).toHaveBeenCalledWith("arg1", "arg2");
-    });
-  });
-
-  // ============ throttleFunction ============
-  describe("throttleFunction", () => {
-    beforeEach(() => {
-      vi.useFakeTimers();
-    });
-
-    afterEach(() => {
-      vi.useRealTimers();
-    });
-
-    it("should call immediately on first invocation", () => {
-      const fn = vi.fn();
-      const { throttledFn } = throttleFunction(fn, 100);
-
-      throttledFn();
-
-      expect(fn).toHaveBeenCalledTimes(1);
-    });
-
-    it("should throttle subsequent calls", () => {
-      const fn = vi.fn();
-      const { throttledFn } = throttleFunction(fn, 100);
-
-      throttledFn();
-      throttledFn();
-      throttledFn();
-
-      expect(fn).toHaveBeenCalledTimes(1);
-
-      vi.advanceTimersByTime(100);
-
-      expect(fn).toHaveBeenCalledTimes(2); // Trailing call
-    });
-
-    it("should allow call after interval", () => {
-      const fn = vi.fn();
-      const { throttledFn } = throttleFunction(fn, 100);
-
-      throttledFn();
-      expect(fn).toHaveBeenCalledTimes(1);
-
-      vi.advanceTimersByTime(100);
-
-      throttledFn();
-      expect(fn).toHaveBeenCalledTimes(2);
-    });
-
-    it("should cancel pending call", () => {
-      const fn = vi.fn();
-      const { throttledFn, cancel } = throttleFunction(fn, 100);
-
-      throttledFn();
-      throttledFn(); // This schedules a trailing call
-      cancel();
-
-      vi.advanceTimersByTime(100);
-
-      expect(fn).toHaveBeenCalledTimes(1); // Only the first immediate call
-    });
-
-    it("should pass latest arguments to trailing call", () => {
-      const fn = vi.fn();
-      const { throttledFn } = throttleFunction(fn, 100);
-
-      throttledFn("first");
-      throttledFn("second");
-      throttledFn("third");
-
-      expect(fn).toHaveBeenCalledWith("first");
-
-      vi.advanceTimersByTime(100);
-
-      expect(fn).toHaveBeenLastCalledWith("third");
+      vi.stubGlobal("ResizeObserver", originalRO);
+      expect(result).toBe(false);
     });
   });
 });

@@ -49,14 +49,16 @@ export interface UseInitResult {
 }
 
 /**
- * Type for cleanup function returned by init callback
+ * A function returned by an init callback that releases whatever the
+ * initialization set up. Invoked on unmount and before re-initialization.
  */
-type CleanupFn = () => void;
+export type CleanupFn = () => void;
 
 /**
- * Type for init callback function
+ * The initialization callback passed to {@link useInit}. It may be synchronous
+ * or asynchronous and may optionally return a {@link CleanupFn}.
  */
-type InitCallback = () => void | CleanupFn | Promise<void | CleanupFn>;
+export type InitCallback = () => void | CleanupFn | Promise<void | CleanupFn>;
 
 /**
  * Custom error for timeout
@@ -123,7 +125,10 @@ export function useInit(
     error: Error | null;
   }>({
     isInitialized: false,
-    isInitializing: false,
+    // Seed as pending when initialization is going to run, so the first commit
+    // does not flash "not started" before the effect flips it to initializing.
+    // `when` is a deterministic prop, so this stays SSR-safe.
+    isInitializing: when,
     error: null,
   });
 
@@ -133,8 +138,36 @@ export function useInit(
   const mountedRef = useRef(true);
   const initializingRef = useRef(false);
 
-  // Always update callback ref to latest version
-  callbackRef.current = callback;
+  // Latest-value refs so `runInit` / `reinitialize` can stay identity-stable
+  // (empty dependency arrays) while still reading the current props.
+  const whenRef = useRef(when);
+  const retryRef = useRef(retry);
+  const retryDelayRef = useRef(retryDelay);
+  const timeoutRef = useRef(timeout);
+
+  // Concurrent-safe latest-ref pattern: mutate refs in an effect, never during
+  // render. Runs on every commit so the values are always current.
+  useEffect(() => {
+    callbackRef.current = callback;
+    whenRef.current = when;
+    retryRef.current = retry;
+    retryDelayRef.current = retryDelay;
+    timeoutRef.current = timeout;
+  });
+
+  // Invoke the stored cleanup exactly once, swallowing any error so a throwing
+  // cleanup can never wedge the hook or crash an unmount.
+  const runCleanup = useCallback(() => {
+    const cleanup = cleanupRef.current;
+    cleanupRef.current = null;
+    if (cleanup) {
+      try {
+        cleanup();
+      } catch {
+        // Intentionally swallow: a failed cleanup must not brick the hook.
+      }
+    }
+  }, []);
 
   const runInit = useCallback(async () => {
     // Prevent concurrent initializations
@@ -144,141 +177,174 @@ export function useInit(
 
     initializingRef.current = true;
 
-    // Clean up previous initialization if any
-    if (cleanupRef.current) {
-      cleanupRef.current();
-      cleanupRef.current = null;
-    }
+    try {
+      // Clean up previous initialization if any
+      runCleanup();
 
-    setState({
-      isInitialized: false,
-      isInitializing: true,
-      error: null,
-    });
+      setState({
+        isInitialized: false,
+        isInitializing: true,
+        error: null,
+      });
 
-    let lastError: Error | null = null;
-    const maxAttempts = retry + 1;
+      const retryCount = retryRef.current;
+      const delay = retryDelayRef.current;
+      const timeoutMs = timeoutRef.current;
 
-    for (let attempt = 0; attempt < maxAttempts; attempt++) {
-      if (!mountedRef.current) {
-        initializingRef.current = false;
-        return;
-      }
+      let lastError: Error | null = null;
+      const maxAttempts = retryCount + 1;
 
-      try {
-        let result: void | CleanupFn;
+      for (let attempt = 0; attempt < maxAttempts; attempt++) {
+        if (!mountedRef.current) {
+          return;
+        }
 
-        if (timeout !== undefined) {
-          // Race between callback and timeout
-          let timeoutId: ReturnType<typeof setTimeout> | undefined;
-          const timeoutPromise = new Promise<never>((_, reject) => {
-            timeoutId = setTimeout(() => {
-              reject(new InitTimeoutError(timeout));
-            }, timeout);
-          });
+        try {
+          let result: void | CleanupFn;
 
-          const callbackResult = callbackRef.current();
+          if (timeoutMs !== undefined) {
+            // Race between callback and timeout
+            let timeoutId: ReturnType<typeof setTimeout> | undefined;
+            const timeoutPromise = new Promise<never>((_, reject) => {
+              timeoutId = setTimeout(() => {
+                reject(new InitTimeoutError(timeoutMs));
+              }, timeoutMs);
+            });
 
-          if (callbackResult instanceof Promise) {
-            try {
-              result = await Promise.race([callbackResult, timeoutPromise]);
-            } finally {
+            const callbackResult = callbackRef.current();
+
+            if (callbackResult instanceof Promise) {
+              // If the callback loses the race but later resolves with a
+              // cleanup function, that resource would otherwise be orphaned.
+              // Release it as soon as it arrives.
+              let abandoned = false;
+              callbackResult
+                .then((late) => {
+                  if (abandoned && typeof late === "function") {
+                    try {
+                      (late as CleanupFn)();
+                    } catch {
+                      // Swallow: best-effort release of an orphaned resource.
+                    }
+                  }
+                })
+                .catch(() => {
+                  // Swallow: the abandoned callback's own rejection is moot.
+                });
+
+              try {
+                result = await Promise.race([callbackResult, timeoutPromise]);
+              } catch (raceErr) {
+                abandoned = true;
+                throw raceErr;
+              } finally {
+                if (timeoutId !== undefined) {
+                  clearTimeout(timeoutId);
+                }
+              }
+            } else {
               if (timeoutId !== undefined) {
                 clearTimeout(timeoutId);
               }
+              result = callbackResult;
             }
           } else {
-            if (timeoutId !== undefined) {
-              clearTimeout(timeoutId);
+            const callbackResult = callbackRef.current();
+            if (callbackResult instanceof Promise) {
+              result = await callbackResult;
+            } else {
+              result = callbackResult;
             }
-            result = callbackResult;
           }
-        } else {
-          const callbackResult = callbackRef.current();
-          if (callbackResult instanceof Promise) {
-            result = await callbackResult;
-          } else {
-            result = callbackResult;
+
+          // Store cleanup function if returned
+          if (typeof result === "function") {
+            if (mountedRef.current) {
+              cleanupRef.current = result as CleanupFn;
+            } else {
+              // Unmounted before completion: release immediately so the
+              // resource is not leaked (the unmount cleanup already ran).
+              try {
+                (result as CleanupFn)();
+              } catch {
+                // Swallow: best-effort release.
+              }
+            }
           }
-        }
 
-        // Store cleanup function if returned
-        if (typeof result === "function") {
-          cleanupRef.current = result;
-        }
+          if (mountedRef.current) {
+            hasInitializedRef.current = true;
+            setState({
+              isInitialized: true,
+              isInitializing: false,
+              error: null,
+            });
+          }
 
-        if (mountedRef.current) {
-          hasInitializedRef.current = true;
-          setState({
-            isInitialized: true,
-            isInitializing: false,
-            error: null,
-          });
-        }
+          return;
+        } catch (err) {
+          lastError = err instanceof Error ? err : new Error(String(err));
 
-        initializingRef.current = false;
-        return;
-      } catch (err) {
-        lastError = err instanceof Error ? err : new Error(String(err));
-
-        // If not the last attempt and still mounted, wait before retrying
-        if (attempt < maxAttempts - 1 && mountedRef.current) {
-          await new Promise((resolve) => setTimeout(resolve, retryDelay));
+          // If not the last attempt and still mounted, wait before retrying
+          if (attempt < maxAttempts - 1 && mountedRef.current) {
+            await new Promise((resolve) => setTimeout(resolve, delay));
+          }
         }
       }
-    }
 
-    // All attempts failed
-    if (mountedRef.current) {
-      setState({
-        isInitialized: false,
-        isInitializing: false,
-        error: lastError,
-      });
+      // All attempts failed
+      if (mountedRef.current) {
+        setState({
+          isInitialized: false,
+          isInitializing: false,
+          error: lastError,
+        });
+      }
+    } finally {
+      // Always release the concurrency latch, even if a cleanup or callback
+      // threw synchronously, so the hook can never get permanently wedged.
+      initializingRef.current = false;
     }
-
-    initializingRef.current = false;
-  }, [retry, retryDelay, timeout]);
+  }, [runCleanup]);
 
   const reinitialize = useCallback(() => {
-    if (!when) {
+    if (!whenRef.current) {
       return;
     }
     runInit();
-  }, [when, runInit]);
+  }, [runInit]);
 
-  // Track when condition changes from false to true
+  // `when` at the previous effect setup. Used to tell a genuine `when`
+  // transition apart from a StrictMode-style teardown/re-setup with the same
+  // `when` value.
   const prevWhenRef = useRef(when);
-  const hasRunOnceRef = useRef(false);
 
   useEffect(() => {
     mountedRef.current = true;
 
-    // Run initialization if:
-    // 1. `when` is true AND
-    // 2. Never successfully initialized AND
-    // 3. Either first run OR `when` just changed from false to true
-    const whenJustBecameTrue = !prevWhenRef.current && when;
+    // Run initialization if `when` is true AND either:
+    // 1. We have never successfully initialized (first run / `when` first
+    //    becomes true), OR
+    // 2. This is a teardown/re-setup at the same `when` value (StrictMode's
+    //    double-invoke, or any remount of this effect) — the previous cleanup
+    //    tore the initialization down, so we must re-establish it. Because the
+    //    effect only re-runs on a `when` change (runInit is identity-stable), an
+    //    unchanged `when` at setup means the resource was just cleaned up and
+    //    needs to be re-created, not a true→false→true intent change.
     const shouldInit =
-      when &&
-      !hasInitializedRef.current &&
-      (!hasRunOnceRef.current || whenJustBecameTrue);
+      when && (!hasInitializedRef.current || prevWhenRef.current === when);
 
     prevWhenRef.current = when;
 
     if (shouldInit) {
-      hasRunOnceRef.current = true;
       runInit();
     }
 
     return () => {
       mountedRef.current = false;
-      if (cleanupRef.current) {
-        cleanupRef.current();
-        cleanupRef.current = null;
-      }
+      runCleanup();
     };
-  }, [when, runInit]);
+  }, [when, runInit, runCleanup]);
 
   return {
     isInitialized: state.isInitialized,

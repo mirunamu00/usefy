@@ -539,6 +539,48 @@ describe("useResizeObserver", () => {
       expect(onResize).toHaveBeenCalledTimes(2);
     });
 
+    it("should deliver the latest dimensions on the trailing edge", () => {
+      // Regression: previously the trailing setTimeout closed over the entries
+      // captured when it was scheduled (the first sub-threshold resize), so the
+      // final dimensions of a burst were dropped.
+      const onResize = vi.fn();
+      const { result } = renderHook(() =>
+        useResizeObserver({ throttle: 100, onResize })
+      );
+
+      act(() => {
+        result.current.ref(targetElement);
+      });
+
+      // Leading edge fires immediately with the first size.
+      act(() => {
+        simulateResize(targetElement, { width: 100, height: 100 });
+      });
+      expect(result.current.width).toBe(100);
+
+      // Two more resizes within the interval — only a trailing call is scheduled.
+      act(() => {
+        simulateResize(targetElement, { width: 150, height: 150 });
+        simulateResize(targetElement, { width: 200, height: 200 });
+      });
+
+      // Still throttled: state not yet updated to the latest size.
+      expect(result.current.width).toBe(100);
+
+      // Trailing edge must commit the MOST RECENT dimensions (200), not 150.
+      act(() => {
+        vi.advanceTimersByTime(100);
+      });
+
+      expect(result.current.width).toBe(200);
+      expect(result.current.height).toBe(200);
+      expect(onResize).toHaveBeenLastCalledWith(
+        expect.objectContaining({
+          contentRect: expect.objectContaining({ width: 200, height: 200 }),
+        })
+      );
+    });
+
     it("should cleanup throttle timeout on unmount", () => {
       const onResize = vi.fn();
       const { result, unmount } = renderHook(() =>
@@ -981,6 +1023,57 @@ describe("useResizeObserver", () => {
     });
   });
 
+  // ============ Reference Stability & Callback Re-subscription ============
+  describe("reference stability", () => {
+    it("should keep observe/unobserve/disconnect referentially stable across renders", () => {
+      const { result, rerender } = renderHook(() => useResizeObserver());
+
+      const observeBefore = result.current.observe;
+      const unobserveBefore = result.current.unobserve;
+      const disconnectBefore = result.current.disconnect;
+
+      rerender();
+
+      expect(result.current.observe).toBe(observeBefore);
+      expect(result.current.unobserve).toBe(unobserveBefore);
+      expect(result.current.disconnect).toBe(disconnectBefore);
+    });
+
+    it("should invoke the latest onResize without re-subscribing the observer", () => {
+      const onResizeA = vi.fn();
+      const onResizeB = vi.fn();
+
+      const { result, rerender } = renderHook(
+        ({ onResize }) => useResizeObserver({ onResize }),
+        { initialProps: { onResize: onResizeA } }
+      );
+
+      act(() => {
+        result.current.ref(targetElement);
+      });
+
+      const observerCountAfterMount = mockObserverInstances.length;
+
+      // Swap the callback and resize — the NEW callback must fire.
+      rerender({ onResize: onResizeB });
+
+      act(() => {
+        simulateResize(targetElement, { width: 200, height: 150 });
+      });
+
+      expect(onResizeA).not.toHaveBeenCalled();
+      expect(onResizeB).toHaveBeenCalledTimes(1);
+      expect(onResizeB).toHaveBeenCalledWith(
+        expect.objectContaining({
+          contentRect: expect.objectContaining({ width: 200, height: 150 }),
+        })
+      );
+
+      // The observer must not have been torn down and recreated.
+      expect(mockObserverInstances.length).toBe(observerCountAfterMount);
+    });
+  });
+
   // ============ Edge Cases ============
   describe("edge cases", () => {
     it("should handle elements with zero dimensions", () => {
@@ -1090,6 +1183,69 @@ describe("useResizeObserver", () => {
       expect(typeof result.current.ref).toBe("function");
       expect(() => result.current.ref(targetElement)).not.toThrow();
       expect(() => result.current.ref(null)).not.toThrow();
+    });
+
+    describe("unsupported environment", () => {
+      let originalRO: typeof window.ResizeObserver;
+
+      beforeEach(() => {
+        originalRO = window.ResizeObserver;
+        // Remove the API entirely so isResizeObserverSupported() returns false
+        // and the hook takes its graceful-degradation branch.
+        // @ts-expect-error - intentionally removing ResizeObserver
+        delete window.ResizeObserver;
+      });
+
+      afterEach(() => {
+        window.ResizeObserver = originalRO;
+      });
+
+      it("should report isSupported as false", () => {
+        const { result } = renderHook(() => useResizeObserver());
+        expect(result.current.isSupported).toBe(false);
+        expect(result.current.isObserving).toBe(false);
+      });
+
+      it("should fall back to initial dimensions and initial entry", () => {
+        const { result } = renderHook(() =>
+          useResizeObserver({ initialWidth: 42, initialHeight: 24 })
+        );
+
+        expect(result.current.width).toBe(42);
+        expect(result.current.height).toBe(24);
+        expect(result.current.entry).toBeDefined();
+        expect(result.current.entry?.contentRect.width).toBe(42);
+        expect(result.current.entry?.contentRect.height).toBe(24);
+      });
+
+      it("should expose ref/observe/unobserve/disconnect as no-ops that don't throw", () => {
+        const { result } = renderHook(() => useResizeObserver());
+
+        expect(() => result.current.ref(targetElement)).not.toThrow();
+        expect(() => result.current.ref(null)).not.toThrow();
+        expect(() => result.current.observe(targetElement)).not.toThrow();
+        expect(() => result.current.unobserve(targetElement)).not.toThrow();
+        expect(() => result.current.disconnect()).not.toThrow();
+
+        // No observer is ever created in the unsupported branch.
+        expect(mockObserverInstances.length).toBe(0);
+      });
+
+      it("should return stable function identities across renders", () => {
+        const { result, rerender } = renderHook(() => useResizeObserver());
+
+        const refBefore = result.current.ref;
+        const observeBefore = result.current.observe;
+        const unobserveBefore = result.current.unobserve;
+        const disconnectBefore = result.current.disconnect;
+
+        rerender();
+
+        expect(result.current.ref).toBe(refBefore);
+        expect(result.current.observe).toBe(observeBefore);
+        expect(result.current.unobserve).toBe(unobserveBefore);
+        expect(result.current.disconnect).toBe(disconnectBefore);
+      });
     });
   });
 

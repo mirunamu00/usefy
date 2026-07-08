@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
+import { StrictMode } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { useInit } from "./useInit";
 
@@ -106,6 +107,28 @@ describe("useInit", () => {
 
       unmount();
 
+      expect(cleanup).toHaveBeenCalledTimes(1);
+    });
+
+    it("should release a cleanup that arrives after unmount (async)", async () => {
+      const cleanup = vi.fn();
+      const callback = vi.fn(
+        () =>
+          new Promise<() => void>((resolve) => {
+            setTimeout(() => resolve(cleanup), 1000);
+          })
+      );
+
+      const { unmount } = renderHook(() => useInit(callback));
+
+      // Unmount before the async callback resolves with its cleanup.
+      unmount();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1000);
+      });
+
+      // The cleanup must still be invoked so the resource is not leaked.
       expect(cleanup).toHaveBeenCalledTimes(1);
     });
 
@@ -578,6 +601,255 @@ describe("useInit", () => {
 
       expect(callback).toHaveBeenCalledTimes(2);
       expect(result.current.isInitialized).toBe(true);
+    });
+  });
+
+  describe("StrictMode", () => {
+    it("keeps a sync cleanup subscription active after a StrictMode double-mount", async () => {
+      let subscribeCount = 0;
+      let unsubscribeCount = 0;
+      const callback = vi.fn(() => {
+        subscribeCount++;
+        return () => {
+          unsubscribeCount++;
+        };
+      });
+
+      renderHook(() => useInit(callback), { wrapper: StrictMode });
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      // Under StrictMode the effect is set up, torn down, then set up again.
+      // The subscription must be re-established, i.e. still net-active.
+      expect(subscribeCount - unsubscribeCount).toBe(1);
+    });
+
+    it("does not double-invoke an async callback under StrictMode", async () => {
+      const callback = vi.fn(
+        () => new Promise<void>((resolve) => setTimeout(resolve, 50))
+      );
+
+      const { result } = renderHook(() => useInit(callback), {
+        wrapper: StrictMode,
+      });
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      // The concurrency guard collapses the double-invoke into one run.
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(result.current.isInitialized).toBe(true);
+    });
+  });
+
+  describe("throwing cleanup", () => {
+    it("does not wedge the hook when the cleanup throws on reinitialize", async () => {
+      const cleanup = vi.fn(() => {
+        throw new Error("cleanup boom");
+      });
+      const callback = vi.fn(() => cleanup);
+
+      const { result } = renderHook(() => useInit(callback));
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      expect(result.current.isInitialized).toBe(true);
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      // The previous cleanup throws while re-initializing; the hook must
+      // recover and still run the callback again.
+      await act(async () => {
+        result.current.reinitialize();
+        await vi.runAllTimersAsync();
+      });
+
+      expect(cleanup).toHaveBeenCalled();
+      expect(callback).toHaveBeenCalledTimes(2);
+      expect(result.current.isInitialized).toBe(true);
+      expect(result.current.error).toBeNull();
+    });
+
+    it("does not throw on unmount when the cleanup throws", async () => {
+      const cleanup = vi.fn(() => {
+        throw new Error("cleanup boom");
+      });
+      const callback = vi.fn(() => cleanup);
+
+      const { result, unmount } = renderHook(() => useInit(callback));
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      expect(result.current.isInitialized).toBe(true);
+      expect(() => unmount()).not.toThrow();
+      expect(cleanup).toHaveBeenCalled();
+    });
+  });
+
+  describe("concurrent initialization", () => {
+    it("ignores reinitialize calls while an init is already in progress", async () => {
+      const callback = vi.fn(
+        () => new Promise<void>((resolve) => setTimeout(resolve, 100))
+      );
+
+      const { result } = renderHook(() => useInit(callback));
+
+      // Mount kicks off the first (still-pending) init; extra reinitialize
+      // calls must be dropped by the concurrency guard.
+      await act(async () => {
+        result.current.reinitialize();
+        result.current.reinitialize();
+      });
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(result.current.isInitialized).toBe(true);
+    });
+  });
+
+  describe("latest callback", () => {
+    it("invokes the latest callback on reinitialize after the prop changes", async () => {
+      const first = vi.fn();
+      const second = vi.fn();
+
+      const { result, rerender } = renderHook(({ cb }) => useInit(cb), {
+        initialProps: { cb: first },
+      });
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      expect(first).toHaveBeenCalledTimes(1);
+      expect(second).not.toHaveBeenCalled();
+
+      rerender({ cb: second });
+
+      await act(async () => {
+        result.current.reinitialize();
+        await vi.runAllTimersAsync();
+      });
+
+      expect(second).toHaveBeenCalledTimes(1);
+      expect(first).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("reference stability", () => {
+    it("keeps a stable reinitialize identity when when or options change", async () => {
+      const callback = vi.fn();
+
+      const { result, rerender } = renderHook(
+        ({ when, retry }) => useInit(callback, { when, retry }),
+        { initialProps: { when: true, retry: 0 } }
+      );
+
+      await act(async () => {
+        await vi.runAllTimersAsync();
+      });
+
+      const initialReinitialize = result.current.reinitialize;
+
+      rerender({ when: false, retry: 5 });
+      rerender({ when: true, retry: 2 });
+
+      expect(result.current.reinitialize).toBe(initialReinitialize);
+    });
+  });
+
+  describe("unmount during retry", () => {
+    it("stops retrying and does not update state after unmount", async () => {
+      const callback = vi.fn().mockImplementation(() => {
+        throw new Error("fail");
+      });
+
+      const { result, unmount } = renderHook(() =>
+        useInit(callback, { retry: 3, retryDelay: 1000 })
+      );
+
+      // First attempt fails; the hook is now waiting out the retry delay.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(0);
+      });
+
+      expect(callback).toHaveBeenCalledTimes(1);
+
+      unmount();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(5000);
+      });
+
+      // No further attempts once unmounted, and no post-unmount error state.
+      expect(callback).toHaveBeenCalledTimes(1);
+      expect(result.current.error).toBeNull();
+    });
+  });
+
+  describe("orphaned cleanup after timeout", () => {
+    it("releases a cleanup returned by a callback that resolves after the timeout", async () => {
+      const orphanCleanup = vi.fn();
+      const callback = vi.fn(
+        () =>
+          new Promise<() => void>((resolve) => {
+            setTimeout(() => resolve(orphanCleanup), 2000);
+          })
+      );
+
+      const { result } = renderHook(() =>
+        useInit(callback, { timeout: 500 })
+      );
+
+      // The timeout fires first.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(500);
+      });
+
+      expect(result.current.error?.message).toContain("timed out");
+      expect(orphanCleanup).not.toHaveBeenCalled();
+
+      // The slow callback eventually resolves with a cleanup function. Since
+      // its result was abandoned, that resource must be released immediately.
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1500);
+      });
+
+      expect(orphanCleanup).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("initial state", () => {
+    it("reports isInitializing on the first commit when when is true", () => {
+      const callback = vi.fn(
+        () => new Promise<void>((resolve) => setTimeout(resolve, 100))
+      );
+
+      const { result } = renderHook(() => useInit(callback));
+
+      // First commit reflects that initialization is pending, no flash of
+      // "not started".
+      expect(result.current.isInitializing).toBe(true);
+      expect(result.current.isInitialized).toBe(false);
+    });
+
+    it("reports not initializing on the first commit when when is false", () => {
+      const callback = vi.fn();
+
+      const { result } = renderHook(() =>
+        useInit(callback, { when: false })
+      );
+
+      expect(result.current.isInitializing).toBe(false);
+      expect(result.current.isInitialized).toBe(false);
     });
   });
 });

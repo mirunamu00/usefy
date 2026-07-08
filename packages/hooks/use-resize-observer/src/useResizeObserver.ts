@@ -12,10 +12,15 @@ import {
   toResizeEntry,
   extractSize,
   createInitialResizeEntry,
-  createNoopRef,
   validateOptions,
   hasSizeChanged,
 } from "./utils";
+
+/**
+ * Shared no-op with a stable identity, returned from the unsupported/SSR branch
+ * so that path never allocates fresh function references on re-render.
+ */
+const NOOP = (): void => {};
 
 /**
  * React hook for observing element size changes using ResizeObserver API.
@@ -121,6 +126,10 @@ export function useResizeObserver<T extends Element = Element>(
   const lastThrottleTimeRef = useRef<number>(0);
   const isObservingRef = useRef<boolean>(false);
   const prevSizeRef = useRef<{ width: number; height: number } | null>(null);
+  // Latest entries seen by processResize; the trailing throttle timeout reads
+  // from here so it always delivers the most recent dimensions of a burst
+  // rather than the (stale) entries captured when the timeout was scheduled.
+  const latestEntriesRef = useRef<ResizeObserverEntry[]>([]);
 
   // Update refs on each render to get latest values
   onResizeRef.current = onResize;
@@ -191,6 +200,10 @@ export function useResizeObserver<T extends Element = Element>(
   // ============ Process Resize (with Debounce/Throttle) ============
   const processResize = useCallback(
     (entries: ResizeObserverEntry[]) => {
+      // Always record the most recent entries so a pending trailing throttle
+      // call delivers the latest dimensions instead of a stale snapshot.
+      latestEntriesRef.current = entries;
+
       // Clear existing debounce timeout
       if (debounceTimeoutRef.current) {
         clearTimeout(debounceTimeoutRef.current);
@@ -216,10 +229,12 @@ export function useResizeObserver<T extends Element = Element>(
           lastThrottleTimeRef.current = now;
           handleResize(entries);
         } else if (!throttleTimeoutRef.current) {
-          // Schedule trailing call
+          // Schedule trailing call — read the latest entries at fire time so the
+          // final dimensions of the burst are delivered, not the ones captured
+          // when this timeout was first scheduled.
           throttleTimeoutRef.current = setTimeout(() => {
             lastThrottleTimeRef.current = Date.now();
-            handleResize(entries);
+            handleResize(latestEntriesRef.current);
             throttleTimeoutRef.current = null;
           }, throttleInterval - timeSinceLastCall);
         }
@@ -236,29 +251,6 @@ export function useResizeObserver<T extends Element = Element>(
     (entries) => processResize(entries)
   );
   observerCallbackRef.current = (entries) => processResize(entries);
-
-  // ============ Create Observer ============
-  const createObserver = useCallback(() => {
-    if (!isSupported) return;
-
-    // Disconnect existing observer
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-      observerRef.current = null;
-    }
-
-    // Create new observer with ref-based callback for stability
-    observerRef.current = new ResizeObserver((entries) => {
-      observerCallbackRef.current(entries);
-    });
-
-    // Observe current target if exists and enabled
-    if (targetRef.current && enabled) {
-      observerRef.current.observe(targetRef.current, { box });
-      isObservingRef.current = true;
-      setIsObserving(true);
-    }
-  }, [isSupported, enabled, box]);
 
   // ============ Ref Callback ============
   const setRef = useCallback(
@@ -395,7 +387,7 @@ export function useResizeObserver<T extends Element = Element>(
   // ============ SSR Return ============
   if (!isSupported) {
     return {
-      ref: createNoopRef<T>(),
+      ref: NOOP,
       width: initialWidth,
       height: initialHeight,
       entry: createInitialResizeEntry(initialWidth, initialHeight),
@@ -405,9 +397,9 @@ export function useResizeObserver<T extends Element = Element>(
       devicePixelContentBoxSize: undefined,
       isSupported: false,
       isObserving: false,
-      observe: () => {},
-      unobserve: () => {},
-      disconnect: () => {},
+      observe: NOOP,
+      unobserve: NOOP,
+      disconnect: NOOP,
     };
   }
 

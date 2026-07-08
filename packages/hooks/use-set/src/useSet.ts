@@ -18,7 +18,8 @@ function resolveInitial<T>(initial?: SetInitializer<T>): Set<T> {
  * Every mutation produces a brand-new `Set` so React re-renders correctly and
  * the previous state is never mutated in place. Updates that would not change
  * anything (adding an existing value, removing an absent value, clearing an
- * empty set) are skipped to avoid needless re-renders.
+ * empty set, or resetting a set that already equals the initial) are skipped to
+ * avoid needless re-renders.
  *
  * Features:
  * - Immutable updates (`new Set` on every change) with a `ReadonlySet` return type
@@ -74,8 +75,12 @@ export function useSet<T>(initialState?: SetInitializer<T>): UseSetReturn<T> {
     () => new Set(initialRef.current as Set<T>)
   );
 
-  // Mirror the latest set so `has` can be a stable callback that still reads
-  // fresh state.
+  // Mirror the latest set during render so `has` can be a stable callback that
+  // still reads fresh state. This render-time write matches the house
+  // latest-value-ref convention used by sibling hooks (e.g. use-window-size's
+  // `sizeRef.current = size`) and keeps `has` in sync within the same render,
+  // before any effect commits. `has` is purely a stable convenience over the
+  // returned set's own `set.has`.
   const setStateRef = useRef(set);
   setStateRef.current = set;
 
@@ -126,7 +131,24 @@ export function useSet<T>(initialState?: SetInitializer<T>): UseSetReturn<T> {
   }, []);
 
   const reset = useCallback(() => {
-    setSet(new Set(initialRef.current as Set<T>));
+    setSet((prev) => {
+      const initial = initialRef.current as Set<T>;
+      // Skip the re-render when state already equals the initial (same size and
+      // same members), keeping the reference stable like the other no-op paths.
+      if (prev.size === initial.size) {
+        let equal = true;
+        for (const value of initial) {
+          if (!prev.has(value)) {
+            equal = false;
+            break;
+          }
+        }
+        if (equal) {
+          return prev;
+        }
+      }
+      return new Set(initial);
+    });
   }, []);
 
   const has = useCallback((value: T) => setStateRef.current.has(value), []);

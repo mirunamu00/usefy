@@ -1,3 +1,4 @@
+import { StrictMode } from "react";
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useMemoryMonitor } from "./useMemoryMonitor";
@@ -5,6 +6,46 @@ import {
   mockSupportedBrowser,
   mockUnsupportedBrowser,
 } from "../vitest.setup";
+
+/**
+ * Install a performance.memory mock whose heap grows by a fixed step on every
+ * read, producing a clean monotonically-increasing signal for leak/trend tests.
+ */
+function mockGrowingMemory(startMB: number, stepMB: number) {
+  let reads = 0;
+  Object.defineProperty(performance, "memory", {
+    configurable: true,
+    get() {
+      const used = (startMB + reads * stepMB) * 1024 * 1024;
+      reads += 1;
+      return {
+        usedJSHeapSize: used,
+        totalJSHeapSize: used + 20 * 1024 * 1024,
+        jsHeapSizeLimit: 4 * 1024 * 1024 * 1024,
+      };
+    },
+  });
+}
+
+/**
+ * Fully remove the performance.memory property so the legacy API detection
+ * (`"memory" in performance`) reports the browser as unsupported. The setup
+ * mocks assign `undefined`, which still leaves the key present.
+ */
+function removeMemoryAPI() {
+  delete (performance as unknown as Record<string, unknown>).memory;
+}
+
+/**
+ * Drive a synthetic tab visibility transition and dispatch the event.
+ */
+function setDocumentHidden(hidden: boolean) {
+  Object.defineProperty(document, "hidden", {
+    value: hidden,
+    configurable: true,
+  });
+  document.dispatchEvent(new Event("visibilitychange"));
+}
 
 describe("useMemoryMonitor", () => {
   beforeEach(() => {
@@ -671,6 +712,274 @@ describe("useMemoryMonitor", () => {
       expect(result.current.compareSnapshots).toBe(initialCompareSnapshots);
       expect(result.current.clearHistory).toBe(initialClearHistory);
       expect(result.current.requestGC).toBe(initialRequestGC);
+    });
+
+    it("keeps a stable start reference and re-targets onUpdate without interval churn", async () => {
+      // Regression for finding 6: swapping the onUpdate identity across renders
+      // must not recreate the polling callback (it lives behind a ref).
+      const first = vi.fn();
+      const { result, rerender } = renderHook(
+        ({ cb }: { cb: () => void }) =>
+          useMemoryMonitor({ interval: 1000, onUpdate: cb }),
+        { initialProps: { cb: first as unknown as () => void } }
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1100);
+      });
+
+      const startRef = result.current.start;
+
+      const second = vi.fn();
+      rerender({ cb: second as unknown as () => void });
+      first.mockClear();
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1100);
+      });
+
+      // Same interval keeps running (stable start identity, no restart)…
+      expect(result.current.start).toBe(startRef);
+      // …but updates now flow to the latest callback only.
+      expect(second).toHaveBeenCalled();
+      expect(first).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("leak detection (hook level)", () => {
+    it("detects a leak and fires onLeakDetected for monotonically growing heap", async () => {
+      // Steep relative growth keeps the normalized slope well above the trend
+      // threshold even as absolute heap rises across the analysis window.
+      mockGrowingMemory(20, 20);
+      const onLeakDetected = vi.fn();
+
+      const { result } = renderHook(() =>
+        useMemoryMonitor({
+          interval: 1000,
+          enableHistory: true,
+          historySize: 60,
+          leakDetection: {
+            enabled: true,
+            sensitivity: "high",
+            windowSize: 20,
+          },
+          onLeakDetected,
+        })
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(25000);
+      });
+
+      expect(result.current.leakProbability).toBeGreaterThanOrEqual(70);
+      expect(result.current.isLeakDetected).toBe(true);
+      expect(onLeakDetected).toHaveBeenCalled();
+      expect(onLeakDetected).toHaveBeenCalledWith(
+        expect.objectContaining({
+          isLeaking: true,
+          probability: expect.any(Number),
+          trend: "increasing",
+        })
+      );
+    });
+
+    it("does not flag a leak when history/leak detection is disabled", async () => {
+      mockGrowingMemory(50, 5);
+      const onLeakDetected = vi.fn();
+
+      const { result } = renderHook(() =>
+        useMemoryMonitor({ interval: 1000, onLeakDetected })
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(50000);
+      });
+
+      expect(result.current.isLeakDetected).toBe(false);
+      expect(result.current.leakProbability).toBe(0);
+      expect(onLeakDetected).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("trend analysis", () => {
+    it("reports an increasing trend when heap grows over time", async () => {
+      mockGrowingMemory(50, 5);
+
+      const { result } = renderHook(() =>
+        useMemoryMonitor({
+          interval: 1000,
+          enableHistory: true,
+          historySize: 30,
+        })
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(10000);
+      });
+
+      expect(result.current.trend).toBe("increasing");
+    });
+  });
+
+  describe("tab visibility", () => {
+    afterEach(() => {
+      setDocumentHidden(false);
+    });
+
+    it("pauses on hide and resumes on show when monitoring was active", async () => {
+      const { result } = renderHook(() =>
+        useMemoryMonitor({ interval: 1000, autoStart: true })
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(100);
+      });
+      expect(result.current.isMonitoring).toBe(true);
+
+      act(() => {
+        setDocumentHidden(true);
+      });
+      expect(result.current.isMonitoring).toBe(false);
+
+      act(() => {
+        setDocumentHidden(false);
+      });
+      expect(result.current.isMonitoring).toBe(true);
+    });
+
+    it("does not auto-resume monitoring the user manually stopped (finding 10)", async () => {
+      const { result } = renderHook(() =>
+        useMemoryMonitor({ interval: 1000, autoStart: true })
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(100);
+      });
+      expect(result.current.isMonitoring).toBe(true);
+
+      // User explicitly stops monitoring.
+      act(() => {
+        result.current.stop();
+      });
+      expect(result.current.isMonitoring).toBe(false);
+
+      // Tab hides then re-shows.
+      act(() => {
+        setDocumentHidden(true);
+      });
+      act(() => {
+        setDocumentHidden(false);
+      });
+
+      // User intent is respected: monitoring stays stopped.
+      expect(result.current.isMonitoring).toBe(false);
+    });
+  });
+
+  describe("history resize", () => {
+    it("shrinks the history buffer when historySize is reduced", async () => {
+      const { result, rerender } = renderHook(
+        ({ size }: { size: number }) =>
+          useMemoryMonitor({
+            interval: 100,
+            enableHistory: true,
+            historySize: size,
+          }),
+        { initialProps: { size: 20 } }
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(1500);
+      });
+      expect(result.current.history.length).toBeGreaterThan(5);
+
+      rerender({ size: 3 });
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(300);
+      });
+
+      expect(result.current.history.length).toBeLessThanOrEqual(3);
+    });
+  });
+
+  describe("threshold edge cases", () => {
+    it("fires onWarning at 0% usage when the warning threshold is 0 (finding 9)", async () => {
+      // heapUsed 0 => usagePercentage 0. A truthiness guard would swallow this.
+      mockSupportedBrowser({
+        usedJSHeapSize: 0,
+        totalJSHeapSize: 100 * 1024 * 1024,
+        jsHeapSizeLimit: 2 * 1024 * 1024 * 1024,
+      });
+      const onWarning = vi.fn();
+
+      const { result } = renderHook(() =>
+        useMemoryMonitor({
+          interval: 1000,
+          thresholds: { warning: 0, critical: 90 },
+          onWarning,
+        })
+      );
+
+      await act(async () => {
+        await vi.advanceTimersByTimeAsync(100);
+      });
+
+      expect(result.current.usagePercentage).toBe(0);
+      expect(result.current.severity).toBe("warning");
+      expect(onWarning).toHaveBeenCalled();
+    });
+  });
+
+  describe("unsupported environment", () => {
+    it("calls onUnsupported once with reason and fallbacks", () => {
+      removeMemoryAPI();
+      const onUnsupported = vi.fn();
+
+      renderHook(() =>
+        useMemoryMonitor({
+          fallbackStrategy: "none",
+          onUnsupported,
+          autoStart: false,
+        })
+      );
+
+      expect(onUnsupported).toHaveBeenCalledTimes(1);
+      expect(onUnsupported).toHaveBeenCalledWith(
+        expect.objectContaining({
+          reason: expect.any(String),
+          availableFallbacks: expect.any(Array),
+        })
+      );
+    });
+
+    it("calls onUnsupported exactly once under StrictMode (finding 5)", () => {
+      removeMemoryAPI();
+      const onUnsupported = vi.fn();
+
+      renderHook(
+        () =>
+          useMemoryMonitor({
+            fallbackStrategy: "none",
+            onUnsupported,
+            autoStart: false,
+          }),
+        { wrapper: StrictMode }
+      );
+
+      expect(onUnsupported).toHaveBeenCalledTimes(1);
+    });
+
+    it("reports isSupported false and N/A formatting when the memory API is absent", () => {
+      removeMemoryAPI();
+
+      const { result } = renderHook(() =>
+        useMemoryMonitor({ fallbackStrategy: "none", autoStart: false })
+      );
+
+      expect(result.current.isSupported).toBe(false);
+      expect(result.current.supportLevel).toBe("none");
+      expect(result.current.formatted.heapUsed).toBe("N/A");
     });
   });
 });

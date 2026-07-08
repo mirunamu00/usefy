@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Options for useDebounce hook
@@ -88,33 +88,21 @@ export function useDebounce<T>(
   const lastValueRef = useRef<T>(value);
   const prevValueRef = useRef<T>(value); // Track previous value to detect actual changes
 
-  // Store options in refs to access latest values in timer callbacks
+  // Store options in refs so the timer callbacks always read the latest values.
+  // Initialised from the first render's options; kept in sync via the effect
+  // below (never mutated during render, to preserve render purity).
   const waitRef = useRef(wait);
   const leadingRef = useRef(leading);
   const trailingRef = useRef(trailing);
   const maxingRef = useRef(maxing);
   const maxWaitRef = useRef(maxWait);
 
-  // Update refs when options change
-  waitRef.current = wait;
-  leadingRef.current = leading;
-  trailingRef.current = trailing;
-  maxingRef.current = maxing;
-  maxWaitRef.current = maxWait;
-
-  // Helper function to get current time
-  const now = () => Date.now();
-
-  // Define helper functions using refs for latest values
-  const shouldInvokeRef = useRef<(time: number) => boolean>(() => false);
-  const invokeRef = useRef<(time: number) => void>(() => {});
-  const remainingWaitRef = useRef<(time: number) => number>(() => 0);
+  // Self-reference indirection for the recursively-restarting trailing timer.
   const timerExpiredRef = useRef<() => void>(() => {});
-  const trailingEdgeRef = useRef<(time: number) => void>(() => {});
-  const leadingEdgeRef = useRef<(time: number) => void>(() => {});
 
-  // Helper function: shouldInvoke
-  shouldInvokeRef.current = (time: number): boolean => {
+  // Helper: shouldInvoke — reads all mutable state through refs, so it can be a
+  // stable closure created once (no per-render reassignment).
+  const shouldInvoke = useCallback((time: number): boolean => {
     const lastCallTime = lastCallTimeRef.current;
     if (lastCallTime === undefined) {
       return true; // First call
@@ -129,16 +117,16 @@ export function useDebounce<T>(
       (maxingRef.current &&
         timeSinceLastInvoke >= (maxWaitRef.current as number))
     );
-  };
+  }, []);
 
-  // Helper function: invokeFunc
-  invokeRef.current = (time: number): void => {
+  // Helper: invokeFunc
+  const invoke = useCallback((time: number): void => {
     setDebouncedValue(lastValueRef.current);
     lastInvokeTimeRef.current = time;
-  };
+  }, []);
 
-  // Helper function: remainingWait
-  remainingWaitRef.current = (time: number): number => {
+  // Helper: remainingWait
+  const remainingWait = useCallback((time: number): number => {
     const lastCallTime = lastCallTimeRef.current;
     if (lastCallTime === undefined) {
       return waitRef.current;
@@ -154,47 +142,62 @@ export function useDebounce<T>(
           (maxWaitRef.current as number) - timeSinceLastInvoke
         )
       : timeWaiting;
-  };
+  }, []);
 
-  // Helper function: trailingEdge
-  trailingEdgeRef.current = (time: number): void => {
-    timerIdRef.current = undefined;
+  // Helper: trailingEdge
+  const trailingEdge = useCallback(
+    (time: number): void => {
+      timerIdRef.current = undefined;
 
-    // Only invoke if we have `lastValueRef.current` which means `value` has been
-    // debounced at least once.
-    if (trailingRef.current && lastCallTimeRef.current !== undefined) {
-      invokeRef.current(time);
-    }
-  };
+      // Only invoke if we have `lastCallTimeRef.current`, which means `value`
+      // has been debounced at least once.
+      if (trailingRef.current && lastCallTimeRef.current !== undefined) {
+        invoke(time);
+      }
+    },
+    [invoke]
+  );
 
-  // Helper function: timerExpired
-  timerExpiredRef.current = (): void => {
-    const time = now();
-    if (shouldInvokeRef.current(time)) {
-      trailingEdgeRef.current(time);
+  // Helper: timerExpired — self-restarts through timerExpiredRef.
+  const timerExpired = useCallback((): void => {
+    const time = Date.now();
+    if (shouldInvoke(time)) {
+      trailingEdge(time);
     } else {
       // Restart the timer.
       timerIdRef.current = setTimeout(
         () => timerExpiredRef.current(),
-        remainingWaitRef.current(time)
+        remainingWait(time)
       );
     }
-  };
+  }, [shouldInvoke, trailingEdge, remainingWait]);
 
-  // Helper function: leadingEdge
-  leadingEdgeRef.current = (time: number): void => {
-    // Reset any `maxWait` timer.
-    lastInvokeTimeRef.current = time;
-    // Start the timer for the trailing edge.
-    timerIdRef.current = setTimeout(
-      () => timerExpiredRef.current(),
-      waitRef.current
-    );
-    // Invoke the leading edge.
-    if (leadingRef.current) {
-      invokeRef.current(time);
-    }
-  };
+  // Helper: leadingEdge
+  const leadingEdge = useCallback(
+    (time: number): void => {
+      // Reset any `maxWait` timer.
+      lastInvokeTimeRef.current = time;
+      // Start the timer for the trailing edge.
+      timerIdRef.current = setTimeout(() => timerExpiredRef.current(), waitRef.current);
+      // Invoke the leading edge.
+      if (leadingRef.current) {
+        invoke(time);
+      }
+    },
+    [invoke]
+  );
+
+  // Sync option refs and the self-reference after commit — never during render.
+  // Declared before the main effect so the option refs are current by the time
+  // the value effect reads them within the same commit.
+  useEffect(() => {
+    waitRef.current = wait;
+    leadingRef.current = leading;
+    trailingRef.current = trailing;
+    maxingRef.current = maxing;
+    maxWaitRef.current = maxWait;
+    timerExpiredRef.current = timerExpired;
+  });
 
   // Cleanup on unmount only
   useEffect(() => {
@@ -207,14 +210,15 @@ export function useDebounce<T>(
 
   // Main debounce effect - runs when value changes
   useEffect(() => {
-    // Skip if value hasn't actually changed (prevents initial render from consuming leading edge)
+    // Skip if value hasn't actually changed (prevents initial render — and
+    // StrictMode's double-invoked mount effect — from consuming the leading edge)
     if (Object.is(prevValueRef.current, value)) {
       return;
     }
     prevValueRef.current = value;
 
-    const time = now();
-    const isInvoking = shouldInvokeRef.current(time);
+    const time = Date.now();
+    const isInvoking = shouldInvoke(time);
 
     // Update lastValueRef with current value
     lastValueRef.current = value;
@@ -222,32 +226,26 @@ export function useDebounce<T>(
 
     if (isInvoking) {
       if (timerIdRef.current === undefined) {
-        leadingEdgeRef.current(time);
+        leadingEdge(time);
       } else if (maxingRef.current) {
         // Handle invocations in a tight loop.
         clearTimeout(timerIdRef.current);
-        timerIdRef.current = setTimeout(
-          () => timerExpiredRef.current(),
-          waitRef.current
-        );
+        timerIdRef.current = setTimeout(() => timerExpiredRef.current(), waitRef.current);
         // Only invoke if at least one edge is enabled (matches lodash behavior)
         if (leadingRef.current || trailingRef.current) {
-          invokeRef.current(time);
+          invoke(time);
         }
       }
     } else {
       if (timerIdRef.current === undefined) {
         // Start timer with wait
         // remainingWait is only used inside timerExpired for restarting
-        timerIdRef.current = setTimeout(
-          () => timerExpiredRef.current(),
-          waitRef.current
-        );
+        timerIdRef.current = setTimeout(() => timerExpiredRef.current(), waitRef.current);
       }
     }
     // No cleanup here - timer should persist across value changes
     // This is the key difference from the previous implementation
-  }, [value]);
+  }, [value, shouldInvoke, leadingEdge, invoke]);
 
   return debouncedValue;
 }

@@ -500,7 +500,7 @@ const meta: Meta<typeof MemoryMonitorDemo> = {
           "**Key Features:**\n" +
           "- Real-time heap usage monitoring (Chrome/Edge)\n" +
           "- Memory leak detection with linear regression\n" +
-          "- Configurable threshold alerts (low/medium/high/critical)\n" +
+          "- Configurable threshold alerts (normal/warning/critical)\n" +
           "- Memory snapshots and comparison\n" +
           "- History tracking with trend analysis\n" +
           "- Tab visibility optimization (auto pause when hidden)\n" +
@@ -621,23 +621,21 @@ export const ThresholdAlerts: Story = {
         code: `import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 
 function ThresholdMonitor() {
-  const { severity, formatted, heapUsed, heapLimit } = useMemoryMonitor({
+  const { severity, usagePercentage, formatted } = useMemoryMonitor({
     interval: 1000,
     autoStart: true,
     thresholds: {
-      medium: 50,  // Yellow alert at 50%
-      high: 75,    // Orange alert at 75%
-      critical: 90, // Red alert at 90%
+      warning: 50,  // severity becomes "warning" at 50%
+      critical: 90, // severity becomes "critical" at 90%
     },
+    onWarning: (data) =>
+      console.warn(\`Memory warning at \${data.usagePercentage.toFixed(1)}%\`),
+    onCritical: () => console.error("Critical memory usage!"),
   });
-
-  const usagePercent = heapUsed && heapLimit
-    ? (heapUsed / heapLimit) * 100
-    : 0;
 
   return (
     <div>
-      <h2>Memory Usage: {usagePercent.toFixed(1)}%</h2>
+      <h2>Memory Usage: {usagePercentage?.toFixed(1) ?? "0"}%</h2>
       <p>Severity: {severity}</p>
       <p>Used: {formatted.heapUsed}</p>
       <p>Limit: {formatted.heapLimit}</p>
@@ -672,37 +670,46 @@ export const Snapshots: Story = {
 import { useState } from "react";
 
 function SnapshotExample() {
-  const {
-    takeSnapshot,
-    compareSnapshots,
-    clearSnapshots,
-    getAllSnapshots,
-  } = useMemoryMonitor({
+  const { takeSnapshot, compareSnapshots } = useMemoryMonitor({
     interval: 1000,
     autoStart: true,
   });
 
+  // The hook stores snapshots internally by id; track the ids in local state.
+  const [snapshotIds, setSnapshotIds] = useState<string[]>([]);
+  const [result, setResult] = useState<string | null>(null);
+
   const handleTakeSnapshot = () => {
     const snapshot = takeSnapshot(\`snapshot-\${Date.now()}\`);
-    console.log("Snapshot taken:", snapshot);
+    if (snapshot) {
+      setSnapshotIds((prev) => [...prev, snapshot.id]);
+    }
   };
 
   const handleCompare = () => {
-    const snapshots = getAllSnapshots();
-    if (snapshots.length >= 2) {
+    if (snapshotIds.length >= 2) {
       const diff = compareSnapshots(
-        snapshots[0].id,
-        snapshots[snapshots.length - 1].id
+        snapshotIds[0],
+        snapshotIds[snapshotIds.length - 1]
       );
-      console.log("Memory difference:", diff);
+      if (diff) {
+        setResult(
+          \`Heap delta: \${(diff.heapDelta / 1024 / 1024).toFixed(2)} MB \` +
+            \`(\${diff.heapPercentChange.toFixed(1)}%)\`
+        );
+      }
     }
   };
 
   return (
     <div>
       <button onClick={handleTakeSnapshot}>Take Snapshot</button>
-      <button onClick={handleCompare}>Compare</button>
-      <button onClick={clearSnapshots}>Clear All</button>
+      <button onClick={handleCompare} disabled={snapshotIds.length < 2}>
+        Compare
+      </button>
+      <button onClick={() => setSnapshotIds([])}>Clear All</button>
+      <p>Snapshots: {snapshotIds.length}</p>
+      {result && <p>{result}</p>}
     </div>
   );
 }`,

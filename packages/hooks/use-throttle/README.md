@@ -47,7 +47,7 @@
 
 ### Why use-throttle?
 
-- **Zero Dependencies** — Pure React implementation (uses @usefy/use-debounce internally)
+- **Tiny Wrapper** — Built on [@usefy/use-debounce](https://www.npmjs.com/package/@usefy/use-debounce) (its only runtime dependency); adds ~200B of its own code
 - **TypeScript First** — Full type safety with generics and exported interfaces
 - **Flexible Options** — Leading edge and trailing edge support
 - **Guaranteed Updates** — Regular updates during continuous changes (unlike debounce)

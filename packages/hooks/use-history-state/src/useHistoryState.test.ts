@@ -222,6 +222,28 @@ describe("useHistoryState", () => {
 
       expect(result.current.history).toEqual([0, 1, 2, 3]);
     });
+
+    it("treats a non-finite limit (Infinity) as unlimited", () => {
+      const { result } = renderHook(() =>
+        useHistoryState(0, { limit: Infinity })
+      );
+
+      act(() => result.current.set(1));
+      act(() => result.current.set(2));
+      act(() => result.current.set(3));
+
+      expect(result.current.history).toEqual([0, 1, 2, 3]);
+    });
+
+    it("treats a non-finite limit (NaN) as unlimited", () => {
+      const { result } = renderHook(() => useHistoryState(0, { limit: NaN }));
+
+      act(() => result.current.set(1));
+      act(() => result.current.set(2));
+      act(() => result.current.set(3));
+
+      expect(result.current.history).toEqual([0, 1, 2, 3]);
+    });
   });
 
   // ============ clear ============
@@ -264,6 +286,33 @@ describe("useHistoryState", () => {
       expect(result.current.history).toEqual([0]);
       expect(result.current.currentIndex).toBe(0);
       expect(result.current.canUndo).toBe(false);
+    });
+
+    it("restores the resolved value/reference from a lazy initializer", () => {
+      const initial = { count: 5 };
+      const { result } = renderHook(() => useHistoryState(() => initial));
+
+      act(() => result.current.set({ count: 6 }));
+      act(() => result.current.set({ count: 7 }));
+      act(() => result.current.set((s) => ({ count: s.count + 1 })));
+
+      act(() => result.current.reset());
+
+      // Same resolved value AND the same reference the factory produced.
+      expect(result.current.state).toBe(initial);
+      expect(result.current.state).toEqual({ count: 5 });
+      expect(result.current.history).toEqual([initial]);
+      expect(result.current.currentIndex).toBe(0);
+    });
+
+    it("is a no-op (stable reference) when already at the initial state", () => {
+      const { result } = renderHook(() => useHistoryState(0));
+      const before = result.current.history;
+
+      act(() => result.current.reset());
+
+      expect(result.current.history).toBe(before);
+      expect(result.current.currentIndex).toBe(0);
     });
   });
 

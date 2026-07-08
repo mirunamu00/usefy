@@ -297,6 +297,51 @@ describe("useGeolocation", () => {
       });
     });
 
+    it("should pass the same GeoPosition instance to onSuccess and onPositionChange per tick", () => {
+      let watchCallback: ((pos: GeoPosition) => void) | null = null;
+
+      mockGeolocation.watchPosition.mockImplementation((success) => {
+        watchCallback = success;
+        return 1;
+      });
+
+      const onSuccess = vi.fn();
+      const onPositionChange = vi.fn();
+
+      const { result } = renderHook(() =>
+        useGeolocation({ immediate: false, onSuccess, onPositionChange })
+      );
+
+      act(() => {
+        result.current.watchPosition();
+      });
+
+      const nativePosition: GeoPosition = {
+        coords: {
+          latitude: 37.7749,
+          longitude: -122.4194,
+          altitude: null,
+          accuracy: 10,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
+        },
+        timestamp: Date.now(),
+      };
+
+      act(() => {
+        watchCallback?.(nativePosition);
+      });
+
+      expect(onSuccess).toHaveBeenCalledTimes(1);
+      expect(onPositionChange).toHaveBeenCalledTimes(1);
+
+      // The object is built once and reused — both callbacks get the same ref.
+      const successArg = onSuccess.mock.calls[0][0];
+      const changeArg = onPositionChange.mock.calls[0][0];
+      expect(successArg).toBe(changeArg);
+    });
+
     it("should clear watch on clearWatch call", () => {
       mockGeolocation.watchPosition.mockReturnValue(123);
 
@@ -588,6 +633,20 @@ describe("useGeolocation", () => {
       });
     });
 
+    it("should NOT issue a redundant getCurrentPosition when watch: true (immediate defaults to true)", async () => {
+      mockGeolocation.watchPosition.mockReturnValue(1);
+
+      // immediate is left at its default (true); watch mode already provides
+      // the first position, so no one-shot getCurrentPosition should fire.
+      renderHook(() => useGeolocation({ watch: true }));
+
+      await waitFor(() => {
+        expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+      });
+
+      expect(mockGeolocation.getCurrentPosition).not.toHaveBeenCalled();
+    });
+
     it("should not fetch position when immediate: false", () => {
       renderHook(() => useGeolocation({ immediate: false }));
 
@@ -687,6 +746,86 @@ describe("useGeolocation", () => {
       expect(result.current.bearingTo).toBe(firstRefs.bearingTo);
     });
 
+    it("should keep control functions stable and not re-subscribe watch when callbacks change identity each render", async () => {
+      mockGeolocation.watchPosition.mockReturnValue(1);
+
+      // A brand new onSuccess/onPositionChange is created on every render,
+      // exercising the latest-callback ref pattern.
+      const { result, rerender } = renderHook(() =>
+        useGeolocation({
+          watch: true,
+          immediate: false,
+          onSuccess: () => {},
+          onPositionChange: () => {},
+        })
+      );
+
+      await waitFor(() => {
+        expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+      });
+
+      const firstGetCurrentPosition = result.current.getCurrentPosition;
+      const firstWatchPosition = result.current.watchPosition;
+      const firstClearWatch = result.current.clearWatch;
+
+      rerender();
+      rerender();
+
+      // Control function identities remain stable despite fresh callbacks...
+      expect(result.current.getCurrentPosition).toBe(firstGetCurrentPosition);
+      expect(result.current.watchPosition).toBe(firstWatchPosition);
+      expect(result.current.clearWatch).toBe(firstClearWatch);
+
+      // ...and the watch was not torn down / re-subscribed.
+      expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+      expect(mockGeolocation.clearWatch).not.toHaveBeenCalled();
+    });
+
+    it("should invoke the latest onSuccess callback without re-registering the watch", () => {
+      let watchCallback: ((pos: GeoPosition) => void) | null = null;
+      mockGeolocation.watchPosition.mockImplementation((success) => {
+        watchCallback = success;
+        return 1;
+      });
+
+      const firstOnSuccess = vi.fn();
+      const secondOnSuccess = vi.fn();
+
+      const { result, rerender } = renderHook(
+        ({ onSuccess }) => useGeolocation({ immediate: false, onSuccess }),
+        { initialProps: { onSuccess: firstOnSuccess } }
+      );
+
+      act(() => {
+        result.current.watchPosition();
+      });
+
+      // Swap the callback identity, then fire a position update.
+      rerender({ onSuccess: secondOnSuccess });
+
+      const nativePosition: GeoPosition = {
+        coords: {
+          latitude: 1,
+          longitude: 2,
+          altitude: null,
+          accuracy: 5,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
+        },
+        timestamp: Date.now(),
+      };
+
+      act(() => {
+        watchCallback?.(nativePosition);
+      });
+
+      // Only the latest callback should fire; watch not re-subscribed.
+      expect(firstOnSuccess).not.toHaveBeenCalled();
+      expect(secondOnSuccess).toHaveBeenCalledTimes(1);
+      expect(mockGeolocation.watchPosition).toHaveBeenCalledTimes(1);
+    });
+
     it("should update distanceFrom and bearingTo when position changes", async () => {
       const mockPosition: GeoPosition = {
         coords: {
@@ -752,6 +891,82 @@ describe("useGeolocation", () => {
 
       // Should not throw error
       expect(mockGeolocation.clearWatch).toHaveBeenCalledTimes(0); // No watch was started
+    });
+
+    it("should remove the permission change listener on unmount", async () => {
+      const removeEventListener = vi.fn();
+      const addEventListener = vi.fn();
+      const mockPermissionStatus = {
+        state: "granted",
+        addEventListener,
+        removeEventListener,
+      };
+
+      mockPermissions.query.mockResolvedValue(mockPermissionStatus);
+
+      const { result, unmount } = renderHook(() =>
+        useGeolocation({ immediate: false })
+      );
+
+      await waitFor(() => {
+        expect(result.current.permission).toBe("granted");
+      });
+
+      expect(addEventListener).toHaveBeenCalledTimes(1);
+      const registeredHandler = addEventListener.mock.calls[0][1];
+
+      unmount();
+
+      // Cleanup must remove the exact handler that was added.
+      expect(removeEventListener).toHaveBeenCalledTimes(1);
+      expect(removeEventListener).toHaveBeenCalledWith(
+        "change",
+        registeredHandler
+      );
+    });
+
+    it("should not leak a listener or setState when unmounted before permissions.query resolves", async () => {
+      const addEventListener = vi.fn();
+      const removeEventListener = vi.fn();
+      let resolveQuery!: (status: unknown) => void;
+
+      mockPermissions.query.mockReturnValue(
+        new Promise((resolve) => {
+          resolveQuery = resolve;
+        })
+      );
+
+      const errorSpy = vi
+        .spyOn(console, "error")
+        .mockImplementation(() => undefined);
+
+      const { unmount } = renderHook(() =>
+        useGeolocation({ immediate: false })
+      );
+
+      // Unmount while the permissions query is still pending.
+      unmount();
+
+      // Now resolve the query — the effect has already been cleaned up.
+      await act(async () => {
+        resolveQuery({
+          state: "granted",
+          addEventListener,
+          removeEventListener,
+        });
+        await Promise.resolve();
+      });
+
+      // No listener should have been registered after unmount...
+      expect(addEventListener).not.toHaveBeenCalled();
+      // ...and React must not warn about setState on an unmounted component.
+      expect(errorSpy).not.toHaveBeenCalledWith(
+        expect.stringContaining("unmounted"),
+        expect.anything(),
+        expect.anything()
+      );
+
+      errorSpy.mockRestore();
     });
   });
 });

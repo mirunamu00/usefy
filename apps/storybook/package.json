@@ -34,6 +34,7 @@
     "@usefy/use-toggle": "workspace:*",
     "@usefy/use-unmount": "workspace:*",
     "@usefy/use-timeout": "workspace:*",
+    "@usefy/use-interval": "workspace:*",
     "@usefy/use-hover": "workspace:*",
     "@usefy/use-key-press": "workspace:*",
     "@usefy/use-map": "workspace:*",

@@ -47,4 +47,4 @@ export interface UseStepControls {
  * Return type of {@link useStep}: a tuple of the current (0-based) step index
  * and the stable controls object.
  */
-export type UseStepReturn = [number, UseStepControls];
+export type UseStepReturn = readonly [number, UseStepControls];

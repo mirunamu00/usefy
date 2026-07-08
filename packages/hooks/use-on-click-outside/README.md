@@ -51,7 +51,7 @@
 - **TypeScript First** — Full type safety with exported interfaces
 - **Multiple Refs Support** — Pass a single ref or an array of refs (e.g., button + dropdown)
 - **Exclude Elements** — Exclude specific elements from triggering the handler via `excludeRefs` or `shouldExclude`
-- **Mouse + Touch Support** — Handles both `mousedown` and `touchstart` events for mobile compatibility
+- **Mouse + Touch Support** — Handles both `mousedown` and `touchstart` events for mobile compatibility, and suppresses the emulated mouse event that trails a tap so the handler fires once per interaction
 - **Capture Phase** — Uses capture phase by default to avoid `stopPropagation` issues
 - **Conditional Activation** — Enable/disable via the `enabled` option
 - **Handler Stability** — No re-registration when handler changes
@@ -135,7 +135,7 @@ A hook that detects clicks outside of specified element(s).
 | `detectTouch`    | `boolean`                           | `true`         | Whether to detect touch events (mobile support)           |
 | `excludeRefs`    | `RefObject<HTMLElement>[]`          | `[]`           | Refs to exclude from outside click detection              |
 | `shouldExclude`  | `(target: Node) => boolean`         | `undefined`    | Custom function to determine if target should be excluded |
-| `eventTarget`    | `Document \| HTMLElement \| Window` | `document`     | The event target to attach listeners to                   |
+| `eventTarget`    | `Document \| HTMLElement \| Window \| null` | `document`     | The event target to attach listeners to                   |
 
 #### Types
 

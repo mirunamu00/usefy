@@ -1,7 +1,8 @@
 import { renderHook, act } from "@testing-library/react";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useHover } from "./useHover";
-import { isHoverSupported, normalizeDelay } from "./utils";
+import * as utils from "./utils";
+import { isHoverSupported, normalizeDelay, createNoopRef } from "./utils";
 
 describe("useHover", () => {
   let container: HTMLDivElement;
@@ -707,6 +708,68 @@ describe("useHover", () => {
       expect(result.current.isHovered).toBe(true);
     });
 
+    it("should fire onChange only once for a single hover transition on hybrid devices", () => {
+      // Hybrid/touch devices dispatch a touch event AND a synthesized mouse
+      // event for one physical interaction. onChange must fire per state
+      // transition, not per DOM event.
+      const onChange = vi.fn();
+      const { result } = renderHook(() =>
+        useHover({ detectTouch: true, onChange })
+      );
+
+      act(() => {
+        result.current.ref(targetElement);
+      });
+
+      act(() => {
+        targetElement.dispatchEvent(
+          new TouchEvent("touchstart", { bubbles: true })
+        );
+        // The browser then synthesizes a mouseenter for the same tap.
+        targetElement.dispatchEvent(
+          new MouseEvent("mouseenter", { bubbles: true })
+        );
+      });
+
+      expect(result.current.isHovered).toBe(true);
+      expect(onChange).toHaveBeenCalledTimes(1);
+      expect(onChange).toHaveBeenNthCalledWith(1, true, expect.any(TouchEvent));
+
+      // Likewise on leave: touchend + synthesized mouseleave = one transition.
+      act(() => {
+        targetElement.dispatchEvent(
+          new TouchEvent("touchend", { bubbles: true })
+        );
+        targetElement.dispatchEvent(
+          new MouseEvent("mouseleave", { bubbles: true })
+        );
+      });
+
+      expect(result.current.isHovered).toBe(false);
+      expect(onChange).toHaveBeenCalledTimes(2);
+      expect(onChange).toHaveBeenNthCalledWith(2, false, expect.any(TouchEvent));
+    });
+
+    it("should not fire onChange again when already hovered", () => {
+      const onChange = vi.fn();
+      const { result } = renderHook(() => useHover({ onChange }));
+
+      act(() => {
+        result.current.ref(targetElement);
+      });
+
+      act(() => {
+        targetElement.dispatchEvent(
+          new MouseEvent("mouseenter", { bubbles: true })
+        );
+        targetElement.dispatchEvent(
+          new MouseEvent("mouseenter", { bubbles: true })
+        );
+      });
+
+      expect(onChange).toHaveBeenCalledTimes(1);
+    });
+
     it("should add touch listeners with passive option", () => {
       const addEventListenerSpy = vi.spyOn(targetElement, "addEventListener");
       const { result } = renderHook(() => useHover({ detectTouch: true }));
@@ -1176,6 +1239,48 @@ describe("useHover", () => {
       expect(onChange2).toHaveBeenCalledTimes(1);
     });
   });
+
+  // ============ SSR / Unsupported Environment ============
+  describe("SSR / unsupported environment", () => {
+    it("returns the initial state and a no-op ref when hover is unsupported", () => {
+      vi.spyOn(utils, "isHoverSupported").mockReturnValue(false);
+
+      const { result } = renderHook(() =>
+        useHover({ initialHovered: true })
+      );
+
+      // Falls back to the provided initial state (avoids hydration mismatch).
+      expect(result.current.isHovered).toBe(true);
+
+      // ref is a callable no-op that does not throw or attach listeners.
+      expect(result.current.ref).toBeInstanceOf(Function);
+      const addEventListenerSpy = vi.spyOn(targetElement, "addEventListener");
+      expect(() => {
+        act(() => {
+          result.current.ref(targetElement);
+        });
+      }).not.toThrow();
+      expect(addEventListenerSpy).not.toHaveBeenCalled();
+
+      // Dispatching events has no effect.
+      act(() => {
+        targetElement.dispatchEvent(
+          new MouseEvent("mouseenter", { bubbles: true })
+        );
+      });
+      expect(result.current.isHovered).toBe(true);
+    });
+
+    it("supports tuple destructuring in an unsupported environment", () => {
+      vi.spyOn(utils, "isHoverSupported").mockReturnValue(false);
+
+      const { result } = renderHook(() => useHover({ initialHovered: true }));
+
+      const [r, h] = result.current;
+      expect(r).toBeInstanceOf(Function);
+      expect(h).toBe(true);
+    });
+  });
 });
 
 // ============ Utils Tests ============
@@ -1183,6 +1288,17 @@ describe("utils", () => {
   describe("isHoverSupported", () => {
     it("should return true in browser environment", () => {
       expect(isHoverSupported()).toBe(true);
+    });
+  });
+
+  describe("createNoopRef", () => {
+    it("returns a callable no-op that ignores its argument", () => {
+      const noop = createNoopRef<HTMLDivElement>();
+
+      expect(noop).toBeInstanceOf(Function);
+      expect(noop(document.createElement("div"))).toBeUndefined();
+      expect(noop(null)).toBeUndefined();
+      expect(() => noop(document.createElement("div"))).not.toThrow();
     });
   });
 

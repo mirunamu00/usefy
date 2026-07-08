@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
 import { useHover } from "@usefy/use-hover";
-import { within, userEvent, expect, waitFor } from "@storybook/test";
+import { within, userEvent, expect, waitFor, fireEvent } from "@storybook/test";
 import { storyTheme } from "../styles/storyTheme";
 
 // ============ Demo Components ============
@@ -428,6 +428,49 @@ function CallbackDemo() {
   );
 }
 
+/**
+ * Touch support demo (detectTouch)
+ */
+function MobileTouchDemo() {
+  const { ref, isHovered } = useHover<HTMLButtonElement>({
+    detectTouch: true,
+    delay: { enter: 0, leave: 1500 },
+  });
+
+  return (
+    <div className={storyTheme.containerCentered}>
+      <h2 className={storyTheme.title}>Touch Support</h2>
+      <p className={storyTheme.subtitle}>
+        Tap or hover the button — <code>detectTouch: true</code>
+      </p>
+
+      <button
+        ref={ref}
+        className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 cursor-pointer ${
+          isHovered
+            ? "bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-xl scale-105"
+            : "bg-gray-100 text-gray-700"
+        }`}
+        data-testid="touch-button"
+      >
+        {isHovered ? "Tapped / Hovered!" : "Tap or hover"}
+      </button>
+
+      <div className={`${storyTheme.statBox} mt-6`}>
+        <p className={storyTheme.statLabel}>
+          Status:{" "}
+          <span className={storyTheme.statValue} data-testid="touch-status">
+            {isHovered ? "Active" : "Inactive"}
+          </span>
+        </p>
+        <p className="text-gray-500 text-sm mt-2">
+          Stays active for 1.5s after the touch ends
+        </p>
+      </div>
+    </div>
+  );
+}
+
 // ============ Meta & Stories ============
 
 const meta: Meta<typeof BasicHoverDemo> = {
@@ -705,7 +748,54 @@ export const CardPreview: Story = {
     layout: "padded",
     docs: {
       description: {
-        story: "Interactive card previews that reveal more content on hover.",
+        story:
+          "Interactive card previews that reveal more content on hover. Each card owns its own `useHover` instance, so hovering one card never affects the others.",
+      },
+      source: {
+        code: `import { useHover } from "@usefy/use-hover";
+
+function CardGrid() {
+  const cards = [
+    { id: 1, title: "React Hooks", description: "Learn about React hooks" },
+    { id: 2, title: "TypeScript", description: "Type-safe development" },
+    { id: 3, title: "Testing", description: "Write robust tests" },
+  ];
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      {cards.map((card) => (
+        <HoverCard key={card.id} {...card} />
+      ))}
+    </div>
+  );
+}
+
+// Each card owns its own hover state.
+function HoverCard({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  const { ref, isHovered } = useHover<HTMLDivElement>();
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        transform: isHovered ? "translateY(-8px)" : "none",
+        boxShadow: isHovered ? "0 12px 24px rgba(0,0,0,0.15)" : "none",
+        transition: "all 0.3s",
+      }}
+    >
+      <h3>{title}</h3>
+      <p>{description}</p>
+      {isHovered && <button>Learn More</button>}
+    </div>
+  );
+}`,
+        language: "tsx",
       },
     },
   },
@@ -796,5 +886,60 @@ function TrackedElement() {
         language: "tsx",
       },
     },
+  },
+};
+
+export const MobileTouch: Story = {
+  render: () => <MobileTouchDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Enable `detectTouch` so `touchstart`/`touchend` also drive hover state on hybrid and mobile devices. A touch and its synthesized mouse event count as a single transition, so `onChange` fires exactly once per tap.",
+      },
+      source: {
+        code: `import { useHover } from "@usefy/use-hover";
+
+function MobileTooltip() {
+  const { ref, isHovered } = useHover<HTMLButtonElement>({
+    detectTouch: true,
+    delay: { enter: 0, leave: 1500 }, // stay visible for 1.5s after touch ends
+  });
+
+  return (
+    <button ref={ref}>
+      {isHovered ? "Tapped/Hovered!" : "Tap or hover"}
+    </button>
+  );
+}`,
+        language: "tsx",
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByTestId("touch-button");
+
+    // Initial state
+    await expect(canvas.getByTestId("touch-status")).toHaveTextContent(
+      "Inactive"
+    );
+
+    // Simulate a touch tap — activates immediately (enter delay 0)
+    fireEvent.touchStart(button);
+    await waitFor(() => {
+      expect(canvas.getByTestId("touch-status")).toHaveTextContent("Active");
+    });
+
+    // Touch end — deactivates after the 1.5s leave delay
+    fireEvent.touchEnd(button);
+    await waitFor(
+      () => {
+        expect(canvas.getByTestId("touch-status")).toHaveTextContent(
+          "Inactive"
+        );
+      },
+      { timeout: 2500 }
+    );
   },
 };

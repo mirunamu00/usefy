@@ -76,6 +76,13 @@ describe("useList", () => {
       expect(result.current[0]).not.toBe(before);
       expect(before).toEqual([1]);
     });
+
+    it("is a no-op (stable reference) when the updater returns the current list", () => {
+      const { result } = renderHook(() => useList<number>([1, 2, 3]));
+      const before = result.current[0];
+      act(() => result.current[1].set((prev) => prev));
+      expect(result.current[0]).toBe(before);
+    });
   });
 
   // ============ push ============

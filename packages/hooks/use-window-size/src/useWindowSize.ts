@@ -76,14 +76,14 @@ export function useWindowSize(
 
   const isSupported = isWindowAvailable();
 
-  // Read the real size synchronously on the client so the very first render
-  // returns the correct value; fall back to the provided initial size in SSR.
-  const [size, setSize] = useState<WindowSize>(() => {
-    if (isSupported && enabled) {
-      return getWindowSize(includeScrollbar);
-    }
-    return { width: initialWidth, height: initialHeight };
-  });
+  // The first render MUST be deterministic and identical on server and client
+  // (initialWidth/initialHeight) — reading the real window size here would make
+  // the client's first render diverge from the server HTML and cause a
+  // hydration mismatch. The real size is measured in the mount effect below.
+  const [size, setSize] = useState<WindowSize>(() => ({
+    width: initialWidth,
+    height: initialHeight,
+  }));
 
   // Keep the latest callback in a ref so it never re-creates the effect.
   const onChangeRef = useRef<OnWindowSizeChange | undefined>(onChange);
@@ -109,8 +109,14 @@ export function useWindowSize(
       return;
     }
 
-    // Sync immediately in case the window changed between render and effect.
-    updateSize();
+    // Post-mount sync: adopt the real window size WITHOUT firing onChange
+    // (onChange is reserved for actual resize events, not the initial measure
+    // that replaces the SSR-safe initial value after hydration).
+    const mounted = getWindowSize(includeScrollbar);
+    if (!areSizesEqual(sizeRef.current, mounted)) {
+      sizeRef.current = mounted;
+      setSize(mounted);
+    }
 
     let timeoutId: ReturnType<typeof setTimeout> | null = null;
     let lastRun = 0;

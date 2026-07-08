@@ -98,7 +98,11 @@ export interface UseHoverOptions {
 
 /**
  * Return type for the useHover hook.
- * Supports both object destructuring and tuple destructuring via Symbol.iterator.
+ *
+ * It is both a labeled, positionally-typed **tuple** `[ref, isHovered]` and an
+ * **object** `{ ref, isHovered }`, so either destructuring form infers precise
+ * types (the tuple positions are `ref` then `boolean`, never a union). The
+ * tuple half is natively iterable, which is what powers `const [ref, isHovered]`.
  *
  * @template T - The type of element the ref will be attached to (HTMLElement or SVGElement)
  *
@@ -114,7 +118,10 @@ export interface UseHoverOptions {
  * const { ref, isHovered } = useHover<SVGSVGElement>();
  * ```
  */
-export interface UseHoverReturn<T extends Element = HTMLElement> {
+export type UseHoverReturn<T extends Element = HTMLElement> = readonly [
+  ref: (node: T | null) => void,
+  isHovered: boolean,
+] & {
   /**
    * Callback ref to attach to the target element.
    * Can be passed directly to the ref prop of any element.
@@ -131,10 +138,4 @@ export interface UseHoverReturn<T extends Element = HTMLElement> {
    * Boolean indicating whether the element is currently being hovered.
    */
   isHovered: boolean;
-
-  /**
-   * Iterator for tuple destructuring support.
-   * Allows `const [ref, isHovered] = useHover()` syntax.
-   */
-  [Symbol.iterator](): Iterator<((node: T | null) => void) | boolean>;
-}
+};

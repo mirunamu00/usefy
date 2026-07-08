@@ -21,9 +21,11 @@ import type {
   UseMemoryMonitorReturn,
 } from "./types";
 import {
+  DEFAULT_LEAK_WINDOW_SIZE,
   DEFAULT_OPTIONS,
   DEFAULT_SEVERITY,
   DEFAULT_TREND,
+  MIN_LEAK_DETECTION_SAMPLES,
   SSR_FORMATTED_MEMORY,
 } from "./constants";
 import {
@@ -202,6 +204,14 @@ export function useMemoryMonitor(
   // Monitoring state ref
   const isMonitoringRef = useRef<boolean>(false);
 
+  // Tracks whether monitoring was active immediately before the tab was hidden,
+  // so visibility restore only resumes monitoring the user hadn't already stopped.
+  const wasMonitoringBeforeHiddenRef = useRef<boolean>(false);
+
+  // Guard so onUnsupported fires at most once per unsupported condition
+  // (avoids a double fire under React StrictMode's double-invoked effects).
+  const hasFiredUnsupportedRef = useRef<boolean>(false);
+
   // Determine if monitoring is supported
   const isSupported = useMemo(() => {
     if (isServer()) return false;
@@ -266,10 +276,10 @@ export function useMemoryMonitor(
   const leakAnalysis = useMemo((): LeakAnalysis | null => {
     if (!leakDetection.enabled || !enableHistory) return null;
 
-    const windowSize = leakDetection.windowSize ?? 10;
+    const windowSize = leakDetection.windowSize ?? DEFAULT_LEAK_WINDOW_SIZE;
     const samples = historyBufferRef.current?.getRecent(windowSize) ?? [];
 
-    if (samples.length < 5) return null;
+    if (samples.length < MIN_LEAK_DETECTION_SAMPLES) return null;
 
     return analyzeLeakProbability(
       samples,
@@ -483,8 +493,12 @@ export function useMemoryMonitor(
 
     const handleVisibilityChange = () => {
       if (document.hidden) {
+        // Remember whether the user was actively monitoring so we only auto-resume
+        // work that the tab paused — never work the user manually stopped.
+        wasMonitoringBeforeHiddenRef.current = isMonitoringRef.current;
         stop();
-      } else if (autoStart && isSupported && enabled) {
+      } else if (wasMonitoringBeforeHiddenRef.current && isSupported && enabled) {
+        wasMonitoringBeforeHiddenRef.current = false;
         start();
       }
     };
@@ -494,7 +508,7 @@ export function useMemoryMonitor(
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, [autoStart, isSupported, enabled, start, stop]);
+  }, [isSupported, enabled, start, stop]);
 
   // Severity change callback effect
   useEffect(() => {
@@ -503,7 +517,7 @@ export function useMemoryMonitor(
     const prevSeverity = prevSeverityRef.current;
     prevSeverityRef.current = severity;
 
-    if (!memory || !usagePercentage) return;
+    if (!memory || usagePercentage === null) return;
 
     const callbackData = {
       memory,
@@ -531,12 +545,20 @@ export function useMemoryMonitor(
     prevLeakDetectedRef.current = isLeakDetected;
   }, [isLeakDetected, leakAnalysis]);
 
-  // Unsupported callback effect
+  // Unsupported callback effect.
+  // Fires once per unsupported condition; a StrictMode double-invoke (mount →
+  // cleanup → mount) sees the ref already set and does not fire a second time.
+  // The guard resets whenever support is (re)gained so a later loss re-notifies.
   useEffect(() => {
-    if (!isSupported && onUnsupportedRef.current) {
-      const unsupportedInfo = createUnsupportedInfo();
-      onUnsupportedRef.current(unsupportedInfo);
+    if (isSupported) {
+      hasFiredUnsupportedRef.current = false;
+      return;
     }
+
+    if (hasFiredUnsupportedRef.current) return;
+    hasFiredUnsupportedRef.current = true;
+
+    onUnsupportedRef.current?.(createUnsupportedInfo());
   }, [isSupported]);
 
   // SSR early return

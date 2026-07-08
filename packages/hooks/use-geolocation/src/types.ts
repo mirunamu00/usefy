@@ -95,7 +95,10 @@ export interface UseGeolocationOptions {
   immediate?: boolean;
 
   /**
-   * Callback when position is successfully retrieved
+   * Callback when position is successfully retrieved.
+   * Fires on every successful acquisition — once per `getCurrentPosition()`
+   * call and on every position update while watching. In watch mode the same
+   * `GeoPosition` instance is passed to both `onSuccess` and `onPositionChange`.
    * @param position - The geolocation position data
    */
   onSuccess?: (position: GeoPosition) => void;

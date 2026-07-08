@@ -283,4 +283,27 @@ describe("utils", () => {
       ).toBe(false);
     });
   });
+
+  describe("hydration safety (audit regression)", () => {
+    it("first render returns the SSR-safe initial values, not the live window size", () => {
+      setWindowSize(1280, 720);
+      const sizes: Array<{ width: number; height: number }> = [];
+      renderHook(() => {
+        const s = useWindowSize({ initialWidth: 111, initialHeight: 222 });
+        sizes.push(s);
+        return s;
+      });
+      // First commit must equal the deterministic initial values (matches the
+      // server HTML) to avoid a hydration mismatch; the real size is adopted
+      // only after the mount effect.
+      expect(sizes[0]).toEqual({ width: 111, height: 222 });
+      expect(sizes[sizes.length - 1]).toEqual({ width: 1280, height: 720 });
+    });
+
+    it("does not fire onChange for the silent post-mount measurement", () => {
+      const onChange = vi.fn();
+      renderHook(() => useWindowSize({ onChange }));
+      expect(onChange).not.toHaveBeenCalled();
+    });
+  });
 });

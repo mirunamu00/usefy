@@ -102,29 +102,46 @@ export function useUnmount(
 ): void {
   const { enabled = true } = options;
 
-  // Store callback in ref to always have the latest version
+  // Store callback in ref to always have the latest version.
   // This ensures closure freshness - the callback at unmount time
-  // will have access to the most recent state/props values
+  // will have access to the most recent state/props values.
   const callbackRef = useRef(callback);
 
-  // Update the ref on every render to capture latest callback
-  callbackRef.current = callback;
+  // Track the latest `enabled` value in a ref so the cleanup can read it at
+  // unmount time without needing `enabled` in the effect's dependency array.
+  const enabledRef = useRef(enabled);
+
+  // Update the refs after each commit (post-commit convention) so the values
+  // are refreshed without re-running the unmount effect. Keeping the writes in
+  // an effect rather than during render is concurrent-safe: React may render a
+  // component without committing it, and we only want committed values here.
+  useEffect(() => {
+    callbackRef.current = callback;
+  });
 
   useEffect(() => {
-    // If disabled, don't set up cleanup
-    if (!enabled) {
-      return;
-    }
+    enabledRef.current = enabled;
+  });
 
-    // Return cleanup function
+  // Empty dependency array: this effect runs once on mount and its cleanup runs
+  // ONLY on real unmount. Because `enabled` lives in a ref, toggling it while
+  // the component is still mounted never re-runs this effect, so the callback
+  // is never fired prematurely - it honors the `enabled` value at unmount time.
+  useEffect(() => {
     return () => {
+      // Read the latest enabled value at unmount time.
+      if (!enabledRef.current) {
+        return;
+      }
+
       try {
         callbackRef.current();
       } catch (error) {
-        // Log the error to help with debugging
-        // Catch to prevent breaking other unmounts in the component tree
+        // Log the error to help with debugging.
+        // Catch to prevent breaking other unmounts in the component tree.
         console.error("useUnmount: Error in unmount callback:", error);
       }
     };
-  }, [enabled]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }

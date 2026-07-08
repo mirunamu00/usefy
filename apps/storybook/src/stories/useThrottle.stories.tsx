@@ -1556,7 +1556,6 @@ function ClickEventThrottleExample() {
       </p>
       <button
         onClick={handleClick}
-        disabled={isOnCooldown}
         style={{
           width: "100%",
           padding: "1rem",
@@ -1568,7 +1567,7 @@ function ClickEventThrottleExample() {
             : "linear-gradient(to bottom right, #a855f7, #7c3aed)",
           border: "none",
           borderRadius: "0.5rem",
-          cursor: isOnCooldown ? "not-allowed" : "pointer",
+          cursor: "pointer",
         }}
       >
         {isOnCooldown ? "Cooldown..." : "🔄 Renew Token"}

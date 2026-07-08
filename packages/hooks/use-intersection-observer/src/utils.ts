@@ -105,45 +105,6 @@ export function normalizeThreshold(
 }
 
 /**
- * Deep compare two IntersectionObserverInit options objects
- * Used to determine if observer needs to be recreated
- *
- * @param a - First options object
- * @param b - Second options object
- * @returns true if options are equal
- */
-export function areOptionsEqual(
-  a: IntersectionObserverInit,
-  b: IntersectionObserverInit
-): boolean {
-  // Compare root
-  if (a.root !== b.root) {
-    return false;
-  }
-
-  // Compare rootMargin
-  if (a.rootMargin !== b.rootMargin) {
-    return false;
-  }
-
-  // Compare threshold (normalize to arrays for comparison)
-  const thresholdA = normalizeThreshold(a.threshold);
-  const thresholdB = normalizeThreshold(b.threshold);
-
-  if (thresholdA.length !== thresholdB.length) {
-    return false;
-  }
-
-  for (let i = 0; i < thresholdA.length; i++) {
-    if (thresholdA[i] !== thresholdB[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/**
  * Create a no-op ref callback for SSR environments
  * Returns a function that does nothing when called
  */
@@ -151,18 +112,4 @@ export function createNoopRef(): (node: Element | null) => void {
   return () => {
     // No-op for SSR
   };
-}
-
-/**
- * Validate rootMargin string format
- * rootMargin follows CSS margin syntax: "10px", "10px 20px", "10px 20px 30px 40px"
- *
- * @param rootMargin - The rootMargin string to validate
- * @returns true if valid format
- */
-export function isValidRootMargin(rootMargin: string): boolean {
-  // Basic validation - rootMargin should contain px or %
-  // Browser will handle more detailed validation
-  const pattern = /^(-?\d+(\.\d+)?(px|%)?\s*){1,4}$/;
-  return pattern.test(rootMargin.trim());
 }

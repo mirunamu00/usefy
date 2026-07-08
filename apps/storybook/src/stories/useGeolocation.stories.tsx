@@ -437,6 +437,29 @@ export const Basic: Story = {
   render: () => <BasicGeolocationDemo />,
   parameters: {
     docs: {
+      source: {
+        language: "tsx",
+        type: "code",
+        code: `import { useGeolocation } from "@usefy/use-geolocation";
+
+function CurrentLocation() {
+  const { position, loading, error, permission, isSupported } = useGeolocation();
+
+  if (!isSupported) return <p>Geolocation is not supported</p>;
+  if (loading) return <p>Getting your location…</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  if (!position) return <p>No position yet</p>;
+
+  return (
+    <div>
+      <p>Permission: {permission}</p>
+      <p>Latitude: {position.coords.latitude.toFixed(6)}°</p>
+      <p>Longitude: {position.coords.longitude.toFixed(6)}°</p>
+      <p>Accuracy: ±{position.coords.accuracy.toFixed(1)}m</p>
+    </div>
+  );
+}`,
+      },
       description: {
         story:
           "Basic usage that automatically fetches the user's current location on mount. Shows all available coordinate data including latitude, longitude, accuracy, and optional fields like altitude, speed, and heading.",
@@ -452,6 +475,59 @@ export const ManualControl: Story = {
   render: () => <ManualControlDemo />,
   parameters: {
     docs: {
+      source: {
+        language: "tsx",
+        type: "code",
+        code: `import { useState } from "react";
+import { useGeolocation } from "@usefy/use-geolocation";
+
+function ManualControl() {
+  const {
+    position,
+    loading,
+    error,
+    getCurrentPosition,
+    watchPosition,
+    clearWatch,
+  } = useGeolocation({ immediate: false, watch: false });
+
+  const [isWatching, setIsWatching] = useState(false);
+
+  return (
+    <div>
+      <button onClick={getCurrentPosition} disabled={loading}>
+        Get Current Location
+      </button>
+      <button
+        onClick={() => {
+          watchPosition();
+          setIsWatching(true);
+        }}
+        disabled={isWatching}
+      >
+        Start Tracking
+      </button>
+      <button
+        onClick={() => {
+          clearWatch();
+          setIsWatching(false);
+        }}
+        disabled={!isWatching}
+      >
+        Stop Tracking
+      </button>
+
+      {error && <p>{error.message}</p>}
+      {position && (
+        <p>
+          {position.coords.latitude.toFixed(6)},{" "}
+          {position.coords.longitude.toFixed(6)}
+        </p>
+      )}
+    </div>
+  );
+}`,
+      },
       description: {
         story:
           "Demonstrates manual control with immediate: false. Get location on demand with getCurrentPosition() or start/stop real-time tracking with watchPosition()/clearWatch().",
@@ -482,6 +558,39 @@ export const DistanceCalculation: Story = {
   render: () => <DistanceCalculationDemo />,
   parameters: {
     docs: {
+      source: {
+        language: "tsx",
+        type: "code",
+        code: `import { useGeolocation } from "@usefy/use-geolocation";
+
+const CITIES = [
+  { name: "New York", lat: 40.7128, lon: -74.006 },
+  { name: "London", lat: 51.5074, lon: -0.1278 },
+  { name: "Tokyo", lat: 35.6762, lon: 139.6503 },
+];
+
+function DistanceCalculator() {
+  const { position, distanceFrom, bearingTo } = useGeolocation();
+
+  if (!position) return <p>Getting your location…</p>;
+
+  return (
+    <ul>
+      {CITIES.map((city) => {
+        const distance = distanceFrom(city.lat, city.lon);
+        const bearing = bearingTo(city.lat, city.lon);
+
+        return (
+          <li key={city.name}>
+            {city.name}: {distance ? (distance / 1000).toFixed(0) : "—"} km
+            {bearing !== null && \` at \${bearing.toFixed(0)}°\`}
+          </li>
+        );
+      })}
+    </ul>
+  );
+}`,
+      },
       description: {
         story:
           "Uses distanceFrom() and bearingTo() utility functions to calculate distances (in meters) and bearings (in degrees) to famous world cities. The Haversine formula is used for distance calculation.",
@@ -497,6 +606,40 @@ export const HighAccuracyMode: Story = {
   render: () => <HighAccuracyDemo />,
   parameters: {
     docs: {
+      source: {
+        language: "tsx",
+        type: "code",
+        code: `import { useState } from "react";
+import { useGeolocation } from "@usefy/use-geolocation";
+
+function AccuracyComparison() {
+  const standard = useGeolocation({
+    enableHighAccuracy: false,
+    immediate: false,
+  });
+  const highAccuracy = useGeolocation({
+    enableHighAccuracy: true,
+    immediate: false,
+  });
+
+  const [mode, setMode] = useState<"standard" | "high">("standard");
+  const current = mode === "standard" ? standard : highAccuracy;
+
+  return (
+    <div>
+      <button onClick={() => setMode("standard")}>Standard</button>
+      <button onClick={() => setMode("high")}>High Accuracy</button>
+      <button onClick={current.getCurrentPosition} disabled={current.loading}>
+        Get Location ({mode})
+      </button>
+
+      {current.position && (
+        <p>Accuracy: ±{current.position.coords.accuracy.toFixed(1)}m</p>
+      )}
+    </div>
+  );
+}`,
+      },
       description: {
         story:
           "Compare standard vs high accuracy mode. High accuracy uses GPS which provides better precision but may take longer and consume more battery. Toggle between modes to see the difference in accuracy values.",
@@ -651,6 +794,56 @@ export const RealTimeTracking: Story = {
   },
   parameters: {
     docs: {
+      source: {
+        language: "tsx",
+        type: "code",
+        code: `import { useEffect, useState } from "react";
+import { useGeolocation } from "@usefy/use-geolocation";
+
+function RealTimeTracking() {
+  const { position, loading, watchPosition, clearWatch } = useGeolocation({
+    immediate: false,
+    watch: false,
+    onPositionChange: (pos) => console.log("Position updated:", pos),
+  });
+
+  const [isTracking, setIsTracking] = useState(false);
+  const [updateCount, setUpdateCount] = useState(0);
+
+  useEffect(() => {
+    if (position) setUpdateCount((n) => n + 1);
+  }, [position]);
+
+  const start = () => {
+    watchPosition();
+    setIsTracking(true);
+    setUpdateCount(0);
+  };
+  const stop = () => {
+    clearWatch();
+    setIsTracking(false);
+  };
+
+  return (
+    <div>
+      <button onClick={start} disabled={isTracking || loading}>
+        Start Tracking
+      </button>
+      <button onClick={stop} disabled={!isTracking}>
+        Stop Tracking
+      </button>
+
+      {isTracking && <p>LIVE — {updateCount} updates</p>}
+      {position && (
+        <p>
+          {position.coords.latitude.toFixed(6)},{" "}
+          {position.coords.longitude.toFixed(6)}
+        </p>
+      )}
+    </div>
+  );
+}`,
+      },
       description: {
         story:
           "Demonstrates real-time position tracking using watchPosition(). The position updates automatically as the device moves. Use onPositionChange callback to react to position updates.",

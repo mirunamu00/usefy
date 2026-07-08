@@ -164,9 +164,14 @@ export function useHistoryState<T>(
   }, []);
 
   const reset = useCallback(() => {
-    setTimeline({
-      history: [(initialRef.current as { value: T }).value],
-      index: 0,
+    setTimeline((prev) => {
+      const initial = (initialRef.current as { value: T }).value;
+      // Already at the pristine initial state — skip the re-render.
+      return prev.history.length === 1 &&
+        prev.index === 0 &&
+        Object.is(prev.history[0], initial)
+        ? prev
+        : { history: [initial], index: 0 };
     });
   }, []);
 

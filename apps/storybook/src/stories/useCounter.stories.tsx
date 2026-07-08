@@ -50,6 +50,12 @@ const meta: Meta<typeof CounterDemo> = {
   component: CounterDemo,
   parameters: {
     layout: "centered",
+    docs: {
+      description: {
+        component:
+          "A hook for managing counter state with increment, decrement, and reset. Ideal for quantity selectors, pagination, and scoreboards.",
+      },
+    },
   },
   tags: ["autodocs"],
   argTypes: {

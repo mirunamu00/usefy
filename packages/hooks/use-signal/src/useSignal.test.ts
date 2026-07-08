@@ -1,7 +1,14 @@
 import { renderHook, act } from "@testing-library/react";
+import { StrictMode, createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { useSignal } from "./useSignal";
-import { clearAllSignals } from "./store";
+import {
+  clearAllSignals,
+  getEmitCount,
+  getSnapshot,
+  getSubscriberCount,
+} from "./store";
 
 describe("useSignal", () => {
   beforeEach(() => {
@@ -644,6 +651,178 @@ describe("useSignal", () => {
 
       expect(result.current.signal).toBe(2);
       expect(onEmit).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe("StrictMode safety", () => {
+    it("fires emitOnMount exactly once under StrictMode", () => {
+      // Without the didEmitOnMountRef guard, StrictMode's mount → unmount →
+      // remount double-invoke fires the mount emit twice. onEmit is called by
+      // baseEmit regardless of store eviction, so its call count is the robust
+      // signal of a double-fire.
+      const onEmit = vi.fn();
+      renderHook(
+        () => useSignal("strict-mount", { emitOnMount: true, onEmit }),
+        { wrapper: StrictMode }
+      );
+
+      expect(onEmit).toHaveBeenCalledTimes(1);
+    });
+
+    it("does not double-subscribe under StrictMode", () => {
+      const { result } = renderHook(() => useSignal("strict-sub"), {
+        wrapper: StrictMode,
+      });
+
+      // A leaked subscription from the discarded first mount would show 2.
+      expect(result.current.info.subscriberCount).toBe(1);
+    });
+  });
+
+  describe("store eviction", () => {
+    it("evicts the store entry after all subscribers unmount", () => {
+      const { result, unmount } = renderHook(() => useSignal("evict-me"));
+
+      act(() => {
+        result.current.emit();
+        result.current.emit();
+      });
+      expect(result.current.info.emitCount).toBe(2);
+
+      unmount();
+
+      // The entry is gone entirely, not merely emptied of subscribers.
+      expect(getSubscriberCount("evict-me")).toBe(0);
+      expect(getEmitCount("evict-me")).toBe(0);
+      expect(getSnapshot("evict-me")).toBe(0);
+    });
+
+    it("resets version/emitCount for a fresh mount of the same name", () => {
+      const first = renderHook(() => useSignal("reused-name"));
+      act(() => {
+        first.result.current.emit();
+        first.result.current.emit();
+        first.result.current.emit();
+      });
+      expect(first.result.current.signal).toBe(3);
+      first.unmount();
+
+      // A brand-new mount of the same channel starts from a clean slate.
+      const { result } = renderHook(() => useSignal("reused-name"));
+      expect(result.current.signal).toBe(0);
+      expect(result.current.info.emitCount).toBe(0);
+    });
+
+    it("keeps the entry alive while at least one subscriber remains", () => {
+      const keeper = renderHook(() => useSignal("kept"));
+      const leaving = renderHook(() => useSignal("kept"));
+
+      act(() => {
+        keeper.result.current.emit();
+      });
+      expect(getEmitCount("kept")).toBe(1);
+
+      leaving.unmount();
+
+      // One subscriber left ⇒ entry (and its emitCount) survives.
+      expect(getSubscriberCount("kept")).toBe(1);
+      expect(getEmitCount("kept")).toBe(1);
+    });
+  });
+
+  describe("dynamic enabled toggle", () => {
+    it("subscribes and unsubscribes as enabled flips across renders", () => {
+      const watcher = renderHook(() => useSignal("dyn-enabled"));
+      const { result, rerender } = renderHook(
+        ({ enabled }) => useSignal("dyn-enabled", { enabled }),
+        { initialProps: { enabled: false } }
+      );
+
+      // Disabled: only the watcher is subscribed and the toggled hook is inert.
+      expect(watcher.result.current.info.subscriberCount).toBe(1);
+      act(() => {
+        watcher.result.current.emit();
+      });
+      expect(result.current.signal).toBe(0);
+
+      // Enable ⇒ it subscribes and starts receiving updates.
+      rerender({ enabled: true });
+      act(() => {
+        watcher.result.current.emit();
+      });
+      expect(watcher.result.current.info.subscriberCount).toBe(2);
+      expect(result.current.signal).toBeGreaterThan(0);
+
+      // Disable again ⇒ it unsubscribes.
+      rerender({ enabled: false });
+      act(() => {
+        watcher.result.current.emit();
+      });
+      expect(watcher.result.current.info.subscriberCount).toBe(1);
+    });
+  });
+
+  describe("SSR safety", () => {
+    it("renders the server snapshot (0) without touching the store", () => {
+      function Probe() {
+        const { signal } = useSignal("ssr-signal");
+        return createElement("div", null, String(signal));
+      }
+
+      const html = renderToStaticMarkup(createElement(Probe));
+
+      expect(html).toBe("<div>0</div>");
+      // Server render must not leave a lingering subscription or entry behind.
+      expect(getSubscriberCount("ssr-signal")).toBe(0);
+    });
+  });
+
+  describe("latest onEmit callback", () => {
+    it("does not resubscribe when onEmit identity changes each render", () => {
+      const { result, rerender } = renderHook(
+        ({ cb }) => useSignal("cb-stable", { onEmit: cb }),
+        { initialProps: { cb: () => {} } }
+      );
+
+      expect(result.current.info.subscriberCount).toBe(1);
+
+      // New function identity on every rerender must not churn the subscription.
+      rerender({ cb: () => {} });
+      rerender({ cb: () => {} });
+      expect(result.current.info.subscriberCount).toBe(1);
+
+      // The most recent callback is the one invoked on emit.
+      const latest = vi.fn();
+      rerender({ cb: latest });
+      act(() => {
+        result.current.emit();
+      });
+      expect(latest).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("debounce with changing name", () => {
+    it("does not emit to the previous channel when name changes mid-debounce", () => {
+      const watcherA = renderHook(() => useSignal("channel-a"));
+      const emitter = renderHook(
+        ({ name }) => useSignal(name, { debounce: 100 }),
+        { initialProps: { name: "channel-a" } }
+      );
+
+      // Schedule a debounced emit against "channel-a"...
+      act(() => {
+        emitter.result.current.emit();
+      });
+
+      // ...then switch the channel before the timer fires.
+      emitter.rerender({ name: "channel-b" });
+
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
+
+      // The pending timer must have been cancelled; "channel-a" never fires.
+      expect(watcherA.result.current.signal).toBe(0);
     });
   });
 });

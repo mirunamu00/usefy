@@ -16,7 +16,7 @@ export {
 } from "@usefy/use-copy-to-clipboard";
 
 // useCounter
-export { useCounter } from "@usefy/use-counter";
+export { useCounter, type UseCounterReturn } from "@usefy/use-counter";
 
 // useSignal
 export {
@@ -86,8 +86,11 @@ export {
 // useTimer
 export {
   useTimer,
+  ms,
   type TimeUnit,
   type TimeFormat,
+  type TimeFormatter,
+  type TimerStatus,
   type UseTimerOptions,
   type UseTimerReturn,
 } from "@usefy/use-timer";
@@ -128,14 +131,31 @@ export {
   type OnChangeCallback,
 } from "@usefy/use-intersection-observer";
 
+// useResizeObserver — observe an element's size (content/border/device-pixel
+// box) with debounce/throttle, callbacks, and SSR support. Mirrors the package's
+// public surface; the advanced device-pixel probe stays package-only.
+export {
+  useResizeObserver,
+  isResizeObserverSupported,
+  toResizeEntry,
+  extractSize,
+  createInitialResizeEntry,
+  type UseResizeObserverOptions,
+  type UseResizeObserverReturn,
+  type ResizeEntry,
+  type ResizeObserverBoxOptions,
+  type OnResizeCallback,
+  type OnErrorCallback,
+} from "@usefy/use-resize-observer";
+
 // useMemoryMonitor
+// The advanced internal algorithm utils (CircularBuffer/linearRegression/
+// calculateTrend) stay package-only — import them from @usefy/use-memory-monitor
+// directly rather than polluting the umbrella namespace.
 export {
   useMemoryMonitor,
   formatBytes,
   detectSupport,
-  CircularBuffer,
-  linearRegression,
-  calculateTrend,
   analyzeLeakProbability,
   type UseMemoryMonitorOptions,
   type UseMemoryMonitorReturn,
@@ -161,6 +181,16 @@ export {
   type UseTimeoutCallback,
   type UseTimeoutReturn,
 } from "@usefy/use-timeout";
+
+// useInterval — declarative setInterval with start/stop/toggle controls,
+// latest-callback ref, null-delay disable, and SSR safety.
+export {
+  useInterval,
+  type IntervalDelay,
+  type UseIntervalCallback,
+  type UseIntervalOptions,
+  type UseIntervalReturn,
+} from "@usefy/use-interval";
 
 // useHover
 export {
@@ -279,9 +309,10 @@ export {
 } from "@usefy/use-idle";
 
 // useWindowSize
+// The generic `isWindowAvailable` SSR guard stays package-only (too generic a
+// name for the umbrella namespace); import it from @usefy/use-window-size directly.
 export {
   useWindowSize,
-  isWindowAvailable,
   getWindowSize,
   areSizesEqual,
   type WindowSize,

@@ -1,4 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, type RefObject } from "react";
+
+// SSR-safe layout effect: sync the stored handler before paint on the client,
+// fall back to useEffect on the server (mirrors the house useEventCallback).
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
  * Options for useEventListener hook
@@ -37,16 +42,19 @@ export type EventTargetType<T extends HTMLElement = HTMLElement> =
   | Window
   | Document
   | HTMLElement
-  | React.RefObject<T | null>
+  | RefObject<T | null>
   | null
   | undefined;
 
 /**
  * Check if target is a RefObject
+ *
+ * @internal Exported for unit testing only — not re-exported from the package
+ * entry, so it stays out of the public API.
  */
-function isRefObject<T extends HTMLElement>(
+export function isRefObject<T extends HTMLElement>(
   target: EventTargetType<T>
-): target is React.RefObject<T | null> {
+): target is RefObject<T | null> {
   return (
     target !== null &&
     target !== undefined &&
@@ -56,9 +64,16 @@ function isRefObject<T extends HTMLElement>(
 }
 
 /**
- * Extract actual DOM element from target
+ * Extract actual DOM element from target.
+ *
+ * Returns `null` when there is no element to attach to — an explicit `null`
+ * target, a `RefObject` that hasn't populated yet, or a server environment with
+ * no `window` (SSR).
+ *
+ * @internal Exported for unit testing only — not re-exported from the package
+ * entry, so it stays out of the public API.
  */
-function getTargetElement<T extends HTMLElement>(
+export function getTargetElement<T extends HTMLElement>(
   target: EventTargetType<T>
 ): Window | Document | HTMLElement | null {
   // Default to window if target is undefined (not provided)
@@ -161,7 +176,7 @@ export function useEventListener<
 >(
   eventName: K,
   handler: (event: HTMLElementEventMap[K]) => void,
-  element: React.RefObject<T | null>,
+  element: RefObject<T | null>,
   options?: UseEventListenerOptions
 ): void;
 
@@ -192,6 +207,9 @@ export function useEventListener(
  * - Type-safe event handling with TypeScript inference
  * - Automatic cleanup on unmount
  * - Handler stability (no re-registration on handler change)
+ * - Late-mount aware: a `RefObject` target that populates after the initial
+ *   render (conditional/late mount) or changes on a remount is subscribed as
+ *   soon as its element appears
  * - SSR compatible
  *
  * @param eventName - The event type to listen for
@@ -238,24 +256,29 @@ export function useEventListener(
   // Store handler in ref to avoid re-registering event listeners
   const handlerRef = useRef(handler);
 
-  // Update handler ref on each render to always call the latest handler
-  handlerRef.current = handler;
+  // Sync the latest handler in a layout effect (not during render) so we never
+  // mutate a ref while rendering — a render may be thrown away under concurrent
+  // rendering / StrictMode. This mirrors the house useEventCallback pattern.
+  useIsomorphicLayoutEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
+
+  // Resolve the target to a concrete element on every render and depend on the
+  // *resolved element* below (not the raw `element` arg). A RefObject's identity
+  // is stable, so depending on the ref itself would never re-run the effect when
+  // `ref.current` populates after mount (late/conditional mount) or changes on a
+  // remount — the listener would silently never attach. Depending on the
+  // resolved element re-subscribes as soon as it flips null -> element.
+  const targetElement = getTargetElement(element);
 
   useEffect(() => {
-    // SSR check
-    if (typeof window === "undefined") {
-      return;
-    }
-
     // Don't add listener if disabled
     if (!enabled) {
       return;
     }
 
-    // Get the target element
-    const targetElement = getTargetElement(element);
-
-    // Don't add listener if element is null
+    // Don't add listener if there is no element (null target / unpopulated ref /
+    // SSR). getTargetElement already collapses all of these to null.
     if (!targetElement) {
       return;
     }
@@ -285,5 +308,5 @@ export function useEventListener(
         capture,
       });
     };
-  }, [eventName, element, enabled, capture, passive, once]);
+  }, [eventName, targetElement, enabled, capture, passive, once]);
 }

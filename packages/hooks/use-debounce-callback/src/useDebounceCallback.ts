@@ -24,7 +24,7 @@ export interface UseDebounceCallbackOptions {
 /**
  * Debounced function interface with control methods
  */
-export interface DebouncedFunction<T extends (...args: any[]) => any> {
+export interface DebouncedFunction<T extends (...args: never[]) => unknown> {
   /**
    * Call the debounced function
    */
@@ -100,7 +100,7 @@ export interface DebouncedFunction<T extends (...args: any[]) => any> {
  * }
  * ```
  */
-export function useDebounceCallback<T extends (...args: any[]) => any>(
+export function useDebounceCallback<T extends (...args: never[]) => unknown>(
   callback: T,
   delay: number = 500,
   options: UseDebounceCallbackOptions = {}
@@ -167,7 +167,10 @@ export function useDebounceCallback<T extends (...args: any[]) => any>(
     lastInvokeTimeRef.current = time;
 
     if (args !== undefined) {
-      resultRef.current = callbackRef.current(...args);
+      // The `never[]` constraint keeps `any` out of the public surface, but it
+      // also means calling a value of generic type `T` is inferred as `unknown`;
+      // the call is semantically `ReturnType<T>` since `args` is `Parameters<T>`.
+      resultRef.current = callbackRef.current(...args) as ReturnType<T>;
     }
     return resultRef.current;
   }, []);

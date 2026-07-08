@@ -289,8 +289,8 @@ Utility helpers such as `parseShortcut`, `isKeyPressSupported`, and `isApplePlat
 ## Behavior Notes
 
 - **Held state** — With the default `eventType: "both"`, the returned boolean is `true` only while the key/combination is physically held.
-- **Stuck-key prevention** — If focus leaves the window while a key is held (so `keyup` is never delivered), the state resets on `blur`.
-- **Modifier release** — For combinations, releasing either the primary key or any required modifier ends the pressed state.
+- **Stuck-key prevention** — If focus leaves the window while a key is held (so `keyup` is never delivered), the state resets on `blur`. To keep `onPress`/`onRelease` balanced, `onRelease` also fires once on that `blur`, receiving a synthetic `keyup` event. `onRelease` is **not** fired when the hook is disabled (`enabled: false`) or unmounted while pressed.
+- **Modifier release** — For combinations, releasing either the primary key or a modifier that was part of the held trigger ends the pressed state. Releasing an unrelated modifier (e.g. `Shift` while holding a bare `"a"`) does **not** reset it.
 - **SSR** — In non-browser environments the hook safely returns `false` and attaches no listeners.
 
 ---
@@ -319,9 +319,9 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Files
 
-- `useKeyPress.test.ts` — 49 tests for hook behavior and utilities
+- `useKeyPress.test.ts` — 60 tests for hook behavior and utilities
 
-**Total: 49 tests**
+**Total: 60 tests**
 
 ---
 

@@ -519,11 +519,11 @@ describe("useIntersectionObserver", () => {
         simulateIntersection(targetElement, true);
       });
 
-      // Disable triggerOnce - should reset
+      // Disable triggerOnce - should reset and re-observe the current node
       rerender({ triggerOnce: false });
 
-      // Should be able to observe again
-      // (need to reattach ref since observer was recreated)
+      const observer = getLatestObserver();
+      expect(observer?.observedElements.has(targetElement)).toBe(true);
     });
 
     it("should not trigger on non-intersecting entry", () => {
@@ -607,8 +607,8 @@ describe("useIntersectionObserver", () => {
       // Disable
       rerender({ enabled: false });
 
-      // Observer should be disconnected
-      // Note: The mock may keep the instance but disconnect clears elements
+      // Observer should be disconnected and no elements observed after disable
+      expect(observer?.observedElements.size).toBe(0);
     });
 
     it("should preserve entry when disabled", () => {
@@ -863,7 +863,9 @@ describe("useIntersectionObserver", () => {
       const { result, rerender } = renderHook(
         (props: UseIntersectionObserverOptions) =>
           useIntersectionObserver(props),
-        { initialProps: { threshold: 0.5, rootMargin: "10px" } }
+        // Use a fresh inline array each render to prove the observer is
+        // keyed on the normalized threshold value, not the array identity.
+        { initialProps: { threshold: [0, 0.5], rootMargin: "10px" } }
       );
 
       act(() => {
@@ -872,11 +874,11 @@ describe("useIntersectionObserver", () => {
 
       const observerCountBefore = mockObserverInstances.length;
 
-      // Rerender with same values
-      rerender({ threshold: 0.5, rootMargin: "10px" });
+      // Rerender with a structurally-equal (but new) inline array
+      rerender({ threshold: [0, 0.5], rootMargin: "10px" });
 
-      // Should not create new observer (within same render cycle)
-      // Note: Due to React's effect dependencies, it may recreate
+      // Observer must NOT be torn down / recreated for an equal threshold
+      expect(mockObserverInstances.length).toBe(observerCountBefore);
     });
 
     it("should handle root element becoming null", () => {
@@ -1457,9 +1459,9 @@ describe("useIntersectionObserver", () => {
         vi.advanceTimersByTime(200);
       });
 
-      // Observer should exist but not observing yet
+      // The delayed observer must not have been created / observing yet
       const observer = getLatestObserver();
-      // Depending on implementation, observer might be created but not observing
+      expect(observer?.observedElements.size ?? 0).toBe(0);
     });
 
     it("should cleanup delay timeout on unmount", () => {
@@ -1530,6 +1532,7 @@ describe("useIntersectionObserver", () => {
 
       // Observer should not be recreated just because onChange changed
       // (onChange is stored in a ref)
+      expect(mockObserverInstances.length).toBe(observerCountBefore);
     });
 
     it("should call updated handler after change", () => {
@@ -1684,6 +1687,82 @@ describe("useIntersectionObserver", () => {
 
       expect(onChange1).toHaveBeenCalled();
       // onChange2 should not be called for element1's intersection
+    });
+  });
+
+  // ============ Observer Stability Regressions ============
+  describe("observer stability (regressions)", () => {
+    it("should not recreate the native observer when an equal inline threshold array is passed on every render", () => {
+      const { result, rerender } = renderHook(
+        ({ threshold }: { threshold: number[] }) =>
+          useIntersectionObserver({ threshold }),
+        { initialProps: { threshold: [0, 0.25, 0.5, 0.75, 1] } }
+      );
+
+      act(() => {
+        result.current.ref(targetElement);
+      });
+
+      const countAfterAttach = mockObserverInstances.length;
+
+      // Each rerender passes a brand-new (but structurally-equal) array literal,
+      // exactly what an inline `threshold={[...]}` prop produces.
+      rerender({ threshold: [0, 0.25, 0.5, 0.75, 1] });
+      rerender({ threshold: [0, 0.25, 0.5, 0.75, 1] });
+      rerender({ threshold: [0, 0.25, 0.5, 0.75, 1] });
+
+      // The observer must be reused, not torn down and rebuilt each render.
+      expect(mockObserverInstances.length).toBe(countAfterAttach);
+
+      const observer = getLatestObserver();
+      expect(observer?.observedElements.has(targetElement)).toBe(true);
+    });
+
+    it("should recreate the observer only when the threshold value actually changes", () => {
+      const { result, rerender } = renderHook(
+        ({ threshold }: { threshold: number[] }) =>
+          useIntersectionObserver({ threshold }),
+        { initialProps: { threshold: [0, 0.5] } }
+      );
+
+      act(() => {
+        result.current.ref(targetElement);
+      });
+
+      const countBefore = mockObserverInstances.length;
+
+      // Equal value -> no recreation
+      rerender({ threshold: [0, 0.5] });
+      expect(mockObserverInstances.length).toBe(countBefore);
+
+      // Genuinely different value -> recreation
+      rerender({ threshold: [0, 0.5, 1] });
+      expect(mockObserverInstances.length).toBeGreaterThan(countBefore);
+    });
+
+    it("should coerce inView to a strict boolean regardless of the native entry value", () => {
+      const { result } = renderHook(() => useIntersectionObserver());
+
+      act(() => {
+        result.current.ref(targetElement);
+      });
+
+      const observer = getLatestObserver();
+
+      // Feed a truthy but non-boolean isIntersecting (as some polyfills do).
+      act(() => {
+        observer?.callback(
+          [
+            {
+              ...createMockEntry(targetElement, true),
+              isIntersecting: 1 as unknown as boolean,
+            },
+          ],
+          observer as unknown as IntersectionObserver
+        );
+      });
+
+      expect(typeof result.current.inView).toBe("boolean");
     });
   });
 });

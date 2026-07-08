@@ -48,8 +48,12 @@ export function subscribe(name: string, listener: () => void): () => void {
   return () => {
     signal.subscribers.delete(listener);
 
-    // Cleanup: remove the signal entry if no more subscribers and never emitted
-    if (signal.subscribers.size === 0 && signal.emitCount === 0) {
+    // Cleanup: remove the signal entry once the last subscriber leaves.
+    // This is unconditional (regardless of emitCount) so dynamically-named
+    // signals don't accumulate forever, and a fresh mount of the same name
+    // starts from a clean version/emitCount/data of 0 rather than inheriting
+    // stale state from a previous, fully-unmounted lifecycle.
+    if (signal.subscribers.size === 0) {
       signalStore.delete(name);
     }
   };

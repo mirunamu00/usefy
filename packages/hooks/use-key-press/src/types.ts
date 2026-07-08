@@ -149,6 +149,12 @@ export interface UseKeyPressOptions {
 
   /**
    * Called when a previously matched target is released on `keyup`.
+   *
+   * To keep `onPress`/`onRelease` balanced, this also fires once when the
+   * window loses focus (`blur`) while the target was held — in that case it
+   * receives a **synthetic** `keyup` event (no real key data), since the OS
+   * never delivers a real `keyup`. It is **not** called when the hook is
+   * disabled (`enabled: false`) or unmounted while pressed.
    */
   onRelease?: (event: KeyboardEvent) => void;
 }

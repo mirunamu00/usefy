@@ -132,6 +132,12 @@ export function useHover<T extends Element = HTMLElement>(
   // ============ State ============
   const [isHovered, setIsHovered] = useState<boolean>(initialHovered);
 
+  // Track the committed hover state synchronously so we only react to real
+  // transitions. Without this, hybrid/touch devices that fire both a touch
+  // event and the synthesized mouse event would flip state (and call onChange)
+  // twice for a single logical hover.
+  const isHoveredRef = useRef<boolean>(initialHovered);
+
   // ============ Normalize delay values ============
   const { enterDelay, leaveDelay } = normalizeDelay(delay);
 
@@ -147,6 +153,21 @@ export function useHover<T extends Element = HTMLElement>(
     }
   }, []);
 
+  // ============ Commit a hover transition ============
+  // Only update state / fire onChange when the hover state actually changes,
+  // so onChange fires once per transition rather than once per DOM event.
+  const commitHoverState = useCallback(
+    (next: boolean, event: MouseEvent | TouchEvent) => {
+      if (isHoveredRef.current === next) {
+        return;
+      }
+      isHoveredRef.current = next;
+      setIsHovered(next);
+      onChangeRef.current?.(next, event);
+    },
+    []
+  );
+
   // ============ Event Handlers ============
   const handleMouseEnter = useCallback(
     (event: MouseEvent | TouchEvent) => {
@@ -154,16 +175,14 @@ export function useHover<T extends Element = HTMLElement>(
 
       if (enterDelay > 0) {
         enterDelayRef.current = setTimeout(() => {
-          setIsHovered(true);
-          onChangeRef.current?.(true, event);
+          commitHoverState(true, event);
           enterDelayRef.current = null;
         }, enterDelay);
       } else {
-        setIsHovered(true);
-        onChangeRef.current?.(true, event);
+        commitHoverState(true, event);
       }
     },
-    [enterDelay, clearTimeouts]
+    [enterDelay, clearTimeouts, commitHoverState]
   );
 
   const handleMouseLeave = useCallback(
@@ -172,16 +191,14 @@ export function useHover<T extends Element = HTMLElement>(
 
       if (leaveDelay > 0) {
         leaveDelayRef.current = setTimeout(() => {
-          setIsHovered(false);
-          onChangeRef.current?.(false, event);
+          commitHoverState(false, event);
           leaveDelayRef.current = null;
         }, leaveDelay);
       } else {
-        setIsHovered(false);
-        onChangeRef.current?.(false, event);
+        commitHoverState(false, event);
       }
     },
-    [leaveDelay, clearTimeouts]
+    [leaveDelay, clearTimeouts, commitHoverState]
   );
 
   // ============ Ref Callback ============
@@ -205,6 +222,7 @@ export function useHover<T extends Element = HTMLElement>(
     if (!enabled) {
       // Reset hover state when disabled
       setIsHovered(false);
+      isHoveredRef.current = false;
       clearTimeouts();
       return;
     }
@@ -274,26 +292,22 @@ export function useHover<T extends Element = HTMLElement>(
 
   // ============ SSR Return ============
   if (!isSupported) {
-    const ssrResult: UseHoverReturn<T> = {
-      ref: createNoopRef<T>(),
-      isHovered: initialHovered,
-      [Symbol.iterator]: function* () {
-        yield this.ref;
-        yield this.isHovered;
-      },
-    };
-    return ssrResult;
+    return createHoverReturn<T>(createNoopRef<T>(), initialHovered);
   }
 
-  // ============ Return with iterator support ============
-  const result: UseHoverReturn<T> = {
-    ref: setRef,
-    isHovered,
-    [Symbol.iterator]: function* () {
-      yield this.ref;
-      yield this.isHovered;
-    },
-  };
+  // ============ Return (tuple + object, natively iterable) ============
+  return createHoverReturn<T>(setRef, isHovered);
+}
 
-  return result;
+/**
+ * Build the {@link UseHoverReturn} value: a real array so it is natively
+ * iterable with precise tuple positions (`[ref, isHovered]`), plus the named
+ * `ref`/`isHovered` properties for object destructuring.
+ */
+function createHoverReturn<T extends Element>(
+  ref: (node: T | null) => void,
+  isHovered: boolean
+): UseHoverReturn<T> {
+  const tuple: [(node: T | null) => void, boolean] = [ref, isHovered];
+  return Object.assign(tuple, { ref, isHovered });
 }

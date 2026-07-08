@@ -124,7 +124,7 @@ A hook that returns a debounced version of the provided callback function.
 
 | Parameter  | Type                                | Default | Description                        |
 | ---------- | ----------------------------------- | ------- | ---------------------------------- |
-| `callback` | `T extends (...args: any[]) => any` | —       | The callback function to debounce  |
+| `callback` | `T extends (...args: never[]) => unknown` | —       | The callback function to debounce  |
 | `delay`    | `number`                            | `500`   | The debounce delay in milliseconds |
 | `options`  | `UseDebounceCallbackOptions`        | `{}`    | Additional configuration options   |
 
@@ -138,43 +138,51 @@ A hook that returns a debounced version of the provided callback function.
 
 #### Returns `DebouncedFunction<T>`
 
-| Property    | Type            | Description                                         |
-| ----------- | --------------- | --------------------------------------------------- |
-| `(...args)` | `ReturnType<T>` | The debounced function (same signature as original) |
-| `cancel`    | `() => void`    | Cancels any pending invocation                      |
-| `flush`     | `() => void`    | Immediately invokes any pending invocation          |
-| `pending`   | `() => boolean` | Returns `true` if there's a pending invocation      |
+| Property    | Type                            | Description                                                                                                                     |
+| ----------- | ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| `(...args)` | `ReturnType<T> \| undefined`    | The debounced function (same parameters as the original). Returns the last callback result on a leading-edge invoke, otherwise `undefined`. |
+| `cancel`    | `() => void`                    | Cancels any pending invocation                                                                                                 |
+| `flush`     | `() => ReturnType<T> \| undefined` | Immediately invokes any pending invocation and returns the last callback result (`undefined` if the callback has never run)     |
+| `pending`   | `() => boolean`                 | Returns `true` if there's a pending invocation. Imperative check — see the caveat below; it does not trigger re-renders.        |
 
 ---
 
 ## Examples
 
+> **Note on `pending()`** — `pending()` is an **imperative** check: it reads a ref, so calling it does **not** trigger a re-render. Use it inside event handlers, effects, or `flush`/`cancel` logic — not directly in JSX to reactively toggle UI. To show a "Saving…" indicator that updates on screen, drive it from real state that your callback sets (see the Auto-Save example below).
+
 ### Auto-Save with Cancel
 
 ```tsx
+import { useState } from "react";
 import { useDebounceCallback } from "@usefy/use-debounce-callback";
 
 function Editor() {
   const [content, setContent] = useState("");
+  // Drive the indicator from real state — `pending()` does not re-render.
+  const [saving, setSaving] = useState(false);
 
   const debouncedSave = useDebounceCallback((text: string) => {
     saveToServer(text);
-    console.log("Auto-saved");
+    setSaving(false);
   }, 1000);
 
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
+    setSaving(true);
     debouncedSave(e.target.value);
   };
 
   const handleManualSave = () => {
     // Flush any pending save immediately
     debouncedSave.flush();
+    setSaving(false);
   };
 
   const handleDiscard = () => {
     // Cancel pending save and reset content
     debouncedSave.cancel();
+    setSaving(false);
     setContent("");
   };
 
@@ -183,7 +191,7 @@ function Editor() {
       <textarea value={content} onChange={handleChange} />
       <button onClick={handleManualSave}>Save Now</button>
       <button onClick={handleDiscard}>Discard</button>
-      {debouncedSave.pending() && <span>Saving...</span>}
+      {saving && <span>Saving...</span>}
     </div>
   );
 }
@@ -295,13 +303,18 @@ function ResizeHandler() {
 ### API Request with Pending State
 
 ```tsx
+import { useState } from "react";
 import { useDebounceCallback } from "@usefy/use-debounce-callback";
 
 function DataFetcher() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
+  // "queued" reflects a debounced-but-not-yet-fired request; keep it in state
+  // so the UI re-renders (pending() is imperative and would not).
+  const [queued, setQueued] = useState(false);
 
   const fetchData = useDebounceCallback(async (params: QueryParams) => {
+    setQueued(false);
     setLoading(true);
     try {
       const response = await fetch("/api/data", {
@@ -314,10 +327,15 @@ function DataFetcher() {
     }
   }, 500);
 
+  const handleFetch = () => {
+    setQueued(true);
+    fetchData({ page: 1 });
+  };
+
   return (
     <div>
-      <button onClick={() => fetchData({ page: 1 })}>
-        {fetchData.pending() ? "Request pending..." : "Fetch Data"}
+      <button onClick={handleFetch}>
+        {queued ? "Request pending..." : "Fetch Data"}
       </button>
       {loading && <Spinner />}
     </div>
@@ -366,7 +384,7 @@ const debouncedFn = useDebounceCallback((a: string, b: number) => {
 
 // debouncedFn(string, number) => string | undefined
 // debouncedFn.cancel() => void
-// debouncedFn.flush() => void
+// debouncedFn.flush() => string | undefined
 // debouncedFn.pending() => boolean
 ```
 

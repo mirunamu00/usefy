@@ -89,10 +89,12 @@ export function useList<T>(initialState?: ListInitializer<T>): UseListReturn<T> 
   );
 
   const set = useCallback(
-    (next: T[] | ((prev: readonly T[]) => T[])) => {
+    (next: readonly T[] | ((prev: readonly T[]) => readonly T[])) => {
       setList((prev) => {
         const resolved = typeof next === "function" ? next(prev) : next;
-        return [...resolved];
+        // An updater returning the current reference means nothing changed;
+        // skip the defensive copy so no re-render is forced.
+        return resolved === prev ? prev : [...resolved];
       });
     },
     []

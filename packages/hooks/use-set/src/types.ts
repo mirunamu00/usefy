@@ -48,8 +48,9 @@ export interface UseSetActions<T> {
   toggle: (value: T, force?: boolean) => void;
 
   /**
-   * Whether the set currently contains a value. Stable across renders and always
-   * reflects the latest state.
+   * Whether the set currently contains a value. A stable convenience over the
+   * returned set's own `set.has(...)` — safe to use as an effect dependency,
+   * and always reflects the latest state.
    */
   has: (value: T) => boolean;
 
@@ -60,7 +61,8 @@ export interface UseSetActions<T> {
 
   /**
    * Reset the set back to the initial value provided at mount (a fresh copy, so
-   * later mutations never affect the stored initial).
+   * later mutations never affect the stored initial). Resetting a set that
+   * already equals the initial is a no-op and does not trigger a re-render.
    */
   reset: () => void;
 }

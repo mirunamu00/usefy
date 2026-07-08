@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type {
   UseIntersectionObserverOptions,
   UseIntersectionObserverReturn,
@@ -10,7 +17,16 @@ import {
   toIntersectionEntry,
   createInitialEntry,
   createNoopRef,
+  normalizeThreshold,
 } from "./utils";
+
+/**
+ * useLayoutEffect logs a warning when invoked during server rendering.
+ * Fall back to useEffect on the server so the latest-callback ref can still
+ * be kept up to date without noise in SSR environments.
+ */
+const useIsomorphicLayoutEffect =
+  typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
  * A React hook for observing element visibility using the Intersection Observer API.
@@ -138,7 +154,6 @@ export function useIntersectionObserver(
 
   // ============ Refs for internal state (no re-renders) ============
   const observerRef = useRef<IntersectionObserver | null>(null);
-  const targetRef = useRef<Element | null>(null);
   const hasTriggeredRef = useRef<boolean>(false);
   const delayTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -148,20 +163,32 @@ export function useIntersectionObserver(
     intersectionRatio: number;
   } | null>(null);
 
-  // Store callbacks in refs to avoid effect dependencies
+  // Store the latest onChange callback in a ref so identity changes don't
+  // recreate the observer. Assigned post-commit (never during render) to stay
+  // concurrent/StrictMode safe.
   const onChangeRef = useRef<OnChangeCallback | undefined>(onChange);
-  onChangeRef.current = onChange;
+  useIsomorphicLayoutEffect(() => {
+    onChangeRef.current = onChange;
+  });
 
-  // Force re-render trigger for ref changes
-  const [, forceUpdate] = useState({});
+  // Track the observed node as state so the observer effect re-runs when the
+  // ref callback receives a new element — no manual forceUpdate required.
+  const [node, setNode] = useState<Element | null>(null);
 
   // ============ State (triggers re-renders) ============
   const [entry, setEntry] = useState<IntersectionEntry | null>(() =>
     initialIsIntersecting ? createInitialEntry(true, null) : null
   );
 
-  // Compute inView from entry state
-  const inView = entry?.isIntersecting ?? initialIsIntersecting;
+  // Compute inView from entry state, coercing at the boundary to a strict boolean.
+  const inView = entry ? entry.isIntersecting === true : initialIsIntersecting;
+
+  // Stabilize the threshold so an inline array (e.g. threshold={[0, 0.5, 1]})
+  // does not tear down and recreate the native observer on every render.
+  const thresholdKey = useMemo(
+    () => JSON.stringify(normalizeThreshold(threshold)),
+    [threshold]
+  );
 
   // ============ Observer Callback ============
   const handleIntersection = useCallback(
@@ -193,7 +220,7 @@ export function useIntersectionObserver(
         }
 
         // Handle triggerOnce - unobserve after first intersection
-        if (triggerOnce && nativeEntry.isIntersecting) {
+        if (triggerOnce && nativeEntry.isIntersecting === true) {
           hasTriggeredRef.current = true;
 
           // Unobserve the target
@@ -207,17 +234,8 @@ export function useIntersectionObserver(
   );
 
   // ============ Ref Callback ============
-  const setRef = useCallback((node: Element | null) => {
-    // Store previous target
-    const prevTarget = targetRef.current;
-
-    // Update target ref
-    targetRef.current = node;
-
-    // Force re-render to trigger useEffect with new target
-    if (prevTarget !== node) {
-      forceUpdate({});
-    }
+  const ref = useCallback((element: Element | null) => {
+    setNode(element);
   }, []);
 
   // ============ Effect: Manage Observer Lifecycle ============
@@ -244,23 +262,21 @@ export function useIntersectionObserver(
     }
 
     // Don't create if no target
-    if (!targetRef.current) {
+    if (!node) {
       return;
     }
 
-    const target = targetRef.current;
+    const thresholds = JSON.parse(thresholdKey) as number[];
 
     // Create and observe function
     const createAndObserve = () => {
       observerRef.current = new IntersectionObserver(handleIntersection, {
-        threshold,
+        threshold: thresholds,
         root,
         rootMargin,
       });
 
-      if (target) {
-        observerRef.current.observe(target);
-      }
+      observerRef.current.observe(node);
     };
 
     // Handle delay
@@ -292,18 +308,16 @@ export function useIntersectionObserver(
         observerRef.current = null;
       }
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     enabled,
     triggerOnce,
     delay,
-    threshold,
+    thresholdKey,
     root,
     rootMargin,
     handleIntersection,
     isSupported,
-    // Include target change trigger
-    targetRef.current,
+    node,
   ]);
 
   // ============ Effect: Reset hasTriggered when triggerOnce is disabled ============
@@ -325,6 +339,6 @@ export function useIntersectionObserver(
   return {
     entry,
     inView,
-    ref: setRef,
+    ref,
   };
 }

@@ -375,11 +375,11 @@ export interface UseMemoryMonitorReturn {
   /** Level of API support */
   supportLevel: SupportLevel;
   /** List of available metrics */
-  availableMetrics: AvailableMetric[];
+  availableMetrics: readonly AvailableMetric[];
 
   // Analysis Data
   /** Memory history array (empty if history disabled) */
-  history: MemoryInfo[];
+  history: readonly MemoryInfo[];
   /** Memory usage trend */
   trend: Trend;
   /** Probability of memory leak (0-100) */

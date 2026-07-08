@@ -355,7 +355,7 @@ function HighAccuracyLocation() {
 import { useGeolocation } from "@usefy/use-geolocation";
 
 function PermissionStatus() {
-  const { permission, onPermissionChange } = useGeolocation({
+  const { permission } = useGeolocation({
     onPermissionChange: (state) => {
       console.log("Permission changed:", state);
     },
@@ -498,6 +498,16 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
+**37 tests** covering initialization, one-shot and watch-mode fetching, permission tracking, distance/bearing math, options auto-restart, reference stability, and unmount/StrictMode safety.
+
+Measured coverage (central Vitest v8 run):
+
+| Metric      | `useGeolocation.ts` | `utils.ts` |
+| ----------- | ------------------- | ---------- |
+| Statements  | 93.0%               | 100%       |
+| Branches    | 94.1%               | 100%       |
+| Functions   | 100%                | 100%       |
+
 📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-geolocation/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
@@ -584,6 +594,8 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 - Maintain stable function references across renders
 - Update distanceFrom and bearingTo when position changes
+- Keep control functions stable and avoid re-subscribing the watch when callbacks change identity each render
+- Invoke the latest onSuccess callback without re-registering the watch (latest-callback pattern)
 
 </details>
 
@@ -592,6 +604,8 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 - Clear watch on unmount
 - Clear watch multiple times safely
+- Remove the permission change listener on unmount
+- Avoid listener/setState leaks when unmounted before permissions.query resolves
 
 </details>
 

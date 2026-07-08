@@ -51,7 +51,7 @@
 - **TypeScript First** — Full type safety with exported interfaces
 - **Stable References** — All functions are memoized with `useCallback` for optimal performance
 - **SSR Compatible** — Works seamlessly with Next.js, Remix, and other SSR frameworks
-- **Lightweight** — Minimal bundle footprint (~300B minified + gzipped)
+- **Lightweight** — Tiny footprint (see the bundle size badge above for the current minified + gzipped number)
 - **Well Tested** — Comprehensive test coverage with Vitest
 
 ---

@@ -149,30 +149,24 @@ export function createNoopRef<T extends Element>(): (element: T | null) => void 
 }
 
 /**
- * Check if device-pixel-content-box is supported
+ * Check if the `device-pixel-content-box` observation mode is supported.
+ *
+ * Browsers that don't implement this box mode throw synchronously when it's
+ * passed to `observe()`, so a non-throwing `observe` is the accepted synchronous
+ * capability probe. (The old approach read a flag set inside the observer
+ * callback, which fires asynchronously — so it could never return `true`.)
  */
 export function isDevicePixelContentBoxSupported(): boolean {
   if (!isResizeObserverSupported()) {
     return false;
   }
 
-  // This is a simplified check - actual support detection would require
-  // creating an observer and checking the entry
   try {
-    // Check if the option is accepted without throwing
+    const observer = new ResizeObserver(() => {});
     const testDiv = document.createElement("div");
-    let supported = false;
-
-    const observer = new ResizeObserver((entries) => {
-      if (entries[0]?.devicePixelContentBoxSize) {
-        supported = true;
-      }
-    });
-
     observer.observe(testDiv, { box: "device-pixel-content-box" });
     observer.disconnect();
-
-    return supported;
+    return true;
   } catch {
     return false;
   }
@@ -209,78 +203,4 @@ export function hasSizeChanged(
   newHeight: number
 ): boolean {
   return prevWidth !== newWidth || prevHeight !== newHeight;
-}
-
-/**
- * Create a debounced function
- */
-export function debounceFunction<T extends (...args: unknown[]) => void>(
-  fn: T,
-  delay: number
-): { debouncedFn: T; cancel: () => void } {
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-
-  const debouncedFn = ((...args: unknown[]) => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-    timeoutId = setTimeout(() => {
-      fn(...args);
-      timeoutId = null;
-    }, delay);
-  }) as T;
-
-  const cancel = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      timeoutId = null;
-    }
-  };
-
-  return { debouncedFn, cancel };
-}
-
-/**
- * Create a throttled function
- */
-export function throttleFunction<T extends (...args: unknown[]) => void>(
-  fn: T,
-  interval: number
-): { throttledFn: T; cancel: () => void } {
-  let lastCallTime = 0;
-  let timeoutId: ReturnType<typeof setTimeout> | null = null;
-  let lastArgs: unknown[] | null = null;
-
-  const throttledFn = ((...args: unknown[]) => {
-    const now = Date.now();
-    const timeSinceLastCall = now - lastCallTime;
-
-    if (timeSinceLastCall >= interval) {
-      lastCallTime = now;
-      fn(...args);
-    } else {
-      // Schedule trailing call
-      lastArgs = args;
-      if (!timeoutId) {
-        timeoutId = setTimeout(() => {
-          lastCallTime = Date.now();
-          if (lastArgs) {
-            fn(...lastArgs);
-          }
-          timeoutId = null;
-          lastArgs = null;
-        }, interval - timeSinceLastCall);
-      }
-    }
-  }) as T;
-
-  const cancel = () => {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-      timeoutId = null;
-    }
-    lastArgs = null;
-  };
-
-  return { throttledFn, cancel };
 }

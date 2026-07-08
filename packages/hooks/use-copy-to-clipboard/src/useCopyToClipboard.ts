@@ -137,46 +137,41 @@ export function useCopyToClipboard(
   onErrorRef.current = onError;
   timeoutValueRef.current = timeout;
 
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current !== undefined) {
-        clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
+  // Mounted flag — re-armed on (re-)mount so StrictMode's mount→unmount→mount
+  // double-invoke does not leave it stuck at `false`. Guards post-await state
+  // updates and timer scheduling that would otherwise run after unmount.
+  const mountedRef = useRef(true);
 
-  const copy: CopyFn = useCallback(async (text: string): Promise<boolean> => {
-    // Clear any existing timeout
+  // Clear the pending auto-reset timer, if any.
+  const clearResetTimer = useCallback(() => {
     if (timeoutRef.current !== undefined) {
       clearTimeout(timeoutRef.current);
       timeoutRef.current = undefined;
     }
+  }, []);
 
-    // Check for SSR
-    if (typeof window === "undefined") {
-      const error = new Error("Clipboard is not available in this environment");
-      onErrorRef.current?.(error);
-      return false;
-    }
+  // Cleanup timeout on unmount + maintain the mounted flag.
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      clearResetTimer();
+    };
+  }, [clearResetTimer]);
 
-    try {
-      // Try the modern Clipboard API first
-      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
-        await navigator.clipboard.writeText(text);
-      } else {
-        // Fall back to execCommand
-        const success = fallbackCopyToClipboard(text);
-        if (!success) {
-          throw new Error("Failed to copy text using fallback method");
-        }
-      }
+  // Mark the copy as succeeded: update state, fire onSuccess, and (re)schedule
+  // the auto-reset. Skips all state work once unmounted so a copy() resolving
+  // after unmount never touches state or leaks a timer the cleanup can't clear.
+  const commitSuccess = useCallback(
+    (text: string): boolean => {
+      if (!mountedRef.current) return true;
 
-      // Success
       setCopiedText(text);
       onSuccessRef.current?.(text);
 
-      // Set timeout for auto-reset if enabled
+      // Supersede any in-flight reset timer (e.g. from an overlapping copy)
+      // right at the point of scheduling, so the latest copy always wins.
+      clearResetTimer();
       if (timeoutValueRef.current > 0) {
         timeoutRef.current = setTimeout(() => {
           setCopiedText(null);
@@ -185,35 +180,66 @@ export function useCopyToClipboard(
       }
 
       return true;
-    } catch (err) {
-      // Try fallback if Clipboard API failed
-      try {
-        const success = fallbackCopyToClipboard(text);
-        if (success) {
-          setCopiedText(text);
-          onSuccessRef.current?.(text);
+    },
+    [clearResetTimer]
+  );
 
-          if (timeoutValueRef.current > 0) {
-            timeoutRef.current = setTimeout(() => {
-              setCopiedText(null);
-              timeoutRef.current = undefined;
-            }, timeoutValueRef.current);
-          }
+  const copy: CopyFn = useCallback(
+    async (text: string): Promise<boolean> => {
+      // Clear any existing timeout
+      clearResetTimer();
 
-          return true;
-        }
-      } catch {
-        // Fallback also failed
+      // Check for SSR
+      if (typeof window === "undefined") {
+        const error = new Error(
+          "Clipboard is not available in this environment"
+        );
+        onErrorRef.current?.(error);
+        return false;
       }
 
-      // Both methods failed
-      const error =
-        err instanceof Error ? err : new Error("Failed to copy text to clipboard");
-      setCopiedText(null);
-      onErrorRef.current?.(error);
-      return false;
-    }
-  }, []);
+      try {
+        // Try the modern Clipboard API first
+        if (
+          navigator.clipboard &&
+          typeof navigator.clipboard.writeText === "function"
+        ) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          // Fall back to execCommand
+          const success = fallbackCopyToClipboard(text);
+          if (!success) {
+            throw new Error("Failed to copy text using fallback method");
+          }
+        }
+
+        // Success
+        return commitSuccess(text);
+      } catch (err) {
+        // Try fallback if Clipboard API failed
+        try {
+          const success = fallbackCopyToClipboard(text);
+          if (success) {
+            return commitSuccess(text);
+          }
+        } catch {
+          // Fallback also failed
+        }
+
+        // Both methods failed
+        if (!mountedRef.current) return false;
+
+        const error =
+          err instanceof Error
+            ? err
+            : new Error("Failed to copy text to clipboard");
+        setCopiedText(null);
+        onErrorRef.current?.(error);
+        return false;
+      }
+    },
+    [clearResetTimer, commitSuccess]
+  );
 
   return [copiedText, copy];
 }

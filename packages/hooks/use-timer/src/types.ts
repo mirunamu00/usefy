@@ -23,8 +23,13 @@ export type TimerStatus = "idle" | "running" | "paused" | "finished";
  */
 export interface UseTimerOptions {
   /**
-   * Update interval in milliseconds
-   * @default 100
+   * Update interval in milliseconds — how often the timer recomputes the
+   * remaining time. The hook only re-renders when the *formatted* value
+   * changes, so coarse displays (`MM:SS`, `HH:MM:SS`) update at most once per
+   * second regardless of a small interval. Prefer a larger value (e.g. 250)
+   * for those, and opt into `1` only for millisecond-precision formats such as
+   * `mm:ss.SSS`.
+   * @default 1
    */
   interval?: number;
 

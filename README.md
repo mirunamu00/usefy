@@ -86,7 +86,7 @@ function App() {
 **Highlights:**
 - `useToggle`, `useCounter`, `useObjectState` — State management (boolean, counter, object patch/merge)
 - `useRafState` — `useState` that batches updates to `requestAnimationFrame` (one commit per frame)
-- `useDebounce`, `useThrottle`, `useTimer` — Timing utilities
+- `useDebounce`, `useThrottle`, `useTimer`, `useTimeout`, `useInterval` — Timing utilities
 - `useLocalStorage`, `useSessionStorage`, `useCookie` — Persistent storage (localStorage, sessionStorage, cookies)
 - `useEventListener`, `useOnClickOutside`, `useHover`, `useLongPress`, `useScrollLock`, `useFocusTrap`, `useFocusWithin` — DOM events, gestures & modal accessibility
 - `useInfiniteScroll` — Sentinel-driven infinite loading built on IntersectionObserver
@@ -223,6 +223,8 @@ Some packages may have additional peer dependencies (check individual package do
 | `useThrottle` | Value throttling for rate-limiting |
 | `useThrottleCallback` | Throttled callbacks with cancel/flush |
 | `useTimer` | Countdown timer with drift compensation |
+| `useTimeout` | Declarative setTimeout with reset/clear and isPending |
+| `useInterval` | Declarative setInterval with start/stop/toggle and isRunning |
 | `useLocalStorage` | localStorage with cross-tab sync |
 | `useSessionStorage` | sessionStorage persistence |
 | `useCookie` | Browser cookie as React state, SSR-aware |
@@ -232,6 +234,7 @@ Some packages may have additional peer dependencies (check individual package do
 | `useCopyToClipboard` | Clipboard operations |
 | `useGeolocation` | Device geolocation with tracking |
 | `useIntersectionObserver` | Element visibility detection |
+| `useResizeObserver` | Element size tracking (content/border/device-pixel box) with debounce/throttle and SSR |
 | `useWindowSize` | Window size tracking with debounce/throttle and SSR support |
 | `useHover` | Element hover detection with delay |
 | `useKeyPress` | Keyboard key, shortcut, and combination detection |

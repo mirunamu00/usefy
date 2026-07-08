@@ -1,6 +1,6 @@
 import { renderHook, act } from "@testing-library/react";
-import { describe, it, expect } from "vitest";
-import { useCounter } from "./useCounter";
+import { describe, it, expect, expectTypeOf } from "vitest";
+import { useCounter, type UseCounterReturn } from "./useCounter";
 
 describe("useCounter", () => {
   describe("initialization", () => {
@@ -306,6 +306,22 @@ describe("useCounter", () => {
 
       expect(result1.current.count).toBe(1);
       expect(result2.current.count).toBe(9);
+    });
+  });
+
+  describe("public type surface", () => {
+    it("should expose a return value assignable to UseCounterReturn", () => {
+      const { result } = renderHook(() => useCounter(0));
+
+      // Regression: the hook must return the exported UseCounterReturn shape,
+      // not an anonymous inferred object.
+      expectTypeOf(result.current).toEqualTypeOf<UseCounterReturn>();
+
+      const bundle: UseCounterReturn = result.current;
+      expect(typeof bundle.count).toBe("number");
+      expect(typeof bundle.increment).toBe("function");
+      expect(typeof bundle.decrement).toBe("function");
+      expect(typeof bundle.reset).toBe("function");
     });
   });
 

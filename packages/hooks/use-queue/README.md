@@ -247,11 +247,11 @@ const [queue, actions]: UseQueueReturn<number> = useQueue<number>([1, 2, 3]);
 
 - **FIFO** — `add` appends to the back; `remove` and `peek` operate on the front (`queue[0]`).
 - **`remove` returns the item** — It dequeues and returns the front element in one call, or `undefined` when the queue is empty.
-- **Batched `remove` caveat** — The value `remove` returns is the front at call time. If you call `remove` multiple times synchronously (before React re-renders), each call returns the same front snapshot, though the settled state advances correctly by that many items. Read the returned `queue` array after the render for the final state.
+- **Synchronous dequeue** — The queue advances immediately, so calling `remove` several times in a row within the same event (before React re-renders) dequeues successive items: the first call returns the current front, the second returns the next item, and so on. Read the returned `queue` array after the render for the settled state.
 - **Immutable** — Actions never mutate the current array; they replace it with a new one. Any snapshot you captured stays valid.
 - **Referentially stable actions** — The actions object and each function keep the same identity for the lifetime of the component.
-- **Initial value is copied** — The array/iterable you pass in is never mutated, and `reset` always yields a fresh copy of it.
-- **No-op skipping** — Updates that wouldn't change anything don't create a new array or trigger a re-render.
+- **Initial value is copied** — The array/iterable you pass in is never mutated, and `reset` yields a fresh copy of it.
+- **No-op skipping** — Updates that wouldn't change anything don't create a new array or trigger a re-render. This includes `reset` when the queue already equals its initial value.
 
 ---
 
@@ -265,9 +265,9 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Files
 
-- `useQueue.test.ts` — 24 tests for hook behavior, FIFO semantics, and immutability
+- `useQueue.test.ts` — 28 tests for hook behavior, FIFO semantics, and immutability
 
-**Total: 24 tests**
+**Total: 28 tests**
 
 ---
 
