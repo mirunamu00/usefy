@@ -267,7 +267,7 @@ function HangulDemo() {
 // ============================================================================
 
 const meta: Meta<typeof VirtualKeyboard> = {
-  title: "Components/VirtualKeyboard",
+  title: "virtual-keyboard",
   component: VirtualKeyboard,
   parameters: {
     layout: "centered",
