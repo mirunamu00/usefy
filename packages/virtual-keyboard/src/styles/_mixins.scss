@@ -1,0 +1,51 @@
+@use "variables" as *;
+
+@mixin reset-button {
+  appearance: none;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+}
+
+@mixin focus-ring {
+  &:focus-visible {
+    outline: none;
+    box-shadow:
+      0 0 0 2px var(--usefy-vk-bg, #{$white}),
+      0 0 0 4px var(--usefy-vk-accent, #{$indigo-500});
+  }
+}
+
+// Emit the themeable CSS custom properties consumers can override.
+@mixin theme-light {
+  --usefy-vk-bg: #{$slate-100};
+  --usefy-vk-key-bg: #{$white};
+  --usefy-vk-key-color: #{$slate-900};
+  --usefy-vk-key-border: #{$slate-200};
+  --usefy-vk-key-active-bg: #{$slate-200};
+  --usefy-vk-modifier-bg: #{$slate-200};
+  --usefy-vk-modifier-active-bg: #{$indigo-500};
+  --usefy-vk-modifier-active-color: #{$white};
+  --usefy-vk-accent: #{$indigo-500};
+  --usefy-vk-radius: #{$radius};
+  --usefy-vk-gap: #{$gap};
+  --usefy-vk-key-min-size: #{$key-min-size};
+  --usefy-vk-font: #{$font-family};
+}
+
+@mixin theme-dark {
+  --usefy-vk-bg: #{$slate-900};
+  --usefy-vk-key-bg: #{$slate-800};
+  --usefy-vk-key-color: #{$slate-100};
+  --usefy-vk-key-border: #{$slate-700};
+  --usefy-vk-key-active-bg: #{$slate-700};
+  --usefy-vk-modifier-bg: #{$slate-700};
+  --usefy-vk-modifier-active-bg: #{$indigo-500};
+  --usefy-vk-modifier-active-color: #{$white};
+  --usefy-vk-accent: #{$indigo-400};
+}

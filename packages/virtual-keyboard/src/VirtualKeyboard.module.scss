@@ -1,0 +1,64 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.keyboard {
+  @include theme-light;
+
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: var(--usefy-vk-gap);
+  width: 100%;
+  padding: var(--usefy-vk-gap);
+  background-color: var(--usefy-vk-bg);
+  border-radius: calc(var(--usefy-vk-radius) * 1.5);
+  font-family: var(--usefy-vk-font);
+  -webkit-user-select: none;
+  user-select: none;
+  touch-action: manipulation;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+// Dark theme: applied by the component (`.dark` class) or a host `[data-theme]`.
+.dark {
+  @include theme-dark;
+}
+
+:global([data-theme="dark"]) .keyboard,
+.keyboard:global(.dark) {
+  @include theme-dark;
+}
+
+.row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--usefy-vk-gap);
+  width: 100%;
+}
+
+// Fixed to the bottom of the viewport as a full-width bar.
+.docked {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  border-radius: 0;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.18);
+}
+
+// An elevated floating panel above the bottom edge (responsive, not full-bleed).
+.floating {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  transform: translateX(-50%);
+  width: min(680px, calc(100% - 32px));
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+}

@@ -1,0 +1,83 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.key {
+  @include reset-button;
+  @include focus-ring;
+
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-basis: 0;
+  min-width: var(--usefy-vk-key-min-size);
+  min-height: var(--usefy-vk-key-min-size);
+  padding: 0 6px;
+  border: 1px solid var(--usefy-vk-key-border);
+  border-radius: var(--usefy-vk-radius);
+  background-color: var(--usefy-vk-key-bg);
+  color: var(--usefy-vk-key-color);
+  font-size: 1rem;
+  line-height: 1;
+  transition:
+    background-color $transition-fast $ease,
+    transform $transition-fast $ease;
+
+  &:active:not(:disabled) {
+    background-color: var(--usefy-vk-key-active-bg);
+    transform: scale(0.96);
+  }
+
+  @media (hover: hover) {
+    &:hover:not(:disabled) {
+      background-color: var(--usefy-vk-key-active-bg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: background-color $transition-fast $ease;
+
+    &:active:not(:disabled) {
+      transform: none;
+    }
+  }
+}
+
+.label {
+  pointer-events: none;
+}
+
+// Corner dot marking a key that has accent variants (shown only when enabled).
+.hasVariants {
+  .variantDot {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--usefy-vk-accent);
+    pointer-events: none;
+  }
+}
+
+// Modifier keys (Shift / Caps / layer) get a distinct resting + active look.
+.modifier {
+  background-color: var(--usefy-vk-modifier-bg);
+  font-size: 0.85rem;
+}
+
+.action {
+  font-size: 0.85rem;
+}
+
+.active {
+  background-color: var(--usefy-vk-modifier-active-bg);
+  color: var(--usefy-vk-modifier-active-color);
+  border-color: var(--usefy-vk-modifier-active-bg);
+
+  &:active:not(:disabled),
+  &:hover:not(:disabled) {
+    background-color: var(--usefy-vk-modifier-active-bg);
+  }
+}

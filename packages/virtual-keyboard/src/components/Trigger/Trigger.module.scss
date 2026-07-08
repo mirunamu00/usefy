@@ -1,0 +1,12 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.trigger {
+  @include reset-button;
+  @include focus-ring;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--usefy-vk-radius, #{$radius});
+}

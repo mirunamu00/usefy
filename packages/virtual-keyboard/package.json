@@ -1,0 +1,88 @@
+{
+  "name": "@usefy/virtual-keyboard",
+  "version": "0.22.0",
+  "description": "React on-screen virtual keyboard with a declarative layout engine, headless hook, and enterprise a11y",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./headless": {
+      "types": "./dist/headless.d.ts",
+      "import": "./dist/headless.mjs",
+      "require": "./dist/headless.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@usefy/use-controllable-state": "workspace:*",
+    "@usefy/use-long-press": "workspace:*",
+    "@usefy/use-on-click-outside": "workspace:*",
+    "clsx": "^2.1.1"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "jsdom": "^26.0.0",
+    "postcss": "^8.4.49",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "sass": "^1.83.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.16"
+  },
+  "keywords": [
+    "react",
+    "virtual-keyboard",
+    "on-screen-keyboard",
+    "keyboard",
+    "kiosk",
+    "touch",
+    "accessibility",
+    "a11y",
+    "pin-pad",
+    "headless"
+  ],
+  "author": "usefy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/virtual-keyboard"
+  },
+  "bugs": {
+    "url": "https://github.com/mirunamu00/usefy/issues"
+  },
+  "homepage": "https://github.com/mirunamu00/usefy/tree/master/packages/virtual-keyboard#readme",
+  "publishConfig": {
+    "access": "public"
+  }
+}

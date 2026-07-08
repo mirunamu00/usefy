@@ -368,16 +368,27 @@ export {
 
 ## 5. Architecture
 
-### 5.1 Two-package split (house pattern)
+### 5.1 Single package with a headless subpath (shipped decision)
+
+> **Deviation from the original two-package plan.** v0.1.0 ships as **one**
+> package, `@usefy/virtual-keyboard` (`packages/virtual-keyboard`), rather than a
+> separate `@usefy/use-virtual-keyboard` hook package. The headless engine is
+> exposed through a **`./headless` subpath export** (and everything is also
+> re-exported from the main entry).
 
 ```
-@usefy/use-virtual-keyboard   (packages/hooks/use-virtual-keyboard)  ← headless engine
-        ▲  consumed by
-        │
-@usefy/virtual-keyboard       (packages/virtual-keyboard)           ← styled component
+@usefy/virtual-keyboard            (packages/virtual-keyboard)
+├── "."          → styled component + hook + engine + layouts + types (injects CSS)
+├── "./headless" → hook + engine + layouts + types only (NO styles / CSS side-effects)
+└── "./styles.css" → opt-in extracted stylesheet
 ```
 
-Mirrors `@usefy/use-memory-monitor` → `@usefy/memory-monitor`. The hook holds the layout engine, modifier state, value/caret logic, and the `Composer` seam; the component is presentation + interaction only.
+The engine (layout resolution, modifier state, value/caret logic, and the
+`Composer` seam) lives in pure internal modules under `src/engine/`,
+`src/layouts/`, and `src/composer/`, unit-tested in isolation. Consumers who want
+the headless core without pulling in the styled component import from
+`@usefy/virtual-keyboard/headless`. There is **no** `@usefy/hooks` umbrella wiring
+(the umbrella is for `@usefy/use-*` hook packages only).
 
 ### 5.2 Component file structure
 
@@ -456,31 +467,35 @@ Caret handling: in ref-bound mode the hook reads `selectionStart/End` from the t
 
 ## 6. Development Milestones
 
-### Phase 1 — Headless engine (`@usefy/use-virtual-keyboard`)
+> **Shipped as one package.** Per §5.1 the engine is not a separate
+> `@usefy/use-virtual-keyboard` package; it lives inside `@usefy/virtual-keyboard`
+> (exposed via `./headless`), so "umbrella wiring" below does not apply.
 
-- [ ] Package scaffold (via `add-usefy-hook`).
-- [ ] Types: `KeyDefinition`, `KeyboardLayout`, `Composer`, options/return.
-- [ ] Pure `resolveLayout` (shift/caps/layer) + `applyKey` (insert/backspace/caret) + tests.
-- [ ] `identityComposer`; wire the composer seam (no-op).
-- [ ] Built-in layouts: QWERTY, numeric, phone, email.
-- [ ] `useVirtualKeyboard` with all three input modes + prop-getters.
-- [ ] 90%+ coverage; umbrella wiring; story; READMEs; changeset.
+### Phase 1 — Headless engine ✅ (shipped)
 
-### Phase 2 — Styled component MVP (`@usefy/virtual-keyboard`)
+- [x] Package scaffold.
+- [x] Types: `KeyDefinition`, `KeyboardLayout`, `Composer`, options/return.
+- [x] Pure `resolveLayout` (shift/caps/layer) + `applyKey` (insert/backspace/caret) + tests.
+- [x] `identityComposer`; wire the composer seam (no-op).
+- [x] Built-in layouts: QWERTY, numeric, phone, email.
+- [x] `useVirtualKeyboard` with all three input modes + prop-getters.
+- [x] 90%+ coverage; ~~umbrella wiring~~ (single package); story; READMEs; changeset.
 
-- [ ] Package scaffold (via `add-usefy-component`, SCSS-modules tsup).
-- [ ] `Key`, `Row`, keyboard container; CSS-var theming + light/dark.
-- [ ] Pointer/touch press feedback; responsive sizing (44px targets).
-- [ ] `inline` variant; controlled/uncontrolled/ref-bound wired through.
-- [ ] a11y: roles, `aria-*`, roving focus / arrow-key nav; Escape to hide.
-- [ ] Tests (component + a11y), Storybook, READMEs, changeset.
+### Phase 2 — Styled component MVP ✅ (shipped)
 
-### Phase 3 — Interaction polish
+- [x] Package scaffold (`add-usefy-component`, SCSS-modules tsup).
+- [x] `Key`, `Row`, keyboard container; CSS-var theming + light/dark.
+- [x] Pointer/touch press feedback; responsive sizing (44px targets).
+- [x] `inline` variant; controlled/uncontrolled/ref-bound wired through.
+- [x] a11y: roles, `aria-*`, roving focus / arrow-key nav; Escape to hide.
+- [x] Tests (component + a11y), Storybook, READMEs, changeset.
 
-- [ ] `docked` + `floating` variants, trigger button, `open`/`onOpenChange`.
-- [ ] Long-press accent variants popup; key auto-repeat.
-- [ ] `randomize` (secure PIN pad); `renderKey`/`classNames` slots.
-- [ ] Sound/haptics (optional); RTL.
+### Phase 3 — Interaction polish ✅ (shipped)
+
+- [x] `docked` + `floating` variants, trigger button, `open`/`onOpenChange`.
+- [x] Long-press accent variants popup; key auto-repeat.
+- [x] `randomize` (secure PIN pad); `renderKey`/`classNames` slots.
+- [x] Sound/haptics (optional); RTL.
 
 ### Phase 4 — Layout catalog & composition
 
@@ -594,7 +609,7 @@ describe('applyKey', () => {
 
 ## 13. Resolved Decisions
 
-1. **Package naming** — `@usefy/virtual-keyboard` (component) + `@usefy/use-virtual-keyboard` (engine). ✅ Confirmed.
+1. **Packaging** — ~~`@usefy/virtual-keyboard` (component) + `@usefy/use-virtual-keyboard` (engine)~~ **Superseded (v0.1.0):** ships as a **single** package `@usefy/virtual-keyboard` with the headless engine exposed via a `./headless` subpath export (see §5.1). No separate hook package, no `@usefy/hooks` umbrella wiring. ✅ Confirmed.
 2. **Enter default** — insert newline by default; `submitOnEnter` opt-in fires `onEnter` instead. ✅ Confirmed.
 3. **Variants popup** — long-press to open **and** a visible corner indicator (a small dot) on keys that have variants, so pointer users without press-and-hold discover them; a right-click / secondary-tap also opens the popup. ✅ Confirmed.
 4. **Composer packaging** — future concrete composers (Hangul 두벌식, …) ship as **subpath exports of the engine** (`@usefy/use-virtual-keyboard/hangul`), tree-shakeable and opt-in; the `Composer` interface stays in the main entry. ✅ Confirmed.
