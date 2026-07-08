@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-network-state",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "A React hook for tracking online/offline status and the Network Information API (effectiveType, downlink, saveData) with SSR support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

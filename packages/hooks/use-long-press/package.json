@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-long-press",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "A React hook for long-press gestures with a time threshold and movement cancellation — mouse and touch, with onStart/onFinish/onCancel callbacks",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

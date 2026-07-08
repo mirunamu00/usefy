@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-permission",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "A React hook for reading Permissions API status with live updates, SSR-safe and typed",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

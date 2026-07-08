@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-hotkeys",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "A React hook for high-level keyboard shortcuts — combos, sequences, the cross-platform mod alias, scoping, and an input-field guard",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

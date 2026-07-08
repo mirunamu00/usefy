@@ -1,5 +1,12 @@
 # @usefy/use-hotkeys
 
+## 0.24.0
+
+### Patch Changes
+
+- @usefy/use-event-listener@0.24.0
+- @usefy/use-latest@0.24.0
+
 ## 0.23.0
 
 ### Patch Changes

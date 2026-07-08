@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-media-query",
-  "version": "0.23.0",
+  "version": "0.24.0",
   "description": "A React hook for matching CSS media queries with matchMedia and SSR support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
