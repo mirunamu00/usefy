@@ -1,5 +1,12 @@
 # @usefy/use-async
 
+## 0.22.0
+
+### Patch Changes
+
+- @usefy/use-async-fn@0.22.0
+- @usefy/use-latest@0.22.0
+
 ## 0.21.1
 
 ### Patch Changes
