@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-merged-refs",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "A React hook to merge multiple refs (callback or object) into one — essential for forwardRef components",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

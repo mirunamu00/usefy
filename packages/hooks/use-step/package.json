@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-step",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "description": "A React hook for multi-step navigation (wizards, forms, carousels)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
