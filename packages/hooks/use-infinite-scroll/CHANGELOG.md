@@ -1,5 +1,11 @@
 # @usefy/use-infinite-scroll
 
+## 0.25.1
+
+### Patch Changes
+
+- @usefy/use-intersection-observer@0.25.1
+
 ## 0.25.0
 
 ### Patch Changes

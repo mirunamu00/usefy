@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-pagination",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "description": "A React hook for pagination state — controlled/uncontrolled current page, page count, range, and an ellipsis-aware page-number model",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

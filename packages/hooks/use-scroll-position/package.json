@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-scroll-position",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "description": "A React hook for tracking the throttled scroll position (x, y) of the window or a given element",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

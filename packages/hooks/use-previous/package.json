@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-previous",
-  "version": "0.25.0",
+  "version": "0.25.1",
   "description": "A React hook that returns the value from the previous render",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
