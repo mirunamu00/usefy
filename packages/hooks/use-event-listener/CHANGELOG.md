@@ -1,5 +1,7 @@
 # @usefy/use-event-listener
 
+## 0.23.0
+
 ## 0.22.0
 
 ## 0.21.1

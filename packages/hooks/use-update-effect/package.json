@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-update-effect",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "description": "A React useEffect variant that skips the first render",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

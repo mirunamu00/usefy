@@ -1,5 +1,11 @@
 # @usefy/use-raf-state
 
+## 0.23.0
+
+### Patch Changes
+
+- @usefy/use-unmount@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

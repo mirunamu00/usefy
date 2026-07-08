@@ -1,5 +1,7 @@
 # @usefy/use-interval
 
+## 0.23.0
+
 ## 0.22.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # @usefy/use-long-press
 
+## 0.23.0
+
+### Patch Changes
+
+- @usefy/use-latest@0.23.0
+
 ## 0.22.0
 
 ### Patch Changes

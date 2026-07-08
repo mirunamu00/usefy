@@ -1,5 +1,7 @@
 # @usefy/use-resize-observer
 
+## 0.23.0
+
 ## 0.22.0
 
 ## 0.21.1
