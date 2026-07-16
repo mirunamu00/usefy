@@ -929,8 +929,35 @@ const meta: Meta<typeof LocalStorageDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for persisting state in localStorage with automatic synchronization. Works like useState but values persist across page refreshes and sync across browser tabs.",
+        component: `A \`useState\`-like hook that persists state in \`localStorage\` and keeps every consumer in sync. Returns a tuple \`[value, setValue, removeValue]\` — \`setValue\` accepts a value or an updater function just like \`useState\`, and \`removeValue\` clears the key and resets to the initial value.
+
+Built on \`useSyncExternalStore\` for Concurrent Mode safety, with an internal store so multiple components on the same key update together, and a \`storage\`-event listener so changes in other tabs sync too.
+
+## Features
+- **useState-like tuple** — \`[value, setValue, removeValue]\`; \`setValue\` takes a value or an updater \`(prev) => next\`
+- **Same-tab sync** — every component using the same key re-renders together via an internal store
+- **Cross-tab sync** — mirrors changes from other tabs through the \`storage\` event (toggle off with \`syncTabs: false\`)
+- **Lazy initialization** — pass \`() => T\` to compute an expensive default only when the key is empty
+- **Custom serialization** — \`serializer\` / \`deserializer\` (default \`JSON.stringify\` / \`JSON.parse\`) for \`Date\`, \`Map\`, and other types
+- **Error handling** — \`onError\` fires on read/write/quota failures; a corrupt entry falls back to the initial value
+- **SSR-safe & stable** — returns the initial value on the server; \`setValue\` / \`removeValue\` keep stable identities
+
+## Basic Usage
+\`\`\`tsx
+import { useLocalStorage } from "@usefy/use-local-storage";
+
+function ThemeToggle() {
+  const [theme, setTheme, removeTheme] = useLocalStorage("theme", "light");
+
+  return (
+    <div>
+      <p>Current theme: {theme}</p>
+      <button onClick={() => setTheme("dark")}>Dark</button>
+      <button onClick={removeTheme}>Reset</button>
+    </div>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -966,6 +993,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Basic string storage — save a value that survives a page refresh, then clear it back to the initial value with removeValue.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 import { useState } from "react";
@@ -1041,6 +1072,10 @@ export const WithObject: Story = {
   render: () => <ObjectStorageDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Stores a typed object and updates individual fields with functional updates, showing full type safety across the persisted value.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 
@@ -1139,6 +1174,10 @@ export const WithCounter: Story = {
   render: () => <CounterDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "A counter whose value persists across refreshes, driven entirely by functional updates to setValue.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 
@@ -1202,6 +1241,10 @@ export const MultipleKeys: Story = {
   render: () => <MultipleKeysDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Independent form fields each backed by their own localStorage key, showing how several keys coexist in one component.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 
@@ -1285,6 +1328,10 @@ export const CrossTabSync: Story = {
   render: () => <CrossTabSyncDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Changes written on one key propagate to other browser tabs via the storage event — open this page in two tabs to see it sync.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 import { useState } from "react";
@@ -1353,6 +1400,10 @@ export const ErrorHandling: Story = {
   render: () => <ErrorHandlingDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Routes read/write failures (e.g. a quota-exceeding value) to the onError callback so the UI can recover gracefully.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 import { useState } from "react";
@@ -1434,6 +1485,10 @@ export const ComponentSync: Story = {
   render: () => <ComponentSyncDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Three sibling components share one key and re-render in lockstep — same-tab sync without prop drilling or context.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 
@@ -1532,6 +1587,10 @@ export const WithCustomSerializer: Story = {
   render: () => <CustomSerializerDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Custom serializer / deserializer store non-JSON types — a Date as an ISO string and an array as a comma-separated string.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 import { useState } from "react";
@@ -1671,6 +1730,10 @@ export const SyncTabsOption: Story = {
   render: () => <SyncTabsOptionDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Compares syncTabs: true (default) against syncTabs: false to show how the option gates cross-tab synchronization.",
+      },
       source: {
         code: `import { useLocalStorage } from "@usefy/use-local-storage";
 

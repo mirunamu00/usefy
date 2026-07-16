@@ -84,8 +84,38 @@ const meta: Meta<typeof ToggleDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for managing boolean state with helpful utilities. Perfect for modals, dropdowns, and any on/off state management.",
+        component: `Manage a single **boolean** state with a small set of purpose-built helpers instead of hand-rolling \`useState(false)\` plus setter closures. Perfect for modals, dropdowns, accordions, and any on/off UI state.
+
+Pass an optional \`initialValue\` (defaults to \`false\`). Returns \`{ value, toggle, setTrue, setFalse, setValue }\` — every function is memoized with \`useCallback\` for a stable identity across renders.
+
+## Features
+- **\`toggle\`** — flips the current value (uses the functional updater, so it is always correct)
+- **\`setTrue\` / \`setFalse\`** — idempotent setters for the explicit on/off cases (great as direct \`onClick\` handlers)
+- **\`setValue\`** — set the state to any boolean directly for controlled/computed cases
+- **Stable references** — all four functions keep a constant identity, safe to pass to memoized children or effect deps
+- **Zero config** — no options object; supports React 18 and 19
+
+## Basic Usage
+\`\`\`tsx
+import { useToggle } from "@usefy/use-toggle";
+
+function Modal() {
+  const { value: isOpen, toggle, setTrue, setFalse } = useToggle(false);
+
+  return (
+    <>
+      <button onClick={setTrue}>Open</button>
+      <button onClick={toggle}>Toggle</button>
+      {isOpen && (
+        <div role="dialog">
+          Modal content
+          <button onClick={setFalse}>Close</button>
+        </div>
+      )}
+    </>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -122,6 +152,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Starts at false and shows every helper — toggle flips the value, while setTrue and setFalse jump straight to a known state.",
+      },
       source: {
         code: `import { useToggle } from "@usefy/use-toggle";
 
@@ -193,6 +227,10 @@ export const StartingTrue: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Seeds the hook with an initialValue of true, so the state renders on from the first paint.",
+      },
       source: {
         code: `import { useToggle } from "@usefy/use-toggle";
 
@@ -242,6 +280,10 @@ export const SetValueFunction: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Uses setValue to drive the state to any boolean directly — ideal when the next value is computed rather than a fixed on or off.",
+      },
       source: {
         code: `import { useToggle } from "@usefy/use-toggle";
 
@@ -302,6 +344,10 @@ export const IdempotentOperations: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Demonstrates that setTrue and setFalse are idempotent — calling either repeatedly settles on the same state as calling it once.",
+      },
       source: {
         code: `import { useToggle } from "@usefy/use-toggle";
 

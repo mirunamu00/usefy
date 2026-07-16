@@ -833,8 +833,34 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "Throttles a rapidly changing value to update at most once per specified interval. Useful for optimizing performance with high-frequency events like scroll, resize, or mousemove by limiting how often a value propagates through your component tree.",
+        component: `Throttle a rapidly-changing **value** — \`useThrottle\` returns a value that updates at most once per \`delay\` milliseconds, regardless of how fast the source changes. Unlike debounce (which waits for a pause), throttle emits steadily *during* continuous activity — ideal for scroll position, window/element size, and mouse tracking. Built on \`useDebounce\` with \`maxWait\` set to the interval; the value-based sibling of \`useThrottleCallback\`.
+
+Signature: \`useThrottle(value, delay = 500, options?)\` → the throttled value.
+
+## Features
+- **Value in, throttled value out** — \`const throttled = useThrottle(value, 100)\`; just read the return
+- **\`delay\`** — the minimum interval in milliseconds between updates (defaults to \`500\`)
+- **Leading / trailing edges** — \`{ leading, trailing }\`; **both default to \`true\`** (note: this differs from \`useDebounce\`, whose \`leading\` is \`false\`)
+- **Edge control** — \`leading\` only for instant feedback, \`trailing\` only to settle on the final value; setting both to \`false\` disables updates entirely (matches lodash)
+- **Steady updates** — because it uses \`maxWait\` internally, the value keeps updating on the interval throughout continuous change instead of waiting for a pause
+- **StrictMode-safe** — skips the initial render and StrictMode's double-invoked mount; clears its timer on unmount
+
+## Basic Usage
+\`\`\`tsx
+function ScrollTracker() {
+  const [scrollY, setScrollY] = useState(0);
+  // throttledScrollY changes at most once per 100ms
+  const throttledScrollY = useThrottle(scrollY, 100);
+
+  useEffect(() => {
+    const onScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return <div>Scroll: {throttledScrollY}px</div>;
+}
+\`\`\``,
       },
     },
   },

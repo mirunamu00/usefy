@@ -249,8 +249,42 @@ const meta: Meta<typeof TimerDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A powerful countdown timer hook with comprehensive controls, multiple formats, and time manipulation features. Perfect for countdowns, pomodoro timers, cooking timers, and more.",
+        component: `A countdown timer hook that counts **down** from \`initialTimeMs\` to zero, with a formatted \`time\` string, a \`progress\` percentage, a four-state \`status\` machine (\`idle → running → paused → finished\`), full playback controls, and live time manipulation. Perfect for countdowns, pomodoro/cooking timers, and quiz clocks.
+
+Only the *formatted* value triggers re-renders, so coarse formats (\`MM:SS\`) re-render at most once per second even with a small \`interval\`. Ships with an \`ms\` helper for building durations. Returns \`{ time, progress, status, isRunning, isPaused, isFinished, isIdle, start, pause, stop, reset, restart, toggle, addTime, subtractTime, setTime }\`.
+
+## Features
+- **Formatted output** — \`time\` renders via a preset (\`HH:MM:SS\`, \`MM:SS\`, \`SS\`, \`mm:ss.SSS\`, …) or a custom \`(ms) => string\` formatter
+- **\`progress\`** — 0 → 100 completion percentage, handy for progress bars
+- **Status machine** — \`status\` plus \`isRunning\` / \`isPaused\` / \`isFinished\` / \`isIdle\` derived booleans
+- **Controls** — \`start\`, \`pause\`, \`stop\`, \`reset\` (back to initial), \`restart\` (reset + start), and \`toggle\`
+- **Time manipulation** — \`addTime\`, \`subtractTime\`, and \`setTime\` adjust the remaining time on the fly (clamped at \`0\`)
+- **\`autoStart\`** and **\`loop\`** — begin on mount and/or auto-restart on completion
+- **Lifecycle callbacks** — \`onComplete\`, \`onTick\`, \`onStart\`, \`onPause\`, \`onReset\`, \`onStop\`
+- **Accurate & efficient** — \`interval\` / \`useRAF\` control tick granularity, drift is corrected when the tab is backgrounded, and timers are cleared on unmount
+- **\`ms\` helper** — \`ms.seconds\`, \`ms.minutes\`, \`ms.hours\` build millisecond durations
+
+## Basic Usage
+\`\`\`tsx
+import { useTimer, ms } from "@usefy/use-timer";
+
+function Countdown() {
+  const timer = useTimer(ms.minutes(1), {
+    format: "MM:SS",
+    onComplete: () => alert("Time's up!"),
+  });
+
+  return (
+    <div>
+      <p>{timer.time}</p>
+      <button onClick={timer.toggle}>
+        {timer.isRunning ? "Pause" : "Start"}
+      </button>
+      <button onClick={timer.reset}>Reset</button>
+    </div>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -315,6 +349,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "A one-minute MM:SS countdown showing time, status, and progress with start/pause/reset/restart controls.",
+      },
       source: {
         code: `import { useTimer } from "@usefy/use-timer";
 
@@ -400,6 +438,10 @@ export const FiveMinuteTimer: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "The same timer seeded with a longer five-minute (300000ms) duration.",
+      },
       source: {
         code: `import { useTimer } from "@usefy/use-timer";
 
@@ -439,6 +481,10 @@ export const LongTimer: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Uses the HH:MM:SS format for durations over an hour (here 1h 1m 1s).",
+      },
       source: {
         code: `import { useTimer } from "@usefy/use-timer";
 
@@ -478,6 +524,10 @@ export const PrecisionTimer: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "The mm:ss.SSS format surfaces millisecond precision for a fast-updating display.",
+      },
       source: {
         code: `import { useTimer } from "@usefy/use-timer";
 
@@ -518,6 +568,10 @@ export const AutoStart: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "With autoStart: true the timer begins counting down the moment the component mounts.",
+      },
       source: {
         code: `import { useTimer } from "@usefy/use-timer";
 
@@ -558,6 +612,10 @@ export const LoopingTimer: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "With loop: true the timer automatically restarts from the top each time it reaches zero.",
+      },
       source: {
         code: `import { useTimer } from "@usefy/use-timer";
 
@@ -599,6 +657,10 @@ export const TimeManipulation: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Demonstrates addTime and subtractTime adjusting the remaining time on the fly with the ms helper.",
+      },
       source: {
         code: `import { useTimer, ms } from "@usefy/use-timer";
 

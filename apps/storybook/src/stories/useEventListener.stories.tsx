@@ -492,9 +492,39 @@ const meta: Meta<typeof WindowResizeDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component: `
-A React hook for adding event listeners to DOM elements with automatic cleanup.
-        `,
+        component: `Declaratively attach a DOM event listener to the **window** (default), **document**, an **HTMLElement**, or a **RefObject**, with automatic cleanup on unmount. Fully typed: the event object is inferred from the event name and target, so \`useEventListener("keydown", e => e.key, document)\` gives you a \`KeyboardEvent\` with no casting.
+
+The single call replaces the \`useEffect\` + \`addEventListener\` + \`removeEventListener\` boilerplate you'd otherwise write by hand, and handles the subtle correctness issues (stale handlers, late-mounting refs, SSR) for you.
+
+## Features
+- **Any target** — window (omit the element), \`document\`, a raw \`HTMLElement\`, or a \`RefObject\`; a \`null\`/undefined ref simply attaches nothing until it populates
+- **Type-safe** — overloads infer the event type from the name + target (\`WindowEventMap\` / \`DocumentEventMap\` / \`HTMLElementEventMap\`)
+- **Always-latest handler** — kept in a ref synced in a layout effect, so a new inline callback each render never re-registers the listener
+- **Late-mount aware** — depends on the *resolved* element, so a ref that populates after mount (or changes on remount) is subscribed as soon as its element appears
+- **Options** — \`enabled\` (\`default: true\`), \`capture\` (\`default: false\`), \`passive\` (browser default; great for \`scroll\`/\`touch\`), and \`once\` (\`default: false\`)
+- **SSR-safe** — no listener attaches on the server; automatic cleanup on unmount and whenever the target/options change
+
+## Basic Usage
+\`\`\`tsx
+import { useEventListener } from "@usefy/use-event-listener";
+import { useRef } from "react";
+
+function Example() {
+  // window (default target) — inferred UIEvent
+  useEventListener("resize", () => console.log(window.innerWidth));
+
+  // document — inferred KeyboardEvent
+  useEventListener("keydown", (e) => {
+    if (e.key === "Escape") closeModal();
+  }, document);
+
+  // element via ref, with a passive scroll listener
+  const boxRef = useRef<HTMLDivElement>(null);
+  useEventListener("scroll", () => {}, boxRef, { passive: true });
+
+  return <div ref={boxRef}>…</div>;
+}
+\`\`\``,
       },
     },
   },
@@ -509,6 +539,10 @@ export const Default: Story = {
   render: () => <WindowResizeDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Listens for `resize` on the window (the default target) to keep the current dimensions in sync.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState } from "react";
@@ -548,6 +582,10 @@ export const KeyboardEvents: StoryObj<typeof KeyboardEventsDemo> = {
   render: () => <KeyboardEventsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Attaches `keydown` to `document`; the handler is typed as a `KeyboardEvent`, exposing `key` and the modifier flags.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState } from "react";
@@ -584,6 +622,10 @@ export const ElementMouseEvents: StoryObj<typeof ElementMouseEventsDemo> = {
   render: () => <ElementMouseEventsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Targets a specific element via a `RefObject`, listening for `mousemove`/`mouseenter`/`mouseleave` scoped to that box.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";
@@ -643,6 +685,10 @@ export const ScrollEvents: StoryObj<typeof ScrollEventsDemo> = {
   render: () => <ScrollEventsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Uses `{ passive: true }` on a `scroll` listener so the browser can optimize scrolling — the ideal option for scroll and touch events.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";
@@ -689,6 +735,10 @@ export const ConditionalListener: StoryObj<typeof ConditionalListenerDemo> = {
   render: () => <ConditionalListenerDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Drives the `enabled` option from state so the listener can be attached and detached at runtime.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState } from "react";
@@ -751,6 +801,10 @@ export const NetworkStatus: StoryObj<typeof NetworkStatusDemo> = {
   render: () => <NetworkStatusDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Listens for the window `online` and `offline` events to reflect the browser's connectivity state.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState } from "react";
@@ -1763,6 +1817,10 @@ export const FocusBlur: StoryObj<typeof FocusBlurDemo> = {
   render: () => <FocusBlurDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Attaches `focus` and `blur` listeners to individual element refs to track which control currently has focus.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";
@@ -1829,6 +1887,10 @@ export const TouchEvents: StoryObj<typeof TouchEventsDemo> = {
   render: () => <TouchEventsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Handles `touchstart`/`touchmove`/`touchend` on an element ref, reading coordinates from the `TouchEvent` (touch-enabled device).",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";
@@ -1878,6 +1940,10 @@ export const ClipboardEvents: StoryObj<typeof ClipboardEventsDemo> = {
   render: () => <ClipboardEventsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Listens for `copy`, `cut`, and `paste`, reading the selection and `clipboardData` off the events.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState } from "react";
@@ -1931,6 +1997,10 @@ export const VisibilityChange: StoryObj<typeof VisibilityChangeDemo> = {
   render: () => <VisibilityChangeDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Watches `visibilitychange` on `document` to detect when the tab is hidden or brought back to the foreground.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState } from "react";
@@ -1969,6 +2039,10 @@ export const MouseEventsAdvanced: StoryObj<typeof MouseEventsAdvancedDemo> = {
   render: () => <MouseEventsAdvancedDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Registers multiple listeners (`click`, `dblclick`, `contextmenu`) on one element, calling `preventDefault` to suppress the native context menu.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";
@@ -2043,6 +2117,10 @@ export const FormEvents: StoryObj<typeof FormEventsDemo> = {
   render: () => <FormEventsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Listens for `input`/`change` on an input ref and `submit` on the form ref, using `preventDefault` to stop the page reload.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";
@@ -2114,6 +2192,10 @@ export const DragDrop: StoryObj<typeof DragDropDemo> = {
   render: () => <DragDropDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Wires the drag-and-drop lifecycle (`dragstart`/`dragover`/`dragleave`/`drop`) across a draggable element and a drop zone via their refs.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";
@@ -2179,6 +2261,10 @@ export const PointerEvents: StoryObj<typeof PointerEventsDemo> = {
   render: () => <PointerEventsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Uses unified `pointerdown`/`pointermove`/`pointerup` listeners that work across mouse, touch, and pen, exposing `pointerType` and `pressure`.",
+      },
       source: {
         code: `import { useEventListener } from "@usefy/use-event-listener";
 import { useState, useRef } from "react";

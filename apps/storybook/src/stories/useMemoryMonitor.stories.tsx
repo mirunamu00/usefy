@@ -491,20 +491,39 @@ const meta: Meta<typeof MemoryMonitorDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A comprehensive React hook for monitoring browser memory usage in real-time. Provides heap metrics, leak detection, trend analysis, and threshold-based alerts.\n\n" +
-          "**Browser Support:**\n" +
-          "- ✅ Chrome/Edge: Full support with `performance.memory` API\n" +
-          "- ⚠️ Firefox/Safari: Limited support (DOM-only metrics)\n" +
-          "- ✅ SSR Compatible: Safe to use in Next.js, Remix, etc.\n\n" +
-          "**Key Features:**\n" +
-          "- Real-time heap usage monitoring (Chrome/Edge)\n" +
-          "- Memory leak detection with linear regression\n" +
-          "- Configurable threshold alerts (normal/warning/critical)\n" +
-          "- Memory snapshots and comparison\n" +
-          "- History tracking with trend analysis\n" +
-          "- Tab visibility optimization (auto pause when hidden)\n" +
-          "- TypeScript first with full type safety",
+        component: `Monitor browser memory usage in real time from a single hook — live heap metrics (\`heapUsed\` / \`heapTotal\` / \`heapLimit\` + \`usagePercentage\`), a \`severity\` level, opt-in leak detection, history with trend analysis, and named snapshots. The headless data layer that powers the \`MemoryMonitor\` component.
+
+Polls at a configurable \`interval\` (default \`5000\`ms), \`autoStart\`s on mount, and auto-pauses when the tab is hidden. State is managed with \`useSyncExternalStore\` (concurrent-safe) and every returned function is memoized. Fully SSR-safe and degrades gracefully in browsers without the \`performance.memory\` API (Firefox/Safari).
+
+## Features
+- **Live heap metrics** — \`memory\`, \`heapUsed\`, \`heapTotal\`, \`heapLimit\`, \`usagePercentage\`, plus a \`formatted\` object with display-ready strings ("45.2 MB")
+- **Threshold severity** — \`severity\` becomes \`"warning"\` / \`"critical"\` at configurable \`thresholds\` (default 70% / 90%); fires \`onWarning\` / \`onCritical\`
+- **Leak detection** — opt-in multi-factor analysis (linear regression + GC + baseline) exposing \`isLeakDetected\`, \`leakProbability\`, and \`trend\`; requires \`enableHistory\`
+- **History & trend** — a circular buffer of samples (\`enableHistory\` + \`historySize\`) with \`increasing\` / \`stable\` / \`decreasing\` trend detection
+- **Snapshots** — \`takeSnapshot(id)\` and \`compareSnapshots(id1, id2)\` for point-in-time heap deltas
+- **Manual control** — \`autoStart\` plus \`start()\` / \`stop()\`; \`clearHistory()\` and a best-effort \`requestGC()\` hint
+- **Browser-aware & SSR-safe** — \`isSupported\`, \`supportLevel\`, \`availableMetrics\`, an \`onUnsupported\` callback, and safe server rendering
+
+## Basic Usage
+\`\`\`tsx
+import { useMemoryMonitor } from "@usefy/use-memory-monitor";
+
+function MemoryStatus() {
+  const { formatted, severity, isMonitoring, start, stop } = useMemoryMonitor({
+    interval: 1000,
+    autoStart: true,
+  });
+
+  return (
+    <div>
+      <p>Heap Used: {formatted.heapUsed} ({severity})</p>
+      <button onClick={isMonitoring ? stop : start}>
+        {isMonitoring ? "Stop" : "Start"}
+      </button>
+    </div>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -550,6 +569,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Auto-starts on mount and streams live heap metrics with a severity-colored card; use Start/Stop to control monitoring.",
+      },
       source: {
         code: `import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 
@@ -617,6 +640,10 @@ export const ThresholdAlerts: Story = {
   render: () => <ThresholdAlertsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Maps heap usage to normal/warning/critical severity at configurable thresholds (50% / 90% here), driving a live usage meter and color changes.",
+      },
       source: {
         code: `import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 
@@ -665,6 +692,10 @@ export const Snapshots: Story = {
   render: () => <SnapshotDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Capture named snapshots with takeSnapshot(id), then compareSnapshots(id1, id2) to see the heap delta between two points in time.",
+      },
       source: {
         code: `import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 import { useState } from "react";
@@ -743,6 +774,10 @@ export const HistoryVisualization: Story = {
   render: () => <HistoryVisualizationDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Enables the history buffer (enableHistory + historySize) and renders the recent samples as a bar chart alongside the detected trend.",
+      },
       source: {
         code: `import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 
@@ -801,6 +836,10 @@ export const ManualControl: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Starts with autoStart: false so nothing polls until you call start(); stop() halts it again, giving you full manual control of the lifecycle.",
+      },
       source: {
         code: `import { useMemoryMonitor } from "@usefy/use-memory-monitor";
 

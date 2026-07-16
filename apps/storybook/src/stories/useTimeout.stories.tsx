@@ -407,8 +407,33 @@ const meta: Meta<typeof TimeoutDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for declarative setTimeout with automatic cleanup and controls. Perfect for auto-dismiss notifications, debouncing, delayed actions, and conditional execution.",
+        component: `Declarative \`setTimeout\` for React — schedule a callback after a delay with automatic cleanup on unmount, a latest-callback ref (no stale closures), and \`reset\`/\`clear\` controls. Perfect for auto-dismiss toasts, debounced auto-save, delayed redirects, and conditional execution.
+
+Pass a \`null\`/\`undefined\` delay to disable the timer, or a changing delay to auto-reset it. Returns \`{ reset, clear, isPending }\`.
+
+## Features
+- **Automatic cleanup** — the pending timeout is cleared on unmount, preventing "setState on unmounted component" leaks
+- **Latest callback ref** — always fires the newest \`callback\` without re-scheduling the timer, so inline functions never go stale
+- **Nullable delay** — \`null\`/\`undefined\` disables the timer; changing the delay auto-resets it (a negative delay is normalized to \`0\`)
+- **\`reset()\`** — restart the countdown from the beginning (reads the current delay through a ref, so its identity stays stable)
+- **\`clear()\`** — cancel the pending timeout so the callback never runs
+- **\`isPending\`** — whether a timeout is currently scheduled (correct on the first committed render, SSR-safe)
+
+## Basic Usage
+\`\`\`tsx
+import { useTimeout } from "@usefy/use-timeout";
+
+function Toast({ message }: { message: string }) {
+  const [show, setShow] = useState(true);
+
+  // Auto-dismiss after 3s; reset() restarts it, clear() cancels it.
+  const { reset, clear, isPending } = useTimeout(() => {
+    setShow(false);
+  }, show ? 3000 : null);
+
+  return show ? <div className="toast">{message}</div> : null;
+}
+\`\`\``,
       },
     },
   },
@@ -445,6 +470,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "A 3-second timeout with live isPending status — clear it to cancel, or reset to restart the countdown.",
+      },
       source: {
         code: `import { useTimeout } from "@usefy/use-timeout";
 
@@ -507,6 +536,10 @@ export const ShortTimeout: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "A shorter 1-second delay for quick feedback — the callback fires almost immediately.",
+      },
       source: {
         code: `import { useTimeout } from "@usefy/use-timeout";
 

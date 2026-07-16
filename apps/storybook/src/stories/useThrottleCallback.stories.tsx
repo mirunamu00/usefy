@@ -660,8 +660,36 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "Creates a throttled version of a callback function that limits invocations to at most once per specified interval. Perfect for scroll handlers, resize events, mouse tracking, and any scenario requiring rate limiting with immediate feedback.",
+        component: `Throttle a **callback** — \`useThrottleCallback\` returns a stable throttled function that runs your callback at most once per \`delay\` milliseconds. Unlike debounce, it fires immediately on the first call and keeps firing on the interval during continuous activity — ideal for scroll/resize handlers, mouse tracking, and API rate limiting where you want responsive-but-bounded execution. Built on \`useDebounceCallback\` with \`maxWait\` set to the interval; the function-based sibling of \`useThrottle\`.
+
+Signature: \`useThrottleCallback(callback, delay = 500, options?)\` → a callable augmented with \`.cancel()\`, \`.flush()\`, and \`.pending()\`. Always reads your latest \`callback\`.
+
+## Features
+- **Throttled function out** — call it as often as you like; execution is capped to once per interval
+- **\`delay\`** — the minimum interval in milliseconds between invocations (defaults to \`500\`)
+- **Leading / trailing edges** — \`{ leading, trailing }\`; **both default to \`true\`**, so the first call fires immediately and a final trailing call captures the last state
+- **Edge control** — \`leading\` only for pure immediate feedback, \`trailing\` only to run after each interval; setting both to \`false\` disables the callback (matches lodash)
+- **Control methods** — \`.cancel()\` aborts a pending call, \`.flush()\` invokes it now, \`.pending()\` reports whether one is waiting
+- **Stable identity & fresh callback** — memoized reference (safe in dependency arrays) that always calls the latest \`callback\`; clears its timer on unmount
+
+## Basic Usage
+\`\`\`tsx
+function ScrollLogger() {
+  const throttledScroll = useThrottleCallback(() => {
+    console.log("scrollY:", window.scrollY);
+  }, 100);
+
+  useEffect(() => {
+    window.addEventListener("scroll", throttledScroll);
+    return () => {
+      throttledScroll.cancel();
+      window.removeEventListener("scroll", throttledScroll);
+    };
+  }, [throttledScroll]);
+
+  return <div>Scroll and watch the console</div>;
+}
+\`\`\``,
       },
     },
   },

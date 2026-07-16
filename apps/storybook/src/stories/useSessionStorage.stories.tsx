@@ -586,8 +586,40 @@ const meta: Meta<typeof SessionStorageDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for persisting state in sessionStorage. Works like useState but values persist during the browser session and are cleared when the tab/window is closed.",
+        component: `A \`useState\`-like hook that persists state in \`sessionStorage\` for the lifetime of the tab. Returns a tuple \`[value, setValue, removeValue]\` — \`setValue\` accepts a value or an updater function just like \`useState\`, and \`removeValue\` clears the key and resets to the initial value.
+
+Unlike \`localStorage\`, session data is **isolated per tab** and **cleared when the tab closes** — ideal for form drafts, multi-step wizards, and other session-scoped state. Built on \`useSyncExternalStore\` with an internal store, so multiple components on the same key stay in sync within that tab (there is no cross-tab sync — each tab has its own session).
+
+## Features
+- **useState-like tuple** — \`[value, setValue, removeValue]\`; \`setValue\` takes a value or an updater \`(prev) => next\`
+- **Same-tab sync** — every component using the same key re-renders together via an internal store
+- **Tab isolation** — each tab keeps its own session; data is cleared automatically when the tab closes
+- **Lazy initialization** — pass \`() => T\` to compute an expensive default only when the key is empty
+- **Custom serialization** — \`serializer\` / \`deserializer\` (default \`JSON.stringify\` / \`JSON.parse\`) for \`Date\`, \`Map\`, and other types
+- **Error handling** — \`onError\` fires on read/write failures; a corrupt entry falls back to the initial value
+- **SSR-safe & stable** — returns the initial value on the server; \`setValue\` / \`removeValue\` keep stable identities
+
+## Basic Usage
+\`\`\`tsx
+import { useSessionStorage } from "@usefy/use-session-storage";
+
+function CheckoutForm() {
+  const [formData, setFormData, clearForm] = useSessionStorage("checkout-form", {
+    name: "",
+    email: "",
+  });
+
+  return (
+    <form>
+      <input
+        value={formData.name}
+        onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+      />
+      <button type="button" onClick={clearForm}>Clear</button>
+    </form>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -623,6 +655,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Basic string storage — save a value that survives a refresh within the session, then clear it with removeValue.",
+      },
       source: {
         code: `import { useSessionStorage } from "@usefy/use-session-storage";
 import { useState } from "react";
@@ -693,6 +729,10 @@ export const FormPersistence: Story = {
   render: () => <FormPersistenceDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "A multi-step form whose fields and current step persist through a refresh — the canonical session-scoped use case.",
+      },
       source: {
         code: `import { useSessionStorage } from "@usefy/use-session-storage";
 
@@ -811,6 +851,10 @@ export const WithCounter: Story = {
   render: () => <CounterDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "A counter that persists for the session and resets when the tab closes, driven by functional updates to setValue.",
+      },
       source: {
         code: `import { useSessionStorage } from "@usefy/use-session-storage";
 
@@ -868,6 +912,10 @@ export const SessionBehavior: Story = {
   render: () => <SessionBehaviorDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Illustrates session semantics with a per-session view counter alongside a table contrasting localStorage and sessionStorage.",
+      },
       source: {
         code: `import { useSessionStorage } from "@usefy/use-session-storage";
 import { useEffect } from "react";
@@ -952,6 +1000,10 @@ export const TabIsolation: Story = {
   render: () => <TabIsolationDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Each tab gets its own ID and message — demonstrating that sessionStorage is isolated per tab and never shared across tabs.",
+      },
       source: {
         code: `import { useSessionStorage } from "@usefy/use-session-storage";
 import { useState } from "react";
@@ -1039,6 +1091,10 @@ export const ComponentSync: Story = {
   render: () => <ComponentSyncDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Three sibling components share one key and re-render in lockstep within the tab — same-tab sync without prop drilling or context.",
+      },
       source: {
         code: `import { useSessionStorage } from "@usefy/use-session-storage";
 

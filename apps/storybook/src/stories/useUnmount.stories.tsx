@@ -633,8 +633,34 @@ const meta: Meta<typeof BasicDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component: `
-A React hook that executes a callback function when the component unmounts.`,
+        component: `Run a callback **exactly when a component unmounts** — with **closure freshness** so it always sees the latest state and props, unlike a raw \`useEffect\` cleanup that captures values from when the effect was created.
+
+Errors thrown inside the callback are caught and logged so they can never break the rest of the unmount, and cleanup can be turned on or off with the \`enabled\` option, whose value is read at unmount time.
+
+Signature: \`useUnmount(callback: () => void, options?: { enabled?: boolean })\` — returns \`void\`.
+
+## Features
+- **Closure freshness** — the callback reads the latest state/props at unmount time (a \`callbackRef\` refreshed after every commit)
+- **Runs only on real unmount** — toggling \`enabled\` while the component is still mounted never fires the callback
+- **\`enabled\` option** — skip the callback when \`enabled: false\` (default \`true\`); read at unmount time
+- **Error-safe** — a throwing callback is caught and \`console.error\`-logged, never breaking the component-tree unmount
+- **SSR compatible** — safe to render on the server; the callback never runs during SSR
+
+## Basic Usage
+\`\`\`tsx
+import { useUnmount } from "@usefy/use-unmount";
+
+function MyComponent() {
+  const [formData, setFormData] = useState({});
+
+  // Fires on unmount with the latest formData.
+  useUnmount(() => {
+    saveToLocalStorage(formData);
+  });
+
+  return <form>...</form>;
+}
+\`\`\``,
       },
     },
   },
@@ -649,6 +675,10 @@ export const Default: Story = {
   render: () => <BasicDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Toggle a child in and out of the tree; the unmount callback fires each time it is removed, incrementing the count.",
+      },
       source: {
         code: `import { useUnmount } from "@usefy/use-unmount";
 import { useState } from "react";
@@ -726,6 +756,10 @@ export const ClosureFreshness: StoryObj<typeof ClosureFreshnessDemo> = {
   render: () => <ClosureFreshnessDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Type into a form, then close it — the unmount callback captures the latest field values, demonstrating closure freshness.",
+      },
       source: {
         code: `import { useUnmount } from "@usefy/use-unmount";
 import { useState } from "react";
@@ -827,6 +861,10 @@ export const ConditionalCleanup: StoryObj<typeof ConditionalCleanupDemo> = {
   render: () => <ConditionalCleanupDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Use the `enabled` option to skip cleanup — the value is read at unmount time, so a disabled component unmounts without firing the callback.",
+      },
       source: {
         code: `import { useUnmount } from "@usefy/use-unmount";
 import { useState } from "react";
@@ -954,6 +992,10 @@ export const MultipleInstances: StoryObj<typeof MultipleInstancesDemo> = {
   render: () => <MultipleInstancesDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Each mounted instance owns an independent unmount callback, so removing one — or all — logs only the instances that were actually removed.",
+      },
       source: {
         code: `import { useUnmount } from "@usefy/use-unmount";
 import { useState } from "react";
@@ -1054,6 +1096,10 @@ export const AnalyticsTracking: StoryObj<typeof AnalyticsTrackingDemo> = {
   render: () => <AnalyticsTrackingDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "A real-world use case: track when a user leaves a section by logging a view_end event from the unmount callback as they navigate away.",
+      },
       source: {
         code: `import { useUnmount } from "@usefy/use-unmount";
 import { useState } from "react";

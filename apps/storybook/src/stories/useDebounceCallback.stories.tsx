@@ -319,8 +319,30 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "Creates a debounced version of a callback function that delays invoking until after a specified delay period has elapsed since the last call. Perfect for event handlers, API calls, and any scenario where you want to limit function execution rate.",
+        component: `Debounce a **callback** — \`useDebounceCallback\` returns a stable debounced function that delays invoking your callback until \`delay\` milliseconds have elapsed since the last call. Call it as often as you like (on every keystroke, scroll, or click); the underlying work runs only once activity settles. The function-based sibling of \`useDebounce\`.
+
+Signature: \`useDebounceCallback(callback, delay = 500, options?)\` → a callable augmented with \`.cancel()\`, \`.flush()\`, and \`.pending()\`. Always reads your latest \`callback\`, so inline closures never go stale.
+
+## Features
+- **Debounced function out** — call it with the same arguments as your callback; execution is rate-limited
+- **\`delay\`** — milliseconds to wait after the last call (defaults to \`500\`)
+- **Leading / trailing edges** — \`{ leading, trailing }\`; \`leading\` defaults to \`false\`, \`trailing\` to \`true\`
+- **\`maxWait\`** — guarantees the callback runs at least once every \`maxWait\` ms during continuous calls
+- **Control methods** — \`.cancel()\` aborts a pending call, \`.flush()\` invokes it immediately, \`.pending()\` reports whether one is waiting
+- **Stable identity & fresh callback** — memoized reference (safe in dependency arrays) that always calls the latest \`callback\`; clears its timer on unmount
+
+## Basic Usage
+\`\`\`tsx
+const debouncedSearch = useDebounceCallback((query: string) => {
+  searchAPI(query);
+}, 500);
+
+<input onChange={(e) => debouncedSearch(e.target.value)} placeholder="Search..." />;
+
+// Later, if needed:
+debouncedSearch.cancel(); // drop the pending call
+debouncedSearch.flush(); //  run it right now
+\`\`\``,
       },
     },
   },

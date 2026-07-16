@@ -921,15 +921,38 @@ const meta: Meta<typeof SignalDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A lightweight React hook for event-driven communication between components. Uses a name-based subscription pattern to synchronize state changes across deeply nested or sibling components without prop drilling.\n\n" +
-          "⚠️ **What This Hook Is NOT**\n\n" +
-          "`useSignal` is NOT a global state management solution. " +
-          "This hook is designed for lightweight event-driven communication—sharing simple \"signals\" between components without the overhead of complex state management setup.\n\n" +
-          "If you need complex shared state with derived values, persistent state across page navigation, or state that drives business logic, " +
-          "use dedicated state management tools like **React Context**, **Zustand**, **Jotai**, **Recoil**, or **Redux**.\n\n" +
-          "**About `info.data`:** The data payload feature exists for cases where you need to pass contextual information along with a signal (e.g., which item was clicked, what action was performed). " +
-          "It's meant for event metadata, not as a global state container.",
+        component: `A lightweight React hook for **event-driven communication** between components. Components subscribe to a shared channel **by name**; when any of them calls \`emit()\`, every subscriber re-renders with a new \`signal\` version number — no prop drilling, no context wiring. Built on \`useSyncExternalStore\`, so it is concurrent- and SSR-safe (the server snapshot is always \`0\`).
+
+Returns \`{ signal, emit, info }\`. Put \`signal\` in a \`useEffect\` dependency array to react to emits; call \`emit(data?)\` to broadcast, optionally with a typed payload read back via \`info.data\`.
+
+## Features
+- **Name-based channels** — same name = same channel; different names are fully independent
+- **\`emit(data?)\`** — broadcast to all subscribers, optionally carrying a typed payload (\`useSignal<T>\`); \`info.data\` is set before the version bumps, so it's current inside effects
+- **\`info\` metadata** — \`name\`, \`subscriberCount\`, \`emitCount\`, \`timestamp\`, and \`data\` (read-on-access snapshots, not independently reactive — drive live UI from \`signal\`)
+- **Options** — \`emitOnMount\` (fire once on mount, StrictMode-safe), \`onEmit\` callback, \`enabled\` to conditionally subscribe, and \`debounce\` (ms) to coalesce rapid emits
+
+⚠️ **What this hook is NOT** — \`useSignal\` is not a global state manager. It's for lightweight event fan-out ("something happened"), not for holding shared state, derived values, or business logic. For that, reach for **React Context**, **Zustand**, **Jotai**, **Recoil**, or **Redux**. \`info.data\` carries event metadata (which item, which action), not application state.
+
+## Basic Usage
+\`\`\`tsx
+import { useSignal } from "@usefy/use-signal";
+import { useEffect } from "react";
+
+// Emitter — broadcasts on the "dashboard-refresh" channel
+function RefreshButton() {
+  const { emit } = useSignal("dashboard-refresh");
+  return <button onClick={emit}>Refresh</button>;
+}
+
+// Subscriber — re-runs its effect on every emit
+function Widget() {
+  const { signal } = useSignal("dashboard-refresh");
+  useEffect(() => {
+    fetchWidgetData();
+  }, [signal]);
+  return <div>…</div>;
+}
+\`\`\``,
       },
     },
   },
@@ -965,6 +988,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "The core loop — one component emits on a named channel and reacts to the resulting signal version, with live info metadata alongside.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 import { useEffect } from "react";
@@ -1022,6 +1049,10 @@ export const MultiSubscriber: Story = {
   render: () => <MultiSubscriberDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "One emitter, many subscribers — every component on the shared channel receives the same emit simultaneously without prop drilling.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 
@@ -1096,6 +1127,10 @@ export const IndependentSignals: Story = {
   render: () => <IndependentSignalsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Different signal names are fully isolated channels — emitting \"alpha\" leaves \"beta\" untouched, and vice versa.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 
@@ -1165,6 +1200,10 @@ export const WithOptions: Story = {
   render: () => <OptionsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Walks through the options object — emitOnMount fires once on mount, onEmit runs a callback per emit, and debounce coalesces rapid emits.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 
@@ -1227,6 +1266,10 @@ export const DashboardRefresh: Story = {
   render: () => <DashboardRefreshDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "A real-world pattern — a single Refresh button emits and every dashboard widget reloads in response, no shared parent state required.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 import { useEffect, useState } from "react";
@@ -1296,6 +1339,10 @@ export const EnabledOption: Story = {
   render: () => <EnabledOptionDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "The enabled option toggles a subscription on and off — a disabled subscriber stops receiving emits until it is re-enabled.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 import { useState } from "react";
@@ -1354,6 +1401,10 @@ export const DataPayload: Story = {
   render: () => <DataPayloadDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Carries a payload with each emit — emit(data) sets info.data before bumping the version, so receivers read the latest data inside their effect.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 import { useEffect, useState } from "react";
@@ -1435,6 +1486,10 @@ export const TypedData: Story = {
   render: () => <TypedDataDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Type-safe messaging with useSignal<T> — a controller emits strongly-typed action objects that a display component pattern-matches on.",
+      },
       source: {
         code: `import { useSignal } from "@usefy/use-signal";
 import { useEffect, useState } from "react";

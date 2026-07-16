@@ -200,8 +200,34 @@ const meta: Meta<typeof ClickCounterDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for detecting document-wide click events. Useful for closing dropdowns, modals, or tracking user interactions.",
+        component: `Runs a handler on **every click anywhere in the document** — a document-level \`click\` listener with automatic cleanup. Ideal for dismissing dropdowns, popovers, or menus, and for global click tracking. When you need "clicks *outside* a specific element", reach for \`useOnClickOutside\` instead.
+
+The handler receives the native \`MouseEvent\`, so \`clientX\`/\`clientY\`, the target, and modifier keys are all available.
+
+## Features
+- **Document-wide** — listens on \`document\` for the \`click\` event; the callback fires for clicks on any element
+- **Always-latest handler** — the callback is kept in a ref, so passing a new inline function each render never re-registers the listener
+- **enabled** — toggle the listener on/off reactively (\`default: true\`); disabling removes the listener
+- **capture** — opt into the capture phase (\`default: false\`) to run before other handlers
+- **passive** — optionally mark the listener passive (\`default: browser default / non-passive\`); left unset so \`preventDefault\` keeps working
+- **SSR-safe** — skips attaching when there is no \`document\`, and cleans up on unmount
+
+## Basic Usage
+\`\`\`tsx
+import { useClickAnyWhere } from "@usefy/use-click-any-where";
+import { useState } from "react";
+
+function ClickTracker() {
+  const [count, setCount] = useState(0);
+
+  useClickAnyWhere((event) => {
+    // native MouseEvent — coordinates, target, modifiers all available
+    setCount((prev) => prev + 1);
+  });
+
+  return <p>Clicks anywhere: {count}</p>;
+}
+\`\`\``,
       },
     },
   },
@@ -230,6 +256,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "The default listener: every click anywhere in the document increments the counter.",
+      },
       source: {
         code: `import { useClickAnyWhere } from "@usefy/use-click-any-where";
 import { useState } from "react";
@@ -282,6 +312,10 @@ export const Disabled: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "With `enabled: false` the listener is not attached, so clicks are ignored and the count stays at zero.",
+      },
       source: {
         code: `import { useClickAnyWhere } from "@usefy/use-click-any-where";
 import { useState } from "react";
@@ -332,6 +366,10 @@ export const ClickPosition: StoryObj<typeof ClickPositionDemo> = {
   render: () => <ClickPositionDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Reads `clientX`/`clientY` off the MouseEvent to report the coordinates of the last click.",
+      },
       source: {
         code: `import { useClickAnyWhere } from "@usefy/use-click-any-where";
 import { useState } from "react";
@@ -382,6 +420,10 @@ export const ConditionalActivation: StoryObj<typeof ConditionalDemo> = {
   render: () => <ConditionalDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Drives `enabled` from state so the listener can be toggled on and off at runtime; clicks only count while it is active.",
+      },
       source: {
         code: `import { useClickAnyWhere } from "@usefy/use-click-any-where";
 import { useState } from "react";
