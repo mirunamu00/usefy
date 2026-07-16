@@ -2188,9 +2188,33 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component: `
-\`useIntersectionObserver\` is a React hook that efficiently detects element visibility in the viewport using the Intersection Observer API.
-`,
+        component: `Detect when an element enters or leaves the viewport (or a custom scroll container) using the native **Intersection Observer API**. Attach the returned callback \`ref\` to any element and read \`inView\` / \`entry\` — perfect for lazy loading, infinite scroll, scroll-triggered animations, and visibility analytics.
+
+Returns \`{ ref, inView, entry }\`. State only updates when \`isIntersecting\` or \`intersectionRatio\` meaningfully changes, so it stays cheap even with fine-grained thresholds. SSR-safe: on the server (or where \`IntersectionObserver\` is unsupported) it degrades to a no-op ref and \`inView\` falls back to \`initialIsIntersecting\`.
+
+## Features
+- **Callback ref** — \`ref\` is a stable callback; attach it to the element you want to observe (re-observes automatically when the node changes)
+- **\`threshold\`** — a single ratio or an array (e.g. \`[0, 0.25, 0.5, 0.75, 1]\`) for granular visibility tracking; inline arrays are stabilized so the observer isn't torn down each render
+- **\`root\` / \`rootMargin\`** — observe within a custom scroll container and expand/shrink the detection boundary (CSS-margin syntax) to preload or defer
+- **\`triggerOnce\`** — unobserve after the first time the element becomes visible (ideal for lazy loading / one-shot animations)
+- **\`enabled\`** — dynamically pause and resume observation; disconnects the observer when \`false\`
+- **\`onChange\` + \`delay\`** — get \`(entry, inView)\` on every change (latest callback used, no observer churn) and optionally delay observer creation
+- **\`initialIsIntersecting\`** — seed the initial state for SSR/SSG above-the-fold content
+- **Optimized re-renders** — only updates when \`isIntersecting\` or \`intersectionRatio\` changes
+
+## Basic Usage
+\`\`\`tsx
+import { useIntersectionObserver } from "@usefy/use-intersection-observer";
+
+function LazySection() {
+  const { ref, inView } = useIntersectionObserver({
+    threshold: 0.1,
+    triggerOnce: true,
+  });
+
+  return <div ref={ref}>{inView ? <Heavy /> : <Placeholder />}</div>;
+}
+\`\`\``,
       },
     },
   },

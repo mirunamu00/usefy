@@ -11,9 +11,39 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component: `
-\`useGeolocation\` is a feature-rich React hook for accessing device geolocation with real-time tracking, distance calculation, and comprehensive error handling. It provides a simple API for getting current position, watching position changes, calculating distances, and tracking permission states.
-        `,
+        component: `Access the device's location via the **Geolocation API** — read the current position, watch it in real time as the device moves, track permission state, and compute distances/bearings to other coordinates. Fetches on mount by default (\`immediate\`) or entirely on demand.
+
+Returns \`{ position, loading, error, permission, isSupported, getCurrentPosition, watchPosition, clearWatch, distanceFrom, bearingTo }\`. Every control function is memoized for stable identity, the active watch is cleared on unmount, and it degrades gracefully where geolocation is unsupported or during SSR (\`isSupported\` is \`false\`).
+
+## Features
+- **One-shot & watch** — \`getCurrentPosition()\` for a single read, or \`watchPosition()\` / \`clearWatch()\` for live tracking as the device moves
+- **\`immediate\` & \`watch\`** — auto-fetch (or auto-watch) on mount, or opt out with \`immediate: false\` to trigger manually
+- **Permission tracking** — \`permission\` reflects \`prompt\` / \`granted\` / \`denied\` / \`unavailable\`, with an \`onPermissionChange\` callback
+- **Distance & bearing** — \`distanceFrom(lat, lon)\` (meters, Haversine) and \`bearingTo(lat, lon)\` (0–360°) from the current position
+- **Typed errors** — \`error\` carries a typed \`code\` (e.g. \`PERMISSION_DENIED\`, \`POSITION_UNAVAILABLE\`, \`TIMEOUT\`)
+- **Tunable accuracy** — \`enableHighAccuracy\`, \`timeout\`, and \`maximumAge\` map straight onto the native API
+- **Callbacks** — \`onSuccess\`, \`onError\`, and \`onPositionChange\` fire outside of \`setState\` for concurrent safety
+- **SSR-safe & auto-cleanup** — no-op where unsupported; the watch is torn down on unmount and restarted when options change
+
+## Basic Usage
+\`\`\`tsx
+import { useGeolocation } from "@usefy/use-geolocation";
+
+function CurrentLocation() {
+  const { position, loading, error, isSupported } = useGeolocation();
+
+  if (!isSupported) return <p>Geolocation is not supported</p>;
+  if (loading) return <p>Getting your location…</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  return (
+    <p>
+      {position?.coords.latitude.toFixed(4)}°,{" "}
+      {position?.coords.longitude.toFixed(4)}°
+    </p>
+  );
+}
+\`\`\``,
       },
     },
   },

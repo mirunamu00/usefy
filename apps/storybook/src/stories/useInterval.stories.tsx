@@ -87,8 +87,39 @@ const meta: Meta<typeof IntervalDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for declarative setInterval with automatic cleanup, a latest-callback ref, and start/stop/toggle controls. Perfect for polling, clocks, countdowns, and pause/resume timers. Pass a null delay to disable it.",
+        component: `Declarative, SSR-safe \`setInterval\` for React — run a callback every \`delay\` ms with automatic cleanup, a latest-callback ref, and \`start\`/\`stop\`/\`toggle\` controls. Perfect for polling, clocks, countdowns, and pause/resume timers.
+
+Changing the callback never restarts the interval; changing the delay restarts it with the new value; a \`null\`/\`undefined\` delay disables it. Returns \`{ start, stop, toggle, isRunning }\`.
+
+## Features
+- **Latest callback ref** — the newest \`callback\` runs each tick without re-subscribing, so inline functions never go stale
+- **Nullable delay** — \`null\`/\`undefined\` disables the interval; changing the delay restarts it (a negative delay is treated as \`0\`)
+- **start / stop / toggle** — identity-stable controls to pause and resume on demand
+- **\`isRunning\`** — \`true\` only when started **and** a valid delay is set
+- **\`autoStart\`** (default \`true\`) — start on mount, or set \`false\` to begin stopped and call \`start()\` yourself
+- **\`immediate\`** (default \`false\`) — fire the callback once right when the interval (re)starts, then on every tick (StrictMode-safe on auto-start)
+- **Automatic cleanup** — the interval is cleared on unmount and re-established correctly across StrictMode double-invokes
+
+## Basic Usage
+\`\`\`tsx
+import { useState } from "react";
+import { useInterval } from "@usefy/use-interval";
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  const { toggle, isRunning } = useInterval(() => {
+    setCount((c) => c + 1);
+  }, 1000);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={toggle}>{isRunning ? "Pause" : "Resume"}</button>
+    </div>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -120,6 +151,10 @@ export const Default: Story = {
   args: { delay: 1000, title: "Basic Interval" },
   parameters: {
     docs: {
+      description: {
+        story:
+          "A counter that auto-increments once per second, with pause/resume via toggle and explicit start/stop.",
+      },
       source: {
         code: `import { useState } from "react";
 import { useInterval } from "@usefy/use-interval";
@@ -178,6 +213,10 @@ export const ManualControl: Story = {
   render: (args) => <ManualControlDemo {...args} />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "With autoStart: false the interval begins stopped — nothing ticks until you call start().",
+      },
       source: {
         code: `import { useState } from "react";
 import { useInterval } from "@usefy/use-interval";

@@ -177,8 +177,32 @@ const meta: Meta<typeof CopyToClipboardDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for copying text to the clipboard using the Clipboard API with fallback support for older browsers.",
+        component: `Copy text to the clipboard with the async **Clipboard API**, falling back to a hidden \`textarea\` + \`document.execCommand("copy")\` for older browsers. Tracks the most recently copied text so you can flip a button to a "Copied!" state, and auto-resets it after a configurable timeout.
+
+Returns a tuple \`[copiedText, copy]\`: \`copiedText\` is the last successfully copied string (or \`null\`), and \`copy(text)\` returns a \`Promise<boolean>\` that resolves to whether the copy succeeded. It's SSR-safe (\`copy\` reports failure instead of throwing when no \`window\` is present) and cleans up its reset timer on unmount.
+
+## Features
+- **Tuple API** — \`const [copiedText, copy] = useCopyToClipboard()\`; \`copiedText\` doubles as your "just copied" flag
+- **Async \`copy\`** — returns \`Promise<boolean>\` so you can await the result and branch on success/failure
+- **Graceful fallback** — uses \`navigator.clipboard\` when available, otherwise a hidden-\`textarea\` \`execCommand\` fallback
+- **\`timeout\`** — auto-resets \`copiedText\` to \`null\` after N ms (default \`2000\`); set \`0\` to keep it until the next copy
+- **\`onSuccess\` / \`onError\`** — callbacks fired with the copied text or the thrown \`Error\`
+- **StrictMode & unmount safe** — post-await state updates and the reset timer are guarded once unmounted; the latest copy always wins
+
+## Basic Usage
+\`\`\`tsx
+import { useCopyToClipboard } from "@usefy/use-copy-to-clipboard";
+
+function CopyButton() {
+  const [copiedText, copy] = useCopyToClipboard({ timeout: 2000 });
+
+  return (
+    <button onClick={() => copy("Hello, World!")}>
+      {copiedText ? "Copied!" : "Copy"}
+    </button>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -217,6 +241,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Default usage: click Copy to write the input text to the clipboard, and `copiedText` flips the button to the copied state until it auto-resets after 2000ms.",
+      },
       source: {
         code: `import { useCopyToClipboard } from "@usefy/use-copy-to-clipboard";
 import { useState } from "react";
@@ -276,6 +304,10 @@ export const WithCallbacks: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Wires up the `onSuccess` and `onError` callbacks to surface a status message whenever a copy succeeds or fails.",
+      },
       source: {
         code: `import { useCopyToClipboard } from "@usefy/use-copy-to-clipboard";
 import { useState } from "react";
@@ -335,6 +367,10 @@ export const NoAutoReset: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "With `timeout: 0` the copied state never auto-resets — `copiedText` stays set until the next copy, so you control when to clear it.",
+      },
       source: {
         code: `import { useCopyToClipboard } from "@usefy/use-copy-to-clipboard";
 import { useState } from "react";
@@ -390,6 +426,10 @@ export const LongTimeout: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "A longer `timeout: 5000` keeps the copied state visible for 5 seconds before it auto-resets to null.",
+      },
       source: {
         code: `import { useCopyToClipboard } from "@usefy/use-copy-to-clipboard";
 import { useState } from "react";
@@ -426,6 +466,10 @@ export const MultipleInputs: StoryObj<typeof MultipleInputsDemo> = {
   render: () => <MultipleInputsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "A single hook instance drives several copy buttons: comparing `copiedText` against each value shows which item was most recently copied.",
+      },
       source: {
         code: `import { useCopyToClipboard } from "@usefy/use-copy-to-clipboard";
 
@@ -486,6 +530,10 @@ export const CustomText: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Copies whatever the user types into the input, showing that `copy()` works with any dynamic string, not just static values.",
+      },
       source: {
         code: `import { useCopyToClipboard } from "@usefy/use-copy-to-clipboard";
 import { useState } from "react";

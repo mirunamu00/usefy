@@ -617,8 +617,36 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "Debounces a value by delaying updates until after a specified delay period has elapsed since the last change. Perfect for optimizing search inputs, form validation, auto-save, and any scenario where you want to limit the rate of updates.",
+        component: `Debounce a rapidly-changing **value** — \`useDebounce\` returns a new value that only updates once changes have paused for \`delay\` milliseconds. Ideal for search inputs, live validation, auto-save, and any effect you want to run against a "settled" value instead of every keystroke. The value-based sibling of \`useDebounceCallback\`.
+
+Signature: \`useDebounce(value, delay = 500, options?)\` → the debounced value. Drop it into an \`useEffect\` dependency array and your effect fires only after the value stops changing.
+
+## Features
+- **Value in, debounced value out** — \`const debounced = useDebounce(value, 500)\`; no wiring, just read the return
+- **\`delay\`** — milliseconds to wait after the last change (defaults to \`500\`)
+- **Leading / trailing edges** — \`{ leading, trailing }\`; \`leading\` defaults to \`false\`, \`trailing\` to \`true\`
+- **\`maxWait\`** — guarantees the value updates at least once every \`maxWait\` ms even during continuous change (great for periodic auto-save)
+- **StrictMode-safe** — skips the initial render and StrictMode's double-invoked mount, so the first value never consumes the leading edge
+- **Auto-cleanup** — clears its pending timer on unmount
+
+## Basic Usage
+\`\`\`tsx
+function SearchInput() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  useEffect(() => {
+    if (debouncedSearchTerm) searchAPI(debouncedSearchTerm);
+  }, [debouncedSearchTerm]);
+
+  return (
+    <input
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+    />
+  );
+}
+\`\`\``,
       },
     },
   },

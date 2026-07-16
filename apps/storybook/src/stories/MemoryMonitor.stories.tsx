@@ -28,8 +28,41 @@ function CodeBlock({ code, title }: { code: string; title?: string }) {
 const meta: Meta<typeof MemoryMonitor> = {
   title: "memory-monitor",
   component: MemoryMonitor,
+  tags: ["autodocs"],
   parameters: {
     layout: "fullscreen",
+    docs: {
+      description: {
+        component: `A drop-in React component for real-time browser memory monitoring — mount \`<MemoryMonitor />\` once at your app root and get a floating trigger plus a resizable slide-in panel with **Overview**, **History**, **Snapshots**, and **Settings** tabs. It layers a full debugging UI on top of the \`@usefy/use-memory-monitor\` hook, adding auto-GC, scheduled snapshots, and downloadable HTML diagnostic reports.
+
+Rendering is controlled by \`mode\` (\`'development'\` by default, so the panel only shows locally), and all settings persist to LocalStorage. For production monitoring without any UI, use \`mode="headless"\` or the exported \`useMemoryMonitorHeadless\` hook. Styles are auto-injected — no CSS import required — and the component is SSR-safe.
+
+## Features
+- **Drop-in panel UI** — floating trigger + slide-in panel; Overview gauge, History chart, Snapshots, and Settings tabs
+- **Environment-aware \`mode\`** — \`'development' | 'production' | 'always' | 'headless' | 'never'\` controls when the UI and monitoring run
+- **Threshold alerts** — \`warningThreshold\` / \`criticalThreshold\` drive severity colors and \`onWarning\` / \`onCritical\` callbacks
+- **Leak detection** — \`enableLeakDetection\` + \`leakSensitivity\` (\`'low' | 'medium' | 'high'\`) with an \`onLeakDetected\` callback
+- **Auto-GC** — \`enableAutoGC\` + \`autoGCThreshold\` hint garbage collection under pressure (10s cooldown), reported via \`onAutoGC\`
+- **Snapshots & reports** — manual and scheduled snapshots, snapshot comparison, and HTML diagnostic report generation
+- **Customizable & persistent** — \`position\`, \`defaultWidth\`, \`theme\` (\`'system' | 'light' | 'dark'\`), a keyboard \`shortcut\`, and LocalStorage \`persistSettings\`
+- **Headless option** — \`useMemoryMonitorHeadless\` for data + callbacks with no rendered UI
+
+## Basic Usage
+\`\`\`tsx
+import { MemoryMonitor } from "@usefy/memory-monitor";
+
+function App() {
+  return (
+    <div>
+      <YourApp />
+      {/* Mount once at the root — dev-only panel by default */}
+      <MemoryMonitor mode="development" position="right" />
+    </div>
+  );
+}
+\`\`\``,
+      },
+    },
   },
   argTypes: {
     mode: {
@@ -142,6 +175,14 @@ export const Overview: Story = {
     defaultWidth: 420,
     enableLeakDetection: true,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The full slide-in panel with every tab — click the floating trigger or press Ctrl+Shift+M to open, then explore Overview, History, Snapshots, and Settings.",
+      },
+    },
+  },
   render: (args) => (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-8">
       <div className="max-w-4xl mx-auto">
@@ -219,6 +260,14 @@ export const SnapshotSettings: Story = {
     showTrigger: true,
     defaultWidth: 420,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Configure snapshot capacity and auto-capture schedules from the Settings tab; scheduled captures are marked with a purple \"Auto\" badge in the Snapshots tab.",
+      },
+    },
+  },
   render: (args) => (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-8">
       <div className="max-w-4xl mx-auto">
@@ -285,6 +334,14 @@ export const LeftPosition: Story = {
     position: "left",
     defaultOpen: true,
     showTrigger: true,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The panel slides in from the left edge instead of the right by setting position=\"left\".",
+      },
+    },
   },
   render: (args) => (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-8">
@@ -491,6 +548,14 @@ function HeadlessModeDemo() {
 
 export const HeadlessMode: Story = {
   render: () => <HeadlessModeDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Monitoring with no panel UI via the useMemoryMonitorHeadless hook — live metrics and threshold/leak/auto-GC callbacks stream into an event log.",
+      },
+    },
+  },
 };
 
 // ============================================================================
@@ -633,6 +698,14 @@ function CallbackEventsDemo() {
 
 export const CallbackEvents: Story = {
   render: () => <CallbackEventsDemo />,
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Wires up onOpenChange, onWarning, onCritical, onLeakDetected, and onAutoGC and logs each event as you interact with the panel.",
+      },
+    },
+  },
 };
 
 // ============================================================================
@@ -674,6 +747,14 @@ export const CustomTrigger: Story = {
         <span className="font-medium">Memory</span>
       </div>
     ),
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Replaces the default floating button with your own triggerContent — here a custom \"Memory\" pill in the bottom-right corner.",
+      },
+    },
   },
   render: (args) => (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-8">
@@ -723,6 +804,14 @@ export const ThresholdConfiguration: Story = {
     enableAutoGC: true,
     autoGCThreshold: 80,
     persistSettings: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Sets warning (60%), critical (85%), and auto-GC (80%) thresholds so the panel's colors and callbacks fire at your chosen usage levels.",
+      },
+    },
   },
   render: (args) => (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-8">
@@ -791,6 +880,14 @@ export const DarkMode: Story = {
     theme: "dark",
     persistSettings: false,
   },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Forces the panel's dark theme with theme=\"dark\"; \"system\" follows the OS preference and \"light\" forces light mode.",
+      },
+    },
+  },
   render: (args) => (
     <div className="min-h-screen bg-slate-900 p-8">
       <div className="max-w-4xl mx-auto">
@@ -844,6 +941,14 @@ export const LeakDetection: Story = {
     enableLeakDetection: true,
     leakSensitivity: "high",
     persistSettings: false,
+  },
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Runs leak detection at high sensitivity (10KB/sample, R² ≥ 0.6), surfacing leak probability and trend once enough samples are collected.",
+      },
+    },
   },
   render: (args) => (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 p-8">

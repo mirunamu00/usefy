@@ -525,8 +525,35 @@ const meta = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A React hook for one-time initialization with async support, retry, timeout, and conditional execution. Perfect for component setup, data fetching on mount, and resource initialization.",
+        component: `Run **one-time setup** when a component mounts — sync or async — and track its state. Ideal for initializing services, loading configuration, opening subscriptions, or any run-once-on-mount task, with retry, timeout, and conditional execution built in.
+
+Guarantees initialization runs **once per mount** even if the callback reference changes; it only runs again on remount, on \`reinitialize()\`, or when \`when\` transitions \`false → true\`. The callback may return a cleanup function (sync or async), called on unmount and before re-initialization.
+
+Returns \`{ isInitialized, isInitializing, error, reinitialize }\`.
+
+## Features
+- **Sync or async** — the callback can be either; \`isInitializing\` tracks the in-flight state (seeded true on first commit when \`when\`)
+- **Cleanup functions** — return a function to release resources; runs on unmount and before re-init (one cleanup stored at a time)
+- **\`when\`** — gate initialization on a condition; runs when it flips \`false → true\`, and never re-runs once initialized
+- **\`retry\` / \`retryDelay\`** — automatically retry a failing init up to \`retry\` times, waiting \`retryDelay\`ms between attempts
+- **\`timeout\`** — race an async callback against a deadline, failing with an \`InitTimeoutError\` if it overruns
+- **\`reinitialize\`** — identity-stable function to manually re-run init (respects \`when\`)
+- **SSR compatible** — safe under Next.js / Remix; no effects run during server render
+
+## Basic Usage
+\`\`\`tsx
+import { useInit } from "@usefy/use-init";
+
+function MyComponent() {
+  const { isInitialized, isInitializing, error } = useInit(async () => {
+    await loadConfiguration();
+  });
+
+  if (isInitializing) return <p>Loading…</p>;
+  if (error) return <p>Error: {error.message}</p>;
+  return <div>{isInitialized ? "Ready!" : null}</div>;
+}
+\`\`\``,
       },
     },
   },

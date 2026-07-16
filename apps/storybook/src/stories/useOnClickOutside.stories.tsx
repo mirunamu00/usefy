@@ -449,8 +449,32 @@ const meta: Meta<typeof ModalDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for detecting clicks outside of specified elements. Perfect for modals, dropdowns, popovers, and similar UI components.",
+        component: `Fires a handler when a click (or tap) lands **outside** one or more referenced elements — the standard way to dismiss modals, dropdowns, popovers, and menus. Pass a single ref or an **array of refs** that all count as "inside", and get mouse **and** touch support with the two synthesized-event deduped so a tap fires the handler once.
+
+The handler receives the native \`MouseEvent | TouchEvent\`. Capture phase is on by default, so it still fires even when inner handlers call \`stopPropagation\`.
+
+## Features
+- **Single or multiple refs** — pass one \`ref\` or an array (\`[buttonRef, menuRef]\`); a click inside *any* of them is treated as inside
+- **Touch + mouse** — listens for \`mousedown\` and \`touchstart\` by default (\`detectTouch\`, configurable via \`eventType\` / \`touchEventType\`), suppressing the emulated mouse event that trails a tap
+- **enabled** — gate detection reactively (\`default: true\`) — e.g. only while the modal is open
+- **excludeRefs** — refs whose clicks are ignored (toasts, portals) and never close the target
+- **shouldExclude** — a predicate \`(target) => boolean\` for custom "treat as inside" rules
+- **capture phase by default** — immune to \`stopPropagation\` on inner elements; **latest handler/refs** are read at event time so inline values never go stale, and everything cleans up on unmount
+
+## Basic Usage
+\`\`\`tsx
+import { useOnClickOutside } from "@usefy/use-on-click-outside";
+import { useRef, useState } from "react";
+
+function Modal() {
+  const [isOpen, setIsOpen] = useState(false);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(modalRef, () => setIsOpen(false), { enabled: isOpen });
+
+  return isOpen ? <div ref={modalRef}>Click outside me to close</div> : null;
+}
+\`\`\``,
       },
     },
   },
@@ -479,6 +503,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "The core pattern: a single ref for the modal, gated by `enabled: isOpen`, closes when you click anywhere outside it.",
+      },
       source: {
         code: `import { useOnClickOutside } from "@usefy/use-on-click-outside";
 import { useState, useRef } from "react";
@@ -538,6 +566,10 @@ export const Dropdown: StoryObj<typeof DropdownDemo> = {
   render: () => <DropdownDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Passes an array of refs so both the trigger button and the menu count as inside — clicking the button toggles the menu without registering as an outside click.",
+      },
       source: {
         code: `import { useOnClickOutside } from "@usefy/use-on-click-outside";
 import { useState, useRef } from "react";
@@ -627,6 +659,10 @@ export const WithExclusion: StoryObj<typeof ExcludeRefsDemo> = {
   render: () => <ExcludeRefsDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Uses `excludeRefs` to keep the modal open when clicking the notification area, even though it sits outside the modal.",
+      },
       source: {
         code: `import { useOnClickOutside } from "@usefy/use-on-click-outside";
 import { useState, useRef } from "react";
@@ -723,6 +759,10 @@ export const Conditional: StoryObj<typeof ConditionalDemo> = {
   render: () => <ConditionalDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Toggles the `enabled` option at runtime to turn outside-click detection on and off without unmounting the component.",
+      },
       source: {
         code: `import { useOnClickOutside } from "@usefy/use-on-click-outside";
 import { useState, useRef } from "react";
@@ -825,6 +865,10 @@ export const CustomExclude: StoryObj<typeof ShouldExcludeDemo> = {
   render: () => <ShouldExcludeDemo />,
   parameters: {
     docs: {
+      description: {
+        story:
+          "Supplies a `shouldExclude` predicate so clicks on elements matching `.ignore-outside-click` are treated as inside and never close the menu.",
+      },
       source: {
         code: `import { useOnClickOutside } from "@usefy/use-on-click-outside";
 import { useState, useRef } from "react";

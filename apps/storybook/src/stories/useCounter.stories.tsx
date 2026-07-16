@@ -52,8 +52,34 @@ const meta: Meta<typeof CounterDemo> = {
     layout: "centered",
     docs: {
       description: {
-        component:
-          "A hook for managing counter state with increment, decrement, and reset. Ideal for quantity selectors, pagination, and scoreboards.",
+        component: `Manage a numeric **counter** with ready-made \`increment\`, \`decrement\`, and \`reset\` actions. Ideal for quantity selectors, pagination controls, scoreboards, and step wizards.
+
+Pass an optional \`initialValue\` (defaults to \`0\`). Returns \`{ count, increment, decrement, reset }\` — every action is memoized with \`useCallback\` for a stable identity across renders.
+
+## Features
+- **\`increment\` / \`decrement\`** — adjust the count by 1 using the functional updater, so rapid clicks batch correctly
+- **\`reset\`** — returns the count to the \`initialValue\` it was created with
+- **Any starting point** — accepts positive, zero, or negative \`initialValue\`; the count is unbounded in both directions
+- **Stable references** — all three actions keep a constant identity, safe to pass to memoized children or effect deps
+- **Zero config** — no options object; supports React 18 and 19
+
+## Basic Usage
+\`\`\`tsx
+import { useCounter } from "@usefy/use-counter";
+
+function Counter() {
+  const { count, increment, decrement, reset } = useCounter(0);
+
+  return (
+    <div>
+      <h2>Counter: {count}</h2>
+      <button onClick={increment}>+ Increment</button>
+      <button onClick={decrement}>- Decrement</button>
+      <button onClick={reset}>Reset</button>
+    </div>
+  );
+}
+\`\`\``,
       },
     },
   },
@@ -75,6 +101,10 @@ export const Default: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Starts at 0 and exercises every action — increment, decrement, and reset back to the initial value.",
+      },
       source: {
         code: `import { useCounter } from "@usefy/use-counter";
 
@@ -126,6 +156,10 @@ export const WithInitialValue: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Seeds the counter with an initialValue of 10 and shows that reset returns to that starting value, not to 0.",
+      },
       source: {
         code: `import { useCounter } from "@usefy/use-counter";
 
@@ -174,6 +208,10 @@ export const WithNegativeInitialValue: Story = {
   },
   parameters: {
     docs: {
+      description: {
+        story:
+          "Starts at -5 to show the counter is unbounded — it works with negative values and can decrement below zero.",
+      },
       source: {
         code: `import { useCounter } from "@usefy/use-counter";
 
