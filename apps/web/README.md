@@ -1,0 +1,271 @@
+# @usefy/web — the usefy landing & docs site
+
+> **Handoff document.** This file is the single source of truth for the usefy
+> introduction site. Read it top-to-bottom and you can continue the work in a
+> fresh session with zero prior context. It records **what was built, how, why,
+> what's verified, and what's left.**
+
+---
+
+## 1. What this is
+
+A **Next.js (App Router) marketing + docs site** that introduces every published
+`@usefy/*` package. It is the SEO-first, human-facing front door — distinct from
+Storybook (interactive prop playground) and the per-package READMEs (exhaustive
+npm reference).
+
+**Two hard requirements from the brief, both met:**
+
+1. **Beautiful & trustworthy design** — a developer would not bounce.
+2. **SEO-optimized** — users find packages via search engines.
+
+**The three-surface model** (the key content decision — avoids duplication):
+
+| Surface | Role | Nature |
+| --- | --- | --- |
+| **Storybook** (existing) | change props, test behavior live | interactive playground |
+| **README** (existing, on npm) | every example, prop, edge case | deep reference |
+| **This site** (new) | install + quick start + core API in one screen, then link out | scannable entry point |
+
+→ The site's per-package doc shows **only** the curated essentials (install →
+quick start → API), then links to the README (full) and Storybook (play). It
+never dumps the whole README.
+
+---
+
+## 2. The package layer model (important — drove the IA)
+
+`packages/*` is a **flat set of same-layer, independent packages**. Each top-level
+entry is either:
+
+- an **umbrella / family** — `hooks` = `@usefy/hooks` + 70 `use-*` packages
+  (a collection you browse into), or
+- a **standalone package** — `@usefy/memory-monitor`, `@usefy/virtual-keyboard`
+  (single rich packages).
+
+`memory-monitor` / `virtual-keyboard` sit at the **same layer as `hooks`**, not
+under it. Future umbrellas or standalones join this same layer. The site's
+navigation reflects exactly this: the ecosystem section presents the hooks
+umbrella and each standalone as peer cards.
+
+> `packages/kits/` is a **dead build-artifact directory** (no `package.json`, not
+> a workspace). Ignore it. Cleanup is out of scope for this site work.
+
+---
+
+## 3. Architecture
+
+### 3a. Data layer — the backbone (auto-seeded, do not hand-write docs)
+
+The site renders **72 packages** from a generated registry. Docs content is
+**extracted**, not hand-authored, so it can never drift from the packages.
+
+```
+scripts/build-registry.mjs   ← generator (Node ESM). Runs on prebuild/predev.
+  ├─ walks packages/hooks/use-* + packages/{memory-monitor,virtual-keyboard}
+  ├─ reads each package.json (name, description, keywords, version)
+  ├─ extracts from each README:  Quick Start code block  +  API section markdown
+  ├─ applies the curated CATEGORY slug→category map (the ONE hand-tended map)
+  └─ writes → src/data/registry.generated.ts   (AUTO-GENERATED, never edit)
+
+src/data/types.ts        ← PackageEntry / CategoryId / CategoryMeta types
+src/data/registry.ts     ← typed loader + category taxonomy (CATEGORIES) + helpers:
+                            packages, liteList(), getPackage(), packagesByCategory(),
+                            ecosystem(), categoryMeta(), packageCount/hookCount/…
+```
+
+**Category taxonomy** (8 buckets): `state`, `lifecycle`, `async`, `events`,
+`layout`, `sensors`, `storage`, `component`. Every package is mapped; a missing
+map entry falls back to `misc` and the generator **warns loudly** (currently 0).
+
+### 3b. Pages (all static / SSG — 152 prerendered routes)
+
+```
+src/app/
+  layout.tsx                       ← fonts, metadata base, pre-paint theme script, header/footer
+  page.tsx                         ← "/"  landing (hero + ecosystem + featured + why + CTA) + WebSite JSON-LD
+  not-found.tsx                    ← 404
+  sitemap.ts / robots.ts           ← generated from the registry
+  opengraph-image.tsx              ← root social card (next/og)
+  packages/
+    page.tsx                       ← "/packages"  static; renders the client explorer
+    [slug]/page.tsx                ← "/packages/[slug]"  SSG per package (the core doc)
+    [slug]/opengraph-image.tsx     ← per-package social card (next/og), SSG
+  globals.css                      ← Tailwind v4 + design tokens + prose/code styles
+```
+
+The per-package doc (`[slug]/page.tsx`) layout: breadcrumb → title + category →
+tagline → action links (npm / source / README / Storybook) → **Install** (tabbed)
+→ **Quick start** (shiki) → **API reference** (markdown tables) → at-a-glance
+sidebar → "Go deeper" callout → related packages. Emits `SoftwareSourceCode` +
+`BreadcrumbList` JSON-LD.
+
+### 3c. Components
+
+```
+src/components/
+  site-header.tsx / site-footer.tsx / brand-mark.tsx   ← chrome ({} brace motif)
+  primitives.tsx        ← Container, Eyebrow (code-comment style), Pill
+  code-block.tsx        ← server; shiki-highlighted "editor pane" + copy
+  markdown.tsx          ← server; react-markdown + remark-gfm for API sections
+  package-card.tsx      ← a package tile (used in grids)
+  package-explorer.tsx  ← CLIENT; search + family tabs + category chips over liteList()
+  install-command.tsx   ← CLIENT; npm/pnpm/yarn/bun tabs + copy (dogfoods use-copy-to-clipboard)
+  theme-toggle.tsx      ← CLIENT; dogfoods use-dark-mode (writes data-theme on <html>)
+  copy-button.tsx       ← CLIENT; dogfoods use-copy-to-clipboard
+  live-toggle-demo.tsx  ← CLIENT; hero live island, dogfoods use-toggle
+src/lib/
+  highlight.ts          ← shiki singleton (github-dark-default), build-time highlight
+  site.ts               ← central site config (name, url, repo, storybook, npmOrg)
+  cn.ts                 ← tiny classname join
+```
+
+### 3d. Dogfooding (a deliberate trust signal)
+
+The site is built **with** usefy hooks, proving they work under Next.js/SSR:
+
+- **theme toggle** → `@usefy/use-dark-mode` (attribute `data-theme`, storageKey `usefy-dark-mode`)
+- **copy buttons / install** → `@usefy/use-copy-to-clipboard`
+- **hero live demo** → `@usefy/use-toggle`
+
+These are `workspace:*` deps in `package.json`. A pre-paint inline script in
+`layout.tsx` mirrors `use-dark-mode` to set `data-theme` before first paint
+(no theme flash).
+
+### 3e. Design system
+
+Concept: **"the hook is the hero"** — code is the product's material.
+
+- **Type**: Space Grotesk (display) · Inter (body) · JetBrains Mono (code/data), all self-hosted via `next/font/google` (CLS 0).
+- **Color**: near-monochrome ink with a single chromatic accent = **the brand itself**. The usefy logo is a fish-hook in an **indigo→violet gradient** (`#5b68db` → `#8437c6`, sampled from `assets/logo.png`). Tokens: `--brand` `#6a41d6` light / `#9d8bff` dark, plus `--brand-from`/`--brand-to` for the gradient (`.brand-gradient` utility). This replaced an earlier off-brand flat blue (`#0969DA`) to match the favicon/Storybook. Full light + dark via CSS variables (`:root`, `:root[data-theme="dark"]`, `prefers-color-scheme` fallback).
+- **Brand mark**: the **real usefy hook logo** (gradient circle + white fish-hook) is used everywhere — favicon (tab), header wordmark (`brand-mark.tsx` renders `/public/hook-mark.png`), and both OG images (embedded as a base64 data URI so satori can render it). An earlier `{}` brace placeholder was replaced with the actual logo so all surfaces match. Assets: `public/hook-mark.png` (64², header), `src/app/{favicon.ico, icon.png (256²), apple-icon.png (180²)}` — all generated from `assets/favicon.png` via sharp.
+- **Signature**: code-comment eyebrows (`// browse all 72`) + a real running hook in the hero + the brand-gradient primary CTAs.
+- Verified in light, dark, and mobile (390px).
+
+---
+
+## 4. How to run
+
+```bash
+# from repo root — deps are installed via pnpm workspace
+pnpm install
+
+# dev (predev regenerates the registry). Serves on :3100
+pnpm --filter @usefy/web dev
+
+# production build (prebuild regenerates the registry) + start
+pnpm --filter @usefy/web build
+pnpm --filter @usefy/web start          # :3100
+
+# regenerate the registry only (after adding/editing a package README)
+pnpm --filter @usefy/web build:registry
+
+# typecheck
+pnpm --filter @usefy/web typecheck
+```
+
+### Screenshot check (used during design review)
+
+Playwright lives in `apps/storybook/node_modules`. A throwaway script placed in
+that dir (so `import { chromium } from "playwright"` resolves) against
+`http://localhost:3100`, with `colorScheme` light/dark + a mobile viewport, was
+used to self-critique the design. Repeat that pattern to re-verify visuals.
+
+---
+
+## 5. How to extend
+
+- **A new package ships** → nothing to hand-write. Run `build:registry` (or just
+  `dev`/`build`, which run it automatically). It picks up any new
+  `packages/hooks/use-*` or top-level standalone with a `package.json` + README.
+  **BUT**: add its slug to the `CATEGORY` map in `scripts/build-registry.mjs`, or
+  it lands in `misc` (the generator prints a warning naming the slug).
+- **Feature it on the landing page** → add its slug to `FEATURED` in `src/app/page.tsx`.
+- **Retune categories** → edit `CATEGORY` (generator) + `CATEGORIES` (registry.ts).
+- **README parsing** relies on `## Quick Start` and `## API` / `## API Reference`
+  headings + the punchy `<strong>` subtitle after the `<h1>`. All 72 current
+  READMEs follow this; a new one must too, or those sections come back empty
+  (the generator warns which packages are missing them).
+
+---
+
+## 6. Status
+
+### Done & verified
+
+- [x] Registry extractor + taxonomy (72 packages, 0 `misc`, 0 missing sections)
+- [x] Landing page (hero w/ live hook, ecosystem = same-layer model, featured, why, CTA)
+- [x] `/packages` explorer (search + family + category, stays statically rendered)
+- [x] `/packages/[slug]` per-package doc (SSG, install/quickstart/API/links/related + JSON-LD)
+- [x] SEO: per-page `generateMetadata`, JSON-LD (WebSite/SoftwareSourceCode/BreadcrumbList), `sitemap.xml`, `robots.txt`, root + per-package OG images (next/og), self-hosted fonts, `not-found`
+- [x] Dogfooding (use-dark-mode / use-copy-to-clipboard / use-toggle)
+- [x] Design verified light / dark / mobile
+- [x] `pnpm typecheck` clean · `next build` green (152 static pages)
+- [x] Mandatory review loop (`usefy-reviewer`) run + findings triaged
+
+### Review outcome (usefy-reviewer)
+
+**Fixed:** theme-toggle `aria-label` hydration mismatch (was the one confirmed
+bug) · removed unused `@usefy/use-counter` dep · dynamic search placeholder
+count · `transpilePackages` consistency (added `use-toggle`).
+
+**Consciously deferred:**
+- The family/install tab markup uses `role="tab"` without
+  `role="tabpanel"`/`aria-controls`; a `role="group"` + `aria-pressed` pattern
+  would be cleaner if revisited (cosmetic a11y).
+- `NEXT_PUBLIC_SITE_URL` correctness — a **deploy-time env**, tracked below.
+
+**Post-review bug fix:** the package explorer's family filter is now **URL-driven**
+via `useSearchParams()` (client), wrapped in `<Suspense>` so `/packages` stays
+static. Previously it read `?family=` once in a mount effect, which went stale on
+**same-route** navigations (e.g. `/packages?family=hooks` → `?family=standalone`
+via the header nav didn't update the tab). Tab clicks now also write the param
+(`router.replace`), so state is shareable and header nav + tabs always agree.
+
+### Not started / open decisions (deferred by the user until the page is finished)
+
+- [ ] **Deployment** (explicitly postponed until content is final). When ready:
+  - Set **`NEXT_PUBLIC_SITE_URL`** to the real domain in the Vercel project.
+    `src/lib/site.ts` defaults to `https://usefy.dev` (placeholder) — every
+    canonical/OG/sitemap URL inherits it, so a wrong value ships wrong URLs.
+  - **Build command** must build the workspace `@usefy/*` deps first (their
+    `dist` is what the app imports): `turbo run build --filter=@usefy/web...`
+    (or Root Directory = `apps/web` with a pnpm install that builds deps).
+    Consider adding a `vercel.json`.
+- [ ] Optional: link the site from the root `README.md` once it has a URL.
+- [ ] Optional: `packages/kits/` dead-dir cleanup (separate commit, unrelated).
+- [ ] Not needed: **no changeset** — `@usefy/web` is `private: true`, not published.
+
+---
+
+## 7. Gotchas (things that already bit us — save yourself the time)
+
+- **Stale prod server = broken CSS.** `next start` keeps running across rebuilds;
+  a rebuild changes the CSS hash, and the old server serves old HTML pointing at
+  a CSS file that no longer exists → the page renders **completely unstyled**.
+  On Windows `pkill` may not kill the node server — free the port with PowerShell
+  `Get-NetTCPConnection -LocalPort 3100 -State Listen | Stop-Process` before
+  restarting, and run **one** server.
+- **next/og (satori)**: every `<div>` with **more than one child** must set
+  `display: flex` (or `none`). Text + `{expr}` counts as two children — wrap in a
+  single template literal (`{\`npm install ${name}\`}`) or add `display:flex`.
+- **Next 15**: `params` and `searchParams` are **Promises** — `await` them in
+  async pages / `generateMetadata` / OG routes.
+- **Keeping `/packages` static**: don't read `searchParams` in the **page** (that
+  opts into dynamic rendering). Instead the client explorer uses
+  `useSearchParams()` (URL-driven family filter) and is wrapped in `<Suspense>`
+  on the page — that keeps the route statically prerendered while staying
+  reactive to same-route query changes.
+- **Tailwind v4** here (the app is isolated; Storybook still uses v3). CSS-first
+  config via `@theme inline` in `globals.css`, `@tailwindcss/postcss` plugin —
+  no `tailwind.config.js`.
+- `registry.generated.ts` is **generated** — never edit by hand; change the
+  generator or the source READMEs/package.json instead.
+- **No built-in i18n** — the site relies on the browser's native translation.
+  Code/identifier surfaces carry `translate="no"` + `.notranslate` so auto-transl
+  doesn't mangle snippets (CodeBlock, InstallCommand, the Markdown `code`/`pre`
+  components, hook names, `@usefy/*` identifiers, the "usefy" wordmark). Prose
+  (taglines, API descriptions, section copy) stays translatable. **When adding a
+  new code/identifier element, add the same guard.** Also: custom react-markdown
+  components must destructure out the `node` prop or it leaks onto the DOM.
+```
