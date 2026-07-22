@@ -90,7 +90,8 @@ Verify each; a miss is a finding:
   unit-tested directly.
 - **Changeset present** with the correct bump — new feature = `minor` on the
   package (plus `@usefy/hooks` for a hook; a component has no umbrella so just the
-  component package). Because `@usefy/*` is a fixed group the whole set bumps together.
+  component package). The hook family (`@usefy/hooks` + `@usefy/use-*`) is a fixed
+  group and bumps together; standalone components version independently and bump alone.
   Without it, nothing publishes.
 - **Ecosystem consistency** — the package matches its siblings (naming, file
   layout, return-shape / props conventions, JSDoc with a runnable `@example`,

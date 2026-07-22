@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**usefy** is a pnpm + Turbo monorepo of production-ready React hooks and standalone feature components, published to npm under the `@usefy/*` namespace. Each hook/component ships as its own independently-versioned package. Hooks additionally roll up into a single umbrella package (`@usefy/hooks`) that re-exports every hook for convenient single-import consumption. Feature components (e.g. `@usefy/memory-monitor`) are **not** bundled behind an umbrella — each is installed on its own.
+**usefy** is a pnpm + Turbo monorepo of production-ready React hooks and standalone feature components, published to npm under the `@usefy/*` namespace. Each hook/component ships as its own package; the hook family (`@usefy/hooks` umbrella + every `@usefy/use-*`) versions in **lockstep** (a fixed changeset group), while standalone components version **independently**. Hooks additionally roll up into a single umbrella package (`@usefy/hooks`) that re-exports every hook for convenient single-import consumption. Feature components (e.g. `@usefy/memory-monitor`) are **not** bundled behind an umbrella — each is installed on its own.
 
 ## Common Commands
 
@@ -125,6 +125,7 @@ When the user says "let's PR" / "PR 하자" (or similar), "doing the PR" means e
 
 1. Make changes on a feature branch.
 2. `pnpm changeset` → select affected packages + bump type. **No changeset = not released.**
+   Versioning policy (`.changeset/config.json`): the hook family (`@usefy/hooks` + `@usefy/use-*`) is a **fixed group** — any hook changeset bumps the whole family to the same version. Standalone components (e.g. `@usefy/memory-monitor`, `@usefy/virtual-keyboard`) are **not** in the group and version independently — name them explicitly in their own changesets.
 3. Commit the changeset with your code; open a PR to `master` (see "Opening a PR" above — hand back the link, don't create it).
 4. On merge, the `Release` GitHub Action (`.github/workflows/release.yml`) opens a "Version Packages" PR.
 5. Merging that PR runs `pnpm release` (`pnpm build && changeset publish`) to publish to npm.

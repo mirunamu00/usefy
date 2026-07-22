@@ -13,7 +13,7 @@ Work through the phases in order. Verify at each checkpoint rather than at the v
 
 - Package manager is **pnpm** (workspace protocol). Never use npm/yarn to install.
 - Hooks live at `packages/hooks/use-<name>/`. The umbrella package `@usefy/hooks` (at `packages/hooks/`) re-exports every hook.
-- All `@usefy/*` packages are a **fixed** changeset group (`.changeset/config.json` → `"fixed": [["@usefy/*"]]`), so any release bumps them all together to the same version.
+- The **hook family** (`@usefy/hooks` umbrella + every `@usefy/use-*`) is a **fixed** changeset group (`.changeset/config.json` → `"fixed": [["@usefy/hooks", "@usefy/use-*"]]`), so any hook release bumps the whole family together to the same version. Standalone component packages are NOT in the group — they version independently.
 - Tests run from a **central** config at the repo root (`vitest.packages.config.ts`), not per-package Turbo. Each package still has its own `vitest.config.ts` for `pnpm --filter` runs.
 - Naming: directory `use-key-press` → package `@usefy/use-key-press` → hook `useKeyPress`. Kebab dir, camelCase hook, PascalCase types.
 
@@ -135,7 +135,7 @@ Note the new package's **statement** coverage %. Confirm the HTML report exists 
 pnpm changeset   # select the new package + @usefy/hooks, choose the bump
 ```
 
-Or write `.changeset/<name>.md` by hand with frontmatter listing `"@usefy/use-<name>"` and `"@usefy/hooks"` and the bump type (new feature = `minor`; docs-only follow-ups = `patch`). Because of the fixed group, the whole `@usefy/*` set bumps together — that's expected. Verify with `pnpm changeset status`. **Without a changeset, nothing publishes.**
+Or write `.changeset/<name>.md` by hand with frontmatter listing `"@usefy/use-<name>"` and `"@usefy/hooks"` and the bump type (new feature = `minor`; docs-only follow-ups = `patch`). Because of the fixed group, the whole hook family (`@usefy/hooks` + every `@usefy/use-*`) bumps together — that's expected; standalone components are unaffected. Verify with `pnpm changeset status`. **Without a changeset, nothing publishes.**
 
 ## Phase 10 — Generate a prefilled PR link (at task completion)
 

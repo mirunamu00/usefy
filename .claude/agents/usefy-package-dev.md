@@ -55,10 +55,11 @@ release process). Follow it.
   dispatch it from the event handler or a post-commit effect. Wrap returned
   functions in `useCallback`; give collection/handler objects stable identities
   via `useMemo`. Guard `window`/`document` for SSR. Support React 18 **and** 19.
-- **Changeset or it doesn't release.** `@usefy/*` is a fixed changeset group, so a
-  new feature is a `minor` on the package (plus `@usefy/hooks` for a hook; a
-  standalone component has no umbrella so just the component package); the whole set
-  bumps together — that's expected. Verify with `pnpm changeset status`.
+- **Changeset or it doesn't release.** New feature = `minor` on the package (plus
+  `@usefy/hooks` for a hook; a standalone component has no umbrella so just the
+  component package). The hook family (`@usefy/hooks` + `@usefy/use-*`) is a fixed
+  changeset group and bumps together — that's expected; standalone components version
+  independently and bump alone. Verify with `pnpm changeset status`.
 - **Tests run from the central config** (`vitest.packages.config.ts`), not
   per-package Turbo. Its glob covers `packages/hooks/*` and `packages/*`, so both
   hooks and top-level component packages are picked up by root `pnpm test`. Scope with

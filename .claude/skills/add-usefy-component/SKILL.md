@@ -95,7 +95,7 @@ Rules of thumb:
 - Package manager is **pnpm** (workspace protocol). Never npm/yarn.
 - There is **no component umbrella**. Each standalone component lives at `packages/<name>/` (a sibling of `hooks/`) and is published on its own.
 - `pnpm-workspace.yaml` globs `packages/*` — **no workspace edit needed** for a new top-level component dir.
-- All `@usefy/*` packages are a **fixed** changeset group (`.changeset/config.json` → `"fixed": [["@usefy/*"]]`) — any release bumps them all to the same version. A new component's `version` should match the current group version.
+- Standalone components are **NOT** in the fixed changeset group — only the hook family is (`.changeset/config.json` → `"fixed": [["@usefy/hooks", "@usefy/use-*"]]`). Each component versions **independently**: its changeset bumps only itself, and hook releases never bump it. A new component starts at `0.1.0` and graduates to `1.0.0` via a `major` changeset once its API is stable (ask the user if they want it stable from day one).
 - **Component tests DO run under the repo-root central config.** `vitest.packages.config.ts` globs `packages/hooks/*` and `packages/*` (which covers top-level component packages), so `pnpm test` at the root picks them up. You can also run them per-package with `pnpm --filter @usefy/<name> test` (memory-monitor works this way). Clone `memory-monitor`'s `vitest.config.ts` + `vitest.setup.ts` for the component.
 
 ## Phase 1 — SPEC first (the implementation contract)
@@ -116,8 +116,9 @@ virtual-keyboard SPEC's dependency section is a model).
 ## Phase 2 — Package config (clone from memory-monitor, adapt)
 
 Create `packages/<name>/package.json` by cloning `memory-monitor`'s and
-changing `name` (`@usefy/<name>`, no `use-` prefix), `version` (current group
-version), `description`, `keywords`, `repository.directory`, `homepage`, and the
+changing `name` (`@usefy/<name>`, no `use-` prefix), `version` (components
+version independently — start at `0.1.0`), `description`, `keywords`,
+`repository.directory`, `homepage`, and the
 `dependencies` (its hook counterpart + any runtime deps like `clsx`).
 
 A component's `package.json` differs from a hook's in ways that matter:
@@ -196,8 +197,9 @@ Then:
 pnpm changeset   # select @usefy/<name>, choose the bump
 ```
 
-New component = `minor`; docs-only follow-ups = `patch`. Because of the fixed group the
-whole `@usefy/*` set bumps together — expected. Verify with `pnpm changeset
+New component = `minor`; docs-only follow-ups = `patch`. The changeset bumps **only
+the component** — components aren't in the fixed group (that's hook-family-only), so
+hook releases won't bump it and it won't drag hooks along. Verify with `pnpm changeset
 status`. **Without a changeset, nothing publishes.**
 
 ## Phase 8 — Prefilled PR link (at completion)
