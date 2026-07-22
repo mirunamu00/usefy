@@ -54,9 +54,6 @@ under it. Future umbrellas or standalones join this same layer. The site's
 navigation reflects exactly this: the ecosystem section presents the hooks
 umbrella and each standalone as peer cards.
 
-> `packages/kits/` is a **dead build-artifact directory** (no `package.json`, not
-> a workspace). Ignore it. Cleanup is out of scope for this site work.
-
 ---
 
 ## 3. Architecture
@@ -263,7 +260,7 @@ version stays live.
   `/sitemap.xml` — not required for indexing, but it's how you monitor coverage.
 
 - [x] Link the site from the root `README.md`.
-- [ ] Optional: `packages/kits/` dead-dir cleanup (separate commit, unrelated).
+- [x] `packages/kits/` dead-dir removed (stale build artifacts, untracked by git).
 - Not needed: **no changeset** — `@usefy/web` is `private: true`, not published.
 
 ---
