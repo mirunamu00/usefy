@@ -6,6 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **usefy** is a pnpm + Turbo monorepo of production-ready React hooks and standalone feature components, published to npm under the `@usefy/*` namespace. Each hook/component ships as its own package; the hook family (`@usefy/hooks` umbrella + every `@usefy/use-*`) versions in **lockstep** (a fixed changeset group), while standalone components version **independently**. Hooks additionally roll up into a single umbrella package (`@usefy/hooks`) that re-exports every hook for convenient single-import consumption. Feature components (e.g. `@usefy/memory-monitor`) are **not** bundled behind an umbrella — each is installed on its own.
 
+## Quality bar (NON-NEGOTIABLE)
+
+usefy gives away **enterprise-grade** components — free never means low quality. A package ships when someone seeing it for the first time would be impressed, not merely when tests pass. Concretely:
+
+- **Zero known bugs at ship.** A confirmed defect — functional, visual, or motion — blocks release. There is no "polish later" tier for anything a user can see or feel.
+- **The Storybook demo is the storefront.** Every story must be experienced in a **running browser** (`pnpm storybook`, real interaction — `build-storybook` compiling proves nothing about the experience) before the work is called done. Demos are interactive-first: a story's `play` function **auto-runs when its canvas opens**, so a play that drives a flow to completion destroys the demo in front of the visitor — flow-completing plays live only in dedicated, clearly-labeled test stories (see the `add-usefy-story` skill).
+- **Motion and visual quality are correctness, not polish.** Elements that should move together must be verified to move together (same duration/easing — no teleporting, snapping, or rubber-band chasing); disabled/pending/empty states must be clearly visible in **both** light and dark themes; `prefers-reduced-motion` must be respected. jsdom can see none of this — only a browser check can.
+- **Both the builder and the reviewer verify in a browser.** `usefy-package-dev` performs visual QA (drive every story, both themes, screenshots as evidence) before reporting done; `usefy-reviewer` independently experiences the stories as a first-time user before approving. "Tests green + it compiles" is **not** done — that combination has already shipped one embarrassing release and must never ship another.
+
 ## Common Commands
 
 ```bash

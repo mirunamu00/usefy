@@ -61,12 +61,41 @@ function Component() {
 
 Do not leave some stories with descriptions and others without.
 
-### 3. Use the shared system + test it
+### 3. Demos are interactive-first — a `play` must NEVER consume the demo
+
+A story's `play` function **auto-runs every time its canvas is opened**. A play
+that drives the flow to completion (finishing a tour, submitting the form,
+dismissing the overlay, clearing the list) makes the demo self-destruct in front
+of the visitor — the worst possible first impression, and exactly how one release
+already embarrassed the project. Rules:
+
+- **Demo stories:** no flow-completing or state-destroying `play`. A play on a
+  demo is acceptable only when it leaves the demo visually idle and fully usable
+  afterwards (e.g. asserting the initial render). When in doubt, the demo gets
+  **no play**.
+- **Interaction tests:** put flow-driving assertions in ONE dedicated story
+  (e.g. `InteractionTest`) tagged `tags: ["!autodocs"]`, named and described so
+  anyone opening it knows it auto-runs and will drive the UI by itself. Keep it
+  robust: portal-aware queries, `findBy*`/`waitFor`, no fixed timeouts.
+- Multi-step / flow components (tours, wizards, dialogs, forms) are where this
+  matters most — their demos exist to be *driven by the visitor*.
+
+### 4. Use the shared system
 
 Import `storyTheme` for layout/typography; give interactive elements
-`data-testid`s; add a `play` test (`within`/`userEvent`/`expect` from
-`@storybook/test`) that drives and asserts the demo where the behavior is
-deterministic.
+`data-testid`s (used by the dedicated interaction-test story, never leaked into
+"Show code"); use `within`/`userEvent`/`expect` from `@storybook/test` in the
+interaction-test story.
+
+### 5. Verify in a RUNNING browser — compiling is not done
+
+`build-storybook` compiling proves nothing about the experience. Before done:
+run `pnpm storybook`, open **every** story canvas, and use it like a first-time
+visitor — nothing auto-runs or self-completes, interactions work, the demo is
+restartable after finishing, animation is smooth (things that move together move
+together — no teleporting or rubber-banding), disabled/pending states are
+clearly visible, and light **and** dark themes both look right. Screenshot the
+key states as evidence (CLAUDE.md "Quality bar").
 
 ## The judgment call — how rich should the demo be?
 
@@ -93,6 +122,9 @@ deterministic.
       and `tags: ["autodocs"]`.
 - [ ] Every story has a one-line `docs.description.story`.
 - [ ] Demo richness matches the hook's nature (deliberate judgment, not a count).
-- [ ] `storyTheme` used; interactive nodes have `data-testid`; `play` asserts
-      behavior where deterministic.
+- [ ] **No demo story self-runs or self-completes** — flow-driving plays live
+      only in a dedicated `!autodocs` interaction-test story (rule 3).
+- [ ] `storyTheme` used; interactive nodes have `data-testid`.
 - [ ] `pnpm --filter @usefy/storybook build-storybook` compiles.
+- [ ] **Every story driven by hand in a running Storybook** (rule 5): idle on
+      open, interactive, restartable, smooth motion, visible states, both themes.
