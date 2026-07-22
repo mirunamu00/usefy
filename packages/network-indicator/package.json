@@ -1,6 +1,6 @@
 {
   "name": "@usefy/network-indicator",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Drop-in React online/offline status banner — offline warning plus an auto-dismissing \"back online\" confirmation, zero-config and SSR-safe",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
