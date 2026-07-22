@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-copy-to-clipboard",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-copy-to-clipboard",
   "description": "A React hook for copying text to clipboard with fallback support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

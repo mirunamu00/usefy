@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-local-storage",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-local-storage",
   "description": "A React hook for persisting state in localStorage with automatic synchronization",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

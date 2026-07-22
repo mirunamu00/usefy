@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-media-query",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-media-query",
   "description": "A React hook for matching CSS media queries with matchMedia and SSR support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

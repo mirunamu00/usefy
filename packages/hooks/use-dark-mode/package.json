@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-dark-mode",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-dark-mode",
   "description": "A React hook for dark mode with system detection, persistence, and DOM class/attribute",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-toggle",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-toggle",
   "description": "A React hook for boolean state management",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

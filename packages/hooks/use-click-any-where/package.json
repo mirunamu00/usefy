@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-click-any-where",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-click-any-where",
   "description": "A React hook for detecting document-wide click events",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

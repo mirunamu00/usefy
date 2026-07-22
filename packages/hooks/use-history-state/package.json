@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-history-state",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-history-state",
   "description": "A React hook for undo/redo state history with time-travel",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

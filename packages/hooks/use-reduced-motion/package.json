@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-reduced-motion",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-reduced-motion",
   "description": "A React hook for the user's reduced-motion preference (prefers-reduced-motion)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

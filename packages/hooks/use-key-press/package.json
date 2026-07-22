@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-key-press",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-key-press",
   "description": "A React hook for detecting keyboard key presses, shortcuts, and combinations",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

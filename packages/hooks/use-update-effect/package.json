@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-update-effect",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-update-effect",
   "description": "A React useEffect variant that skips the first render",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

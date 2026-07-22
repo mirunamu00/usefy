@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-object-state",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-object-state",
   "description": "A React hook for object state with immutable partial updates (patch/merge) and reset",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

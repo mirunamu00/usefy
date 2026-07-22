@@ -86,7 +86,7 @@
   "bugs": {
     "url": "https://github.com/mirunamu00/usefy/issues"
   },
-  "homepage": "https://github.com/mirunamu00/usefy/tree/master/packages/virtual-keyboard#readme",
+  "homepage": "https://usefy-web.vercel.app/packages/virtual-keyboard",
   "publishConfig": {
     "access": "public"
   }

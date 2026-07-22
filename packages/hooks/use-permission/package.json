@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-permission",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-permission",
   "description": "A React hook for reading Permissions API status with live updates, SSR-safe and typed",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

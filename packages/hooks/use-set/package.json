@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-set",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-set",
   "description": "A React hook for managing Set state with immutable updates",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

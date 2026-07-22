@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-init",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-init",
   "description": "A React hook for one-time initialization with async support, retry, timeout, and conditional execution",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

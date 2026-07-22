@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-raf-state",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-raf-state",
   "description": "A useState replacement that batches state updates to requestAnimationFrame, coalescing rapid updates (scroll / resize / pointer / animation) to at most one render per frame",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
