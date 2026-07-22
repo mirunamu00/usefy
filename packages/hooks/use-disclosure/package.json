@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-disclosure",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-disclosure",
   "description": "A React hook for open/close/toggle state — modals, drawers, popovers, and accordions",
   "main": "./dist/index.js",

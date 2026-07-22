@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-event-callback",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-event-callback",
   "description": "A React hook returning a stable callback that always sees the latest props and state",
   "main": "./dist/index.js",
