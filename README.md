@@ -53,6 +53,7 @@
 | `@usefy/memory-monitor` | Real-time browser memory monitoring component |
 | `@usefy/virtual-keyboard` | On-screen virtual keyboard with a declarative layout engine and headless hook |
 | `@usefy/network-indicator` | Drop-in online/offline status banner with an auto-dismissing "back online" confirmation |
+| `@usefy/scroll-progress` | Drop-in reading-progress bar that fills as you scroll the page or any container |
 
 ---
 
@@ -230,6 +231,44 @@ function App() {
 
 ---
 
+### @usefy/scroll-progress
+
+<a href="https://www.npmjs.com/package/@usefy/scroll-progress" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/scroll-progress.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/scroll-progress" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/scroll-progress.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/scroll-progress" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/scroll-progress?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+Drop-in reading-progress bar — a thin fixed bar pinned to the top (or bottom) of
+the viewport that fills as you scroll the page or any scrollable container
+(built on `@usefy/use-scroll-position`).
+
+```bash
+pnpm add @usefy/scroll-progress
+```
+
+```tsx
+import { ScrollProgress } from "@usefy/scroll-progress";
+
+function App() {
+  return (
+    <>
+      {/* Mount once — zero-config, accessible, SSR-safe */}
+      <ScrollProgress color="#8b5cf6" height={4} />
+      <YourApp />
+    </>
+  );
+}
+```
+
+<a href="./packages/scroll-progress/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -241,6 +280,7 @@ function App() {
 | Memory monitor | `pnpm add @usefy/memory-monitor` | `import { MemoryMonitor } from "@usefy/memory-monitor"` |
 | Virtual keyboard | `pnpm add @usefy/virtual-keyboard` | `import { VirtualKeyboard } from "@usefy/virtual-keyboard"` |
 | Network status banner | `pnpm add @usefy/network-indicator` | `import { NetworkIndicator } from "@usefy/network-indicator"` |
+| Scroll progress bar | `pnpm add @usefy/scroll-progress` | `import { ScrollProgress } from "@usefy/scroll-progress"` |
 
 ### Peer Dependencies
 
@@ -394,6 +434,13 @@ Also ships a `@usefy/virtual-keyboard/headless` entry (hook + engine + types, no
 | ------ | ----------- |
 | `NetworkIndicator` | Drop-in online/offline banner — offline warning + auto-dismissing "back online" confirmation, `render` escape hatch, `onStatusChange` callback |
 | `DEFAULT_OFFLINE_MESSAGE`, `DEFAULT_ONLINE_MESSAGE`, `DEFAULT_ONLINE_DURATION` | The component's defaults, reusable in custom `render` UIs |
+
+### @usefy/scroll-progress
+
+| Export | Description |
+| ------ | ----------- |
+| `ScrollProgress` | Drop-in reading-progress bar — fixed top/bottom bar filled by `scrollTop / (scrollHeight - clientHeight)`, window or container `target`, `render` escape hatch |
+| `DEFAULT_BAR_COLOR`, `DEFAULT_BAR_HEIGHT`, `DEFAULT_Z_INDEX`, `DEFAULT_ARIA_LABEL` | The component's defaults, reusable in custom `render` UIs |
 
 ---
 

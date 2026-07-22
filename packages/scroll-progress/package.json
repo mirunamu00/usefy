@@ -1,0 +1,74 @@
+{
+  "name": "@usefy/scroll-progress",
+  "version": "0.0.0",
+  "description": "Drop-in React reading-progress bar — a thin fixed bar that fills as you scroll the page or any scrollable container, zero-config, accessible, and SSR-safe",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@usefy/use-isomorphic-layout-effect": "workspace:*",
+    "@usefy/use-scroll-position": "workspace:*",
+    "@usefy/use-window-size": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.16"
+  },
+  "keywords": [
+    "react",
+    "scroll",
+    "progress",
+    "progress-bar",
+    "reading-progress",
+    "scroll-indicator",
+    "scroll-progress",
+    "component",
+    "ssr"
+  ],
+  "author": "usefy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/scroll-progress"
+  },
+  "bugs": {
+    "url": "https://github.com/mirunamu00/usefy/issues"
+  },
+  "homepage": "https://usefy-web.vercel.app/packages/scroll-progress",
+  "publishConfig": {
+    "access": "public"
+  }
+}
