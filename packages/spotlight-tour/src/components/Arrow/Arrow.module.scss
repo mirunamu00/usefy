@@ -1,0 +1,36 @@
+@use "variables" as *;
+
+// A diamond (rotated square) centered on the engine's arrow anchor point,
+// which sits exactly on the tooltip edge facing the target. The inner half
+// overlaps the tooltip body (same background), the outer half forms the tip.
+.arrow {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: var(--usefy-tour-tooltip-bg);
+  border: 1px solid var(--usefy-tour-tooltip-border);
+  transform: translate(-50%, -50%) rotate(45deg);
+  pointer-events: none;
+}
+
+// Hide the border on the half that overlaps the tooltip so only the outward
+// tip shows an edge, per resolved placement.
+.arrow[data-placement="top"] {
+  border-top: none;
+  border-left: none;
+}
+
+.arrow[data-placement="bottom"] {
+  border-bottom: none;
+  border-right: none;
+}
+
+.arrow[data-placement="left"] {
+  border-bottom: none;
+  border-left: none;
+}
+
+.arrow[data-placement="right"] {
+  border-top: none;
+  border-right: none;
+}

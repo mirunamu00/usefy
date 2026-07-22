@@ -1,0 +1,64 @@
+@use "variables" as *;
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none; // the hit strips below opt back in
+}
+
+.svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+// The spotlight hole. Its geometry (x/y/width/height/rx/ry) is set as SVG
+// presentation attributes, which are CSS geometry properties in evergreen
+// browsers — transitioning them animates the hole from one step's target to
+// the next without any per-frame React re-render.
+// Known limitation: Firefox does not support CSS transitions on SVG geometry
+// properties, so there the hole jumps to the next target instead of morphing
+// (graceful degradation — everything else animates normally).
+.hole {
+  transition:
+    x var(--usefy-tour-transition-duration, 300ms) $ease,
+    y var(--usefy-tour-transition-duration, 300ms) $ease,
+    width var(--usefy-tour-transition-duration, 300ms) $ease,
+    height var(--usefy-tour-transition-duration, 300ms) $ease,
+    rx var(--usefy-tour-transition-duration, 300ms) $ease,
+    ry var(--usefy-tour-transition-duration, 300ms) $ease;
+}
+
+// Invisible click-catchers over the dimmed area (top/bottom/left/right of the
+// hole, or the full viewport for centered steps). They block interaction with
+// the page underneath and forward overlay clicks, while the uncovered hole
+// area lets clicks through to the spotlighted element.
+.hit {
+  position: absolute;
+  pointer-events: auto;
+  // Track the animated hole: without this the strips snap to the next step's
+  // geometry instantly while the visual hole is still morphing, letting
+  // clicks through areas that still look dimmed (and vice versa).
+  transition:
+    left var(--usefy-tour-transition-duration, 300ms) $ease,
+    top var(--usefy-tour-transition-duration, 300ms) $ease,
+    right var(--usefy-tour-transition-duration, 300ms) $ease,
+    bottom var(--usefy-tour-transition-duration, 300ms) $ease,
+    width var(--usefy-tour-transition-duration, 300ms) $ease,
+    height var(--usefy-tour-transition-duration, 300ms) $ease;
+}
+
+// Optional blocker over the hole itself (spotlightClicks: false): swallows
+// clicks so the target is visible but not interactive. Not an overlay click.
+.blocker {
+  position: absolute;
+  pointer-events: auto;
+  // Same tracking as .hit — the blocker must ride the morphing hole.
+  transition:
+    left var(--usefy-tour-transition-duration, 300ms) $ease,
+    top var(--usefy-tour-transition-duration, 300ms) $ease,
+    width var(--usefy-tour-transition-duration, 300ms) $ease,
+    height var(--usefy-tour-transition-duration, 300ms) $ease;
+}
