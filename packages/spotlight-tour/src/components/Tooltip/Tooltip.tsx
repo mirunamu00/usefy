@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { clsx } from "clsx";
 import { Arrow } from "../Arrow/Arrow";
 import type {
@@ -12,6 +12,9 @@ import type {
 } from "../../types";
 import styles from "./Tooltip.module.scss";
 
+/** A resolved (non-null) tooltip position from the engine. */
+type TooltipPosition = NonNullable<SpotlightGeometry["tooltip"]>;
+
 /** Props for the internal {@link Tooltip}. */
 export interface TooltipProps {
   /** The active step. */
@@ -22,6 +25,14 @@ export interface TooltipProps {
   count: number;
   /** Engine-resolved position, or `null` (unmeasured / centered). */
   position: SpotlightGeometry["tooltip"];
+  /**
+   * Effective transition duration (ms) — the same value driving the spotlight
+   * morph and the tooltip's CSS `left`/`top` transition. Used to hold the
+   * step-move glide "armed" for exactly its duration before returning to the
+   * snap-on-tracking mode. `0` (reduced motion / disabled) makes every move
+   * instant.
+   */
+  transitionDuration: number;
   /** Render centered (modal mode) instead of positioned. */
   centered: boolean;
   /** Whether the step's advance gate is unmet (disables Next/Done + hint). */
@@ -64,6 +75,7 @@ export function Tooltip(props: TooltipProps): React.ReactNode {
     index,
     count,
     position,
+    transitionDuration,
     centered,
     gated,
     isFirst,
@@ -85,24 +97,88 @@ export function Tooltip(props: TooltipProps): React.ReactNode {
   const titleId = restTooltipProps["aria-labelledby"];
   const contentId = restTooltipProps["aria-describedby"];
 
-  // Suppress the left/top transition on the commits that leave centered mode
-  // (see .noTransition). Updated in a passive (post-paint) effect so the
-  // pre-paint re-renders that first position the tooltip are still covered.
-  const prevCentered = useRef(centered);
-  useEffect(() => {
-    prevCentered.current = centered;
-  });
-  const leavingCentered = prevCentered.current && !centered;
+  // --- motion: glide on step change, snap on live tracking ------------------
+  // The engine feeds `position` as: real coords while the step is settled and
+  // tracking, then momentarily `null` for the re-measure window on a step
+  // change (the size hook drops its measurement so the NEW content is measured
+  // before paint), then the new step's coords — which themselves settle across
+  // SEVERAL pre-paint commits (element → target rect → size → position all
+  // cascade). Two things fall out of that and drive the design:
+  //
+  //   1. Retention — the last painted coordinates are kept as the effective
+  //      position through the null window, so the box never blanks/hides and
+  //      never teleports; those coords are the CSS transition's from-state.
+  //   2. Arming — whether to animate CANNOT be decided from an effect: React
+  //      flushes passive effects between the cascade's commits (verified in
+  //      Chrome, not just jsdom), so any effect-updated "last step" marker
+  //      advances mid-cascade and the final positioned commit snaps. Instead we
+  //      arm synchronously (render-phase) when the step index changes and hold
+  //      it armed for the whole synchronous cascade AND the glide's duration
+  //      (disarming any earlier would toggle `transition: none` mid-flight and
+  //      cancel it). Live tracking updates land later, disarmed, and snap 1:1
+  //      (no rubber-band).
+  //
+  //   • Step-to-step move (target → target) → glide (armed).
+  //   • Live tracking (scroll / resize / auto-scroll) → snap (disarmed).
+  //   • First paint & centered↔targeted → snap (no positioned from-state).
+  //
+  // Concurrent-safe: `paintedRef` (retention only) is read in render and
+  // written in a passive effect; the arm decision is the documented
+  // setState-during-render derivation — no render-phase ref mutation.
+  const paintedRef = useRef<TooltipPosition | null>(null);
 
-  const measuring = !centered && !position;
-  const wrapperStyle: React.CSSProperties | undefined =
-    !centered && position ? { left: position.x, top: position.y } : undefined;
+  // Effective coordinates: the live position, or — through the re-measure
+  // window — the last painted coordinates (retained, never cleared on a step
+  // change), so the transition's from-state survives.
+  const activePos = centered ? null : position ?? paintedRef.current;
+
+  // Arm a glide the moment the step index changes, but only when there is a
+  // positioned from-state to move from (target → target). `armed` stays true
+  // across the settling cascade and is dropped on the next frame below.
+  const [seenIndex, setSeenIndex] = useState(index);
+  const [armed, setArmed] = useState(false);
+  if (seenIndex !== index) {
+    setSeenIndex(index);
+    setArmed(!centered && paintedRef.current !== null);
+  }
+
+  useEffect(() => {
+    if (!armed || typeof window === "undefined") return;
+    // Hold armed for the glide's full duration, then return to snap mode so
+    // live tracking sticks 1:1. Disarming any earlier (e.g. next frame) would
+    // toggle `transition: none` mid-flight and cancel the glide. A small buffer
+    // guards the transition-end boundary. `seenIndex` is a dep so back-to-back
+    // step moves each reschedule their own disarm — without it, a second move
+    // arriving while already armed is a no-op `setArmed(true)` and the FIRST
+    // move's timer would fire mid-way through the second glide, snapping it.
+    const timer = window.setTimeout(
+      () => setArmed(false),
+      transitionDuration + 50
+    );
+    return () => window.clearTimeout(timer);
+  }, [armed, seenIndex, transitionDuration]);
+
+  useEffect(() => {
+    paintedRef.current = centered ? null : position ?? paintedRef.current;
+  });
+
+  const isStepMove = armed && !centered && activePos !== null;
+
+  // Not centered and never positioned yet → keep hidden until the first
+  // measure lands, so the box never flashes at (0, 0).
+  const measuring = !centered && activePos === null;
+
+  const wrapperStyle: React.CSSProperties | undefined = activePos
+    ? { left: activePos.x, top: activePos.y }
+    : undefined;
 
   const wrapperClass = clsx(
     styles.tooltip,
     centered && styles.centered,
     measuring && styles.measuring,
-    leavingCentered && styles.noTransition,
+    // Transition ON only for a step move; snapped for first paint, live
+    // tracking, the re-measure window, and centered↔targeted switches.
+    !isStepMove && styles.noTransition,
     classNames?.tooltip
   );
 
@@ -113,7 +189,7 @@ export function Tooltip(props: TooltipProps): React.ReactNode {
         className={wrapperClass}
         style={wrapperStyle}
         data-tour-tooltip=""
-        data-placement={position?.placement}
+        data-placement={activePos?.placement}
       >
         {renderStep({
           step,
@@ -134,13 +210,13 @@ export function Tooltip(props: TooltipProps): React.ReactNode {
       className={clsx(wrapperClass, styles.box)}
       style={wrapperStyle}
       data-tour-tooltip=""
-      data-placement={position?.placement}
+      data-placement={activePos?.placement}
     >
-      {!centered && position && (
+      {!centered && activePos && (
         <Arrow
-          x={position.arrow.x}
-          y={position.arrow.y}
-          placement={position.placement}
+          x={activePos.arrow.x}
+          y={activePos.arrow.y}
+          placement={activePos.placement}
           className={classNames?.arrow}
         />
       )}

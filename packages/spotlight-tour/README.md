@@ -263,6 +263,7 @@ Every color and metric is a CSS variable scoped to the tour root — override th
 | `--usefy-tour-accent` | `#6366f1` | Primary button, active dot, beacon. |
 | `--usefy-tour-accent-hover` | `#4f46e5` | Primary button hover. |
 | `--usefy-tour-accent-color` | `#ffffff` | Primary button text. |
+| `--usefy-tour-accent-disabled-bg` / `-color` | `#64748b` / `#ffffff` | Disabled primary (e.g. a gated Next) — a solid, clearly-visible muted fill, not a faded accent. |
 | `--usefy-tour-button-bg` / `-color` / `-hover-bg` | grays | Secondary buttons. |
 | `--usefy-tour-dot` / `--usefy-tour-dot-active` | grays / accent | Progress dots. |
 | `--usefy-tour-radius` | `10px` | Corner radius. |
