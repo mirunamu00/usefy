@@ -153,6 +153,26 @@ describe("VirtualKeyboard — theming", () => {
     const group = screen.getByRole("group");
     expect(group.className).not.toMatch(/_dark_/);
   });
+
+  it("explicit theme='light' applies the light override class (beats a dark host)", () => {
+    document.documentElement.setAttribute("data-theme", "dark");
+    try {
+      render(<VirtualKeyboard theme="light" layouts={numericLayout} />);
+      const group = screen.getByRole("group");
+      // The scoped light class wins the specificity tie with the
+      // [data-theme="dark"] host rule by source order.
+      expect(group.className).toMatch(/_light_/);
+      expect(group.className).not.toMatch(/_dark_/);
+    } finally {
+      document.documentElement.removeAttribute("data-theme");
+    }
+  });
+
+  it("theme='system' does not apply the light override (host theme governs)", () => {
+    render(<VirtualKeyboard theme="system" layouts={numericLayout} />);
+    const group = screen.getByRole("group");
+    expect(group.className).not.toMatch(/_light_/);
+  });
 });
 
 describe("VirtualKeyboard — renderKey", () => {

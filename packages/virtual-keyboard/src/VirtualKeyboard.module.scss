@@ -30,9 +30,21 @@
   @include theme-dark;
 }
 
-:global([data-theme="dark"]) .keyboard,
-.keyboard:global(.dark) {
+// Host hook: a `[data-theme="dark"]` ancestor darkens the keyboard.
+// Written as a plain attribute selector — the tsup CSS-module scoper does not
+// understand `:global(...)` (it would land literally in the emitted CSS), and
+// a `.keyboard:global(.dark)` compound leaks an unscoped `.keyboard.dark`
+// rule into consumer pages (the placeholder token defeats the scoper).
+[data-theme="dark"] .keyboard {
   @include theme-dark;
+}
+
+// Explicit `theme="light"` beats a dark host theme (controlled-prop
+// semantics): same specificity (0,2,0) as the attribute rule above, later in
+// source order, so it wins the tie. Applied only when the prop is literally
+// "light" — never system-resolved.
+.keyboard.light {
+  @include theme-light;
 }
 
 .row {

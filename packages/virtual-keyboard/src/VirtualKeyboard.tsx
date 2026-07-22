@@ -393,6 +393,7 @@ export function VirtualKeyboard(props: VirtualKeyboardProps) {
         variant === "docked" && styles.docked,
         variant === "floating" && styles.floating,
         isDark && styles.dark,
+        theme === "light" && styles.light,
         classNames?.root,
         className
       )}
