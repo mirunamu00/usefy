@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-window-size",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-window-size",
   "description": "A React hook for tracking the browser window size with debounce/throttle and SSR support",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

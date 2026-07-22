@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-async",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-async",
   "description": "A React hook for the full lifecycle of a single async task — object-style state, immediate auto-run, and AbortController cancellation",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

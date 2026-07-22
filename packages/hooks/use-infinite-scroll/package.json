@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-infinite-scroll",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-infinite-scroll",
   "description": "A React hook for sentinel-driven infinite scrolling built on IntersectionObserver",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

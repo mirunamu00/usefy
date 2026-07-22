@@ -1,6 +1,7 @@
 {
   "name": "@usefy/hooks",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages",
   "description": "A collection of useful React hooks",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

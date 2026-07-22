@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-is-first-render",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-is-first-render",
   "description": "A React hook that returns true only on the first render",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

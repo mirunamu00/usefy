@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-measure",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-measure",
   "description": "A React hook that reactively reports an element's bounds (x, y, width, height, top, right, bottom, left) via ResizeObserver",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

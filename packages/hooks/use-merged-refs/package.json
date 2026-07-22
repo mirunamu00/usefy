@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-merged-refs",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-merged-refs",
   "description": "A React hook to merge multiple refs (callback or object) into one — essential for forwardRef components",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -76,7 +76,7 @@
   "bugs": {
     "url": "https://github.com/mirunamu00/usefy/issues"
   },
-  "homepage": "https://github.com/mirunamu00/usefy/tree/master/packages/memory-monitor#readme",
+  "homepage": "https://usefy-web.vercel.app/packages/memory-monitor",
   "publishConfig": {
     "access": "public"
   }

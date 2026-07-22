@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-focus-trap",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-focus-trap",
   "description": "A React hook that traps keyboard focus inside a subtree (modals/dialogs) — Tab/Shift+Tab cycling, initial focus, and focus restore on close",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

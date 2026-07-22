@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-preferred-color-scheme",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-preferred-color-scheme",
   "description": "A React hook for the user's preferred color scheme (prefers-color-scheme)",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

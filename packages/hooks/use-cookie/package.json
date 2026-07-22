@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-cookie",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-cookie",
   "description": "A React hook for reading and writing browser cookies as React state, SSR-aware",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -39,7 +39,7 @@
 
 ---
 
-> **Pre-release Notice**: This project is currently in version `0.x.x` (alpha/beta stage). APIs may change between minor versions. While fully functional and tested, please use with caution in production environments.
+> ✅ **Stable & production-ready.** usefy follows [semantic versioning](https://semver.org) — breaking changes only ever land in a new major version.
 
 ---
 

@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-stack",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-stack",
   "description": "A React hook for managing LIFO stack state with immutable updates",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

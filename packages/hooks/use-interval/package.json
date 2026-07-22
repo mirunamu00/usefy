@@ -1,6 +1,7 @@
 {
   "name": "@usefy/use-interval",
   "version": "0.25.1",
+  "homepage": "https://usefy-web.vercel.app/packages/use-interval",
   "description": "A React hook for declarative setInterval with automatic cleanup and start/stop controls",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
