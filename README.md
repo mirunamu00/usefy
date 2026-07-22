@@ -54,6 +54,7 @@
 | `@usefy/virtual-keyboard` | On-screen virtual keyboard with a declarative layout engine and headless hook |
 | `@usefy/network-indicator` | Drop-in online/offline status banner with an auto-dismissing "back online" confirmation |
 | `@usefy/scroll-progress` | Drop-in reading-progress bar that fills as you scroll the page or any container |
+| `@usefy/spotlight-tour` | Guided onboarding tours with an animated spotlight overlay, gates, persistence, and enterprise a11y |
 
 ---
 
@@ -269,6 +270,50 @@ function App() {
 
 ---
 
+### @usefy/spotlight-tour
+
+<a href="https://www.npmjs.com/package/@usefy/spotlight-tour" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/spotlight-tour.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/spotlight-tour" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/spotlight-tour.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/spotlight-tour" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/spotlight-tour?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+Guided onboarding tours — dims the page, cuts an animated spotlight hole around
+each step's target, and shows a step tooltip beside it. Interaction gates,
+missing-target policies, `tourId` persistence, a pulsing beacon, full keyboard +
+screen-reader support, and the whole state machine also available headless.
+
+```bash
+pnpm add @usefy/spotlight-tour
+```
+
+```tsx
+import { SpotlightTour } from "@usefy/spotlight-tour";
+
+function App() {
+  return (
+    <SpotlightTour
+      defaultOpen
+      tourId="app-onboarding"
+      steps={[
+        { title: "Welcome! 👋", content: "Let's take a quick look around." },
+        { target: "#search", title: "Search", content: "Find anything here." },
+        { target: "#create", content: "Click to create your first project.",
+          advanceOn: { event: "click" } }, // gated step
+      ]}
+    />
+  );
+}
+```
+
+<a href="./packages/spotlight-tour/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -281,6 +326,7 @@ function App() {
 | Virtual keyboard | `pnpm add @usefy/virtual-keyboard` | `import { VirtualKeyboard } from "@usefy/virtual-keyboard"` |
 | Network status banner | `pnpm add @usefy/network-indicator` | `import { NetworkIndicator } from "@usefy/network-indicator"` |
 | Scroll progress bar | `pnpm add @usefy/scroll-progress` | `import { ScrollProgress } from "@usefy/scroll-progress"` |
+| Onboarding tour | `pnpm add @usefy/spotlight-tour` | `import { SpotlightTour } from "@usefy/spotlight-tour"` |
 
 ### Peer Dependencies
 
@@ -441,6 +487,17 @@ Also ships a `@usefy/virtual-keyboard/headless` entry (hook + engine + types, no
 | ------ | ----------- |
 | `ScrollProgress` | Drop-in reading-progress bar — fixed top/bottom bar filled by `scrollTop / (scrollHeight - clientHeight)`, window or container `target`, `render` escape hatch |
 | `DEFAULT_BAR_COLOR`, `DEFAULT_BAR_HEIGHT`, `DEFAULT_Z_INDEX`, `DEFAULT_ARIA_LABEL` | The component's defaults, reusable in custom `render` UIs |
+
+### @usefy/spotlight-tour
+
+| Export | Description |
+| ------ | ----------- |
+| `SpotlightTour` | Guided onboarding tour — animated SVG-mask spotlight, step tooltip, gates, auto-scroll, `tourId` persistence, keyboard + dialog a11y, theming, `renderStep` |
+| `SpotlightBeacon` | Pulsing invitation dot pinned to an element that starts the tour on click |
+| `useSpotlightTour`, `resetTour` | The full headless state machine + persistence reset (also via `@usefy/spotlight-tour/headless`) |
+| `computeTooltipPosition`, `getSpotlightRect`, `resolveTarget` | The pure positioning engine, for bespoke UIs |
+
+Also ships a `@usefy/spotlight-tour/headless` entry (hook + engine + types, no CSS) and an opt-in `@usefy/spotlight-tour/styles.css`.
 
 ---
 

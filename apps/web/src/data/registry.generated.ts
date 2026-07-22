@@ -77,7 +77,7 @@ export const generatedPackages: PackageEntry[] = [
       "component",
       "ssr"
     ],
-    "version": "0.0.0",
+    "version": "0.1.0",
     "category": "component",
     "quickStart": "import { ScrollProgress } from \"@usefy/scroll-progress\";\n\nfunction App() {\n  return (\n    <>\n      {/* Mount once — a 3px blue bar fixed to the top of the viewport */}\n      <ScrollProgress />\n      <YourApp />\n    </>\n  );\n}",
     "apiMarkdown": "### `<ScrollProgress />` Props\n\n| Prop | Type | Default | Description |\n| ---- | ---- | ------- | ----------- |\n| `position` | `\"top\" \\| \"bottom\"` | `\"top\"` | Which viewport edge the fixed bar is pinned to. |\n| `color` | `string` | `\"#3b82f6\"` | Bar fill color (any CSS color). |\n| `height` | `number \\| string` | `3` | Bar thickness — a number is pixels, a string is any CSS length. |\n| `zIndex` | `number` | `9999` | Stacking order of the fixed bar. |\n| `target` | `RefObject<HTMLElement \\| null>` | — (window) | Ref to the scrollable container to measure. Omit to track the window/document scroll. |\n| `throttleMs` | `number` | `0` | Throttle interval (ms) for scroll updates, forwarded to `useScrollPosition`. `0` updates on every scroll event. The trailing edge always fires, so the resting position is never dropped. |\n| `aria-label` | `string` | `\"Scroll progress\"` | Accessible name of the progressbar. |\n| `render` | `(progress: number) => ReactNode` | — | Escape hatch: replaces the default bar entirely; called on every render with the current progress (`0`–`1`). |\n| `className` | `string` | — | Class applied to the default bar element. |\n| `style` | `CSSProperties` | — | Inline styles merged over the defaults (yours win). |\n\n### Other exports\n\n| Export | Description |\n| ------ | ----------- |\n| `ScrollProgressProps` | Props type. |\n| `ScrollProgressPosition` | `\"top\" \\| \"bottom\"`. |\n| `DEFAULT_BAR_COLOR` / `DEFAULT_BAR_HEIGHT` / `DEFAULT_Z_INDEX` / `DEFAULT_ARIA_LABEL` | The defaults, for reuse in custom `render` UIs. |\n\nThe default bar also exposes a `data-position=\"top\" | \"bottom\"` attribute for styling and testing.\n\n### Progress model\n\n```\nprogress = clamp(scrollTop / (scrollHeight - clientHeight), 0, 1)\n```\n\nWhen `scrollHeight - clientHeight <= 0` (the content fits in the viewport, so there is nothing to scroll), progress is `0` — the bar renders but stays empty, so layout and stacking never jump when content grows.\n\n---",
@@ -85,6 +85,35 @@ export const generatedPackages: PackageEntry[] = [
     "npmUrl": "https://www.npmjs.com/package/@usefy/scroll-progress",
     "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/scroll-progress",
     "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/scroll-progress/README.md"
+  },
+  {
+    "slug": "spotlight-tour",
+    "name": "@usefy/spotlight-tour",
+    "displayName": "SpotlightTour",
+    "kind": "component",
+    "family": "standalone",
+    "tagline": "React onboarding tour with a tracking spotlight overlay, animated step transitions, headless hook, and enterprise a11y",
+    "subtitle": "React onboarding tours with a tracking spotlight overlay and enterprise a11y",
+    "keywords": [
+      "tour",
+      "product-tour",
+      "onboarding",
+      "walkthrough",
+      "spotlight",
+      "guide",
+      "tooltip",
+      "headless",
+      "accessibility",
+      "a11y"
+    ],
+    "version": "0.1.0",
+    "category": "component",
+    "quickStart": "import { SpotlightTour } from \"@usefy/spotlight-tour\";\n\nfunction App() {\n  return (\n    <>\n      <YourApp />\n      <SpotlightTour\n        defaultOpen\n        steps={[\n          // No target → a centered welcome modal.\n          { title: \"Welcome! 👋\", content: \"Let's take a quick look around.\" },\n          { target: \"#search\", title: \"Search\", content: \"Find anything from here.\" },\n          { target: \"#settings\", content: \"Tune your preferences.\", placement: \"left\" },\n        ]}\n        onFinish={() => console.log(\"toured!\")}\n        onSkip={(at) => console.log(`dismissed at step ${at}`)}\n      />\n    </>\n  );\n}",
+    "apiMarkdown": "### `<SpotlightTour />` Props\n\nAll [`useSpotlightTour` options](#headless-usage) (steps, `open`/`defaultOpen`, `step`/`defaultStep`, `tourId`, `keyboard`, `scrollLock`, `onFinish`, `onSkip`, …) plus:\n\n| Prop | Type | Default | Description |\n| ---- | ---- | ------- | ----------- |\n| `maskColor` | `string` | `\"rgba(0 0 0 / 0.55)\"` | Dim overlay color. |\n| `transitionDuration` | `number` | `300` | Spotlight/tooltip transition (ms). `0` disables; forced to `0` under reduced motion. |\n| `overlayClick` | `\"ignore\" \\| \"close\" \\| \"next\"` | `\"ignore\"` | What a click on the dimmed area does (`\"close\"` fires `onSkip`). Per-step `disableOverlayClose` downgrades to `\"ignore\"`. |\n| `zIndex` | `number` | `1000` | z-index of the portal layer. |\n| `labels` | `Partial<TourLabels>` | English | Button/hint label overrides (i18n): `back`, `next`, `skip`, `finish`, `close`, `gatedHint`. |\n| `showProgress` / `showCounter` / `showSkip` / `showClose` | `boolean` | `true` | Toggle the dots, \"2 / 5\" counter, Skip button, and close (×). |\n| `renderStep` | `(ctx) => ReactNode` | — | Replace the whole tooltip UI; positioning stays automatic. Spread `ctx.tooltipProps` for the dialog semantics. |\n| `theme` | `\"light\" \\| \"dark\" \\| \"system\"` | `\"system\"` | Color theme; `\"system\"` follows `prefers-color-scheme`. |\n| `classNames` | `SpotlightTourClassNames` | — | Per-part class overrides: `overlay`, `spotlight`, `tooltip`, `arrow`, `header`, `content`, `footer`, `dots`, `counter`. |\n| `className` | `string` | — | Extra class on the portal root. |\n| `controllerRef` | `Ref<TourController>` | — | Imperative access: `start(at?)`, `next`, `prev`, `goTo`, `skip`, `finish`. |\n\n### `TourStep`\n\n| Field | Type | Default | Description |\n| ----- | ---- | ------- | ----------- |\n| `target` | `string \\| RefObject \\| () => Element \\| null` | — | Element to spotlight. Omit for a centered modal step. |\n| `title` / `content` | `ReactNode` | — | Tooltip heading / body (`content` required). |\n| `placement` | `\"top\" \\| \"bottom\" \\| \"left\" \\| \"right\" \\| \"auto\"` | `\"auto\"` | Preferred tooltip side; `\"auto\"` prefers a side that fits, then the roomiest. |\n| `spotlightPadding` / `spotlightRadius` | `number` | `8` / `8` | Hole padding / corner radius (px). |\n| `missingTarget` | `\"skip\" \\| \"wait\" \\| \"center\"` | `\"skip\"` | Policy when the target can't be resolved. |\n| `waitTimeout` | `number` | `3000` | How long `\"wait\"` holds before skipping (ms). |\n| `advanceOn` | `{ event: \"click\"; selector?: string }` | — | Interaction gate — see [the recipe](#gating-a-step-on-a-real-action). |\n| `spotlightClicks` | `boolean` | `true` | Whether clicks pass through the hole to the target. |\n| `scrollIntoView` | `boolean` | `true` | Auto-scroll an off-screen target into view. |\n| `disableOverlayClose` | `boolean` | `false` | Make `overlayClick` behave as `\"ignore\"` for this step. |\n| `onEnter` / `onLeave` | `() => void` | — | Fire when the step settles on screen / is left. |\n\n### `<SpotlightBeacon />` Props\n\n| Prop | Type | Default | Description |\n| ---- | ---- | ------- | ----------- |\n| `target` | `TourTarget` | — | Element the pulsing dot pins to (top-right corner, tracks live). |\n| `onActivate` | `() => void` | — | Called on click — typically `controller.current?.start()`. |\n| `aria-label` | `string` | `\"Start tour\"` | Accessible name of the beacon button. |\n| `className` | `string` | — | Extra class on the beacon button. |\n\nRenders nothing while the target is unresolved or invisible; static (no pulse) under reduced motion.\n\n---",
+    "storybookUrl": "https://mirunamu00.github.io/usefy/?path=/story/spotlight-tour--app-onboarding",
+    "npmUrl": "https://www.npmjs.com/package/@usefy/spotlight-tour",
+    "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/spotlight-tour",
+    "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/spotlight-tour/README.md"
   },
   {
     "slug": "use-async",

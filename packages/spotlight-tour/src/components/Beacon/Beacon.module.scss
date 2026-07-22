@@ -1,0 +1,70 @@
+@use "variables" as *;
+
+// The beacon portals into document.body, OUTSIDE the tour root that scopes
+// the theme variables — so every var() here carries an explicit fallback.
+// Consumers can theme it by defining --usefy-tour-accent globally.
+.beacon {
+  position: fixed;
+  z-index: 999;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--usefy-tour-accent, #{$indigo-500});
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+
+  // The pulsing ring: a scaled, fading copy of the dot.
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: inherit;
+    animation: usefy-tour-beacon-pulse 1.6s $ease infinite;
+  }
+
+  &:hover {
+    background: var(--usefy-tour-accent-hover, #{$indigo-600});
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-tour-accent, #{$indigo-500});
+    outline-offset: 2px;
+  }
+}
+
+// Static presentation under reduced motion: a faint fixed halo, no animation.
+// Applied both via the component (`.static`, testable) and the media query
+// (belt-and-braces for consumers composing the class themselves).
+.static::before {
+  animation: none;
+  opacity: 0.3;
+  transform: scale(1.7);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beacon::before {
+    animation: none;
+    opacity: 0.3;
+    transform: scale(1.7);
+  }
+}
+
+// Global (unscoped) name on purpose — the tsup scss-modules scoper does not
+// rewrite @keyframes; the usefy-tour- prefix keeps it collision-safe.
+@keyframes usefy-tour-beacon-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  70% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}

@@ -1,0 +1,56 @@
+@use "variables" as *;
+
+// Portal root: a fixed, full-viewport, pointer-transparent layer that scopes
+// the theme variables. Interactivity is opted back in per part (hit strips,
+// tooltip) so the spotlight hole genuinely lets clicks through.
+.root {
+  @include theme-light;
+
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  font-family: var(--usefy-tour-font);
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+// Visually hidden but exposed to assistive tech — the aria-live step
+// announcer. Standard clip-rect technique.
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Dark theme: applied by the component (scoped `.dark` class) or by a host
+// page marking `[data-theme="dark"]` on an ancestor.
+// NOTE: the tsup scss-modules scoper only rewrites `.class` tokens — it does
+// NOT understand `:global(...)` (it would land literally in dist CSS), and a
+// `.root.dark`-style compound would leak an unscoped global rule. Stick to
+// scoped classes and plain attribute selectors here.
+.dark {
+  @include theme-dark;
+}
+
+[data-theme="dark"] .root {
+  @include theme-dark;
+}
+
+// Explicit theme="light" wins over a dark host (controlled-prop semantics).
+// The compound (.root.light, specificity 0,2,0) ties the attribute rule above
+// and is declared after it, so the light variables take precedence. Applied
+// only when the prop is literally "light" — never for system-resolved light.
+.root.light {
+  @include theme-light;
+}

@@ -26,6 +26,7 @@
     "@usefy/memory-monitor": "workspace:*",
     "@usefy/network-indicator": "workspace:*",
     "@usefy/scroll-progress": "workspace:*",
+    "@usefy/spotlight-tour": "workspace:*",
     "@usefy/virtual-keyboard": "workspace:*",
     "@usefy/use-on-click-outside": "workspace:*",
     "@usefy/use-resize-observer": "workspace:*",

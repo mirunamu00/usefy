@@ -1,0 +1,186 @@
+@use "variables" as *;
+
+// Positioning wrapper for both the default UI and `renderStep` output. The
+// visual box styling lives in `.box` so a custom `renderStep` gets a bare,
+// positioned wrapper to skin however it likes.
+.tooltip {
+  position: absolute;
+  pointer-events: auto;
+  // Size from content, not from the available space to the viewport's right
+  // edge — otherwise clamping x near the right edge would shrink the box,
+  // which re-measures and re-clamps in a creeping feedback loop.
+  width: max-content;
+  transition:
+    left var(--usefy-tour-transition-duration, 300ms) $ease,
+    top var(--usefy-tour-transition-duration, 300ms) $ease;
+}
+
+// Applied for the commit(s) that leave centered mode: jumping from the
+// CSS-centered position (50%/50% + transform) to absolute coordinates must
+// not animate — the transform drop is instant, so animating left/top would
+// read as a jump-then-slide.
+.noTransition {
+  transition: none;
+}
+
+// Centered (modal) mode for target-less steps.
+.centered {
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: none;
+}
+
+// Rendered but not yet measured/positioned — kept invisible so the first
+// paint never flashes the tooltip at (0, 0).
+.measuring {
+  visibility: hidden;
+}
+
+.box {
+  display: flex;
+  flex-direction: column;
+  gap: var(--usefy-tour-gap);
+  max-width: var(--usefy-tour-tooltip-max-width);
+  min-width: 240px;
+  padding: var(--usefy-tour-tooltip-padding);
+  background: var(--usefy-tour-tooltip-bg);
+  color: var(--usefy-tour-tooltip-color);
+  border: 1px solid var(--usefy-tour-tooltip-border);
+  border-radius: var(--usefy-tour-radius);
+  box-shadow: var(--usefy-tour-tooltip-shadow);
+  font-family: var(--usefy-tour-font);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--usefy-tour-gap);
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close {
+  appearance: none;
+  border: none;
+  background: transparent;
+  margin: -4px -4px 0 0;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: calc(var(--usefy-tour-radius) - 4px);
+  color: var(--usefy-tour-muted-color);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--usefy-tour-button-bg);
+    color: var(--usefy-tour-tooltip-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-tour-accent);
+    outline-offset: 1px;
+  }
+}
+
+.content {
+  color: var(--usefy-tour-tooltip-color);
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--usefy-tour-gap);
+  margin-top: 4px;
+}
+
+// Counter + dots cluster, pushed to the footer's left edge.
+.meta {
+  display: flex;
+  align-items: center;
+  gap: var(--usefy-tour-gap);
+  margin-right: auto;
+}
+
+.counter {
+  font-size: 12px;
+  color: var(--usefy-tour-muted-color);
+  white-space: nowrap;
+}
+
+.dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--usefy-tour-dot);
+}
+
+.dotActive {
+  background: var(--usefy-tour-dot-active);
+}
+
+// Shown under the footer while the step's advance gate is unmet.
+.gatedHint {
+  font-size: 12px;
+  color: var(--usefy-tour-muted-color);
+  text-align: right;
+}
+
+.button {
+  appearance: none;
+  border: none;
+  min-height: 36px;
+  min-width: 44px; // WCAG target size with padding
+  padding: 0 14px;
+  border-radius: calc(var(--usefy-tour-radius) - 4px);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.45;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-tour-accent);
+    outline-offset: 1px;
+  }
+}
+
+.buttonSecondary {
+  background: var(--usefy-tour-button-bg);
+  color: var(--usefy-tour-button-color);
+
+  &:hover:not(:disabled) {
+    background: var(--usefy-tour-button-hover-bg);
+  }
+}
+
+.buttonPrimary {
+  background: var(--usefy-tour-accent);
+  color: var(--usefy-tour-accent-color);
+
+  &:hover:not(:disabled) {
+    background: var(--usefy-tour-accent-hover);
+  }
+}
