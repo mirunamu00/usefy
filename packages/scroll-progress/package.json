@@ -1,6 +1,6 @@
 {
   "name": "@usefy/scroll-progress",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Drop-in React reading-progress bar — a thin fixed bar that fills as you scroll the page or any scrollable container, zero-config, accessible, and SSR-safe",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
