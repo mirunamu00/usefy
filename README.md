@@ -52,6 +52,7 @@
 | `@usefy/hooks` | 70+ lightweight React hooks (umbrella — each hook is also published on its own as `@usefy/use-*`) |
 | `@usefy/memory-monitor` | Real-time browser memory monitoring component |
 | `@usefy/virtual-keyboard` | On-screen virtual keyboard with a declarative layout engine and headless hook |
+| `@usefy/network-indicator` | Drop-in online/offline status banner with an auto-dismissing "back online" confirmation |
 
 ---
 
@@ -191,6 +192,44 @@ function Search() {
 
 ---
 
+### @usefy/network-indicator
+
+<a href="https://www.npmjs.com/package/@usefy/network-indicator" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/network-indicator.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/network-indicator" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/network-indicator.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/network-indicator" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/network-indicator?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+Drop-in online/offline status banner — renders nothing while online, warns when
+the connection drops, and flashes an auto-dismissing "Back online" confirmation
+on reconnect (built on `@usefy/use-network-state`).
+
+```bash
+pnpm add @usefy/network-indicator
+```
+
+```tsx
+import { NetworkIndicator } from "@usefy/network-indicator";
+
+function App() {
+  return (
+    <>
+      <YourApp />
+      {/* Mount once at the root — zero-config, SSR-safe */}
+      <NetworkIndicator position="top" onlineDuration={3000} />
+    </>
+  );
+}
+```
+
+<a href="./packages/network-indicator/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -201,6 +240,7 @@ function Search() {
 | Single hook | `pnpm add @usefy/use-toggle` | `import { useToggle } from "@usefy/use-toggle"` |
 | Memory monitor | `pnpm add @usefy/memory-monitor` | `import { MemoryMonitor } from "@usefy/memory-monitor"` |
 | Virtual keyboard | `pnpm add @usefy/virtual-keyboard` | `import { VirtualKeyboard } from "@usefy/virtual-keyboard"` |
+| Network status banner | `pnpm add @usefy/network-indicator` | `import { NetworkIndicator } from "@usefy/network-indicator"` |
 
 ### Peer Dependencies
 
@@ -347,6 +387,13 @@ Some packages may have additional peer dependencies (check individual package do
 | `identityComposer` | Default 1:1 composer (IME seam) |
 
 Also ships a `@usefy/virtual-keyboard/headless` entry (hook + engine + types, no CSS), an opt-in `@usefy/virtual-keyboard/hangul` entry (`hangulComposer` + `hangulLayout` — Korean 두벌식 IME), and an opt-in `@usefy/virtual-keyboard/styles.css`.
+
+### @usefy/network-indicator
+
+| Export | Description |
+| ------ | ----------- |
+| `NetworkIndicator` | Drop-in online/offline banner — offline warning + auto-dismissing "back online" confirmation, `render` escape hatch, `onStatusChange` callback |
+| `DEFAULT_OFFLINE_MESSAGE`, `DEFAULT_ONLINE_MESSAGE`, `DEFAULT_ONLINE_DURATION` | The component's defaults, reusable in custom `render` UIs |
 
 ---
 

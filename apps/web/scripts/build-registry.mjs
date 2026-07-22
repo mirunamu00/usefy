@@ -63,6 +63,7 @@ const CATEGORY = {
   "use-timer": "async", "use-async": "async", "use-async-fn": "async", "use-polling": "async",
   // Standalone components
   "memory-monitor": "component", "virtual-keyboard": "component",
+  "network-indicator": "component",
 };
 
 /** The package directories to scan, relative to packages/. */
@@ -70,6 +71,7 @@ const PACKAGE_DIRS = [
   ...listDirs(join(PKG_ROOT, "hooks")).filter((d) => d.startsWith("use-")).map((d) => `hooks/${d}`),
   "memory-monitor",
   "virtual-keyboard",
+  "network-indicator",
 ];
 
 /** @param {string} dir */
