@@ -24,6 +24,7 @@
     "@usefy/use-local-storage": "workspace:*",
     "@usefy/use-memory-monitor": "workspace:*",
     "@usefy/memory-monitor": "workspace:*",
+    "@usefy/network-indicator": "workspace:*",
     "@usefy/virtual-keyboard": "workspace:*",
     "@usefy/use-on-click-outside": "workspace:*",
     "@usefy/use-resize-observer": "workspace:*",

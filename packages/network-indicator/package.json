@@ -1,0 +1,75 @@
+{
+  "name": "@usefy/network-indicator",
+  "version": "0.0.0",
+  "description": "Drop-in React online/offline status banner — offline warning plus an auto-dismissing \"back online\" confirmation, zero-config and SSR-safe",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@usefy/use-event-callback": "workspace:*",
+    "@usefy/use-network-state": "workspace:*",
+    "@usefy/use-timeout": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^26.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.16"
+  },
+  "keywords": [
+    "react",
+    "network",
+    "online",
+    "offline",
+    "banner",
+    "indicator",
+    "connectivity",
+    "status",
+    "toast",
+    "ssr"
+  ],
+  "author": "usefy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/network-indicator"
+  },
+  "bugs": {
+    "url": "https://github.com/mirunamu00/usefy/issues"
+  },
+  "homepage": "https://usefy-web.vercel.app/packages/network-indicator",
+  "publishConfig": {
+    "access": "public"
+  }
+}
