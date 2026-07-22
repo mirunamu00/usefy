@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-previous",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-previous",
   "description": "A React hook that returns the value from the previous render",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-counter",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-counter",
   "description": "A React hook for counter state management",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/virtual-keyboard",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "description": "React on-screen virtual keyboard with a declarative layout engine, headless hook, and enterprise a11y",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-mount",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-mount",
   "description": "A React hook that runs a callback once when the component mounts",
   "main": "./dist/index.js",

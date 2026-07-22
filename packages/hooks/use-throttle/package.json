@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-throttle",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-throttle",
   "description": "A React hook for throttling values",
   "main": "./dist/index.js",

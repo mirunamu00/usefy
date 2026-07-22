@@ -1,6 +1,6 @@
 {
   "name": "@usefy/web",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "description": "usefy landing site — introduces every @usefy package with scannable, SEO-first docs",
   "scripts": {

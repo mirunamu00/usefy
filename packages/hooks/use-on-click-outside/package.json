@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-on-click-outside",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-on-click-outside",
   "description": "A React hook for detecting clicks outside of specified elements",
   "main": "./dist/index.js",

@@ -1,5 +1,26 @@
 # @usefy/virtual-keyboard
 
+## 1.0.0
+
+### Major Changes
+
+- 8924240: usefy 1.0.0 — first stable release.
+
+  All `@usefy/*` packages graduate to a stable **1.0.0** together (they share a
+  fixed-version group). No API changes are required by this bump — it marks the
+  public API as stable and ready for production semver guarantees.
+
+  Also adds a `homepage` field to every published package, pointing at its page on
+  the docs site (https://usefy-web.vercel.app) so the npm listing links straight
+  to live docs.
+
+### Patch Changes
+
+- Updated dependencies [8924240]
+  - @usefy/use-controllable-state@1.0.0
+  - @usefy/use-long-press@1.0.0
+  - @usefy/use-on-click-outside@1.0.0
+
 ## 0.25.1
 
 ### Patch Changes

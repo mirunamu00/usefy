@@ -1,5 +1,93 @@
 # @usefy/usefy
 
+## 1.0.0
+
+### Major Changes
+
+- 8924240: usefy 1.0.0 — first stable release.
+
+  All `@usefy/*` packages graduate to a stable **1.0.0** together (they share a
+  fixed-version group). No API changes are required by this bump — it marks the
+  public API as stable and ready for production semver guarantees.
+
+  Also adds a `homepage` field to every published package, pointing at its page on
+  the docs site (https://usefy-web.vercel.app) so the npm listing links straight
+  to live docs.
+
+### Patch Changes
+
+- Updated dependencies [8924240]
+  - @usefy/use-async@1.0.0
+  - @usefy/use-async-fn@1.0.0
+  - @usefy/use-click-any-where@1.0.0
+  - @usefy/use-controllable-state@1.0.0
+  - @usefy/use-cookie@1.0.0
+  - @usefy/use-copy-to-clipboard@1.0.0
+  - @usefy/use-counter@1.0.0
+  - @usefy/use-dark-mode@1.0.0
+  - @usefy/use-debounce@1.0.0
+  - @usefy/use-debounce-callback@1.0.0
+  - @usefy/use-disclosure@1.0.0
+  - @usefy/use-document-title@1.0.0
+  - @usefy/use-event-callback@1.0.0
+  - @usefy/use-event-listener@1.0.0
+  - @usefy/use-focus-trap@1.0.0
+  - @usefy/use-focus-within@1.0.0
+  - @usefy/use-geolocation@1.0.0
+  - @usefy/use-history-state@1.0.0
+  - @usefy/use-hotkeys@1.0.0
+  - @usefy/use-hover@1.0.0
+  - @usefy/use-idle@1.0.0
+  - @usefy/use-infinite-scroll@1.0.0
+  - @usefy/use-init@1.0.0
+  - @usefy/use-intersection-observer@1.0.0
+  - @usefy/use-interval@1.0.0
+  - @usefy/use-is-client@1.0.0
+  - @usefy/use-is-first-render@1.0.0
+  - @usefy/use-isomorphic-layout-effect@1.0.0
+  - @usefy/use-key-press@1.0.0
+  - @usefy/use-latest@1.0.0
+  - @usefy/use-list@1.0.0
+  - @usefy/use-local-storage@1.0.0
+  - @usefy/use-long-press@1.0.0
+  - @usefy/use-map@1.0.0
+  - @usefy/use-measure@1.0.0
+  - @usefy/use-media-query@1.0.0
+  - @usefy/use-memory-monitor@1.0.0
+  - @usefy/use-merged-refs@1.0.0
+  - @usefy/use-mount@1.0.0
+  - @usefy/use-mutation-observer@1.0.0
+  - @usefy/use-network-state@1.0.0
+  - @usefy/use-object-state@1.0.0
+  - @usefy/use-on-click-outside@1.0.0
+  - @usefy/use-page-visibility@1.0.0
+  - @usefy/use-pagination@1.0.0
+  - @usefy/use-permission@1.0.0
+  - @usefy/use-polling@1.0.0
+  - @usefy/use-preferred-color-scheme@1.0.0
+  - @usefy/use-previous@1.0.0
+  - @usefy/use-queue@1.0.0
+  - @usefy/use-raf-state@1.0.0
+  - @usefy/use-reduced-motion@1.0.0
+  - @usefy/use-resize-observer@1.0.0
+  - @usefy/use-script@1.0.0
+  - @usefy/use-scroll-lock@1.0.0
+  - @usefy/use-scroll-position@1.0.0
+  - @usefy/use-selection@1.0.0
+  - @usefy/use-session-storage@1.0.0
+  - @usefy/use-set@1.0.0
+  - @usefy/use-signal@1.0.0
+  - @usefy/use-stack@1.0.0
+  - @usefy/use-step@1.0.0
+  - @usefy/use-throttle@1.0.0
+  - @usefy/use-throttle-callback@1.0.0
+  - @usefy/use-timeout@1.0.0
+  - @usefy/use-timer@1.0.0
+  - @usefy/use-toggle@1.0.0
+  - @usefy/use-unmount@1.0.0
+  - @usefy/use-update-effect@1.0.0
+  - @usefy/use-window-size@1.0.0
+
 ## 0.25.1
 
 ### Patch Changes

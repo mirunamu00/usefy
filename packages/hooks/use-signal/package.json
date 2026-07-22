@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-signal",
-  "version": "0.25.1",
+  "version": "1.0.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-signal",
   "description": "A React hook for event-driven communication between components",
   "main": "./dist/index.js",
