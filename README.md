@@ -9,6 +9,9 @@
 </p>
 
 <p align="center">
+  <a href="https://usefy-web.vercel.app" target="_blank" rel="noopener noreferrer">
+    <img src="https://img.shields.io/badge/website-usefy--web.vercel.app-000000?style=flat-square" alt="website" />
+  </a>
   <a href="https://www.npmjs.com/org/usefy" target="_blank" rel="noopener noreferrer">
     <img src="https://img.shields.io/badge/npm-@usefy-007acc?style=flat-square" alt="npm org" />
   </a>
@@ -21,6 +24,7 @@
 </p>
 
 <p align="center">
+  <a href="https://usefy-web.vercel.app">Website</a> •
   <a href="#ecosystem">Ecosystem</a> •
   <a href="#quick-start">Quick Start</a> •
   <a href="#why-usefy">Why usefy?</a> •

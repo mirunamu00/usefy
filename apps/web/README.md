@@ -228,7 +228,7 @@ static. Previously it read `?family=` once in a mount effect, which went stale o
 via the header nav didn't update the tab). Tab clicks now also write the param
 (`router.replace`), so state is shareable and header nav + tabs always agree.
 
-### Deployment — DONE ✅ (auto-deploys; only the domain launch remains)
+### Deployment — DONE ✅ (auto-deploys; live at usefy-web.vercel.app)
 
 **Live on Vercel via Git integration.** Every push to **`master` → production
 build + deploy**; other branches get Preview deploys. A **README-only change on
@@ -244,26 +244,25 @@ version stays live.
 - **Build**: `apps/web/vercel.json` →
   `cd ../.. && pnpm turbo run build --filter=@usefy/web...` (builds workspace
   deps first — `dist` is gitignored, so the cloud build must build them).
-- **Production URL** (temporary): `https://usefy-web-mirunamus-projects.vercel.app`.
-- **Access**: Vercel Authentication is ON for all `*.vercel.app`
-  (`ssoProtection: all_except_custom_domains`) → temp URLs need a Vercel login;
-  a **custom domain is public automatically**.
-- **Indexing**: `NEXT_PUBLIC_NOINDEX=1` env (Production + Preview) → temp site is
-  `robots: disallow` + `<meta noindex>` (see `site.noindex` in `src/lib/site.ts`).
+- **Production URL** (canonical): `https://usefy-web.vercel.app`. We are **not**
+  buying a custom domain — this Vercel subdomain is the permanent public URL. If
+  a real domain is ever attached, set `NEXT_PUBLIC_SITE_URL` to override.
+- **Access**: the production `usefy-web.vercel.app` deploy is **public** (no Vercel
+  login wall) and `robots: index, follow`. Deployment Protection, if re-enabled,
+  would put a Vercel login in front of `*.vercel.app` URLs — keep it off for this
+  project so the site stays public.
+- **Canonical/OG/sitemap**: `src/lib/site.ts` defaults `site.url` to
+  `https://usefy-web.vercel.app`, so canonical, OG, and sitemap URLs all point at
+  the live site with no env var needed.
+- **Indexing**: `NEXT_PUBLIC_NOINDEX` is left unset in production (site is
+  indexable); set it to `1` only for throwaway preview deploys you don't want
+  crawled (see `site.noindex` in `src/lib/site.ts`).
 
-**➡ All that remains is the one-time domain launch (when the real domain is known):**
-1. **Attach the domain** in the Vercel project → public immediately (custom-domain
-   protection exception; no need to disable Vercel Auth).
-2. Set **`NEXT_PUBLIC_SITE_URL`** = the real origin (Vercel env, all environments)
-   so canonical/OG/sitemap URLs are correct — `src/lib/site.ts` otherwise defaults
-   to the `https://usefy.dev` placeholder.
-3. **Remove `NEXT_PUBLIC_NOINDEX`** (or set ≠ `1`) so the site is indexable, then
-   redeploy.
-4. Register the domain in **Google Search Console** and submit `/sitemap.xml`.
-   (GSC is not required for indexing, but it's how you submit the sitemap +
-   monitor coverage — do it on the real domain, not the temp URL.)
+**➡ Optional follow-up (nice-to-have, not blocking):**
+- Register `usefy-web.vercel.app` in **Google Search Console** and submit
+  `/sitemap.xml` — not required for indexing, but it's how you monitor coverage.
 
-- [ ] Optional: link the site from the root `README.md` once it has a public URL.
+- [x] Link the site from the root `README.md`.
 - [ ] Optional: `packages/kits/` dead-dir cleanup (separate commit, unrelated).
 - Not needed: **no changeset** — `@usefy/web` is `private: true`, not published.
 
