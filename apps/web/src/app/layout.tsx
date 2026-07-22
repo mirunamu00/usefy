@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     : { index: true, follow: true },
   // Google Search Console ownership verification (URL-prefix property for
   // https://usefy-web.vercel.app). Renders <meta name="google-site-verification">.
-  verification: { google: "7NmU-GEOwAo3YdMyUk0C91KlBxWtAoEDyHgpG_qTZ48" },
+  verification: { google: "jP_LRgp2ourifn-dveaqSx3v-cBhd7cwuHbUlM6bsA4" },
   alternates: { canonical: "/" },
 };
 
