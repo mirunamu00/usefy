@@ -68,12 +68,34 @@ release process). Follow it.
   cover no-op skipping, reference stability, SSR/unsupported env, and unmount cleanup
   where relevant.
 
+## Visual QA is part of building (MANDATORY for any story/component work)
+
+"Tests green + storybook compiles" is **not** done — that combination has already
+shipped one embarrassing release. Before you report completion on any change that
+touches a component or a story:
+
+1. **Run the real Storybook** (`pnpm storybook`, :6006) and drive every affected
+   story in a browser (Playwright via the `example-skills:webapp-testing` skill)
+   **like a first-time visitor**: open the canvas idle — nothing may auto-run or
+   self-complete (a `play` function auto-runs when its canvas opens!) — then click
+   through the demo and confirm it's restartable after finishing.
+2. **Check what jsdom cannot see**: animation quality (elements that move together
+   stay in sync — no teleporting, no rubber-band lag on tracked positions),
+   disabled/pending/empty states clearly visible, **both light and dark themes**,
+   reduced-motion behavior.
+3. **Capture screenshots** of the key states to the scratchpad and cite the paths
+   in your report as evidence.
+
+If anything looks broken or embarrassing in the browser, fix it before reporting —
+never ship "mostly fine". See CLAUDE.md **"Quality bar"**.
+
 ## Definition of done (verify before you claim completion)
 
 Implementation + tests green (90%+ for hooks) ·
 umbrella wired for hooks (`@usefy/hooks`, 3 places; components have no umbrella) ·
 `pnpm build && pnpm typecheck && pnpm test` clean · Storybook story compiles
-(`pnpm --filter @usefy/storybook build-storybook`) · coverage badge uses the real
+(`pnpm --filter @usefy/storybook build-storybook`) **and passed visual QA in a
+running browser (screenshots cited)** · coverage badge uses the real
 number (hooks) · READMEs updated (new package + root; hooks also the `@usefy/hooks`
 umbrella README) · changeset present with the expected bump. When a branch's work is complete, produce the
 prefilled PR link per the skill's final phase.

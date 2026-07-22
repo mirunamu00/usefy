@@ -249,7 +249,17 @@ export function SpotlightTour(props: SpotlightTourProps): ReactNode {
         theme === "light" && styles.light,
         className
       )}
-      style={{ zIndex }}
+      // Publish the effective duration on the root so BOTH the overlay mask
+      // and the tooltip inherit the *same* value — the tooltip's step-move
+      // glide must match the spotlight morph, and reduced-motion /
+      // transitionDuration=0 must reach the tooltip too (it is a sibling of
+      // the overlay, so it can't inherit the overlay's local variable).
+      style={
+        {
+          zIndex,
+          "--usefy-tour-transition-duration": `${effectiveDuration}ms`,
+        } as React.CSSProperties
+      }
       data-tour-root=""
     >
       <Overlay
@@ -282,6 +292,7 @@ export function SpotlightTour(props: SpotlightTourProps): ReactNode {
           index={tour.stepIndex}
           count={tour.stepCount}
           position={tour.geometry.tooltip}
+          transitionDuration={effectiveDuration}
           centered={centered}
           gated={tour.gated}
           isFirst={tour.isFirst}

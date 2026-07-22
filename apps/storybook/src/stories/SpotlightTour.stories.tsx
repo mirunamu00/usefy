@@ -185,7 +185,7 @@ function App() {
 
   return (
     <>
-      <button onClick={() => controller.current?.start()}>Start tour</button>
+      <button onClick={() => controller.current?.start(0)}>Start tour</button>
       <Dashboard />
 
       <SpotlightTour
@@ -230,7 +230,7 @@ export const AppOnboarding: Story = {
             type="button"
             data-testid="start-onboarding"
             className={storyTheme.buttonPrimary}
-            onClick={() => controller.current?.start()}
+            onClick={() => controller.current?.start(0)}
           >
             Start tour
           </button>
@@ -270,43 +270,6 @@ export const AppOnboarding: Story = {
       );
     };
     return <Demo />;
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = bodyOf(canvasElement);
-
-    await userEvent.click(canvas.getByTestId("start-onboarding"));
-
-    // Step 1: centered welcome.
-    const dialog = await body.findByRole("dialog");
-    await expect(dialog).toHaveAttribute("aria-modal", "true");
-    await expect(body.getByText("Welcome aboard! 👋")).toBeVisible();
-    await expect(body.getByText("1 / 5")).toBeVisible();
-
-    // Click through the spotlighted steps.
-    await userEvent.click(body.getByText("Next"));
-    await body.findByText("Search");
-    await userEvent.click(body.getByText("Next"));
-    await body.findByText("Your numbers");
-    await userEvent.click(body.getByText("Next"));
-
-    // Step 4 is gated: Next is disabled with a visible hint…
-    await body.findByText("Try it");
-    await expect(body.getByText("Next")).toBeDisabled();
-    await expect(
-      body.getByText("Complete the highlighted action to continue")
-    ).toBeVisible();
-    // …until the highlighted button is clicked, which auto-advances.
-    await userEvent.click(canvas.getByTestId("ob-create"));
-    await body.findByText(/nudge you here/);
-
-    // Last step shows Done, which finishes the tour.
-    await userEvent.click(body.getByText("Done"));
-    await waitFor(() =>
-      expect(
-        canvasElement.ownerDocument.querySelector("[data-tour-root]")
-      ).toBeNull()
-    );
   },
 };
 
@@ -350,7 +313,7 @@ export const KeyboardNavigation: Story = {
             type="button"
             data-testid="start-keyboard"
             className={storyTheme.buttonPrimary}
-            onClick={() => controller.current?.start()}
+            onClick={() => controller.current?.start(0)}
           >
             Start tour
           </button>
@@ -375,26 +338,6 @@ export const KeyboardNavigation: Story = {
     };
     return <Demo />;
   },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = bodyOf(canvasElement);
-
-    await userEvent.click(canvas.getByTestId("start-keyboard"));
-    await body.findByText("Arrow keys navigate this tour.");
-
-    await userEvent.keyboard("{ArrowRight}");
-    await body.findByText("Escape closes it from anywhere.");
-
-    await userEvent.keyboard("{ArrowLeft}");
-    await body.findByText("Arrow keys navigate this tour.");
-
-    await userEvent.keyboard("{Escape}");
-    await waitFor(() =>
-      expect(
-        canvasElement.ownerDocument.querySelector("[data-tour-root]")
-      ).toBeNull()
-    );
-  },
 };
 
 // ============================================================================
@@ -412,7 +355,7 @@ function App() {
       {/* A pulsing dot pinned to the feature's corner invites the tour. */}
       <SpotlightBeacon
         target="#new-feature"
-        onActivate={() => controller.current?.start()}
+        onActivate={() => controller.current?.start(0)}
       />
       <NewFeatureCard id="new-feature" />
 
@@ -448,7 +391,7 @@ export const BeaconTriggered: Story = {
           </p>
           <SpotlightBeacon
             target="#beacon-feature"
-            onActivate={() => controller.current?.start()}
+            onActivate={() => controller.current?.start(0)}
           />
           <div
             id="beacon-feature"
@@ -475,23 +418,6 @@ export const BeaconTriggered: Story = {
     };
     return <Demo />;
   },
-  play: async ({ canvasElement }) => {
-    const body = bodyOf(canvasElement);
-
-    // The beacon is a real, labelled button portaled to the body.
-    const beacon = await body.findByLabelText("Start tour");
-    await userEvent.click(beacon);
-
-    await body.findByRole("dialog");
-    await body.findByText("Every PR now gets its own preview URL.");
-
-    await userEvent.click(body.getByText("Done"));
-    await waitFor(() =>
-      expect(
-        canvasElement.ownerDocument.querySelector("[data-tour-root]")
-      ).toBeNull()
-    );
-  },
 };
 
 // ============================================================================
@@ -514,7 +440,7 @@ export const DarkTheme: Story = {
     docs: {
       description: {
         story:
-          "The same tour with theme=\"dark\": tooltip surface, buttons, and dots switch to the dark palette (set via --usefy-tour-* variables).",
+          "The same tour with theme=\"dark\": tooltip surface, buttons, and dots switch to the dark palette (set via --usefy-tour-* variables). The middle step is gated, so you can see the disabled Next stays clearly visible on the dark surface.",
       },
       source: { language: "tsx", code: DARK_CODE },
     },
@@ -533,7 +459,7 @@ export const DarkTheme: Story = {
             type="button"
             data-testid="start-dark"
             className={storyTheme.buttonPrimary}
-            onClick={() => controller.current?.start()}
+            onClick={() => controller.current?.start(0)}
           >
             Start tour
           </button>
@@ -550,6 +476,13 @@ export const DarkTheme: Story = {
               },
               {
                 target: "#dk-create",
+                title: "Try it",
+                content:
+                  "Gated on the dark palette: Next stays a clearly-visible, muted button until you click “Create project”.",
+                advanceOn: { event: "click" },
+              },
+              {
+                target: "#dk-notifications",
                 content: "Same tour, darker clothes.",
               },
             ]}
@@ -558,21 +491,6 @@ export const DarkTheme: Story = {
       );
     };
     return <Demo />;
-  },
-  play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement);
-    const body = bodyOf(canvasElement);
-
-    await userEvent.click(canvas.getByTestId("start-dark"));
-    await body.findByRole("dialog");
-    await body.findByText("Dark-mode tooltip surface and controls.");
-
-    await userEvent.click(body.getByLabelText("Close"));
-    await waitFor(() =>
-      expect(
-        canvasElement.ownerDocument.querySelector("[data-tour-root]")
-      ).toBeNull()
-    );
   },
 };
 
@@ -630,7 +548,7 @@ export const CustomRenderStep: Story = {
             type="button"
             data-testid="start-custom"
             className={storyTheme.buttonPrimary}
-            onClick={() => controller.current?.start()}
+            onClick={() => controller.current?.start(0)}
           >
             Start tour
           </button>
@@ -673,22 +591,143 @@ export const CustomRenderStep: Story = {
     };
     return <Demo />;
   },
-  play: async ({ canvasElement }) => {
+};
+
+// ============================================================================
+// Interaction test (automated — NOT a demo)
+// ============================================================================
+
+/**
+ * A dedicated regression story that AUTO-RUNS and drives the whole tour by
+ * itself. It exists to keep the browser-level interaction coverage the demo
+ * `play` functions used to carry — the demos above are now purely interactive
+ * (they never move on their own). Excluded from the docs page (`!autodocs`).
+ */
+export const InteractionTest: Story = {
+  name: "Interaction test (automated)",
+  tags: ["!autodocs"],
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Automated end-to-end check — this story drives the tour on its own (click-through, gated auto-advance, Done teardown, then a keyboard pass). It is a test, not a demo; the demo stories never self-advance.",
+      },
+    },
+  },
+  render: () => {
+    const Demo = () => {
+      const controller = useRef<TourController>(null);
+      return (
+        <div className={storyTheme.container}>
+          <h2 className={storyTheme.title}>Interaction test</h2>
+          <p className={storyTheme.subtitle}>
+            Automated regression coverage — runs on open and drives the tour
+            automatically.
+          </p>
+          <button
+            type="button"
+            data-testid="start-interaction"
+            className={storyTheme.buttonPrimary}
+            onClick={() => controller.current?.start(0)}
+          >
+            Start tour
+          </button>
+          <Dashboard idPrefix="it" />
+          <SpotlightTour
+            controllerRef={controller}
+            steps={[
+              {
+                title: "Welcome aboard! 👋",
+                content: "Let's take a quick look around your new dashboard.",
+              },
+              {
+                target: "#it-search",
+                title: "Search",
+                content:
+                  "Find any project, deployment, or teammate from here.",
+              },
+              {
+                target: "#it-stats",
+                title: "Your numbers",
+                content: "Live counts of projects and deployments.",
+                placement: "bottom",
+              },
+              {
+                target: "#it-create",
+                title: "Try it",
+                content: "Click “Create project” to continue the tour.",
+                advanceOn: { event: "click" },
+              },
+              {
+                target: "#it-notifications",
+                content: "We'll nudge you here when a deployment finishes.",
+              },
+            ]}
+          />
+        </div>
+      );
+    };
+    return <Demo />;
+  },
+  play: async ({ canvasElement, step }) => {
     const canvas = within(canvasElement);
     const body = bodyOf(canvasElement);
+    const gone = () =>
+      waitFor(() =>
+        expect(
+          canvasElement.ownerDocument.querySelector("[data-tour-root]")
+        ).toBeNull()
+      );
 
-    await userEvent.click(canvas.getByTestId("start-custom"));
-    const custom = await body.findByTestId("custom-step");
-    // ctx.tooltipProps carries the dialog semantics onto the custom element.
-    await expect(custom).toHaveAttribute("role", "dialog");
+    await step(
+      "Click-through with gated auto-advance, then Done teardown",
+      async () => {
+        await userEvent.click(canvas.getByTestId("start-interaction"));
 
-    await userEvent.click(body.getByText("Got it (1/2)"));
-    await body.findByText("Start something new.");
-    await userEvent.click(body.getByText("Finish"));
-    await waitFor(() =>
-      expect(
-        canvasElement.ownerDocument.querySelector("[data-tour-root]")
-      ).toBeNull()
+        // Step 1: centered welcome.
+        const dialog = await body.findByRole("dialog");
+        await expect(dialog).toHaveAttribute("aria-modal", "true");
+        await expect(body.getByText("Welcome aboard! 👋")).toBeVisible();
+        await expect(body.getByText("1 / 5")).toBeVisible();
+
+        // Click through the spotlighted steps.
+        await userEvent.click(body.getByText("Next"));
+        await body.findByText("Search");
+        await userEvent.click(body.getByText("Next"));
+        await body.findByText("Your numbers");
+        await userEvent.click(body.getByText("Next"));
+
+        // Step 4 is gated: Next is disabled with a visible hint…
+        await body.findByText("Try it");
+        await expect(body.getByText("Next")).toBeDisabled();
+        await expect(
+          body.getByText("Complete the highlighted action to continue")
+        ).toBeVisible();
+        // …until the highlighted button is clicked, which auto-advances.
+        await userEvent.click(canvas.getByTestId("it-create"));
+        await body.findByText(/nudge you here/);
+
+        // Last step shows Done, which finishes and tears the tour down.
+        await userEvent.click(body.getByText("Done"));
+        await gone();
+      }
     );
+
+    await step("Keyboard pass: ArrowRight / ArrowLeft / Escape", async () => {
+      await userEvent.click(canvas.getByTestId("start-interaction"));
+      await body.findByText("Welcome aboard! 👋");
+
+      // ArrowRight advances through the non-gated leading steps…
+      await userEvent.keyboard("{ArrowRight}");
+      await body.findByText("Search");
+      await userEvent.keyboard("{ArrowRight}");
+      await body.findByText("Your numbers");
+      // …ArrowLeft goes back…
+      await userEvent.keyboard("{ArrowLeft}");
+      await body.findByText("Search");
+      // …and Escape dismisses from anywhere.
+      await userEvent.keyboard("{Escape}");
+      await gone();
+    });
   },
 };

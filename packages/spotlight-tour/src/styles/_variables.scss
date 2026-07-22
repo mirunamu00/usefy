@@ -46,6 +46,12 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
   --usefy-tour-accent: #{$indigo-500};
   --usefy-tour-accent-hover: #{$indigo-600};
   --usefy-tour-accent-color: #{$white};
+  // Disabled primary (e.g. a gated Next): a solid muted-gray fill — never a
+  // low-opacity accent, which vanishes against the surface. Kept ≥3:1 against
+  // the tooltip so the button shape stays unmistakably present, with a
+  // readable label, while the gray hue (vs the indigo accent) reads inactive.
+  --usefy-tour-accent-disabled-bg: #{$slate-500};
+  --usefy-tour-accent-disabled-color: #{$white};
   --usefy-tour-button-bg: #{$slate-100};
   --usefy-tour-button-color: #{$slate-700};
   --usefy-tour-button-hover-bg: #{$slate-200};
@@ -67,6 +73,12 @@ $ease: cubic-bezier(0.4, 0, 0.2, 1);
   --usefy-tour-accent: #{$indigo-500};
   --usefy-tour-accent-hover: #{$indigo-400};
   --usefy-tour-accent-color: #{$white};
+  // Disabled primary on the dark surface: a light-gray fill (not a dimmed
+  // accent, which reads as missing on dark). ≥3:1 against the tooltip so the
+  // shape is clearly there, with a dark, readable label; the neutral hue keeps
+  // it distinct from the active indigo accent.
+  --usefy-tour-accent-disabled-bg: #{$slate-400};
+  --usefy-tour-accent-disabled-color: #{$slate-900};
   --usefy-tour-button-bg: #{$slate-700};
   --usefy-tour-button-color: #{$slate-200};
   --usefy-tour-button-hover-bg: #{$slate-600};

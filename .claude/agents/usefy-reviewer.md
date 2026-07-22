@@ -98,6 +98,33 @@ Verify each; a miss is a finding:
   config files identical to peers — compare a hook to `use-hover`, a component to
   `memory-monitor`).
 
+### 3. Experience review — run the thing (MANDATORY for story/component work)
+
+A review that never opened a browser is an incomplete review — jsdom tests and
+`build-storybook` compiling once approved a release whose demos self-destructed on
+open. Launch the real Storybook (`pnpm storybook`, :6006) and experience every
+affected story **as a first-time user** (drive it with Playwright via the
+`example-skills:webapp-testing` skill when headless). Hunt specifically for what
+compile checks and jsdom cannot see:
+
+- **Self-running demos** — a `play` function auto-runs when its canvas opens; if
+  it drives the flow to completion (finishing a tour, submitting the form,
+  dismissing the overlay), the demo destroys itself in front of the visitor. Demo
+  stories must be interactive-first; flow-completing plays belong only in
+  dedicated `!autodocs`-tagged test stories (see `add-usefy-story`).
+- **Motion defects** — elements that should move together (e.g. a spotlight and
+  its tooltip) actually move in sync: same duration/easing, no teleporting,
+  snapping, or rubber-band chasing of tracked positions.
+- **State visibility** — disabled/pending/empty states clearly visible in **both**
+  themes (an opacity-dimmed accent button on a dark surface reads as *missing*).
+- **First-impression quality** — flashes on open, layout jumps, broken restart
+  after finishing a flow, reduced-motion respected. Judge it as a product: would
+  a first-time visitor be impressed?
+
+Findings here are **as blocking as code bugs** — the demo is the product's
+storefront (CLAUDE.md "Quality bar"). State in your report which stories you
+personally drove in the browser.
+
 ## How to verify claims
 
 You may **run** things (Bash is for verification, not editing): `pnpm build`,

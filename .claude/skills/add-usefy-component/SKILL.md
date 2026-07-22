@@ -174,13 +174,22 @@ If `build`/`typecheck` errors with "Cannot find module '@usefy/...'" for sibling
 Add `apps/storybook/src/stories/<Component>.stories.tsx` (PascalCase file, e.g.
 `MemoryMonitor.stories.tsx`) — clone the existing `MemoryMonitor.stories.tsx` as
 the template. Import from `@usefy/<name>`, use the shared `storyTheme`, and write
-a handful of scenarios; give interactive elements `data-testid`s and add `play`
-tests where it makes sense. (The **`add-usefy-story`** skill is the authority on
-story quality and the "Show code" convention — invoke it for the story itself.)
+a handful of scenarios; give interactive elements `data-testid`s. (The
+**`add-usefy-story`** skill is the authority on story quality, the "Show code"
+convention, and the play-test placement rules — invoke it for the story itself.
+In particular: **demo stories must never self-run or self-complete**; flow-driving
+`play` assertions go in a dedicated `!autodocs` interaction-test story.)
 
 Then:
 1. Add `"@usefy/<name>": "workspace:*"` (and its paired hook, if the story uses it directly) to `apps/storybook/package.json` dependencies, and run `pnpm install`.
 2. Verify it compiles: `pnpm --filter @usefy/storybook build-storybook`.
+3. **Visual QA (MANDATORY — compiling is not done):** run `pnpm storybook` and
+   drive every story in a real browser like a first-time visitor (Playwright via
+   `example-skills:webapp-testing` when headless): idle on open (nothing
+   auto-runs), fully interactive, restartable after finishing, smooth motion
+   (elements that move together stay in sync), disabled/pending states clearly
+   visible, light **and** dark themes. Screenshot the key states as evidence.
+   See CLAUDE.md "Quality bar".
 
 ## Phase 6 — READMEs
 
@@ -226,6 +235,8 @@ Component implemented against its SPEC · **generic concerns composed from exist
 dependency** · package config cloned + adapted (CSS `exports`/`sideEffects`
 correct if it ships styles) · lives at `packages/<name>/` (top level, no umbrella
 wiring) · `pnpm build && pnpm test && pnpm typecheck` clean · Storybook
-story compiles · README (new component) + root README (added as a sibling of `@usefy/hooks` — Overview table, Ecosystem, Packages) updated ·
+story compiles **and passed visual QA in a running browser** (Phase 5 step 3 —
+screenshots as evidence; demos idle on open, no self-completing plays) · README
+(new component) + root README (added as a sibling of `@usefy/hooks` — Overview table, Ecosystem, Packages) updated ·
 changeset present and `pnpm changeset status` shows the expected bump ·
 **a prefilled PR link generated and handed to the user**.

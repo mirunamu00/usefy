@@ -156,9 +156,12 @@
   font-weight: 500;
   cursor: pointer;
 
+  // Disabled is expressed with explicit muted-but-solid tokens (see the
+  // per-variant rules below), never opacity — a low-opacity accent button
+  // reads as *missing* on the dark surface. `cursor: not-allowed` is the only
+  // shared disabled affordance.
   &:disabled {
     cursor: not-allowed;
-    opacity: 0.45;
   }
 
   &:focus-visible {
@@ -167,6 +170,8 @@
   }
 }
 
+// No :disabled variant: the default UI never disables secondary buttons
+// (Skip/Back stay active; only the gated primary Next disables).
 .buttonSecondary {
   background: var(--usefy-tour-button-bg);
   color: var(--usefy-tour-button-color);
@@ -182,5 +187,12 @@
 
   &:hover:not(:disabled) {
     background: var(--usefy-tour-accent-hover);
+  }
+
+  // A gated Next stays a solid, clearly-visible button — just muted and
+  // inactive — instead of a near-invisible faded accent.
+  &:disabled {
+    background: var(--usefy-tour-accent-disabled-bg);
+    color: var(--usefy-tour-accent-disabled-color);
   }
 }

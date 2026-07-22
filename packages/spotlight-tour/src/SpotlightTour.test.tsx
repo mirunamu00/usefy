@@ -380,6 +380,42 @@ describe("SpotlightTour", () => {
       ).toBe("300ms");
     });
 
+    it("publishes the duration on the portal root so the tooltip inherits it", () => {
+      // The tooltip is a sibling of the overlay, so it can only pick up the
+      // step-move glide duration if the root scopes the variable (not the
+      // overlay's own local copy).
+      render(<SpotlightTour steps={twoSteps()} defaultOpen />);
+      const root = q("[data-tour-root]") as HTMLElement;
+      expect(
+        root.style.getPropertyValue("--usefy-tour-transition-duration")
+      ).toBe("300ms");
+    });
+
+    it("forces the tooltip duration to 0 under reduced motion via the root", () => {
+      const original = window.matchMedia;
+      window.matchMedia = vi.fn().mockImplementation((query: string) => ({
+        matches: query.includes("prefers-reduced-motion"),
+        media: query,
+        onchange: null,
+        addListener: vi.fn(),
+        removeListener: vi.fn(),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn(),
+        dispatchEvent: vi.fn(),
+      }));
+      try {
+        render(
+          <SpotlightTour steps={twoSteps()} defaultOpen transitionDuration={300} />
+        );
+        const root = q("[data-tour-root]") as HTMLElement;
+        expect(
+          root.style.getPropertyValue("--usefy-tour-transition-duration")
+        ).toBe("0ms");
+      } finally {
+        window.matchMedia = original;
+      }
+    });
+
     it("honors a custom transitionDuration", () => {
       render(
         <SpotlightTour steps={twoSteps()} defaultOpen transitionDuration={0} />
@@ -417,6 +453,34 @@ describe("SpotlightTour", () => {
       } finally {
         window.matchMedia = original;
       }
+    });
+  });
+
+  // The precise glide-vs-snap CLASS logic is unit-tested deterministically in
+  // components/Tooltip/Tooltip.test.tsx (isolation avoids the act() passive-
+  // effect timing that collapses the multi-commit step-change cascade here).
+  // These integration checks cover the observable no-flash / no-teleport
+  // guarantee end-to-end.
+  describe("tooltip motion (no flash / no teleport)", () => {
+    const tip = () => q("[data-tour-tooltip]") as HTMLElement;
+
+    it("positions the tooltip on first paint (never left blank)", () => {
+      render(<SpotlightTour steps={twoSteps()} defaultOpen />);
+      expect(tip().style.left).not.toBe("");
+      expect(tip().className).not.toMatch(/measuring/);
+    });
+
+    it("keeps the tooltip positioned across a step change (no hidden flash)", () => {
+      render(<SpotlightTour steps={twoSteps()} defaultOpen />);
+      const before = tip().style.left;
+      fireEvent.click(q("[data-tour-next]")!);
+      expect(screen.getByText("step two")).toBeInTheDocument();
+      // Moved to the new step's coordinates, and never blanked/hidden in the
+      // process — the previous position is retained as the transition's
+      // from-state instead of being cleared.
+      expect(tip().style.left).not.toBe("");
+      expect(tip().style.left).not.toBe(before);
+      expect(tip().className).not.toMatch(/measuring/);
     });
   });
 

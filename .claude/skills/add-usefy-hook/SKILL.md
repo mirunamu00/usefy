@@ -99,11 +99,12 @@ If the umbrella `build`/`typecheck` errors with "Cannot find module '@usefy/use-
 
 ## Phase 6 — Storybook
 
-Add `apps/storybook/src/stories/use<Name>.stories.tsx` following an existing story (`useHover.stories.tsx` is a good template): import from `@usefy/use-<name>`, use the shared `storyTheme` for styling, and write a handful of scenarios with `play` tests (`within`/`userEvent`/`expect` from `@storybook/test`). Give interactive elements `data-testid`s.
+Add `apps/storybook/src/stories/use<Name>.stories.tsx` following an existing story (`useHover.stories.tsx` is a good template): import from `@usefy/use-<name>`, use the shared `storyTheme` for styling, and write a handful of scenarios. Give interactive elements `data-testid`s. The **`add-usefy-story`** skill is the authority on story quality — in particular its play-placement rule: **a demo story's `play` auto-runs on open and must never drive the demo to completion or destroy its state**; flow-driving assertions go in a dedicated `!autodocs` interaction-test story.
 
 Then:
 1. Add `"@usefy/use-<name>": "workspace:*"` to `apps/storybook/package.json` dependencies and run `pnpm install`.
 2. Verify it compiles: `pnpm --filter @usefy/storybook build-storybook` (a TS/compile error fails the build).
+3. **Visual QA (MANDATORY):** run `pnpm storybook` and drive every story in a real browser like a first-time visitor — idle on open, interactive, restartable, smooth motion, visible states, both themes (see CLAUDE.md "Quality bar" and `add-usefy-story` rule 5).
 
 ## Phase 7 — Coverage
 
