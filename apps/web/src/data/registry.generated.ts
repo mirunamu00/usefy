@@ -50,7 +50,7 @@ export const generatedPackages: PackageEntry[] = [
       "toast",
       "ssr"
     ],
-    "version": "0.0.0",
+    "version": "0.1.0",
     "category": "component",
     "quickStart": "import { NetworkIndicator } from \"@usefy/network-indicator\";\n\nfunction App() {\n  return (\n    <>\n      <YourApp />\n      {/* Mount once at the root — renders nothing while online */}\n      <NetworkIndicator />\n    </>\n  );\n}",
     "apiMarkdown": "### `<NetworkIndicator />` Props\n\n| Prop | Type | Default | Description |\n| ---- | ---- | ------- | ----------- |\n| `position` | `\"top\" \\| \"bottom\"` | `\"top\"` | Which screen edge the fixed banner is pinned to. |\n| `offlineMessage` | `ReactNode` | `\"You're offline. Some features may not work.\"` | Content of the offline banner. |\n| `onlineMessage` | `ReactNode` | `\"Back online\"` | Content of the reconnected confirmation. |\n| `onlineDuration` | `number` | `3000` | How long (ms) the confirmation stays before auto-dismissing. `0` or negative disables it. Changing it mid-confirmation restarts the timer from zero with the new duration. |\n| `render` | `(state: NetworkIndicatorState) => ReactNode` | — | Escape hatch: replaces the default banner entirely; called on every render (including steady-state online) with `{ online, reconnected }`. |\n| `onStatusChange` | `(online: boolean) => void` | — | Called after each online/offline transition (never on mount). |\n| `className` | `string` | — | Class applied to the default banner element. |\n| `style` | `CSSProperties` | — | Inline styles merged over the defaults (yours win). |\n\n### `NetworkIndicatorState`\n\n```ts\ninterface NetworkIndicatorState {\n  /** Current connectivity, from navigator.onLine (true on the server). */\n  online: boolean;\n  /** True during the \"back online\" confirmation window. */\n  reconnected: boolean;\n}\n```\n\n### Other exports\n\n| Export | Description |\n| ------ | ----------- |\n| `NetworkIndicatorProps` | Props type. |\n| `NetworkIndicatorPosition` | `\"top\" \\| \"bottom\"`. |\n| `DEFAULT_OFFLINE_MESSAGE` / `DEFAULT_ONLINE_MESSAGE` / `DEFAULT_ONLINE_DURATION` | The defaults, for reuse in custom `render` UIs. |\n\nThe default banner also exposes `data-status=\"offline\" | \"reconnected\"` and `data-position` attributes for styling and testing.\n\n---",
@@ -58,6 +58,33 @@ export const generatedPackages: PackageEntry[] = [
     "npmUrl": "https://www.npmjs.com/package/@usefy/network-indicator",
     "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/network-indicator",
     "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/network-indicator/README.md"
+  },
+  {
+    "slug": "scroll-progress",
+    "name": "@usefy/scroll-progress",
+    "displayName": "ScrollProgress",
+    "kind": "component",
+    "family": "standalone",
+    "tagline": "Drop-in React reading-progress bar — a thin fixed bar that fills as you scroll the page or any scrollable container, zero-config, accessible, and SSR-safe",
+    "subtitle": "Drop-in React reading-progress bar",
+    "keywords": [
+      "scroll",
+      "progress",
+      "progress-bar",
+      "reading-progress",
+      "scroll-indicator",
+      "scroll-progress",
+      "component",
+      "ssr"
+    ],
+    "version": "0.0.0",
+    "category": "component",
+    "quickStart": "import { ScrollProgress } from \"@usefy/scroll-progress\";\n\nfunction App() {\n  return (\n    <>\n      {/* Mount once — a 3px blue bar fixed to the top of the viewport */}\n      <ScrollProgress />\n      <YourApp />\n    </>\n  );\n}",
+    "apiMarkdown": "### `<ScrollProgress />` Props\n\n| Prop | Type | Default | Description |\n| ---- | ---- | ------- | ----------- |\n| `position` | `\"top\" \\| \"bottom\"` | `\"top\"` | Which viewport edge the fixed bar is pinned to. |\n| `color` | `string` | `\"#3b82f6\"` | Bar fill color (any CSS color). |\n| `height` | `number \\| string` | `3` | Bar thickness — a number is pixels, a string is any CSS length. |\n| `zIndex` | `number` | `9999` | Stacking order of the fixed bar. |\n| `target` | `RefObject<HTMLElement \\| null>` | — (window) | Ref to the scrollable container to measure. Omit to track the window/document scroll. |\n| `throttleMs` | `number` | `0` | Throttle interval (ms) for scroll updates, forwarded to `useScrollPosition`. `0` updates on every scroll event. The trailing edge always fires, so the resting position is never dropped. |\n| `aria-label` | `string` | `\"Scroll progress\"` | Accessible name of the progressbar. |\n| `render` | `(progress: number) => ReactNode` | — | Escape hatch: replaces the default bar entirely; called on every render with the current progress (`0`–`1`). |\n| `className` | `string` | — | Class applied to the default bar element. |\n| `style` | `CSSProperties` | — | Inline styles merged over the defaults (yours win). |\n\n### Other exports\n\n| Export | Description |\n| ------ | ----------- |\n| `ScrollProgressProps` | Props type. |\n| `ScrollProgressPosition` | `\"top\" \\| \"bottom\"`. |\n| `DEFAULT_BAR_COLOR` / `DEFAULT_BAR_HEIGHT` / `DEFAULT_Z_INDEX` / `DEFAULT_ARIA_LABEL` | The defaults, for reuse in custom `render` UIs. |\n\nThe default bar also exposes a `data-position=\"top\" | \"bottom\"` attribute for styling and testing.\n\n### Progress model\n\n```\nprogress = clamp(scrollTop / (scrollHeight - clientHeight), 0, 1)\n```\n\nWhen `scrollHeight - clientHeight <= 0` (the content fits in the viewport, so there is nothing to scroll), progress is `0` — the bar renders but stays empty, so layout and stacking never jump when content grows.\n\n---",
+    "storybookUrl": "https://mirunamu00.github.io/usefy/?path=/story/scroll-progress--overview",
+    "npmUrl": "https://www.npmjs.com/package/@usefy/scroll-progress",
+    "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/scroll-progress",
+    "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/scroll-progress/README.md"
   },
   {
     "slug": "use-async",

@@ -63,7 +63,7 @@ const CATEGORY = {
   "use-timer": "async", "use-async": "async", "use-async-fn": "async", "use-polling": "async",
   // Standalone components
   "memory-monitor": "component", "virtual-keyboard": "component",
-  "network-indicator": "component",
+  "network-indicator": "component", "scroll-progress": "component",
 };
 
 /** The package directories to scan, relative to packages/. */
@@ -72,6 +72,7 @@ const PACKAGE_DIRS = [
   "memory-monitor",
   "virtual-keyboard",
   "network-indicator",
+  "scroll-progress",
 ];
 
 /** @param {string} dir */
