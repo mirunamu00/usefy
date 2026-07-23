@@ -115,6 +115,34 @@ export const generatedPackages: PackageEntry[] = [
     "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/scroll-progress/README.md"
   },
   {
+    "slug": "signature-pad",
+    "name": "@usefy/signature-pad",
+    "displayName": "SignaturePad",
+    "kind": "component",
+    "family": "standalone",
+    "tagline": "Electronic signature pad for React — hand-written ink engine with Bézier smoothing and velocity/pressure-based variable stroke width, undo/redo history, and a zero-dependency headless core",
+    "subtitle": "Electronic signature pad for React — hand-written ink engine, velocity/pressure-based variable stroke width, PNG/SVG/JSON exports, zero dependencies",
+    "keywords": [
+      "signature",
+      "signature-pad",
+      "canvas",
+      "ink",
+      "bezier",
+      "drawing",
+      "e-signature",
+      "pointer-events",
+      "headless"
+    ],
+    "version": "0.1.0",
+    "category": "component",
+    "quickStart": "import { useRef, useState } from \"react\";\nimport { SignaturePad, type SignaturePadController } from \"@usefy/signature-pad\";\n\nfunction ConsentForm() {\n  const pad = useRef<SignaturePadController>(null);\n  const [signed, setSigned] = useState(false);\n\n  return (\n    <>\n      <div style={{ height: 200, border: \"1px solid #e2e8f0\", borderRadius: 12 }}>\n        <SignaturePad\n          guideline\n          controllerRef={pad}\n          onChange={({ isEmpty }) => setSigned(!isEmpty)}\n        />\n      </div>\n      <button\n        disabled={!signed}\n        onClick={async () => {\n          const { blob } = await pad.current!.toPNG({ background: \"#fff\" });\n          await upload(blob);\n        }}\n      >\n        Agree &amp; sign\n      </button>\n    </>\n  );\n}",
+    "apiMarkdown": "### `<SignaturePad />`\n\n```tsx\n<SignaturePad\n  penColor=\"#1e293b\"\n  guideline={{ y: 140, inset: 24, color: \"#94a3b8\" }}\n  defaultValue={storedSignature}   // applied once on mount\n  readOnly={false}                 // reactive — input detaches in place\n  controllerRef={pad}              // imperative controller (stable)\n  onBegin={() => {}}\n  onEnd={() => {}}\n  onChange={({ isEmpty, strokeCount }) => {}} // edges only, never per point\n  aria-label=\"Signature input area\"\n  className=\"...\"\n  style={{ ... }}\n/>\n```\n\n- **`controllerRef`** receives a stable `SignaturePadController`: `clear() / undo() / redo() / isEmpty() / toPNG() / toSVG() / toJSON() / fromJSON()`. Calls before mount (or after unmount) are safe no-ops.\n- **`guideline`** draws a \"sign here\" baseline **beneath** the ink, on-canvas — and it is **excluded from every export** by construction.\n- **Ink props are live**: changing `penColor` (etc.) never wipes the pad — committed strokes keep the style they were drawn with; new strokes pick up the new options. (History resets, and a stroke in progress at that exact moment is discarded.)\n\n### `useSignaturePad()`\n\n```tsx\nimport { useSignaturePad } from \"@usefy/signature-pad\";\n\nfunction SignatureField() {\n  const pad = useSignaturePad({ penColor: \"#0f172a\" });\n  return (\n    <>\n      <canvas ref={pad.canvasRef} style={{ width: \"100%\", height: 200 }} />\n      <button onClick={pad.undo} disabled={!pad.canUndo}>Undo</button>\n      <button onClick={pad.redo} disabled={!pad.canRedo}>Redo</button>\n      <button onClick={pad.clear} disabled={pad.isEmpty}>Clear</button>\n    </>\n  );\n}\n```\n\nReturns `{ canvasRef, isEmpty, strokeCount, canUndo, canRedo, clear, undo, redo, toPNG, toSVG, toJSON, fromJSON }` — every function referentially stable. The engine is created when the canvas attaches and destroyed when it detaches; options are read once at attach (remount or attach a new canvas to change them).\n\n---",
+    "storybookUrl": "https://mirunamu00.github.io/usefy/?path=/story/signature-pad--basic-pad",
+    "npmUrl": "https://www.npmjs.com/package/@usefy/signature-pad",
+    "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/signature-pad",
+    "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/signature-pad/README.md"
+  },
+  {
     "slug": "spotlight-tour",
     "name": "@usefy/spotlight-tour",
     "displayName": "SpotlightTour",
