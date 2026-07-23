@@ -74,7 +74,9 @@ export const viewport: Viewport = {
 
 // Resolve the theme before first paint to avoid a flash. Mirrors
 // @usefy/use-dark-mode (storageKey "usefy-dark-mode", data-theme attribute).
-const themeScript = `(function(){try{var m=localStorage.getItem('usefy-dark-mode')||'system';var d=m==='dark'||(m==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');}catch(e){}})();`;
+// Also stamps html.js — scroll-reveal styles only apply when JS will run, so
+// no-JS visitors (and crawlers) always see the full page.
+const themeScript = `(function(){try{document.documentElement.classList.add('js');var m=localStorage.getItem('usefy-dark-mode')||'system';var d=m==='dark'||(m==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

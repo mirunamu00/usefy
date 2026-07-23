@@ -1,5 +1,17 @@
 import Link from "next/link";
 import { Container } from "@/components/primitives";
+import { CodeBlock } from "@/components/code-block";
+
+const SNIPPET = `import { useNotFound } from "@usefy/use-not-found";
+
+function ThisPage() {
+  const { exists, suggestions } = useNotFound();
+
+  // exists      → false
+  // suggestions → ["/packages", "/"]
+
+  return null;
+}`;
 
 export default function NotFound() {
   return (
@@ -9,7 +21,15 @@ export default function NotFound() {
       <p className="mt-2 max-w-sm text-fg-muted">
         That package or page doesn&apos;t exist. Browse the ecosystem instead.
       </p>
-      <div className="mt-6 flex gap-3">
+
+      <div className="mt-8 w-full max-w-md text-left">
+        <CodeBlock code={SNIPPET} filename="use-not-found.tsx" copy={false} />
+        <p className="mt-2 text-center font-mono text-xs text-fg-subtle">
+          the one hook we&apos;ll never ship
+        </p>
+      </div>
+
+      <div className="mt-8 flex gap-3">
         <Link
           href="/packages"
           className="focusable inline-flex h-11 items-center rounded-xl bg-brand px-5 text-sm font-medium text-brand-fg hover:bg-brand-strong"

@@ -26,7 +26,11 @@ export function PackageExplorer({
   const searchParams = useSearchParams();
 
   const [query, setQuery] = useState("");
-  const [category, setCategory] = useState<string | null>(null);
+  // Seed the category filter from ?cat= so landing-page category cards deep-link.
+  const [category, setCategory] = useState<string | null>(() => {
+    const cat = searchParams.get("cat");
+    return cat && categories.some((c) => c.id === cat) ? cat : null;
+  });
 
   // `family` is derived from the URL so header links AND tab clicks agree, even
   // on same-route navigations (e.g. /packages?family=hooks → ?family=standalone),

@@ -6,8 +6,10 @@ import { CodeBlock } from "@/components/code-block";
 import { InstallCommand } from "@/components/install-command";
 import { Markdown } from "@/components/markdown";
 import { PackageCard } from "@/components/package-card";
+import { ProductLiveDemo } from "@/components/product-demos/live-demo";
 import { site } from "@/lib/site";
 import { getPackage, packages, categoryMeta } from "@/data/registry";
+import { productMeta, hasLiveDemo } from "@/data/products";
 
 export function generateStaticParams() {
   return packages.map((p) => ({ slug: p.slug }));
@@ -56,6 +58,12 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
   if (!pkg) notFound();
 
   const cat = categoryMeta(pkg.category);
+  const isStandalone = pkg.family === "standalone";
+  const meta = isStandalone ? productMeta(pkg.slug) : null;
+  // Standalone products carry their own hue through the whole page.
+  const accentStyle = meta
+    ? ({ "--accent": `var(${meta.accentVar})` } as React.CSSProperties)
+    : undefined;
   const related = packages
     .filter((p) => p.category === pkg.category && p.slug !== pkg.slug)
     .slice(0, 3);
@@ -83,7 +91,7 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <Container className="py-12 sm:py-16">
+    <Container className="py-12 sm:py-16" style={accentStyle}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }} />
 
@@ -103,9 +111,21 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
                 {pkg.displayName}
               </h1>
               <span className="inline-flex items-center gap-1.5 rounded-full border border-border bg-surface px-2.5 py-1 text-[11px] text-fg-muted">
-                <span className="h-1.5 w-1.5 rounded-full bg-brand/60" aria-hidden="true" />
+                <span
+                  className="h-1.5 w-1.5 rounded-full"
+                  style={{ background: "color-mix(in srgb, var(--accent, var(--brand)) 70%, transparent)" }}
+                  aria-hidden="true"
+                />
                 {cat.title}
               </span>
+              {meta ? (
+                <span
+                  className="font-mono text-[11px] uppercase tracking-wider"
+                  style={{ color: "var(--accent)" }}
+                >
+                  {meta.role}
+                </span>
+              ) : null}
             </div>
             <p className="mt-3 text-lg text-fg-muted">{pkg.subtitle || pkg.tagline}</p>
 
@@ -116,6 +136,18 @@ export default async function PackagePage({ params }: { params: Promise<{ slug: 
               {pkg.storybookUrl ? <ActionLink href={pkg.storybookUrl}>Storybook demo ↗</ActionLink> : null}
             </div>
           </header>
+
+          {/* Live demo — standalone products run for real, right here. */}
+          {isStandalone && hasLiveDemo(pkg.slug) ? (
+            <section className="mt-10">
+              <h2 className="font-display text-sm font-semibold uppercase tracking-wider text-fg-subtle">
+                Live demo
+              </h2>
+              <div className="mt-3">
+                <ProductLiveDemo slug={pkg.slug} />
+              </div>
+            </section>
+          ) : null}
 
           {/* Install */}
           <section className="mt-10">

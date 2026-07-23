@@ -5,7 +5,7 @@ import { BrandMark } from "./brand-mark";
 import { ThemeToggle } from "./theme-toggle";
 
 const NAV = [
-  { href: "/packages", label: "Packages" },
+  { href: "/packages", label: "All packages" },
   { href: "/packages?family=hooks", label: "Hooks" },
   { href: "/packages?family=standalone", label: "Components" },
 ];

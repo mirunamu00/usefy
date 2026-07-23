@@ -4,11 +4,17 @@ import { cn } from "@/lib/cn";
 export function Container({
   children,
   className,
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
-  return <div className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)}>{children}</div>;
+  return (
+    <div className={cn("mx-auto w-full max-w-6xl px-5 sm:px-8", className)} style={style}>
+      {children}
+    </div>
+  );
 }
 
 /** Monospace, code-comment section eyebrow. */

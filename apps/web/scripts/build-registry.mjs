@@ -125,11 +125,24 @@ function firstCodeBlock(md) {
   return m ? m[1].trim() : "";
 }
 
+/** Decode the handful of HTML entities that show up in README subtitles —
+ * without this, "hooks &amp; components" renders literally on the site.
+ * @param {string} s */
+function decodeEntities(s) {
+  return s
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;|&apos;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&");
+}
+
 /** @param {string} readme */
 function extractSubtitle(readme) {
   const m = readme.match(/<h1[^>]*>[\s\S]*?<\/h1>\s*<p[^>]*>\s*<strong>([\s\S]*?)<\/strong>/i);
   if (!m) return "";
-  return m[1].replace(/\s+/g, " ").trim();
+  return decodeEntities(m[1].replace(/\s+/g, " ").trim());
 }
 
 /** @param {string} readme */

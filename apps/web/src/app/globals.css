@@ -27,6 +27,14 @@
   --code-fg: #e7ecf3;
   --code-border: #1f2937;
   --shadow-card: 0 1px 2px rgba(12, 17, 22, 0.04), 0 8px 24px -12px rgba(12, 17, 22, 0.12);
+  /* Per-product accents — every standalone tool owns a hue (TanStack-style). */
+  --accent-hooks: var(--brand);
+  --accent-confetti: #d6336c;
+  --accent-spotlight-tour: #f08c00;
+  --accent-memory-monitor: #2f9e44;
+  --accent-virtual-keyboard: #0c8599;
+  --accent-network-indicator: #1971c2;
+  --accent-scroll-progress: #e8590c;
   color-scheme: light;
 }
 
@@ -50,6 +58,12 @@
     --code-bg: #0c1420;
     --code-border: #1c2635;
     --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -14px rgba(0, 0, 0, 0.6);
+    --accent-confetti: #f783ac;
+    --accent-spotlight-tour: #ffc078;
+    --accent-memory-monitor: #8ce99a;
+    --accent-virtual-keyboard: #66d9e8;
+    --accent-network-indicator: #74c0fc;
+    --accent-scroll-progress: #ffa94d;
     color-scheme: dark;
   }
 }
@@ -74,6 +88,12 @@
   --code-bg: #0c1420;
   --code-border: #1c2635;
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 32px -14px rgba(0, 0, 0, 0.6);
+  --accent-confetti: #f783ac;
+  --accent-spotlight-tour: #ffc078;
+  --accent-memory-monitor: #8ce99a;
+  --accent-virtual-keyboard: #66d9e8;
+  --accent-network-indicator: #74c0fc;
+  --accent-scroll-progress: #ffa94d;
   color-scheme: dark;
 }
 
@@ -251,6 +271,190 @@ body {
 }
 .docs-prose td code { white-space: nowrap; }
 
+/* ============================================================================
+   v2 — org-scale gimmicks. Every device below is either driven by a usefy hook
+   (Reveal/CountUp/WireDivider use use-intersection-observer) or demonstrates a
+   usefy product (card micro-demos). The global reduced-motion override at the
+   bottom of this file neutralizes all of it in one place.
+   ========================================================================== */
+
+/* Cursor spotlight over the hero grid — a nod to @usefy/spotlight-tour. */
+.hero-spot {
+  background: radial-gradient(
+    260px circle at var(--spot-x, 50%) var(--spot-y, 30%),
+    color-mix(in srgb, var(--brand) 13%, transparent),
+    transparent 70%
+  );
+  transition: opacity 0.4s ease;
+}
+
+/* Logo micro-interaction: the hook swings from its eye on hover. */
+@keyframes hook-swing {
+  0% { transform: rotate(0deg); }
+  30% { transform: rotate(-14deg); }
+  60% { transform: rotate(9deg); }
+  80% { transform: rotate(-4deg); }
+  100% { transform: rotate(0deg); }
+}
+.brand-hook .hook-glyph { transform-origin: 34% 22%; }
+.brand-hook:hover .hook-glyph { animation: hook-swing 0.9s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+/* Typing caret for the hero code switcher. */
+@keyframes caret-blink { 0%, 45% { opacity: 1; } 50%, 95% { opacity: 0; } 100% { opacity: 1; } }
+.type-caret {
+  display: inline-block;
+  width: 8px;
+  margin-left: 1px;
+  height: 1.1em;
+  vertical-align: text-bottom;
+  background: var(--brand);
+  animation: caret-blink 1s steps(1) infinite;
+}
+
+/* Scroll reveal — class applied by <Reveal> (use-intersection-observer).
+   Gated on html.js so content stays visible without JavaScript. */
+html.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+html.js .reveal.is-visible { opacity: 1; transform: none; }
+
+/* Section wire divider — an SVG line "hooks" two sections together and draws
+   itself in when scrolled into view. */
+.wire path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.1s;
+}
+.wire.is-visible path { stroke-dashoffset: 0; }
+
+/* ── Product cards ─────────────────────────────────────────────────────────
+   Each card carries `--accent` (its product hue) and class `pcard`. The
+   signature micro-demo plays on hover, or via `.demo-live` (added in-view on
+   touch devices). */
+.pcard {
+  --accent-soft: color-mix(in srgb, var(--accent) 9%, transparent);
+  --accent-line: color-mix(in srgb, var(--accent) 55%, transparent);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease, background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+}
+.pcard:hover {
+  border-color: var(--accent-line);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+}
+.pcard-bar {
+  position: absolute;
+  inset: 0 auto auto 0;
+  height: 2px;
+  width: 100%;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.pcard:hover .pcard-bar,
+.pcard.demo-live .pcard-bar { transform: scaleX(1); }
+
+/* scroll-progress card: the accent bar IS the demo — it fills like the real bar. */
+.pcard-bar--slow { transition-duration: 1.2s; }
+
+/* memory-monitor card: heap sparkline draws itself. */
+.demo-spark polyline {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+}
+.pcard:hover .demo-spark polyline,
+.pcard.demo-live .demo-spark polyline {
+  animation: spark-draw 1.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes spark-draw { to { stroke-dashoffset: 0; } }
+
+/* virtual-keyboard card: mini keys type "usefy" one press at a time. */
+.demo-key {
+  transition: background-color 0.15s ease, transform 0.15s ease, color 0.15s ease;
+}
+.pcard:hover .demo-key,
+.pcard.demo-live .demo-key {
+  animation: key-press 0.34s ease both;
+  animation-delay: calc(var(--i) * 0.18s + 0.1s);
+}
+@keyframes key-press {
+  0%, 100% { background-color: transparent; color: var(--fg-subtle); transform: none; }
+  50% {
+    background-color: var(--accent-soft);
+    color: var(--accent);
+    transform: translateY(1.5px) scale(0.96);
+    box-shadow: inset 0 0 0 1px var(--accent-line);
+  }
+}
+
+/* network-indicator card: status dot drops offline, pulses, comes back. */
+.pcard:hover .demo-dot,
+.pcard.demo-live .demo-dot { animation: net-dot 2.2s ease both; }
+@keyframes net-dot {
+  0%, 100% { background-color: #37b24d; box-shadow: 0 0 0 0 rgba(55, 178, 77, 0); }
+  15%, 55% { background-color: #f03e3e; }
+  25% { box-shadow: 0 0 0 5px rgba(240, 62, 62, 0.25); }
+  45% { box-shadow: 0 0 0 5px rgba(240, 62, 62, 0.25); }
+  75% { box-shadow: 0 0 0 6px rgba(55, 178, 77, 0.25); }
+}
+.demo-toast {
+  opacity: 0;
+  transform: translateY(4px);
+}
+.pcard:hover .demo-toast,
+.pcard.demo-live .demo-toast { animation: net-toast 2.2s ease both; }
+@keyframes net-toast {
+  0%, 60% { opacity: 0; transform: translateY(4px); }
+  72%, 92% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-3px); }
+}
+
+/* spotlight-tour card: a circle of light sweeps across the card text. */
+.demo-sweep {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    90px circle at var(--sweep-x, 20%) 55%,
+    color-mix(in srgb, var(--accent) 22%, transparent),
+    transparent 72%
+  );
+}
+.pcard:hover .demo-sweep,
+.pcard.demo-live .demo-sweep { animation: sweep 1.6s cubic-bezier(0.4, 0, 0.2, 1) both; }
+@keyframes sweep {
+  0% { opacity: 0; --sweep-x: 12%; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { opacity: 0; --sweep-x: 88%; }
+}
+@property --sweep-x {
+  syntax: "<percentage>";
+  inherits: false;
+  initial-value: 20%;
+}
+
+/* hooks flagship card: hook names roll like a slot machine. */
+.demo-roll { overflow: hidden; }
+.demo-roll ul {
+  animation: roll-y 9s linear infinite;
+  animation-play-state: paused;
+}
+.pcard:hover .demo-roll ul,
+.pcard.demo-live .demo-roll ul { animation-play-state: running; }
+@keyframes roll-y {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -258,4 +462,8 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
+  /* Motion-gated content must simply be visible when motion is off. */
+  html.js .reveal { opacity: 1; transform: none; }
+  .demo-toast { opacity: 1; transform: none; }
+  .hero-spot { display: none; }
 }

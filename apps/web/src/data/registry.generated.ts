@@ -11,7 +11,7 @@ export const generatedPackages: PackageEntry[] = [
     "kind": "component",
     "family": "standalone",
     "tagline": "Canvas confetti and celebration engine for React — pooled particle physics, burst and continuous emit modes, and a zero-dependency headless core",
-    "subtitle": "Canvas confetti &amp; celebration engine for React — hand-written physics, zero dependencies, three consumption layers",
+    "subtitle": "Canvas confetti & celebration engine for React — hand-written physics, zero dependencies, three consumption layers",
     "keywords": [
       "confetti",
       "celebration",
@@ -23,7 +23,7 @@ export const generatedPackages: PackageEntry[] = [
       "effects",
       "headless"
     ],
-    "version": "0.1.0",
+    "version": "0.2.0",
     "category": "component",
     "quickStart": "import { fireConfetti } from \"@usefy/confetti\";\n\nfunction ShipItButton() {\n  return (\n    <button onClick={() => fireConfetti({ origin: { y: 0.8 }, spread: 70 })}>\n      🚀 Ship it\n    </button>\n  );\n}",
     "apiMarkdown": "### `<Confetti />` — overlay with an imperative controller\n\n```tsx\nimport { useRef } from \"react\";\nimport { Confetti, type ConfettiController } from \"@usefy/confetti\";\n\nfunction CheckoutSuccess() {\n  const confetti = useRef<ConfettiController>(null);\n\n  return (\n    <>\n      <Confetti\n        controllerRef={confetti}\n        onComplete={() => console.log(\"settled\")}\n      />\n      <button onClick={() => confetti.current?.fire({ origin: { y: 0.7 } })}>\n        Complete purchase\n      </button>\n    </>\n  );\n}\n```\n\n| Prop | Default | Description |\n|---|---|---|\n| `variant` | `\"overlay\"` | `\"overlay\"` portals a fixed full-viewport canvas after hydration; `\"inline\"` fills the parent element (give it `position: relative`) |\n| `zIndex` | `1100` | Overlay stacking order (above `@usefy/spotlight-tour`'s 1000) |\n| `controllerRef` | — | Receives `{ fire, emit, stop, clear }` (stable identity) |\n| `onComplete` | — | Called on each idle edge (all particles dead, no emitter) |\n| `fireOnMount` | `false` | `true` or a `FireOptions` — one burst after mount (respects reduced motion) |\n| `reducedMotion` | `\"respect\"` | `\"respect\"` no-ops under `prefers-reduced-motion`; `\"ignore\"` animates anyway |\n| `className` / `style` | — | Merged onto the canvas element |\n\nThe canvas is `aria-hidden` with `pointer-events: none` — it never intercepts input, and the engine pauses automatically while the tab is hidden.\n\n### `useConfetti()` — a canvas you own\n\n```tsx\nimport { useConfetti } from \"@usefy/confetti\";\n\nfunction CardCelebration() {\n  const { canvasRef, fire, isActive } = useConfetti();\n\n  return (\n    <div style={{ position: \"relative\", overflow: \"hidden\" }}>\n      <canvas\n        ref={canvasRef}\n        style={{ position: \"absolute\", inset: 0, width: \"100%\", height: \"100%\", pointerEvents: \"none\" }}\n      />\n      <button disabled={isActive} onClick={() => fire({ origin: { y: 0.9 } })}>\n        {isActive ? \"Celebrating…\" : \"🎉 Celebrate\"}\n      </button>\n    </div>\n  );\n}\n```\n\nReturns `{ canvasRef, fire, emit, stop, clear, isActive }` — all functions stable; `isActive` re-renders **only** on idle↔active edges, never per frame.\n\n---",
@@ -388,7 +388,7 @@ export const generatedPackages: PackageEntry[] = [
     "kind": "hook",
     "family": "hooks",
     "tagline": "A React hook for open/close/toggle state — modals, drawers, popovers, and accordions",
-    "subtitle": "open / close / toggle state for modals, drawers, popovers &amp; accordions",
+    "subtitle": "open / close / toggle state for modals, drawers, popovers & accordions",
     "keywords": [
       "disclosure",
       "modal",
