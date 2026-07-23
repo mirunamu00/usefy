@@ -41,8 +41,9 @@ mobile, reduced-motion, via Playwright against the production build):
 - **Product pages**: standalone `[slug]` pages get their accent + a "Live demo"
   section (`components/product-demos/*`, each a lazy `ssr:false` chunk).
 - **Motion utils** (`components/motion/`): `Reveal`, `CountUp`, `WireDivider` —
-  all driven by `use-intersection-observer`; reveal CSS is gated on `html.js`
-  (stamped in the layout pre-paint script) so no-JS/crawlers see everything.
+  all driven by `use-intersection-observer`; reveal CSS is gated on
+  `html[data-js]` (stamped in the layout pre-paint script — an attribute, not
+  a class, or React hydration warns) so no-JS/crawlers see everything.
 - **Logo** is now inline SVG (`brand-mark.tsx`) with a hover swing.
 
 **v2 gotchas (each cost a debugging round — don't regress):**
@@ -63,6 +64,15 @@ mobile, reduced-motion, via Playwright against the production build):
    (`decodeEntities`) — `&amp;` was rendering literally.
 6. Keep heavy demos out of first-load JS: SpotlightTour, confetti, and
    VirtualKeyboard all load on demand (landing first-load is ~117 kB).
+7. `useMemoryMonitorHeadless().memory` is a **fresh object every render and
+   its `timestamp` is stamped `Date.now()` at render time** — neither the
+   object nor `timestamp` is a safe effect dep (both loop setState / max
+   update depth). Depend on `memory?.heapUsed` only. Headless Chromium hid
+   this: `performance.memory` doesn't exist there, so QA passed while real
+   Chrome looped. (Upstream package quirk — worth a package-side fix later.)
+8. The pre-paint script mutates `<html>` attributes (`data-theme`,
+   `data-js`), so `<html>` needs `suppressHydrationWarning` (next-themes
+   pattern) or React 19 logs a hydration mismatch on every page.
 
 ---
 

@@ -13,10 +13,15 @@ export function MemoryMonitorDemo() {
   });
   const [history, setHistory] = useState<number[]>([]);
 
+  // Depend on heapUsed ONLY. The headless hook rebuilds `memory` every render
+  // AND stamps `timestamp: Date.now()` at render time, so both the object and
+  // its timestamp change each render — either as a dep loops setState (max
+  // update depth). heapUsed is stable between polls.
+  const heapUsed = memory?.heapUsed;
   useEffect(() => {
-    if (memory === null) return;
-    setHistory((h) => [...h.slice(-(HISTORY_LEN - 1)), memory.heapUsed]);
-  }, [memory]);
+    if (heapUsed === undefined) return;
+    setHistory((h) => [...h.slice(-(HISTORY_LEN - 1)), heapUsed]);
+  }, [heapUsed]);
 
   if (!isSupported) {
     return (
