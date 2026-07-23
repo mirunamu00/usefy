@@ -22,17 +22,19 @@ const STEPS: TourStep[] = [
     content: "Copy the install command. (Copying it celebrates with @usefy/confetti — try it after the tour.)",
     placement: "bottom",
   },
+  // Targets are compact anchors, never whole sections — a target taller than
+  // the viewport pushes the tooltip off-screen (it clips at the bottom edge).
   {
-    target: "#toolbox",
+    target: "#toolbox-flagship",
     title: "The toolbox",
     content: "One hooks umbrella, plus standalone components that ship on their own. Hover a card — each one demos itself.",
-    placement: "top",
+    placement: "bottom",
   },
   {
-    target: "#standards",
+    target: "#standards-intro",
     title: "The same bar everywhere",
     content: "Every package passes the same tests, SSR checks, and docs bar before it ships. That's the whole pitch.",
-    placement: "top",
+    placement: "bottom",
   },
 ];
 

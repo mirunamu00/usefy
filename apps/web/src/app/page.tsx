@@ -248,7 +248,9 @@ export default async function HomePage() {
           </Reveal>
 
           <div className="mt-10 grid gap-4">
-            <Reveal>
+            {/* id: tour anchor — spotlighting the whole #toolbox section
+                overflows the viewport and clips the tooltip. */}
+            <Reveal id="toolbox-flagship">
               <ProductCard
                 name="@usefy/hooks"
                 href="/packages?family=hooks"
@@ -327,7 +329,8 @@ export default async function HomePage() {
       {/* ── Engineering standards ─────────────────────────────── */}
       <section id="standards" className="border-t border-border py-20 sm:py-24">
         <Container>
-          <Reveal>
+          {/* id: tour anchor (see #toolbox-flagship note). */}
+          <Reveal id="standards-intro">
             <Eyebrow>engineering standards</Eyebrow>
             <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-fg sm:text-4xl">
               Boring on purpose. Reliable by design.

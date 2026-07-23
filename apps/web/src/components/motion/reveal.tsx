@@ -14,12 +14,15 @@ export function Reveal({
   className,
   delay = 0,
   as: Tag = "div",
+  id,
 }: {
   children: React.ReactNode;
   className?: string;
   /** Stagger delay in seconds. */
   delay?: number;
   as?: "div" | "section" | "li" | "span";
+  /** Optional anchor id (e.g. a tour target). */
+  id?: string;
 }) {
   const { ref, inView } = useIntersectionObserver({
     threshold: 0.15,
@@ -34,6 +37,7 @@ export function Reveal({
   return (
     <Tag
       ref={ref}
+      id={id}
       className={cn("reveal", (inView || seen) && "is-visible", className)}
       style={delay ? ({ "--reveal-delay": `${delay}s` } as React.CSSProperties) : undefined}
     >
