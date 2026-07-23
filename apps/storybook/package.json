@@ -23,6 +23,7 @@
     "@usefy/use-intersection-observer": "workspace:*",
     "@usefy/use-local-storage": "workspace:*",
     "@usefy/use-memory-monitor": "workspace:*",
+    "@usefy/confetti": "workspace:*",
     "@usefy/memory-monitor": "workspace:*",
     "@usefy/network-indicator": "workspace:*",
     "@usefy/scroll-progress": "workspace:*",

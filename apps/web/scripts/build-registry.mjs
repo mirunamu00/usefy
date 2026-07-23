@@ -64,7 +64,7 @@ const CATEGORY = {
   // Standalone components
   "memory-monitor": "component", "virtual-keyboard": "component",
   "network-indicator": "component", "scroll-progress": "component",
-  "spotlight-tour": "component",
+  "spotlight-tour": "component", "confetti": "component",
 };
 
 /** The package directories to scan, relative to packages/. */
@@ -75,6 +75,7 @@ const PACKAGE_DIRS = [
   "network-indicator",
   "scroll-progress",
   "spotlight-tour",
+  "confetti",
 ];
 
 /** @param {string} dir */
