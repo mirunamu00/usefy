@@ -56,6 +56,7 @@
 | `@usefy/scroll-progress` | Drop-in reading-progress bar that fills as you scroll the page or any container |
 | `@usefy/spotlight-tour` | Guided onboarding tours with an animated spotlight overlay, gates, persistence, and enterprise a11y |
 | `@usefy/confetti` | Canvas confetti & celebration engine — pooled particle physics, presets, custom shapes, headless core |
+| `@usefy/signature-pad` | Electronic signature input — hand-written ink engine with velocity-based stroke width, PNG/SVG/JSON exports, headless core |
 
 ---
 
@@ -353,6 +354,44 @@ function ShipItButton() {
 
 ---
 
+### @usefy/signature-pad
+
+<a href="https://www.npmjs.com/package/@usefy/signature-pad" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/signature-pad.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/signature-pad" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/signature-pad.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/signature-pad" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/signature-pad?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+Electronic signature input — draw with mouse, finger, or stylus and export a
+trimmed PNG, true-vector SVG, or replayable JSON. Hand-written ink engine:
+Bézier smoothing + velocity/pressure-based variable stroke width, stroke-level
+undo/redo, on-canvas "sign here" guideline (never exported), read-only
+restore, and the whole engine also available headless. Zero dependencies.
+
+```bash
+pnpm add @usefy/signature-pad
+```
+
+```tsx
+import { SignaturePad } from "@usefy/signature-pad";
+
+function ConsentForm() {
+  return (
+    <div style={{ height: 200 }}>
+      <SignaturePad guideline onChange={({ isEmpty }) => setSigned(!isEmpty)} />
+    </div>
+  );
+}
+```
+
+<a href="./packages/signature-pad/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -367,6 +406,7 @@ function ShipItButton() {
 | Scroll progress bar | `pnpm add @usefy/scroll-progress` | `import { ScrollProgress } from "@usefy/scroll-progress"` |
 | Onboarding tour | `pnpm add @usefy/spotlight-tour` | `import { SpotlightTour } from "@usefy/spotlight-tour"` |
 | Confetti / celebrations | `pnpm add @usefy/confetti` | `import { fireConfetti } from "@usefy/confetti"` |
+| Signature input | `pnpm add @usefy/signature-pad` | `import { SignaturePad } from "@usefy/signature-pad"` |
 
 ### Peer Dependencies
 
@@ -551,6 +591,17 @@ Also ships a `@usefy/spotlight-tour/headless` entry (hook + engine + types, no C
 | `createConfettiEngine`, `spawnParticle`, `stepParticle`, `resolveFireOptions` | The framework-free engine + pure physics (also via `@usefy/confetti/headless`) |
 
 Also ships a zero-React `@usefy/confetti/headless` entry (engine + shapes + presets + types, zero dependencies).
+
+### @usefy/signature-pad
+
+| Export | Description |
+| ------ | ----------- |
+| `SignaturePad` | Container-filling signature canvas — `guideline`, `defaultValue`, reactive `readOnly`, imperative `controllerRef` (`clear`/`undo`/`redo`/`toPNG`/`toSVG`/`toJSON`/`fromJSON`), edge-only `onChange` |
+| `useSignaturePad` | The engine on a canvas you own — `{ canvasRef, isEmpty, strokeCount, canUndo, canRedo, clear, undo, redo, toPNG, toSVG, toJSON, fromJSON }`, zero renders while ink flows |
+| `createSignatureEngine` | Framework-free engine: pointer pipeline, incremental rendering, history, exports, `ingest()` replay seam |
+| `filterPoints`, `bezierFor`, `widthForSegment`, `flattenSegment`, `strokeGeometry`, `inkBounds`, `strokesToSVG` | The pure, deterministic ink pipeline (hand-testable math) |
+
+Also ships a zero-React `@usefy/signature-pad/headless` entry (engine + ink math + types, zero dependencies).
 
 ---
 
