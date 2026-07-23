@@ -1,6 +1,6 @@
 {
   "name": "@usefy/confetti",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Canvas confetti and celebration engine for React — pooled particle physics, burst and continuous emit modes, and a zero-dependency headless core",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
