@@ -55,6 +55,7 @@
 | `@usefy/network-indicator` | Drop-in online/offline status banner with an auto-dismissing "back online" confirmation |
 | `@usefy/scroll-progress` | Drop-in reading-progress bar that fills as you scroll the page or any container |
 | `@usefy/spotlight-tour` | Guided onboarding tours with an animated spotlight overlay, gates, persistence, and enterprise a11y |
+| `@usefy/confetti` | Canvas confetti & celebration engine — pooled particle physics, presets, custom shapes, headless core |
 
 ---
 
@@ -314,6 +315,44 @@ function App() {
 
 ---
 
+### @usefy/confetti
+
+<a href="https://www.npmjs.com/package/@usefy/confetti" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/confetti.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/confetti" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/confetti.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/confetti" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/confetti?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+Canvas confetti & celebration effects — bursts, fireworks, cannons, snow —
+driven by a hand-written, zero-dependency particle engine (gravity, drag, 3D
+tumble, object pooling, provably-idle rAF loop). One-liner `fireConfetti()`,
+a `<Confetti />` overlay + `useConfetti()` hook, presets, emoji/image/Path2D
+shapes, and the whole engine also available headless.
+
+```bash
+pnpm add @usefy/confetti
+```
+
+```tsx
+import { fireConfetti } from "@usefy/confetti";
+
+function ShipItButton() {
+  return (
+    <button onClick={() => fireConfetti({ origin: { y: 0.8 }, spread: 70 })}>
+      🚀 Ship it
+    </button>
+  );
+}
+```
+
+<a href="./packages/confetti/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -327,6 +366,7 @@ function App() {
 | Network status banner | `pnpm add @usefy/network-indicator` | `import { NetworkIndicator } from "@usefy/network-indicator"` |
 | Scroll progress bar | `pnpm add @usefy/scroll-progress` | `import { ScrollProgress } from "@usefy/scroll-progress"` |
 | Onboarding tour | `pnpm add @usefy/spotlight-tour` | `import { SpotlightTour } from "@usefy/spotlight-tour"` |
+| Confetti / celebrations | `pnpm add @usefy/confetti` | `import { fireConfetti } from "@usefy/confetti"` |
 
 ### Peer Dependencies
 
@@ -498,6 +538,19 @@ Also ships a `@usefy/virtual-keyboard/headless` entry (hook + engine + types, no
 | `computeTooltipPosition`, `getSpotlightRect`, `resolveTarget` | The pure positioning engine, for bespoke UIs |
 
 Also ships a `@usefy/spotlight-tour/headless` entry (hook + engine + types, no CSS) and an opt-in `@usefy/spotlight-tour/styles.css`.
+
+### @usefy/confetti
+
+| Export | Description |
+| ------ | ----------- |
+| `fireConfetti`, `resetConfetti` | One-liner burst on an auto-managed full-viewport canvas (SSR no-op, idle auto-teardown) |
+| `Confetti` | Overlay/inline canvas component with an imperative `controllerRef` (`fire`/`emit`/`stop`/`clear`), `onComplete`, `fireOnMount` |
+| `useConfetti` | Component-scoped canvas hook — `{ canvasRef, fire, emit, stop, clear, isActive }` with edge-only re-renders |
+| `runPreset` + `celebration`, `fireworks`, `sideCannons`, `pride`, `stars`, `snow`, `rain` | Tree-shakeable preset data + a cancelable runner that works on any layer |
+| `textShape`, `imageShape`, `pathShape` | Emoji/text sprites, image sprites, and palette-colored `Path2D` confetti |
+| `createConfettiEngine`, `spawnParticle`, `stepParticle`, `resolveFireOptions` | The framework-free engine + pure physics (also via `@usefy/confetti/headless`) |
+
+Also ships a zero-React `@usefy/confetti/headless` entry (engine + shapes + presets + types, zero dependencies).
 
 ---
 
