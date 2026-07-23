@@ -1,6 +1,6 @@
 {
   "name": "@usefy/signature-pad",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Electronic signature pad for React — hand-written ink engine with Bézier smoothing and velocity/pressure-based variable stroke width, undo/redo history, and a zero-dependency headless core",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
