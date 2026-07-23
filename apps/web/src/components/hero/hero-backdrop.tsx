@@ -10,7 +10,11 @@ import { useReducedMotion } from "@usefy/use-reduced-motion";
  */
 export function HeroBackdrop() {
   const ref = useRef<HTMLDivElement>(null);
-  const reducedMotion = useReducedMotion();
+  // initializeWithValue: false → first client render matches the server
+  // markup (spotlight present), then the effect-applied real preference
+  // removes it post-hydration. A synchronous read here changes the rendered
+  // tree for reduced-motion visitors → React #418 hydration mismatch.
+  const reducedMotion = useReducedMotion({ initializeWithValue: false });
 
   useEffect(() => {
     if (reducedMotion) return;

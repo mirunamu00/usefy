@@ -45,7 +45,11 @@ const TYPE_TICK_MS = 12;
  */
 export function HeroSwitcher({ tabs }: { tabs: HeroTab[] }) {
   const uid = useId();
-  const reducedMotion = useReducedMotion();
+  // initializeWithValue: false → the first client render matches the server
+  // (false), then an effect flips to the real preference. Without it,
+  // reduced-motion visitors hydrate with a fully-typed pane against the
+  // server's empty one → React #418 hydration mismatch.
+  const reducedMotion = useReducedMotion({ initializeWithValue: false });
   const [activeId, setActiveId] = useState<HeroTab["id"]>(tabs[0].id);
   const [typed, setTyped] = useState(0);
 
