@@ -74,11 +74,22 @@ export const viewport: Viewport = {
 
 // Resolve the theme before first paint to avoid a flash. Mirrors
 // @usefy/use-dark-mode (storageKey "usefy-dark-mode", data-theme attribute).
-const themeScript = `(function(){try{var m=localStorage.getItem('usefy-dark-mode')||'system';var d=m==='dark'||(m==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');}catch(e){}})();`;
+// Also stamps html[data-js] — scroll-reveal styles only apply when JS will
+// run, so no-JS visitors (and crawlers) always see the full page. It must be
+// an attribute React doesn't render (NOT a class): className is hydrated, and
+// mutating it pre-hydration triggers a mismatch warning.
+const themeScript = `(function(){try{document.documentElement.setAttribute('data-js','');var m=localStorage.getItem('usefy-dark-mode')||'system';var d=m==='dark'||(m==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);document.documentElement.setAttribute('data-theme',d?'dark':'light');}catch(e){}})();`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+    // suppressHydrationWarning: the pre-paint script stamps data-theme +
+    // data-js on <html> before React hydrates (the next-themes pattern) —
+    // without it React 19 warns about the attribute mismatch on this element.
+    <html
+      lang="en"
+      className={`${display.variable} ${sans.variable} ${mono.variable}`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

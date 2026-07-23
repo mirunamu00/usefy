@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { hookCount, componentCount } from "@/data/registry";
 
-export const alt = "usefy — production-ready React hooks & components";
+export const alt = "usefy — the React tools you keep rebuilding, already built";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -34,11 +34,11 @@ export default function OpengraphImage() {
 
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ fontSize: 68, fontWeight: 800, color: "#e7ecf3", lineHeight: 1.05, letterSpacing: -1.5 }}>
-            The React hooks you
+            The React tools you
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", fontSize: 68, fontWeight: 800, lineHeight: 1.05, letterSpacing: -1.5 }}>
-            <span style={{ color: "#e7ecf3" }}>keep rewriting.&nbsp;</span>
-            <span style={{ color: "#a78bff" }}>Already written.</span>
+            <span style={{ color: "#e7ecf3" }}>keep rebuilding.&nbsp;</span>
+            <span style={{ color: "#a78bff" }}>Already built.</span>
           </div>
         </div>
 

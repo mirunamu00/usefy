@@ -13,6 +13,69 @@
 
 ---
 
+## v2 (2026-07-23): TanStack-style org repositioning
+
+The landing was rebuilt to present usefy as **an org shipping many tools**, not a
+hooks list. Key additions (everything below is browser-verified, light+dark,
+mobile, reduced-motion, via Playwright against the production build):
+
+- **Self-demonstrating site** — every gimmick IS a usefy product: a real
+  `@usefy/scroll-progress` bar tops the page (`components/page-progress.tsx`),
+  "Tour this page" runs a real `@usefy/spotlight-tour` over the landing sections
+  (`site-tour.tsx` shell + lazy `site-tour-impl.tsx`), copying an install
+  command fires `@usefy/confetti` (`install-command.tsx`, engine imported on
+  interaction).
+- **Hero product switcher** (`components/hero/`) — 4 tabs (use-toggle /
+  confetti / spotlight-tour / virtual-keyboard); code "types itself"
+  (use-interval) then crossfades to server-highlighted Shiki HTML; a live demo
+  strip under each pane (real PIN pad in lazy `keyboard-strip.tsx`). All four
+  sources render invisibly stacked so the pane holds the tallest tab's height.
+- **Product cards** (`components/product/product-card.tsx` + `.pcard` CSS in
+  `globals.css`) — hover = per-product micro-demo (confetti burst, sparkline
+  draw, mini keys typing "usefy", network pulse, spotlight sweep, bar fill,
+  hook-name roll). Touch devices play the demo in-view instead.
+- **Data**: `src/data/products.ts` — hand-tended product identity (accent hue
+  var, role label, demo id) layered over the generated registry. Adding a
+  standalone package → add an entry here + an accent token pair in
+  `globals.css`, or it falls back to brand accent / no demo.
+- **Product pages**: standalone `[slug]` pages get their accent + a "Live demo"
+  section (`components/product-demos/*`, each a lazy `ssr:false` chunk).
+- **Motion utils** (`components/motion/`): `Reveal`, `CountUp`, `WireDivider` —
+  all driven by `use-intersection-observer`; reveal CSS is gated on
+  `html[data-js]` (stamped in the layout pre-paint script — an attribute, not
+  a class, or React hydration warns) so no-JS/crawlers see everything.
+- **Logo** is now inline SVG (`brand-mark.tsx`) with a hover swing.
+
+**v2 gotchas (each cost a debugging round — don't regress):**
+
+1. **Never compose callback refs inline** (`ref={(n) => {a(n); b(n);}}`) — new
+   identity every render → observer detach/attach loop → React #185. Use
+   `@usefy/use-merged-refs` (see `product-card.tsx`).
+2. A `pointer-events: none` element never receives pointer events — the hero
+   spotlight listens on `el.closest("section")` (`hero-backdrop.tsx`).
+3. `CountUp` must **server-render the real value** (crawlers must never see
+   "0 hooks"); it resets to 0 pre-paint via `useLayoutEffect` only when JS runs
+   and motion is allowed.
+4. Themed embeds (SpotlightTour, VirtualKeyboard) can't use their own
+   `theme="system"` — the site's theme is a `data-theme` attribute, so they
+   track it via `lib/use-site-theme.ts` (MutationObserver +
+   `useSyncExternalStore`).
+5. README subtitles are HTML-entity-decoded in `scripts/build-registry.mjs`
+   (`decodeEntities`) — `&amp;` was rendering literally.
+6. Keep heavy demos out of first-load JS: SpotlightTour, confetti, and
+   VirtualKeyboard all load on demand (landing first-load is ~117 kB).
+7. `useMemoryMonitorHeadless().memory` is a **fresh object every render and
+   its `timestamp` is stamped `Date.now()` at render time** — neither the
+   object nor `timestamp` is a safe effect dep (both loop setState / max
+   update depth). Depend on `memory?.heapUsed` only. Headless Chromium hid
+   this: `performance.memory` doesn't exist there, so QA passed while real
+   Chrome looped. (Upstream package quirk — worth a package-side fix later.)
+8. The pre-paint script mutates `<html>` attributes (`data-theme`,
+   `data-js`), so `<html>` needs `suppressHydrationWarning` (next-themes
+   pattern) or React 19 logs a hydration mismatch on every page.
+
+---
+
 ## 1. What this is
 
 A **Next.js (App Router) marketing + docs site** that introduces every published

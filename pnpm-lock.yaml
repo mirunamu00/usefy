@@ -372,15 +372,48 @@ importers:
 
   apps/web:
     dependencies:
+      '@usefy/confetti':
+        specifier: workspace:*
+        version: link:../../packages/confetti
+      '@usefy/memory-monitor':
+        specifier: workspace:*
+        version: link:../../packages/memory-monitor
+      '@usefy/network-indicator':
+        specifier: workspace:*
+        version: link:../../packages/network-indicator
+      '@usefy/scroll-progress':
+        specifier: workspace:*
+        version: link:../../packages/scroll-progress
+      '@usefy/spotlight-tour':
+        specifier: workspace:*
+        version: link:../../packages/spotlight-tour
       '@usefy/use-copy-to-clipboard':
         specifier: workspace:*
         version: link:../../packages/hooks/use-copy-to-clipboard
       '@usefy/use-dark-mode':
         specifier: workspace:*
         version: link:../../packages/hooks/use-dark-mode
+      '@usefy/use-hover':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-hover
+      '@usefy/use-intersection-observer':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-intersection-observer
+      '@usefy/use-interval':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-interval
+      '@usefy/use-merged-refs':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-merged-refs
+      '@usefy/use-reduced-motion':
+        specifier: workspace:*
+        version: link:../../packages/hooks/use-reduced-motion
       '@usefy/use-toggle':
         specifier: workspace:*
         version: link:../../packages/hooks/use-toggle
+      '@usefy/virtual-keyboard':
+        specifier: workspace:*
+        version: link:../../packages/virtual-keyboard
       next:
         specifier: ^15.5.4
         version: 15.5.20(@playwright/test@1.57.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(sass@1.97.2)

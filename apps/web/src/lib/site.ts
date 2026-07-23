@@ -2,10 +2,10 @@
 export const site = {
   name: "usefy",
   /** Used in <title> templates and OG. */
-  title: "usefy — production-ready React hooks & components",
-  tagline: "Production-ready React hooks & components",
+  title: "usefy — production-grade React hooks & components",
+  tagline: "The React tools you keep rebuilding. Already built.",
   description:
-    "A collection of 70+ production-ready React hooks and standalone components. TypeScript-first, SSR-safe, tree-shakeable, and independently versioned on npm under @usefy.",
+    "usefy is an open-source org shipping 70+ production-grade React hooks and standalone components — confetti, product tours, virtual keyboards, and more. TypeScript-first, SSR-safe, tree-shakeable, independently versioned on npm under @usefy.",
   /**
    * Canonical origin. Defaults to the public Vercel subdomain we ship on.
    * Override with NEXT_PUBLIC_SITE_URL in the Vercel project only if a real
