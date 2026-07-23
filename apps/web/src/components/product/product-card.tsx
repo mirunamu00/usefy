@@ -171,6 +171,40 @@ function DemoStage({ demo }: { demo: ProductMeta["demo"] }) {
         </div>
       );
 
+    case "signature-draw":
+      return (
+        <svg viewBox="0 0 120 40" className="demo-sig h-12 w-full" aria-hidden="true">
+          {/* sign-here baseline + × marker — the ink draws itself above it */}
+          <line x1="4" y1="33" x2="116" y2="33" stroke="var(--border)" strokeWidth="1" />
+          <path
+            d="M8 31 l4 -4 M8 27 l4 4"
+            fill="none"
+            stroke="var(--fg-subtle)"
+            strokeWidth="1"
+            strokeLinecap="round"
+          />
+          <path
+            pathLength={1}
+            className="demo-sig-main"
+            d="M18 31 C22 26 28 15 27 9 C26 5 20 7 21 13 C22 21 30 30 37 29 C42 28 44 19 47 14 C49 11 50 11 50 14 C50 19 48 26 51 28 C54 30 58 23 61 19 C63 16 64 16 64 19 C64 24 63 28 66 29 C70 30 74 24 77 20 C79 17 80 17 80 20 C80 24 79 28 82 29 C86 30 92 25 97 20"
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="2.1"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            pathLength={1}
+            className="demo-sig-tail"
+            d="M36 36 C50 39 64 33 76 34 C86 35 96 37 106 34"
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+
     case "memory-spark":
       return (
         <svg viewBox="0 0 120 36" preserveAspectRatio="none" className="demo-spark h-10 w-full" aria-hidden="true">

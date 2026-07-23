@@ -387,6 +387,9 @@ importers:
       '@usefy/scroll-progress':
         specifier: workspace:*
         version: link:../../packages/scroll-progress
+      '@usefy/signature-pad':
+        specifier: workspace:*
+        version: link:../../packages/signature-pad
       '@usefy/spotlight-tour':
         specifier: workspace:*
         version: link:../../packages/spotlight-tour

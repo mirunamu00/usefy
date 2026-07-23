@@ -15,6 +15,7 @@ const DEMOS: Record<string, ComponentType> = {
   confetti: dynamic(() => import("./confetti-demo").then((m) => m.ConfettiDemo), { ssr: false, loading: Loading }),
   "scroll-progress": dynamic(() => import("./scroll-progress-demo").then((m) => m.ScrollProgressDemo), { ssr: false, loading: Loading }),
   "spotlight-tour": dynamic(() => import("./spotlight-tour-demo").then((m) => m.SpotlightTourDemo), { ssr: false, loading: Loading }),
+  "signature-pad": dynamic(() => import("./signature-pad-demo").then((m) => m.SignaturePadDemo), { ssr: false, loading: Loading }),
   "virtual-keyboard": dynamic(() => import("./virtual-keyboard-demo").then((m) => m.VirtualKeyboardDemo), { ssr: false, loading: Loading }),
   "memory-monitor": dynamic(() => import("./memory-monitor-demo").then((m) => m.MemoryMonitorDemo), { ssr: false, loading: Loading }),
   "network-indicator": dynamic(() => import("./network-indicator-demo").then((m) => m.NetworkIndicatorDemo), { ssr: false, loading: Loading }),

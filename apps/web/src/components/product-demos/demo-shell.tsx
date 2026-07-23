@@ -28,20 +28,24 @@ export function DemoButton({
   onClick,
   children,
   primary = false,
+  disabled = false,
 }: {
   onClick: () => void;
   children: React.ReactNode;
   primary?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      disabled={disabled}
       className={cn(
         "focusable inline-flex h-9 items-center rounded-lg px-4 text-sm font-medium transition-colors",
         primary
           ? "text-white"
           : "border border-border text-fg hover:border-border-strong",
+        disabled && "cursor-not-allowed opacity-40",
       )}
       style={
         primary

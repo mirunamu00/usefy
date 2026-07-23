@@ -22,6 +22,7 @@ export interface ProductMeta {
     | "hooks-roll"
     | "confetti-burst"
     | "spotlight-sweep"
+    | "signature-draw"
     | "memory-spark"
     | "keyboard-type"
     | "network-pulse"
@@ -33,6 +34,7 @@ export const PRODUCTS: ProductMeta[] = [
   { slug: "hooks", role: "The hooks umbrella", accentVar: "--accent-hooks", demo: "hooks-roll" },
   { slug: "confetti", role: "Celebration engine", accentVar: "--accent-confetti", demo: "confetti-burst" },
   { slug: "spotlight-tour", role: "Product tours", accentVar: "--accent-spotlight-tour", demo: "spotlight-sweep" },
+  { slug: "signature-pad", role: "Signature capture", accentVar: "--accent-signature-pad", demo: "signature-draw" },
   { slug: "memory-monitor", role: "Memory devtool", accentVar: "--accent-memory-monitor", demo: "memory-spark" },
   { slug: "virtual-keyboard", role: "On-screen input", accentVar: "--accent-virtual-keyboard", demo: "keyboard-type" },
   { slug: "network-indicator", role: "Connectivity status", accentVar: "--accent-network-indicator", demo: "network-pulse" },
@@ -47,6 +49,7 @@ const LIVE_DEMO_SLUGS = new Set([
   "confetti",
   "scroll-progress",
   "spotlight-tour",
+  "signature-pad",
   "virtual-keyboard",
   "memory-monitor",
   "network-indicator",
