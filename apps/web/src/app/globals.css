@@ -36,6 +36,7 @@
   --accent-virtual-keyboard: #0c8599;
   --accent-network-indicator: #1971c2;
   --accent-scroll-progress: #e8590c;
+  --accent-diff-viewer: #9c36b5;
   color-scheme: light;
 }
 
@@ -66,6 +67,7 @@
     --accent-virtual-keyboard: #66d9e8;
     --accent-network-indicator: #74c0fc;
     --accent-scroll-progress: #ffa94d;
+    --accent-diff-viewer: #e599f7;
     color-scheme: dark;
   }
 }
@@ -97,6 +99,7 @@
   --accent-virtual-keyboard: #66d9e8;
   --accent-network-indicator: #74c0fc;
   --accent-scroll-progress: #ffa94d;
+  --accent-diff-viewer: #e599f7;
   color-scheme: dark;
 }
 
@@ -478,6 +481,40 @@ html[data-js] .reveal.is-visible { opacity: 1; transform: none; }
 @keyframes roll-y {
   from { transform: translateY(0); }
   to { transform: translateY(-50%); }
+}
+
+/* diff-viewer card: a mini diff — a removed line, an added line, and the
+   changed word highlighting in a loop (its signature word-level feature). */
+.demo-diff-row {
+  border-radius: 3px;
+  padding: 0 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.demo-diff-sign {
+  display: inline-block;
+  width: 0.75rem;
+  font-weight: 700;
+}
+.demo-diff-del {
+  background: color-mix(in srgb, #f03e3e 13%, transparent);
+}
+.demo-diff-del .demo-diff-sign { color: #e03131; }
+.demo-diff-add {
+  background: color-mix(in srgb, #37b24d 13%, transparent);
+}
+.demo-diff-add .demo-diff-sign { color: #2f9e44; }
+.demo-diff-word {
+  border-radius: 2px;
+  padding: 0 1px;
+  background: color-mix(in srgb, #37b24d 22%, transparent);
+}
+.pcard:hover .demo-diff-word,
+.pcard.demo-live .demo-diff-word { animation: diff-word 2.4s ease-in-out infinite; }
+@keyframes diff-word {
+  0%, 100% { background: color-mix(in srgb, #37b24d 22%, transparent); }
+  50% { background: color-mix(in srgb, #37b24d 55%, transparent); }
 }
 
 @media (prefers-reduced-motion: reduce) {

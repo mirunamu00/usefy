@@ -27,6 +27,7 @@ export interface ProductMeta {
     | "keyboard-type"
     | "network-pulse"
     | "progress-fill"
+    | "diff-lines"
     | "none";
 }
 
@@ -39,6 +40,7 @@ export const PRODUCTS: ProductMeta[] = [
   { slug: "virtual-keyboard", role: "On-screen input", accentVar: "--accent-virtual-keyboard", demo: "keyboard-type" },
   { slug: "network-indicator", role: "Connectivity status", accentVar: "--accent-network-indicator", demo: "network-pulse" },
   { slug: "scroll-progress", role: "Reading progress", accentVar: "--accent-scroll-progress", demo: "progress-fill" },
+  { slug: "diff-viewer", role: "Text diffing", accentVar: "--accent-diff-viewer", demo: "diff-lines" },
 ];
 
 const BY_SLUG = new Map(PRODUCTS.map((p) => [p.slug, p]));
@@ -53,6 +55,7 @@ const LIVE_DEMO_SLUGS = new Set([
   "virtual-keyboard",
   "memory-monitor",
   "network-indicator",
+  "diff-viewer",
 ]);
 
 export function hasLiveDemo(slug: string): boolean {

@@ -1,0 +1,123 @@
+// `--usefy-diff-*` design tokens (SPEC §3.4, §8).
+//
+// Every visual decision the component makes reads from one of these, so a
+// consumer can retheme the whole viewer by setting a handful of custom
+// properties — no `!important`, no selector archaeology.
+//
+// ## Palette rationale (SPEC §8 — the red/green trap)
+//
+// **The row tints alone do not survive colour-blind simulation, and this
+// palette does not pretend otherwise.** Simulated under deuteranopia the
+// add and remove tints sit at a contrast ratio of roughly 1.05 against each
+// other — visually the same. That is a property of *any* low-saturation
+// red/green diff palette: the tints must stay pale enough for body text to
+// clear WCAG AA on top of them, and pale red and pale green converge once
+// the red-green channel is removed.
+//
+// The design therefore treats colour as a **redundant** channel only. Every
+// changed row carries two non-colour signals that do the real work:
+//
+// 1. a `+` / `−` gutter glyph, and
+// 2. a visually-hidden "Added" / "Removed" label for assistive technology.
+//
+// Nothing in the component conveys change type by colour alone, which is
+// what SPEC §8 actually requires. The tints are pushed as far apart in
+// *lightness* as the AA text-contrast budget allows (removals sit slightly
+// darker and warmer than additions), so they help where they can — but they
+// are never the only thing telling you what changed.
+//
+// Body text is near-black on light and near-white on dark, so contrast
+// clears WCAG AA (≥ 4.5:1) in both themes on every tint; measured
+// 5.25–14.95:1.
+
+@mixin usefy-diff-light {
+  --usefy-diff-font: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --usefy-diff-font-size: 12.5px;
+  --usefy-diff-line-height: 1.6;
+  //  Gutter column widths. Wide enough for 5-digit line numbers at the
+  //      default font size; raise it for documents past 99 999 lines.
+  --usefy-diff-gutter-width: 56px;
+  --usefy-diff-marker-width: 22px;
+  //  Minimum width of a code column, so a short diff still fills the box and
+  //      a long one has somewhere to scroll to.
+  --usefy-diff-content-min-width: 24ch;
+  //  Every row is exactly this tall. Two reasons: an empty line (a blank
+  //      line in the source) generates no line box under `white-space: pre` and
+  //      would otherwise collapse the row to zero height — silently dropping a
+  //      real line from the rendered document — and Phase 3's virtualization
+  //      needs a known row height to window on.
+  --usefy-diff-row-height: 22px;
+
+  --usefy-diff-bg: #ffffff;
+  --usefy-diff-fg: #1f2328;
+  --usefy-diff-muted: #59636e;
+  --usefy-diff-border: #d1d9e0;
+
+  --usefy-diff-header-bg: #f6f8fa;
+
+  //  Row tints — low saturation so inline highlights can sit on top.
+  --usefy-diff-add-bg: #e6ffec;
+  --usefy-diff-remove-bg: #ffebe9;
+  --usefy-diff-context-bg: transparent;
+  //  Filler cells in the split view: present but visibly inert. Its own
+  //      token rather than `opacity`, which would wash out cell borders too.
+  --usefy-diff-filler-bg: #fafbfc;
+
+  //  Inline (word-level) highlights — deliberately stronger than the row.
+  --usefy-diff-add-inline-bg: #abf2bc;
+  --usefy-diff-remove-inline-bg: #ffc9c4;
+
+  //  Gutter: line numbers and the +/- markers.
+  --usefy-diff-gutter-bg: #f6f8fa;
+  --usefy-diff-gutter-fg: #59636e;
+  --usefy-diff-add-gutter-bg: #ccffd8;
+  --usefy-diff-remove-gutter-bg: #ffd7d5;
+  --usefy-diff-add-marker-fg: #0a5228;
+  --usefy-diff-remove-marker-fg: #7d1710;
+
+  //  Collapsed-region expander.
+  --usefy-diff-gap-bg: #f0f4f8;
+  --usefy-diff-gap-fg: #4a5560;
+  --usefy-diff-gap-hover-bg: #e2e9f0;
+
+  //  Stats.
+  --usefy-diff-added-fg: #0a5228;
+  --usefy-diff-removed-fg: #7d1710;
+
+  --usefy-diff-focus: #0969da;
+  --usefy-diff-radius: 6px;
+}
+
+@mixin usefy-diff-dark {
+  --usefy-diff-bg: #0d1117;
+  --usefy-diff-fg: #e6edf3;
+  --usefy-diff-muted: #9198a1;
+  --usefy-diff-border: #3d444d;
+
+  --usefy-diff-header-bg: #151b23;
+
+  --usefy-diff-add-bg: #12261e;
+  --usefy-diff-remove-bg: #25171c;
+  --usefy-diff-context-bg: transparent;
+  --usefy-diff-filler-bg: #10151c;
+
+  --usefy-diff-add-inline-bg: #1f6f37;
+  --usefy-diff-remove-inline-bg: #922d28;
+
+  --usefy-diff-gutter-bg: #151b23;
+  --usefy-diff-gutter-fg: #9198a1;
+  --usefy-diff-add-gutter-bg: #133823;
+  --usefy-diff-remove-gutter-bg: #3c1618;
+  --usefy-diff-add-marker-fg: #7ee891;
+  --usefy-diff-remove-marker-fg: #ffa198;
+
+  --usefy-diff-gap-bg: #161c24;
+  --usefy-diff-gap-fg: #9198a1;
+  --usefy-diff-gap-hover-bg: #1f262f;
+
+  --usefy-diff-added-fg: #3fb950;
+  --usefy-diff-removed-fg: #f85149;
+
+  --usefy-diff-focus: #4493f8;
+}

@@ -33,6 +33,34 @@ export const generatedPackages: PackageEntry[] = [
     "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/confetti/README.md"
   },
   {
+    "slug": "diff-viewer",
+    "name": "@usefy/diff-viewer",
+    "displayName": "DiffViewer",
+    "kind": "component",
+    "family": "standalone",
+    "tagline": "Text diff viewer for React — hand-written linear-space Myers engine with word-level intra-line highlighting, hunk collapsing, and a zero-dependency headless core",
+    "subtitle": "Text diff viewer for React — hand-written linear-space Myers engine, word-level highlighting, collapsible context, row virtualization, and a zero-dependency headless core",
+    "keywords": [
+      "diff",
+      "diff-viewer",
+      "myers",
+      "text-diff",
+      "code-review",
+      "side-by-side",
+      "unified-diff",
+      "patch",
+      "headless"
+    ],
+    "version": "0.1.0",
+    "category": "component",
+    "quickStart": "import { DiffViewer } from \"@usefy/diff-viewer\";\n\nfunction Review({ before, after }: { before: string; after: string }) {\n  return <DiffViewer oldText={before} newText={after} view=\"split\" />;\n}",
+    "apiMarkdown": "### `<DiffViewer />`\n\n```tsx\n<DiffViewer\n  oldText={before}                 // the \"before\" document\n  newText={after}                  // the \"after\" document\n  view=\"split\"                     // \"split\" | \"unified\"\n  showLineNumbers                  // default true\n  wrap={false}                     // wrap long lines (disables virtualization)\n  theme=\"system\"                   // \"light\" | \"dark\" | \"system\"\n  context={3}                      // unchanged lines around each change (Infinity = whole file)\n  ignoreWhitespace=\"none\"          // \"none\" | \"trailing\" | \"all\" — matching only\n  ignoreCase={false}               // matching only; renders the original\n  inlineThreshold={0.5}            // min similarity to word-diff a changed pair\n  maxEditDistance={6000}           // cost guard — refuse \"too different\" pairs\n  virtualizeThreshold={200}        // window the DOM above this row count\n  diff={precomputed}               // optional: a DiffResult, skips computeDiff\n  renderContent={({ text }) => ...} // the syntax-highlighting seam\n  labels={{ noChanges: \"…\" }}      // every string overridable for i18n\n  classNames={{ root: \"…\" }}       // per-slot class names\n  onExpand={(hunkIndex, lines) => {}}\n/>\n```\n\nSee the full [options table](#options). All numeric options are\nNaN/Infinity-guarded.\n\n### `computeDiff(oldText, newText, options?)`\n\nThe headless engine — two strings in, a `DiffResult` out:\n\n```ts\ninterface DiffResult {\n  hunks: DiffHunk[];                          // the renderable regions\n  stats: { added: number; removed: number; unchanged: number };\n  truncated: boolean;                         // a guard refused the diff\n  truncatedReason?: \"size\" | \"complexity\";    // too big vs. too different\n  inlineBudgetExhausted?: true;               // some word-highlighting was skipped\n}\n```\n\nEach `DiffHunk` carries its collapsed lines (`hiddenBefore` / `hiddenAfter`\nas real `DiffLine[]`), so a pre-computed `diff` prop can expand with no\nsource texts. See [headless usage](#headless-usage).\n\n---",
+    "storybookUrl": "https://mirunamu00.github.io/usefy/?path=/story/diff-viewer--split-vs-unified",
+    "npmUrl": "https://www.npmjs.com/package/@usefy/diff-viewer",
+    "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/diff-viewer",
+    "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/diff-viewer/README.md"
+  },
+  {
     "slug": "memory-monitor",
     "name": "@usefy/memory-monitor",
     "displayName": "MemoryMonitor",

@@ -1,0 +1,335 @@
+@use "variables" as *;
+
+.root {
+  @include usefy-diff-light;
+
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--usefy-diff-border);
+  border-radius: var(--usefy-diff-radius);
+  background: var(--usefy-diff-bg);
+  color: var(--usefy-diff-fg);
+  font-family: var(--usefy-diff-font);
+  font-size: var(--usefy-diff-font-size);
+  line-height: var(--usefy-diff-line-height);
+  overflow: hidden;
+}
+
+//  Dark theme: applied by the component (scoped `.dark` class, set from the
+//    `theme` prop) or by a host page marking `[data-theme="dark"]` on an
+//    ancestor — the spotlight-tour precedent.
+.dark {
+  @include usefy-diff-dark;
+}
+
+//  `theme="system"` resolves in CSS, not in an effect. The effect still runs
+//    (so a live OS theme change repaints), but it must not be what decides the
+//    FIRST paint: a diff is static content, so a JS-first resolution would
+//    flash a white slab on a dark page until hydration — and stay white
+//    forever with JS disabled. `:not()` keeps an explicit prop winning.
+@media (prefers-color-scheme: dark) {
+  .root:not(.light):not(.dark) {
+    @include usefy-diff-dark;
+  }
+}
+
+[data-theme="dark"] .root {
+  @include usefy-diff-dark;
+}
+
+//  An explicit theme="light" wins over a dark host: prop > host attribute.
+.light,
+[data-theme="dark"] .light {
+  @include usefy-diff-light;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  background: var(--usefy-diff-header-bg);
+  border-bottom: 1px solid var(--usefy-diff-border);
+  font-size: 12px;
+}
+
+.stats {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.statAdded {
+  color: var(--usefy-diff-added-fg);
+  font-weight: 600;
+}
+
+.statRemoved {
+  color: var(--usefy-diff-removed-fg);
+  font-weight: 600;
+}
+
+.statUnchanged {
+  color: var(--usefy-diff-muted);
+}
+
+.scroller {
+  overflow-x: auto;
+}
+
+//  Windowing needs a bounded viewport to window against, so turning
+//    virtualization on also makes the component own its vertical scroll.
+//    Below the threshold the diff grows with its content and never traps the
+//    page's scroll in an arbitrary box.
+.virtualized {
+  max-height: var(--usefy-diff-max-height, 70vh);
+  overflow-y: auto;
+}
+
+//  Stands in for the rows that are not in the DOM so the scrollbar reflects
+//    the whole document, not just the window.
+.spacer td {
+  padding: 0;
+  border: 0;
+}
+
+.scroller:focus-visible {
+  outline: 2px solid var(--usefy-diff-focus);
+  outline-offset: -2px;
+}
+
+// The table grows to fit its widest line and never clips it.
+//
+// `table-layout: fixed` + `width: 100%` looked right until a line was wider
+// than its column: fixed layout never grows a column, and `white-space: pre`
+// never wraps, so the overflow painted straight over the opposite side's
+// gutter and code — and the scroller had no range to scroll, because the
+// table itself was still exactly 100% wide. Long lines (imports, URLs, JSX
+// props, config objects) are the normal case, so this was the default view
+// being illegible.
+//
+// `auto` layout sizes columns to content, `max-content` lets the table
+// exceed its container, and `min-width: 100%` keeps a short diff filling the
+// box. Together they give `.scroller` a real horizontal range, and the row
+// tints extend the full scrollable width instead of stopping at the
+// container edge.
+.table {
+  width: max-content;
+  min-width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+}
+
+//  Column widths come from this <colgroup>, never from the first row — a
+//    collapsed-region row is a single `colspan` cell and would otherwise
+//    dictate the layout.
+.colNumber {
+  width: var(--usefy-diff-gutter-width);
+  min-width: var(--usefy-diff-gutter-width);
+}
+
+.colMarker {
+  width: var(--usefy-diff-marker-width);
+  min-width: var(--usefy-diff-marker-width);
+}
+
+//  50% each keeps the two sides even while the content is short; content
+//    wider than that pushes the column (and the table) out instead of
+//    overlapping.
+.colContent {
+  width: 50%;
+  min-width: var(--usefy-diff-content-min-width);
+}
+
+.row {
+  vertical-align: top;
+  //  A blank source line produces an empty cell, which under
+  //      `white-space: pre` generates no line box at all — the row would collapse
+  //      to 0px and the document would silently lose a line it claims to show.
+  //      A fixed row height is both the fix and Phase 3's windowing unit.
+  height: var(--usefy-diff-row-height);
+}
+
+//  --- gutter (line numbers + change marker) --------------------------------
+
+.lineNumber {
+  padding: 0 8px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--usefy-diff-gutter-fg);
+  background: var(--usefy-diff-gutter-bg);
+  user-select: none;
+  font-weight: 400;
+  border-right: 1px solid var(--usefy-diff-border);
+  white-space: nowrap;
+}
+
+.marker {
+  padding: 0 4px;
+  text-align: center;
+  user-select: none;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.content {
+  padding: 0 8px;
+  white-space: pre;
+  overflow-wrap: normal;
+  tab-size: 2;
+  background: var(--usefy-diff-context-bg);
+}
+
+.wrap .content {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+//  Wrapping makes rows taller than one line, so the fixed height becomes a
+//    floor rather than an exact size.
+.wrap .row {
+  height: auto;
+  min-height: var(--usefy-diff-row-height);
+}
+
+//  --- change types ----------------------------------------------------------
+//
+// NOTE the COMPOUND selectors (`.content.add`, not `.content .add`). The
+// change-type class lands on the very same cell as the role class — a row is
+// built from sibling `<th>`/`<td>`s, not from a wrapper — so a descendant
+// selector matches nothing. Browser QA caught exactly that: markers rendered
+// but every row tint was silently missing.
+
+.content.add,
+.marker.add {
+  background: var(--usefy-diff-add-bg);
+}
+
+.marker.add {
+  color: var(--usefy-diff-add-marker-fg);
+}
+
+.lineNumber.add {
+  background: var(--usefy-diff-add-gutter-bg);
+  color: var(--usefy-diff-add-marker-fg);
+}
+
+.content.remove,
+.marker.remove {
+  background: var(--usefy-diff-remove-bg);
+}
+
+.marker.remove {
+  color: var(--usefy-diff-remove-marker-fg);
+}
+
+.lineNumber.remove {
+  background: var(--usefy-diff-remove-gutter-bg);
+  color: var(--usefy-diff-remove-marker-fg);
+}
+
+.content.filler,
+.lineNumber.filler,
+.marker.filler {
+  background: var(--usefy-diff-filler-bg);
+}
+
+//  --- inline (word-level) segments ------------------------------------------
+//
+// These ARE descendants: the <mark> lives inside the content cell.
+
+.segmentChange {
+  border-radius: 2px;
+  padding: 0 1px;
+  //  `<mark>` defaults to yellow-on-black in every engine; that would be
+  //      illegible on the dark theme's tints.
+  color: inherit;
+  background: none;
+}
+
+.content.add .segmentChange {
+  background: var(--usefy-diff-add-inline-bg);
+}
+
+.content.remove .segmentChange {
+  background: var(--usefy-diff-remove-inline-bg);
+}
+
+//  --- collapsed regions -----------------------------------------------------
+
+.gapCell {
+  padding: 0;
+  background: var(--usefy-diff-gap-bg);
+  border-top: 1px solid var(--usefy-diff-border);
+  border-bottom: 1px solid var(--usefy-diff-border);
+}
+
+.gapInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 8px;
+  color: var(--usefy-diff-gap-fg);
+  font-size: 11.5px;
+}
+
+.gapLabel {
+  flex: 1 1 auto;
+}
+
+.gapButton {
+  appearance: none;
+  border: 1px solid var(--usefy-diff-border);
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 11.5px;
+  padding: 2px 8px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.gapButton:hover {
+  background: var(--usefy-diff-gap-hover-bg);
+}
+
+.gapButton:focus-visible {
+  outline: 2px solid var(--usefy-diff-focus);
+  outline-offset: 1px;
+}
+
+//  --- empty / guarded states ------------------------------------------------
+
+.notice {
+  padding: 20px 16px;
+  text-align: center;
+  color: var(--usefy-diff-muted);
+  font-size: 12.5px;
+}
+
+.noticeTitle {
+  display: block;
+  color: var(--usefy-diff-fg);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.noticeAction {
+  margin-top: 10px;
+}
+
+//  Screen-reader-only text: the change type must be announced, never
+//    conveyed by colour alone (SPEC §8).
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

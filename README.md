@@ -57,6 +57,7 @@
 | `@usefy/spotlight-tour` | Guided onboarding tours with an animated spotlight overlay, gates, persistence, and enterprise a11y |
 | `@usefy/confetti` | Canvas confetti & celebration engine — pooled particle physics, presets, custom shapes, headless core |
 | `@usefy/signature-pad` | Electronic signature input — hand-written ink engine with velocity-based stroke width, PNG/SVG/JSON exports, headless core |
+| `@usefy/diff-viewer` | Text diff viewer — linear-space Myers engine, word-level highlighting, collapsible context, row virtualization, headless core |
 
 ---
 
@@ -392,6 +393,41 @@ function ConsentForm() {
 
 ---
 
+### @usefy/diff-viewer
+
+<a href="https://www.npmjs.com/package/@usefy/diff-viewer" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/diff-viewer.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/diff-viewer" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/diff-viewer.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/diff-viewer" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/diff-viewer?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+Text diff viewer — render the difference between two texts side-by-side or
+unified, with line numbers, word-level highlighting inside changed lines, and
+unchanged regions collapsed behind expandable context. Hand-written
+linear-space Myers engine (zero deps), row virtualization for 20k-line diffs,
+an explicit cost guard, a bring-your-own-highlighter seam, real table
+accessibility, and the whole engine also available headless.
+
+```bash
+pnpm add @usefy/diff-viewer
+```
+
+```tsx
+import { DiffViewer } from "@usefy/diff-viewer";
+
+function Review({ before, after }) {
+  return <DiffViewer oldText={before} newText={after} view="split" />;
+}
+```
+
+<a href="./packages/diff-viewer/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -407,6 +443,7 @@ function ConsentForm() {
 | Onboarding tour | `pnpm add @usefy/spotlight-tour` | `import { SpotlightTour } from "@usefy/spotlight-tour"` |
 | Confetti / celebrations | `pnpm add @usefy/confetti` | `import { fireConfetti } from "@usefy/confetti"` |
 | Signature input | `pnpm add @usefy/signature-pad` | `import { SignaturePad } from "@usefy/signature-pad"` |
+| Text diff viewer | `pnpm add @usefy/diff-viewer` | `import { DiffViewer } from "@usefy/diff-viewer"` |
 
 ### Peer Dependencies
 
@@ -602,6 +639,17 @@ Also ships a zero-React `@usefy/confetti/headless` entry (engine + shapes + pres
 | `filterPoints`, `bezierFor`, `widthForSegment`, `flattenSegment`, `strokeGeometry`, `inkBounds`, `strokesToSVG` | The pure, deterministic ink pipeline (hand-testable math) |
 
 Also ships a zero-React `@usefy/signature-pad/headless` entry (engine + ink math + types, zero dependencies).
+
+### @usefy/diff-viewer
+
+| Export | Description |
+| ------ | ----------- |
+| `DiffViewer` | Split/unified diff table — collapsible context, row virtualization, `renderContent` highlighter seam, `theme`, `classNames`, `labels`, "No changes" / "too large / too different + diff anyway" states |
+| `computeDiff` | The composed engine — two strings → `{ hunks, stats, truncated, truncatedReason?, inlineBudgetExhausted? }`, with size/cost guards |
+| `toSplitRows`, `toUnifiedRows`, `alignRows` | Pure view models — both views render the same `DiffLine` objects |
+| `myersDiff`, `myersDiffBounded`, `splitLines`, `tokenizeWords`, `normalizeLine`, `similarity`, `inlineSegments`, `buildHunks`, `resolveOptions` | The pure, hand-testable diff core (CJK-aware, linear-space Myers) |
+
+Also ships a zero-React `@usefy/diff-viewer/headless` entry (engine + tokenizer + hunks + types, zero dependencies) and a `@usefy/diff-viewer/styles.css` export (styles otherwise inject at runtime).
 
 ---
 

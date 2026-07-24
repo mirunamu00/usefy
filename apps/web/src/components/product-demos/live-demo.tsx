@@ -19,6 +19,7 @@ const DEMOS: Record<string, ComponentType> = {
   "virtual-keyboard": dynamic(() => import("./virtual-keyboard-demo").then((m) => m.VirtualKeyboardDemo), { ssr: false, loading: Loading }),
   "memory-monitor": dynamic(() => import("./memory-monitor-demo").then((m) => m.MemoryMonitorDemo), { ssr: false, loading: Loading }),
   "network-indicator": dynamic(() => import("./network-indicator-demo").then((m) => m.NetworkIndicatorDemo), { ssr: false, loading: Loading }),
+  "diff-viewer": dynamic(() => import("./diff-viewer-demo").then((m) => m.DiffViewerDemo), { ssr: false, loading: Loading }),
 };
 
 /** The per-product live demo, or null when a package has none. Keep the slug
