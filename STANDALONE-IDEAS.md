@@ -1,128 +1,118 @@
 # Standalone component ideas
 
 A browsable, non-committal shortlist of standalone components worth building for
-usefy. This is a **reference to pick from**, not a roadmap — nothing here is
-scheduled, ordered, or promised. Add, cull, and re-rank freely.
+usefy. A **reference to pick from**, not a roadmap — nothing here is scheduled,
+ordered, or promised.
 
-For the *committed* process of actually building one, see the
-`add-usefy-component` skill and CLAUDE.md.
+For the *committed* build process, see the `add-usefy-component` skill and
+CLAUDE.md.
 
-## What makes a good usefy standalone
+## What a usefy standalone IS (and what it is NOT)
 
-The bar these candidates are judged against — a strong pick hits most of these:
+usefy standalones are **self-contained feature libraries** — the kind of thing
+someone deliberately `npm install`s *on its own* because it does one substantial
+thing completely, with a real hand-written engine behind it. They map 1:1 to
+well-known standalone libraries, not to design-system parts:
 
-1. **Real engineering depth.** Something with a hand-written core worth
-   unit-testing (an algorithm, a physics/geometry/parsing engine, tricky
-   interaction state) — not a 50-line wrapper. "만들 맛" matters.
-2. **Reuses the hook family.** The more `@usefy/use-*` hooks it composes
-   (focus-trap, controllable-state, hotkeys, scroll-lock, positioning, …), the
-   better it showcases the ecosystem and the less it re-bugs solved problems.
-3. **Zero-dep, headless-first.** Ships a framework-free `./headless` core plus
-   the styled React layer; no heavy runtime deps (bundle a highlighter/parser →
-   seam it out, don't include it).
-4. **Browser-QA-able quality.** Its correctness is something you can *see* — ink
-   feel, motion sync, layout, a11y — so the house browser-QA pipeline can prove
-   it (CLAUDE.md "Quality bar").
-5. **A genuine gap — verified, not assumed.** Before committing, check npm
-   publish dates + weekly downloads of the incumbents. The diff-viewer lesson:
-   we assumed a stalled niche and found the community fork was actively
-   maintained and *more* used. Compete on quality; never ship an unverified
-   "abandoned" claim.
+| Shipped | The standalone library it stands next to |
+|---|---|
+| `confetti` | canvas-confetti |
+| `signature-pad` | signature_pad |
+| `diff-viewer` | react-diff-viewer |
+| `spotlight-tour` | react-joyride / driver.js |
+| `virtual-keyboard` | react-simple-keyboard |
+| `memory-monitor` / `network-indicator` / `scroll-progress` | self-contained dev/status widgets |
 
-**Already shipped (don't dupe):** memory-monitor, network-indicator,
-scroll-progress, virtual-keyboard, spotlight-tour, confetti, signature-pad,
-diff-viewer.
+**usefy is NOT a UI kit.** We do **not** ship the primitives a design system
+already gives you — Button, Input, Slider, Rating, Checkbox, Switch, Tabs,
+Accordion, Modal/Dialog, Drawer, Tooltip, Popover, Toast, Dropdown/Context-menu,
+Select/Combobox, Tag-input, Avatar, Badge, Skeleton, Breadcrumb, Pagination,
+Color-picker. Those are shadcn/Radix/MUI/Mantine territory. Building them would
+make usefy a me-too component kit — not the point.
+
+### The test for "is this a usefy standalone?"
+
+1. **Would someone install it as its own package?** Does it already exist as a
+   standalone library people seek out (canvas-confetti, signature_pad, qrcode,
+   wavesurfer, react-easy-crop, emoji-mart, react-window, cobe…)? If instead
+   it's "a component you'd get inside a UI library," it's out.
+2. **Is there a real engine?** A hand-written core worth unit-testing — an
+   algorithm, a canvas/geometry/parse/physics engine, a windowing/layout
+   engine. Enough substance ("공수") that one package earns its keep.
+3. **Does it reuse the hook family and stay zero-dep/headless?** Composes
+   `@usefy/use-*`, ships a framework-free `./headless` core, seams out heavy
+   deps (parser/highlighter) rather than bundling them.
+4. **Can the browser-QA pipeline prove it?** Its quality is something you can
+   *see or measure* (CLAUDE.md "Quality bar").
+5. **Is the gap real — verified, not assumed?** Check the incumbents' npm
+   publish dates + weekly downloads before committing (the diff-viewer lesson:
+   the "stalled" fork was actually the actively-maintained, more-used one).
 
 ---
 
-## Input & form
+## Generation & algorithm engines
 
-Extends the `virtual-keyboard` / `signature-pad` line. Heavy hook reuse
-(`use-controllable-state`, `use-hotkeys`, `use-focus-within`, `use-merged-refs`).
+Pure, hand-testable cores — the strongest house-test fit, like the Myers engine.
 
-| Idea | What it is | Depth & fit | Likely hook reuse |
+| Idea | What it is | The engine / depth | Reuse |
 |---|---|---|---|
-| **otp-input** | One-time-code / PIN entry field | Paste distribution across cells, IME/composition, `autocomplete="one-time-code"` autofill, focus stepping, backspace/arrow edge cases — a deep bag of interaction bugs to get right | controllable-state, merged-refs, key-press |
-| **color-picker** | HS/RGB/hex picker | The 2026 angle: modern color spaces (OKLCH/P3), gamut mapping, `EyeDropper` API — react-colorful is small/solid but sRGB-only. Pretty, tactile demo | controllable-state, long-press, event-listener |
-| **tag-input / combobox** | Token/chips input with autocomplete | List filtering, keyboard nav, create-on-enter, dedupe, async options; the WAI-ARIA combobox pattern done right | controllable-state, hotkeys, on-click-outside, focus-within |
-| **file-dropzone** | Drag-and-drop upload zone | DataTransfer parsing, folder traversal, type/size validation, paste-to-upload, preview thumbnails, a11y — no deps (react-dropzone is the incumbent; verify its state) | event-listener, controllable-state |
-| **slider / range** | Single & dual-thumb range | Pointer + keyboard + touch, ticks/marks, RTL, step snapping, collision between thumbs — small surface, deep interaction | controllable-state, long-press, measure |
-| **rating** | Star / heart rating | Half-steps, hover-preview vs committed, keyboard, RTL — small but a clean showcase | controllable-state, hotkeys |
+| **qr-code** | QR (and barcode) generator | Reed–Solomon error correction, mask-pattern selection, matrix encoding — a genuinely pure algorithm, 100%-testable, zero-dep, SVG **and** canvas/PNG export like signature-pad | — (pure) |
+| **qr-scanner** | Camera → decode | getUserMedia stream + a QR/1D decode engine (jsQR/ZXing territory) — locator patterns, perspective correction; pairs with `qr-code` for a scan/generate set | permission, event-listener |
+| **word-cloud** | Text → laid-out word cloud | Spiral placement with collision detection, frequency scaling, rotation, canvas/SVG output — a real layout algorithm | measure, resize-observer |
+| **calendar-heatmap** | GitHub-style contribution grid | Date bucketing, week/month layout, color scales, tooltips, locale weeks — a self-contained data-viz feature (react-calendar-heatmap) | media-query |
+
+## Canvas & media
+
+Inherits the `confetti` / `signature-pad` canvas/DPR/engine know-how.
+
+| Idea | What it is | The engine / depth | Reuse |
+|---|---|---|---|
+| **image-cropper** | Crop / zoom / rotate → output | Pointer + wheel + pinch gesture engine, aspect locks, rotation math, DPR-correct canvas export — react-easy-crop / cropperjs are the standalone incumbents (verify the angle: headless? modern gestures?) | measure, resize-observer, long-press |
+| **pan-zoom** | Zoomable / pannable viewport | Transform-matrix engine: wheel-zoom-to-cursor, drag-pan, pinch, momentum/inertia, bounds — the react-zoom-pan-pinch niche, useful under maps/diagrams/images | measure, resize-observer, raf-state |
+| **audio-waveform** | Waveform render + seek | Decode an AudioBuffer → downsampled peaks → canvas waveform, playhead/seek, regions — a wavesurfer-lite core | resize-observer, raf-state |
+| **globe** | Rotating dotted globe | Orthographic geo-projection, point rasterization, auto-spin + drag, marker overlays — the cobe niche; a striking landing demo | raf-state, resize-observer, reduced-motion |
 
 ## Data & text
 
-Extends `diff-viewer` (the new data/text line). Strong "pure engine +
-hand-testable" fit.
+The `diff-viewer` line — virtualization, big-input guards, parser/render seams.
 
-| Idea | What it is | Depth & fit | Likely hook reuse |
+| Idea | What it is | The engine / depth | Reuse |
 |---|---|---|---|
-| **json-viewer / tree-view** | Collapsible JSON / tree explorer | Virtualized tree, lazy expansion, search + path highlight, copy-path, big-payload guard — reuses diff-viewer's virtualization + guard know-how | resize-observer, intersection-observer |
-| **code-block** | Copy-able code with line numbers | The `renderContent` highlighter-seam pattern (proven in diff-viewer): line numbers, highlight ranges, copy button, wrap toggle — zero-dep, seam the highlighter | copy-to-clipboard |
-| **qr-code** | QR generator (SVG + canvas) | A genuinely pure algorithm (Reed–Solomon ECC, mask selection) — 100%-testable, zero-dep, tiny bundle, crisp demo, exportable like signature-pad | — (pure) |
-| **table-of-contents** | Auto TOC from headings + scroll-spy | Heading extraction, active-section tracking, smooth scroll, nested rendering — the classic docs-site widget done accessibly | intersection-observer, scroll-position |
-| **markdown / prose viewer** | Render markdown with a parser seam | Bring-your-own-parser (like the highlighter seam); focus on safe rendering, heading anchors, TOC integration — careful scope so it doesn't bloat | — |
+| **json-viewer** | Collapsible JSON / tree explorer | Virtualized tree, lazy expansion, big-payload guard, search + path highlight, copy-path — directly reuses diff-viewer's windowing + guard know-how | resize-observer, intersection-observer, copy-to-clipboard |
+| **virtualized-list** | Windowing engine, headless-first | Fixed/variable-row windowing, scroll anchoring, `aria-rowcount/index` — we already hand-wrote one *inside* diff-viewer; extract and generalize it (react-window niche) | resize-observer, isomorphic-layout-effect |
+| **markdown-viewer** | Render markdown safely | Bring-your-own-parser seam (like diff-viewer's highlighter seam), safe rendering, heading anchors + TOC, no `dangerouslySetInnerHTML` on raw input | intersection-observer |
+| **mentions** | `@mention` textarea | Trigger detection, caret-anchored dropdown positioning, token parsing, keyboard nav, serialized value — a self-contained rich-input feature | controllable-state, hotkeys, on-click-outside |
 
-## Overlay & feedback
+## Motion effects
 
-Extends `spotlight-tour` (in-house positioning engine) + `confetti`. Heavy a11y
-hook reuse.
+Self-contained "delight" effects — the `confetti` character (a standalone
+effect library, not a UI primitive). Browser-QA is the whole point.
 
-| Idea | What it is | Depth & fit | Likely hook reuse |
+| Idea | What it is | The engine / depth | Reuse |
 |---|---|---|---|
-| **toast / notifications** | Queued toast system | Queue + priority, positions, swipe-to-dismiss, pause-on-hover, `aria-live` regions, timers, reduced-motion — genuinely fiddly to do accessibly | timeout, hotkeys, reduced-motion, long-press |
-| **popover / tooltip** | Floating positioning primitive | Reuse spotlight-tour's flip/shift/arrow engine as a general (but scoped) floating layer — collision, portals, focus, dismiss. A foundational piece others build on | focus-trap, on-click-outside, resize-observer |
-| **context-menu** | Right-click / long-press menu | Pointer positioning, submenus, keyboard roving, viewport collision, touch long-press — pairs with the positioning engine | long-press, hotkeys, focus-trap, on-click-outside |
-| **modal / dialog** | Accessible dialog + drawer | Focus trap, scroll lock, `inert`, stacking, `Esc`, animation — the composition showcase (nearly all a11y hooks at once); Radix is strong here, so verify the angle | focus-trap, scroll-lock, hotkeys, disclosure |
-| **command-palette** | ⌘K palette | Fuzzy scoring, virtualized results, nested pages, keyboard nav — high demand, but **cmdk is a strong incumbent**: only build with a real differentiator | hotkeys, focus-trap, controllable-state |
-
-## Media & canvas
-
-Extends `confetti` / `signature-pad` (canvas/DPR/engine know-how).
-
-| Idea | What it is | Depth & fit | Likely hook reuse |
-|---|---|---|---|
-| **image-cropper** | Crop / zoom / rotate → canvas output | Pointer + wheel + pinch gestures, aspect locks, output at DPR, rotation math — react-easy-crop is solid, so verify the angle (headless? modern gestures?) | measure, resize-observer, long-press |
-| **image-compare** | Before/after slider | Pointer/keyboard/touch divider, lazy images, labels — small, high visual impact, great card demo | measure, controllable-state |
-| **sparkline** | Tiny inline SVG chart | Pure path math, min/max markers, responsive, tooltip-on-hover — zero-dep, pairs with memory-monitor's dashboard vibe | measure, resize-observer |
-| **avatar** | Image → initials/gradient fallback | Load/error states, deterministic color from a seed, status ring, grouping/stacking — small, ubiquitous | — |
-
-## Motion & delight
-
-Extends the motion-quality lessons (confetti retune, tooltip sync). Browser-QA
-is the whole point.
-
-| Idea | What it is | Depth & fit | Likely hook reuse |
-|---|---|---|---|
-| **number-ticker** | Animated number/odometer transitions | Digit-roll animation, `Intl` formatting across transitions, reduced-motion, spring vs duration — NumberFlow exists, so verify the angle | reduced-motion, raf-state, interval |
-| **typewriter** | Typing / deleting text animation | Multi-string cycling, variable speed, cursor, reduced-motion static fallback — landing-page staple, small | interval, reduced-motion |
-| **marquee** | Seamless infinite scroller | True seamless loop (measure + duplicate), pause-on-hover, gradient masks, reduced-motion, RTL — trickier than it looks to make gapless | measure, resize-observer, reduced-motion |
-| **skeleton** | Loading-placeholder shimmer | Auto-shape from content, shimmer vs pulse, reduced-motion, a11y `aria-busy` — tiny but everywhere | reduced-motion |
-
-## Utility widgets
-
-Extends `memory-monitor` / `network-indicator` / `scroll-progress` (dev/status
-widgets). Lower depth — good for a quick, high-utility win.
-
-| Idea | What it is | Depth & fit | Likely hook reuse |
-|---|---|---|---|
-| **fps-meter** | Frame-rate overlay | The literal sibling of memory-monitor — rAF sampling, min/avg/p95, sparkline. Near-clone of an existing pipeline | raf-state, interval |
-| **back-to-top** | Scroll-to-top button | Appears past a threshold, smooth scroll, reduced-motion, progress ring variant — small, universal | scroll-position, reduced-motion |
-| **cookie-consent** | Consent banner + preferences | Category toggles, persistence, a11y, callback API — dull but genuinely in demand for EU sites | local-storage, focus-trap |
-| **keyboard-shortcuts-help** | `?` overlay listing shortcuts | Pairs with `use-hotkeys` — auto-collects registered shortcuts, grouped, searchable modal | hotkeys, focus-trap, scroll-lock |
+| **typewriter** | Typing / deleting text effect | Multi-string cycling, variable speed + humanized jitter, cursor, reduced-motion static fallback — the react-type-animation niche | interval, reduced-motion |
+| **number-ticker** | Animated number / odometer | Per-digit roll, `Intl` formatting across transitions, spring vs duration, reduced-motion — the NumberFlow niche (verify the angle) | reduced-motion, raf-state |
+| **marquee** | Seamless infinite scroller | Truly gapless loop (measure + duplicate + transform), pause-on-hover, gradient edges, RTL, reduced-motion — react-fast-marquee niche; harder than it looks to make gapless | measure, resize-observer, reduced-motion |
 
 ---
 
 ## Shortlist (strongest picks right now)
 
-Purely a starting point for the next pick — reorder to taste:
+Ordered by how squarely they hit the usefy character — a starting point, reorder
+to taste:
 
-1. **otp-input** — deep interaction edge cases, ubiquitous form need, high hook reuse; the natural next input component.
-2. **qr-code** — a genuinely pure algorithm (great house-test fit), zero-dep, exportable, crisp demo; broadens the data line without a UI-heavy surface.
-3. **popover / tooltip** — promote spotlight-tour's positioning engine into a foundational floating primitive others reuse; high leverage.
-4. **toast / notifications** — the accessible-queue problem is deceptively deep and a strong composition/a11y showcase.
-5. **image-compare** — small, high visual impact, excellent landing-card demo; low risk.
+1. **qr-code** — a genuinely pure algorithm (perfect house-test fit), zero-dep,
+   exportable like signature-pad, ubiquitous demand, crisp demo. The cleanest
+   "self-contained feature library" on the list.
+2. **image-cropper** — substantial gesture + canvas engine, clear standalone
+   demand, inherits the confetti/signature-pad canvas know-how.
+3. **json-viewer** — reuses diff-viewer's virtualization directly; a feature
+   people install on its own; strong data-line continuation.
+4. **audio-waveform** — a real DSP-ish engine (peaks + seek), striking demo,
+   nothing UI-primitive about it.
+5. **globe** — pure projection engine, an unforgettable landing-page card;
+   maximal "wow per package."
 
-**Before committing to any of these:** run the §"genuine gap" check —
-npm publish dates + weekly downloads of the incumbents — and decide whether the
-angle is a real gap or a quality play. Then write the SPEC and go through the
+**Before committing:** run the §"gap is real" check — npm publish dates +
+weekly downloads of the incumbents — then write the SPEC and go through the
 phased build + review loop like the shipped eight.
