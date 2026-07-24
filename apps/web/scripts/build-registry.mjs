@@ -65,7 +65,7 @@ const CATEGORY = {
   "memory-monitor": "component", "virtual-keyboard": "component",
   "network-indicator": "component", "scroll-progress": "component",
   "spotlight-tour": "component", "confetti": "component",
-  "signature-pad": "component",
+  "signature-pad": "component", "diff-viewer": "component",
 };
 
 /** The package directories to scan, relative to packages/. */
@@ -78,6 +78,7 @@ const PACKAGE_DIRS = [
   "spotlight-tour",
   "confetti",
   "signature-pad",
+  "diff-viewer",
 ];
 
 /** @param {string} dir */

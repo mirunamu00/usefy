@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@usefy/confetti": "workspace:*",
+    "@usefy/diff-viewer": "workspace:*",
     "@usefy/memory-monitor": "workspace:*",
     "@usefy/network-indicator": "workspace:*",
     "@usefy/scroll-progress": "workspace:*",

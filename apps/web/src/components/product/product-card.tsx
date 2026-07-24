@@ -262,6 +262,25 @@ function DemoStage({ demo }: { demo: ProductMeta["demo"] }) {
         </div>
       );
 
+    case "diff-lines":
+      return (
+        <div className="demo-diff font-mono text-[11px] leading-5" aria-hidden="true">
+          <div className="demo-diff-row text-fg-subtle">
+            <span className="demo-diff-sign" />  const total = 0;
+          </div>
+          <div className="demo-diff-row demo-diff-del">
+            <span className="demo-diff-sign">−</span>  items.map(x =&gt; x)
+          </div>
+          <div className="demo-diff-row demo-diff-add">
+            <span className="demo-diff-sign">+</span>  items.map(x =&gt;{" "}
+            <span className="demo-diff-word">x.value</span>)
+          </div>
+          <div className="demo-diff-row text-fg-subtle">
+            <span className="demo-diff-sign" />  return total;
+          </div>
+        </div>
+      );
+
     case "none":
       return null;
   }
