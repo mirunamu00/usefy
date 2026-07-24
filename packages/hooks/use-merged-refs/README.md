@@ -109,7 +109,7 @@ Assign a single value to one ref, whatever its form (callback ref → invoked; r
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-merged-refs/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **15 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-merged-refs/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **15 tests**, 100% statement coverage.
 
 ## License
 

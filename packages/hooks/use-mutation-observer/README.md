@@ -170,7 +170,7 @@ function Toggleable() {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-mutation-observer/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **62 tests**, 99% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-mutation-observer/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **62 tests**, 99% statement coverage.
 
 - `useMutationObserver.test.ts` — 44 tests for hook behavior (observation, options passthrough, callback-ref, `enabled`, stable callback, manual control, cleanup, StrictMode, unsupported env)
 - `utils.test.ts` — 18 tests for the config resolver and helpers

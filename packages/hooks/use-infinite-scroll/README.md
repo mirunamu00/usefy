@@ -135,7 +135,7 @@ A **callback ref** — `(node: Element | null) => void` — to attach to your se
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-infinite-scroll/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **19 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-infinite-scroll/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **19 tests**, 100% statement coverage.
 
 ## License
 

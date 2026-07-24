@@ -126,7 +126,7 @@ Both live in the `@usefy` ecosystem and both observe an element with `ResizeObse
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-measure/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **19 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-measure/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **19 tests**, 100% statement coverage.
 
 ## License
 

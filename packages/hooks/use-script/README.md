@@ -146,7 +146,7 @@ if (getScriptStatus("https://cdn.example.com/sdk.js") === "ready") {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-script/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **30 tests**, 96% statement coverage (100% line coverage).
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-script/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **30 tests**, 96% statement coverage (100% line coverage).
 
 ## License
 

@@ -355,7 +355,7 @@ This package is covered by **49 tests** holding **92% statement coverage**, exer
 
 ### Test Coverage
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-debounce/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **49 tests**, 92% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-debounce/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **49 tests**, 92% statement coverage.
 
 ### Test Categories
 

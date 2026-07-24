@@ -112,7 +112,7 @@ Then:
 pnpm test:coverage
 ```
 
-Note the new package's **statement** coverage %. Confirm the HTML report exists at `coverage/use-<name>/src/index.html` (the READMEs link to it). This is regenerated on deploy, but generating it locally validates the link and gives you the badge number.
+Note the new package's **statement** coverage %. Confirm the HTML report exists at `coverage/hooks/use-<name>/src/index.html` — note the `hooks/` segment: the report path mirrors `packages/hooks/use-<name>` under `packages/`, so the README link MUST be `…/coverage/hooks/use-<name>/src/index.html`, not `…/coverage/use-<name>/…` (that 404s). This is regenerated on deploy, but generating it locally validates the link and gives you the badge number.
 
 ## Phase 8 — READMEs (three files)
 

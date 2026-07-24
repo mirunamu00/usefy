@@ -126,7 +126,7 @@ After a touch sequence, browsers emit synthetic `mousedown`/`mouseup`/`click` ev
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-long-press/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **29 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-long-press/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **29 tests**, 100% statement coverage.
 
 ## License
 

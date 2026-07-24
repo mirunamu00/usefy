@@ -136,7 +136,7 @@ import {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-network-state/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **34 tests**, 95% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-network-state/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **34 tests**, 95% statement coverage.
 
 ## License
 

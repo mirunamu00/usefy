@@ -173,7 +173,7 @@ const [consent] = useCookie<string>("consent");
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-cookie/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **47 tests**, 96% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-cookie/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **47 tests**, 96% statement coverage.
 
 ## License
 

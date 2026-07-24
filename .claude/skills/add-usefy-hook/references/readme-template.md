@@ -85,7 +85,7 @@ import { use{{Hook}} } from "@usefy/use-{{name}}";
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-{{name}}/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **{{N}} tests**, {{NN%}} statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-{{name}}/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **{{N}} tests**, {{NN%}} statement coverage.
 
 ## License
 

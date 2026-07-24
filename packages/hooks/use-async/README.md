@@ -142,7 +142,7 @@ const { data, error, status, isLoading, execute, reset } = useAsync<T, Args, E>(
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-async/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **28 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-async/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **28 tests**, 100% statement coverage.
 
 ## License
 

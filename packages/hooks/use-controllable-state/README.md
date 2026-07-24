@@ -128,7 +128,7 @@ A `readonly [value, setValue]` tuple with the same shape as `useState`:
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-controllable-state/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **22 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-controllable-state/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **22 tests**, 100% statement coverage.
 
 ## License
 

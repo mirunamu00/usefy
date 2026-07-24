@@ -146,7 +146,7 @@ const {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-polling/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **39 tests**, 97% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-polling/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **39 tests**, 97% statement coverage.
 
 ## License
 

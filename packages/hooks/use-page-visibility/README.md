@@ -134,7 +134,7 @@ The Page Visibility API is supported in every modern browser (Chrome, Edge, Fire
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-page-visibility/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **22 tests**, 92% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-page-visibility/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **22 tests**, 92% statement coverage.
 
 ## License
 

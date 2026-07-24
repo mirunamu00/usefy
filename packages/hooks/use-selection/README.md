@@ -155,7 +155,7 @@ const result = useSelection<T>(items: T[], options?: UseSelectionOptions<T>);
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-selection/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **24 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-selection/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **24 tests**, 100% statement coverage.
 
 ## License
 

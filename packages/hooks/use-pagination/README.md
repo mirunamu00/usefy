@@ -192,7 +192,7 @@ buildPaginationRange({ page: 1, pageCount: 10 }); // [1, 2, 3, 4, 5, "ellipsis",
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-pagination/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **48 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-pagination/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **48 tests**, 100% statement coverage.
 
 ## License
 

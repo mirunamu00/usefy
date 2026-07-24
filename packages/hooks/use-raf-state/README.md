@@ -125,7 +125,7 @@ This is the correct, expected behaviour for this hook's target use case, where e
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-raf-state/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **14 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-raf-state/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **14 tests**, 100% statement coverage.
 
 ## License
 

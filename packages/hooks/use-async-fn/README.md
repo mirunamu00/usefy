@@ -142,7 +142,7 @@ const [state, run] = useAsyncFn<T, Args, E>(fn, options?);
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-async-fn/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **23 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-async-fn/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **23 tests**, 100% statement coverage.
 
 ## License
 

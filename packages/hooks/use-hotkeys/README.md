@@ -133,7 +133,7 @@ A hotkey string, or an array of them (all bound to the same `handler`, matched a
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-hotkeys/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **55 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-hotkeys/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **55 tests**, 100% statement coverage.
 
 ## License
 

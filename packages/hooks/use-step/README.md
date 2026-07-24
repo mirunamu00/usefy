@@ -243,7 +243,7 @@ This package maintains comprehensive test coverage to ensure reliability and sta
 
 ### Test Coverage
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-step/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-step/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Files
 

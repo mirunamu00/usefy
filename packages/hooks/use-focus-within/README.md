@@ -172,7 +172,7 @@ return (
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-focus-within/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **26 tests**, 98% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-focus-within/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **26 tests**, 98% statement coverage.
 
 - `useFocusWithin.test.tsx` — hook behavior (focus in/out, container-level focus, no-flicker between descendants, leave to outside, blur-to-nothing; `relatedTarget` inside/outside/`null`- and `undefined`-quirk branches; `onFocus`/`onBlur` edge semantics; latest-callback without re-subscribe; callback-ref attach/detach, initial-focus sync, detach reset, unmount cleanup; ref stability, SSR-inert default, StrictMode) plus the `isFocusInside` predicate in isolation.
 

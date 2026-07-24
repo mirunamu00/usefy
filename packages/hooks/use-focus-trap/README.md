@@ -194,7 +194,7 @@ function Modal({ open, onClose }: { open: boolean; onClose: () => void }) {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-focus-trap/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **44 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-focus-trap/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **44 tests**, 100% statement coverage.
 
 - `useFocusTrap.test.tsx` — hook behavior (initial focus: default/custom element/ref/getter/`false`; Tab & Shift+Tab wrap-around; from-outside recovery; zero-focusable container pinning; disabled/hidden/`fieldset[disabled]` exclusion; `onEscape`; nested/simultaneous traps — topmost-only Escape & Tab, next-trap re-activation, no stack leak on unmount; return focus on deactivate/unmount; re-activation cancels the pending restore; `returnFocus` `false`/custom; ref stability; no-op when unattached; no re-subscribe on option change; StrictMode) plus the `getFocusableElements` / `isFocusable` / `isHidden` / `resolveFocusTarget` utilities in isolation.
 

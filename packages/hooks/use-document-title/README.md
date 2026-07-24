@@ -72,7 +72,7 @@ useDocumentTitle(`Inbox (${unread})`);
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-document-title/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **5 tests**, 92% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-document-title/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **5 tests**, 92% statement coverage.
 
 ## License
 

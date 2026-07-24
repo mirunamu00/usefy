@@ -157,7 +157,7 @@ function Drawer() {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-scroll-lock/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **37 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-scroll-lock/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **37 tests**, 100% statement coverage.
 
 - `useScrollLock.test.ts` — hook behavior (imperative lock/unlock, per-instance idempotency, nested locks across two instances, per-instance `isLocked`, unmount cleanup, the `enabled` option, and StrictMode double-mount safety)
 - `scrollLockManager.test.ts` — the shared reference counter (single apply/restore, scrollbar-width padding, original-style preservation, the iOS `position: fixed` branch + `scrollTo` restore, negative-count guard, SSR no-op)

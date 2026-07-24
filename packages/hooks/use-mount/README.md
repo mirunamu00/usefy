@@ -75,7 +75,7 @@ useMount(() => {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-mount/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **3 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-mount/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **3 tests**, 100% statement coverage.
 
 ## License
 

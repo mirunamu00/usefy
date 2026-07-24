@@ -136,7 +136,7 @@ function ReadingProgress() {
 
 ## Testing
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-scroll-position/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **27 tests**, 100% statement coverage.
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-scroll-position/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages) — **27 tests**, 100% statement coverage.
 
 - `useScrollPosition.test.ts` — hook behavior (window & element targets, ref targets, synchronous initial read, leading/trailing throttle, `throttleMs: 0`, reference stability, dynamic throttle without re-subscribe, listener cleanup on unmount / target change) plus the pure `utils` helpers (target resolution, offset reading, SSR guard, equality)
 

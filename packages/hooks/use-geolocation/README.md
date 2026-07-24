@@ -508,7 +508,7 @@ Measured coverage (central Vitest v8 run):
 | Branches    | 94.1%               | 100%       |
 | Functions   | 100%                | 100%       |
 
-📊 <a href="https://mirunamu00.github.io/usefy/coverage/use-geolocation/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
+📊 <a href="https://mirunamu00.github.io/usefy/coverage/hooks/use-geolocation/src/index.html" target="_blank" rel="noopener noreferrer"><strong>View Detailed Coverage Report</strong></a> (GitHub Pages)
 
 ### Test Categories
 
