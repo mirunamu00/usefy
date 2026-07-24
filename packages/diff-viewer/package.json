@@ -1,6 +1,6 @@
 {
   "name": "@usefy/diff-viewer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Text diff viewer for React — hand-written linear-space Myers engine with word-level intra-line highlighting, hunk collapsing, and a zero-dependency headless core",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

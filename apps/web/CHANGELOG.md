@@ -1,5 +1,12 @@
 # @usefy/web
 
+## 0.0.2
+
+### Patch Changes
+
+- Updated dependencies [576ca46]
+  - @usefy/diff-viewer@0.2.0
+
 ## 0.0.1
 
 ### Patch Changes
