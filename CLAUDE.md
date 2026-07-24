@@ -62,12 +62,32 @@ packages/
 └── <package>/                  # future top-level packages sit here too — another umbrella, or another standalone package
 apps/
 ├── storybook/                  # @usefy/storybook — interactive docs (:6006)
+├── web/                        # @usefy/web — Next.js landing + docs site (the public storefront)
 └── playground/                 # @usefy/playground — Vite sandbox app
 ```
 
 The **top level of `packages/`** is a flat set of independent packages, one directory each — that layout **is** the classification, not any imposed category. `hooks/` happens to be an umbrella that bundles a whole family (`@usefy/hooks` + `use-*`); `memory-monitor/` is a single standalone package. Future additions — another umbrella, or another standalone UI package — sit at this same level as their own directory. The `pnpm-workspace.yaml` glob `packages/*` picks them up automatically — drop a new directory in and it's a workspace, no config edit needed.
 
 Note the naming split: the **hook** package `@usefy/use-memory-monitor` (`packages/hooks/use-memory-monitor`) vs. the **component** package `@usefy/memory-monitor` (`packages/memory-monitor`), which consumes the hook.
+
+### A new standalone component must also land on `apps/web`
+
+Every standalone component has a **first-class presence on the site**: an
+accent-colored landing card with a signature micro-demo, and a **real
+interactive live demo** on its product page. A package that only gets registry
+wiring renders as a bare fallback card next to fully-presented siblings.
+
+Ship it in the **same branch as the package** (the site isn't published, so no
+changeset). Six touchpoints — the **`add-usefy-component` skill, Phase 7** has
+the full instructions:
+`build-registry.mjs` (`CATEGORY` + `PACKAGE_DIRS`, then regenerate
+`registry.generated.ts`) · `data/products.ts` (`PRODUCTS` entry + `demo` union
+member + `LIVE_DEMO_SLUGS`) · `globals.css` (`--accent-<slug>` in all three
+theme spots) · `product/product-card.tsx` (micro-demo `case`) ·
+`product-demos/<slug>-demo.tsx` + the `DEMOS` map in `live-demo.tsx` ·
+`apps/web/package.json` workspace dep. Verify both in a browser, both themes.
+
+Hooks have no per-package web presentation — this is component-only.
 
 ### The @usefy/hooks umbrella — keep in sync
 

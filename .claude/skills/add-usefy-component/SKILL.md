@@ -200,7 +200,56 @@ Then:
    - a `### @usefy/<name>` section in the **Packages** listing (an exports/API table), a peer of `### @usefy/hooks`,
    - and a row in the **"Choose Your Package"** quick-start table, labeled by the package (e.g. `Memory monitor`), not a generic "component".
 
-## Phase 7 — Changeset
+## Phase 7 — Web presentation (`apps/web`) — REQUIRED, not optional
+
+Every standalone package has a **first-class presence on the marketing/docs
+site**: an accent-colored card with a signature micro-demo on the landing page,
+and a **real interactive live demo** on its product page. A package that only
+gets registry wiring renders as a bare fallback card next to six fully-presented
+siblings — it looks abandoned. This has been missed twice; do not skip it.
+
+Do this in the **same branch/PR as the package** (the site is not published to
+npm, so it needs no changeset — but shipping the package without it means the
+site is wrong the moment the package releases).
+
+Read two or three existing siblings before writing anything
+(`confetti`, `virtual-keyboard`, `scroll-progress`, `signature-pad` are the
+models) and match their structure and tone. Six touchpoints:
+
+1. **Registry** — `apps/web/scripts/build-registry.mjs`: add the slug to the
+   `CATEGORY` map (`"<slug>": "component"`) and to `PACKAGE_DIRS`. The generated
+   `apps/web/src/data/registry.generated.ts` is produced by the build's prebuild
+   script — **regenerate, never hand-edit**.
+2. **Product identity** — `apps/web/src/data/products.ts`: a `PRODUCTS` entry
+   (`slug`, short `role` label, `accentVar`, `demo`), a new member in the `demo`
+   union for your micro-demo, and the slug added to `LIVE_DEMO_SLUGS`. Without
+   the entry the card silently falls back to the brand accent with no demo.
+3. **Accent tokens** — `apps/web/src/app/globals.css`: `--accent-<slug>` in
+   **all three** places the siblings define theirs (light `:root`, the
+   `prefers-color-scheme: dark` block, and the `data-theme` dark class). Pick a
+   hue distinct from the existing ones and check legibility in both themes.
+4. **Card micro-demo** — `apps/web/src/components/product/product-card.tsx`: a
+   `case` in the demo switch rendering a small, looping, *signature* animation
+   of what the product does (siblings: confetti burst, spotlight sweep,
+   keyboard typing, signature drawing itself). Must fit the shared stage height,
+   be `aria-hidden`, and respect `prefers-reduced-motion` (static end state).
+5. **Product-page live demo** — new
+   `apps/web/src/components/product-demos/<slug>-demo.tsx` wrapped in
+   `DemoShell`, plus its entry in the `DEMOS` map in
+   `product-demos/live-demo.tsx` (lazy `dynamic()` chunk, same pattern). Use the
+   **real component**, interactive-first: nothing self-runs, the visitor
+   triggers everything, and it is restartable. Show the package's actual selling
+   point (confetti fires bursts, signature-pad signs → exports a trimmed PNG).
+6. **Dependency** — `"@usefy/<name>": "workspace:*"` in `apps/web/package.json`,
+   then `pnpm install`.
+
+Then **verify in a browser** (`pnpm --filter @usefy/web build` + `next start`,
+Playwright): the landing card animates and resets, is static under reduced
+motion, the product page renders the full sibling template (accent, live demo,
+install command, links), and the live demo works in **both themes**. Screenshot
+the card and the live demo as evidence. See CLAUDE.md "Quality bar".
+
+## Phase 8 — Changeset
 
 ```bash
 pnpm changeset   # select @usefy/<name>, choose the bump
@@ -211,7 +260,7 @@ the component** — components aren't in the fixed group (that's hook-family-onl
 hook releases won't bump it and it won't drag hooks along. Verify with `pnpm changeset
 status`. **Without a changeset, nothing publishes.**
 
-## Phase 8 — Prefilled PR link (at completion)
+## Phase 9 — Prefilled PR link (at completion)
 
 Identical to the hooks workflow — **reuse `add-usefy-hook`'s Phase 10 verbatim**:
 build a `https://github.com/mirunamu00/usefy/compare/master...<branch>?expand=1&title=<enc>&body=<enc>`
@@ -238,5 +287,8 @@ wiring) · `pnpm build && pnpm test && pnpm typecheck` clean · Storybook
 story compiles **and passed visual QA in a running browser** (Phase 5 step 3 —
 screenshots as evidence; demos idle on open, no self-completing plays) · README
 (new component) + root README (added as a sibling of `@usefy/hooks` — Overview table, Ecosystem, Packages) updated ·
+**`apps/web` presentation complete (Phase 7: registry + PRODUCTS entry + accent
+tokens + card micro-demo + product-page live demo, browser-verified in both
+themes)** ·
 changeset present and `pnpm changeset status` shows the expected bump ·
 **a prefilled PR link generated and handed to the user**.

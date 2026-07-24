@@ -55,6 +55,14 @@ release process). Follow it.
   dispatch it from the event handler or a post-commit effect. Wrap returned
   functions in `useCallback`; give collection/handler objects stable identities
   via `useMemo`. Guard `window`/`document` for SSR. Support React 18 **and** 19.
+- **A standalone component isn't done until `apps/web` shows it off.** Every
+  standalone has an accent-colored landing card with a signature micro-demo AND
+  a real interactive live demo on its product page — registry wiring alone
+  renders a bare fallback card next to fully-presented siblings. It ships in the
+  same branch as the package; `add-usefy-component` Phase 7 lists the six
+  touchpoints (registry, `PRODUCTS` entry, accent tokens ×3, card micro-demo,
+  `product-demos/<slug>-demo.tsx` + `DEMOS` map, workspace dep). Hooks have no
+  web presentation of their own — this is component-only.
 - **Changeset or it doesn't release.** New feature = `minor` on the package (plus
   `@usefy/hooks` for a hook; a standalone component has no umbrella so just the
   component package). The hook family (`@usefy/hooks` + `@usefy/use-*`) is a fixed
@@ -97,7 +105,9 @@ umbrella wired for hooks (`@usefy/hooks`, 3 places; components have no umbrella)
 (`pnpm --filter @usefy/storybook build-storybook`) **and passed visual QA in a
 running browser (screenshots cited)** · coverage badge uses the real
 number (hooks) · READMEs updated (new package + root; hooks also the `@usefy/hooks`
-umbrella README) · changeset present with the expected bump. When a branch's work is complete, produce the
+umbrella README) · **for a standalone component: `apps/web` presentation complete
+and browser-verified in both themes (card micro-demo + product-page live demo,
+not just registry wiring)** · changeset present with the expected bump. When a branch's work is complete, produce the
 prefilled PR link per the skill's final phase.
 
 ## Environment

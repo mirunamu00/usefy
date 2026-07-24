@@ -88,6 +88,18 @@ Verify each; a miss is a finding:
   actually exercised (every option/prop, edge cases, enable/disable, unmount
   cleanup, SSR/unsupported, no-op skipping, reference stability); pure helpers
   unit-tested directly.
+- **`apps/web` presentation (standalone components only)** — a new standalone
+  package must reach full parity with its siblings on the site, in the same
+  change: slug in `build-registry.mjs` (`CATEGORY` + `PACKAGE_DIRS`) with
+  `registry.generated.ts` **regenerated, not hand-edited**; a `PRODUCTS` entry
+  in `data/products.ts` (role, `accentVar`, `demo` member) plus the slug in
+  `LIVE_DEMO_SLUGS`; `--accent-<slug>` in **all three** spots of `globals.css`;
+  a card micro-demo `case` in `product/product-card.tsx` (reduced-motion-safe);
+  a real interactive `product-demos/<slug>-demo.tsx` wired into the `DEMOS` map
+  of `live-demo.tsx`; and the `workspace:*` dep in `apps/web/package.json`.
+  Registry-only wiring is a **finding** — it renders as a bare fallback card
+  beside fully-presented siblings. Verify the card and live demo in a browser
+  (both themes) as part of your experience review.
 - **Changeset present** with the correct bump — new feature = `minor` on the
   package (plus `@usefy/hooks` for a hook; a component has no umbrella so just the
   component package). The hook family (`@usefy/hooks` + `@usefy/use-*`) is a fixed
