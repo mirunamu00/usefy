@@ -4,6 +4,12 @@ import { expect, userEvent, waitFor, within } from "@storybook/test";
 import { DiffViewer } from "@usefy/diff-viewer";
 import { storyTheme } from "../styles/storyTheme";
 
+// A diff — especially the side-by-side split view (old + new columns) — needs
+// roughly twice the width of a single-column hook demo, so these stories use a
+// wider wrapper than the shared 600px `storyTheme.container`. The component
+// still scrolls horizontally on narrower screens.
+const diffContainer = "p-8 max-w-[1100px] font-sans mx-auto";
+
 // ============================================================================
 // Sample content
 // ============================================================================
@@ -205,7 +211,7 @@ export const SplitVsUnified: Story = {
     const Demo = () => {
       const [view, setView] = useState<"split" | "unified">("split");
       return (
-        <div className={storyTheme.container}>
+        <div className={diffContainer}>
           <h2 className={storyTheme.title}>Split vs unified</h2>
           <p className={storyTheme.subtitle}>
             The same diff in both layouts — toggle and compare.
@@ -261,7 +267,7 @@ export const ProseAndCJK: Story = {
     },
   },
   render: () => (
-    <div className={storyTheme.container}>
+    <div className={diffContainer}>
       <h2 className={storyTheme.title}>Prose &amp; CJK</h2>
       <p className={storyTheme.subtitle}>
         Latin and Hangul highlight per word; Han and Kana per character.
@@ -300,7 +306,7 @@ export const WhitespaceOptions: Story = {
     const Demo = () => {
       const [mode, setMode] = useState<"none" | "trailing" | "all">("none");
       return (
-        <div className={storyTheme.container}>
+        <div className={diffContainer}>
           <h2 className={storyTheme.title}>Whitespace options</h2>
           <p className={storyTheme.subtitle}>
             <code>ignoreWhitespace</code> changes what counts as a difference, never what is
@@ -357,7 +363,7 @@ export const HugeDiff: Story = {
     const Demo = () => {
       const { before, after } = useMemo(() => hugeDiff(20_000), []);
       return (
-        <div className={storyTheme.container}>
+        <div className={diffContainer}>
           <h2 className={storyTheme.title}>20,000-line diff</h2>
           <p className={storyTheme.subtitle}>
             Windowed rendering — scroll the diff; the DOM stays tiny.
@@ -425,7 +431,7 @@ export const CustomRenderContent: Story = {
     },
   },
   render: () => (
-    <div className={storyTheme.container}>
+    <div className={diffContainer}>
       <h2 className={storyTheme.title}>Custom renderContent</h2>
       <p className={storyTheme.subtitle}>
         A dependency-free highlighter plugged into the <code>renderContent</code> seam.
@@ -510,7 +516,7 @@ export const InteractionTest: Story = {
       }, []);
 
       return (
-        <div className={storyTheme.container}>
+        <div className={diffContainer}>
           <div className={storyTheme.buttonGroupFull}>
             <button
               type="button"
