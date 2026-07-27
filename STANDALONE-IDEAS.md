@@ -19,6 +19,7 @@ well-known standalone libraries, not to design-system parts:
 | `confetti` | canvas-confetti |
 | `signature-pad` | signature_pad |
 | `diff-viewer` | react-diff-viewer |
+| `qr-code` | qrcode + qrcode.react + qr-code-styling, in one engine |
 | `spotlight-tour` | react-joyride / driver.js |
 | `virtual-keyboard` | react-simple-keyboard |
 | `memory-monitor` / `network-indicator` / `scroll-progress` | self-contained dev/status widgets |
@@ -47,6 +48,13 @@ make usefy a me-too component kit — not the point.
 5. **Is the gap real — verified, not assumed?** Check the incumbents' npm
    publish dates + weekly downloads before committing (the diff-viewer lesson:
    the "stalled" fork was actually the actively-maintained, more-used one).
+6. **Is there an independent oracle?** Something outside our own code that can
+   say "this output is correct" — a reference implementation to diff against, a
+   consumer that reads the output back, a closed-form answer, a published test
+   vector. This is a *tiebreaker, not a veto*: `confetti` and `spotlight-tour`
+   shipped fine without one. But candidates that have it reach a demonstrably
+   higher bar for the same effort (the qr-code lesson, below), so when two ideas
+   look equally good, take the one you can prove.
 
 ---
 
@@ -56,8 +64,7 @@ Pure, hand-testable cores — the strongest house-test fit, like the Myers engin
 
 | Idea | What it is | The engine / depth | Reuse |
 |---|---|---|---|
-| **qr-code** | QR (and barcode) generator | Reed–Solomon error correction, mask-pattern selection, matrix encoding — a genuinely pure algorithm, 100%-testable, zero-dep, SVG **and** canvas/PNG export like signature-pad | — (pure) |
-| **qr-scanner** | Camera → decode | getUserMedia stream + a QR/1D decode engine (jsQR/ZXing territory) — locator patterns, perspective correction; pairs with `qr-code` for a scan/generate set | permission, event-listener |
+| **qr-scanner** | Camera / image → decode | Binarization, locator-pattern detection, perspective correction, grid sampling, then Reed–Solomon *decoding* — **half the engine already exists**: `@usefy/qr-code`'s `galois.ts` + `reedSolomon.ts` give the GF(256) arithmetic, so only syndromes + an error locator are new. Pairs with `qr-code` as a generate/scan set | permission, event-listener |
 | **word-cloud** | Text → laid-out word cloud | Spiral placement with collision detection, frequency scaling, rotation, canvas/SVG output — a real layout algorithm | measure, resize-observer |
 | **calendar-heatmap** | GitHub-style contribution grid | Date bucketing, week/month layout, color scales, tooltips, locale weeks — a self-contained data-viz feature (react-calendar-heatmap) | media-query |
 
@@ -96,23 +103,65 @@ effect library, not a UI primitive). Browser-QA is the whole point.
 
 ---
 
+## What shipping `qr-code` taught us
+
+The previous #1 shipped, and it's worth recording *why* it went as well as it
+did, because it changes how the rest of this list should be ranked.
+
+**Two independent oracles carried the whole thing.** Every generated symbol was
+checked two ways that had nothing to do with our own code: matrices compared
+module-for-module against a reference encoder (all 160 version × level
+combinations, zero mismatches), and rendered output read back by a real decoder
+— including all 16 module × eye shape combinations, gradients on SVG *and*
+canvas, and the exported PNG's own bytes. That is what let "does it scan?" be a
+**test result** instead of an opinion, and it is why gate ⑥ now exists.
+
+**Measured beats assumed, and a threshold you can't cross isn't a threshold.**
+The per-shape `moduleGap` ceilings came from rendering in a browser and
+decoding at five resolutions. The first pass sampled four and got `square`
+wrong — and because its "safe" value equalled the hard clamp, the warning could
+never fire for square modules at all. Sample past where you think the answer is.
+
+**Budget for the review loop, and let it be adversarial.** Two `usefy-reviewer`
+rounds produced six blocking findings. Round 2's worst were two demos that
+called the encoder directly in render, so pasting a long value took down the
+Storybook canvas and an entire product-page route — while the package's headline
+promise was that an over-long value is *reported*, not thrown. The storefront
+was demonstrating the opposite of the pitch. Roughly a third of the effort went
+into these rounds; that is the normal cost, not an overrun.
+
+---
+
 ## Shortlist (strongest picks right now)
 
 Ordered by how squarely they hit the usefy character — a starting point, reorder
 to taste:
 
-1. **qr-code** — a genuinely pure algorithm (perfect house-test fit), zero-dep,
-   exportable like signature-pad, ubiquitous demand, crisp demo. The cleanest
-   "self-contained feature library" on the list.
-2. **image-cropper** — substantial gesture + canvas engine, clear standalone
-   demand, inherits the confetti/signature-pad canvas know-how.
-3. **json-viewer** — reuses diff-viewer's virtualization directly; a feature
-   people install on its own; strong data-line continuation.
+1. **qr-scanner** — the only candidate that is **self-verifying**: our own
+   encoder generates the ground truth, so "read back all 160 version × level
+   combinations" is an automated suite nothing else on this list can match. Half
+   the engine (GF(256) arithmetic) already ships in `@usefy/qr-code`, and the
+   pair makes a generate/scan set. *Risks, stated plainly:* the image-processing
+   half — binarization, locator detection, perspective correction — has no
+   shortcut and is where the estimate blows up; camera permissions and device
+   variance make browser QA harder (a fake media stream handles the automated
+   part); and jsQR / zxing-js are established, so gate ⑤ matters more than usual.
+   One lead worth chasing: during the qr-code build a valid version-23 symbol
+   failed to decode in jsQR — and the reference encoder's byte-identical matrix
+   failed too, so it was the decoder's limit, not ours. One data point, not a
+   market analysis.
+2. **json-viewer** — the cheapest good option. Reuses diff-viewer's windowing
+   and big-payload guards directly, and `JSON.parse` is a free oracle for the
+   parse half. Least new ground of anything here.
+3. **image-cropper** — substantial gesture + canvas engine, clear standalone
+   demand, inherits the confetti/signature-pad canvas know-how. Weakest on gate
+   ⑥: geometry and feel, with no external oracle to check the output against.
 4. **audio-waveform** — a real DSP-ish engine (peaks + seek), striking demo,
-   nothing UI-primitive about it.
+   nothing UI-primitive about it. Synthetic signals give it a partial oracle.
 5. **globe** — pure projection engine, an unforgettable landing-page card;
-   maximal "wow per package."
+   maximal "wow per package." Projection math has closed-form answers to check
+   against, but the rest is visual.
 
 **Before committing:** run the §"gap is real" check — npm publish dates +
 weekly downloads of the incumbents — then write the SPEC and go through the
-phased build + review loop like the shipped eight.
+phased build + review loop like the shipped nine.
