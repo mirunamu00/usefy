@@ -66,6 +66,7 @@ const CATEGORY = {
   "network-indicator": "component", "scroll-progress": "component",
   "spotlight-tour": "component", "confetti": "component",
   "signature-pad": "component", "diff-viewer": "component",
+  "qr-code": "component",
 };
 
 /** The package directories to scan, relative to packages/. */
@@ -79,6 +80,7 @@ const PACKAGE_DIRS = [
   "confetti",
   "signature-pad",
   "diff-viewer",
+  "qr-code",
 ];
 
 /** @param {string} dir */
@@ -88,11 +90,20 @@ function listDirs(dir) {
 }
 
 /**
+ * Slugs whose exported identifier isn't plain PascalCase — initialisms that
+ * would otherwise render as "QrCode" instead of the name people import.
+ * @type {Record<string, string>}
+ */
+const DISPLAY_NAME_OVERRIDES = { "qr-code": "QRCode" };
+
+/**
  * hooks slug → hook identifier: "use-toggle" → "useToggle".
  * component slug → PascalCase: "memory-monitor" → "MemoryMonitor".
  * @param {string} slug @param {"hook"|"component"} kind
  */
 function toDisplayName(slug, kind) {
+  const override = DISPLAY_NAME_OVERRIDES[slug];
+  if (override) return override;
   const parts = slug.split("-");
   if (kind === "hook") {
     return parts.map((p, i) => (i === 0 ? p : p[0].toUpperCase() + p.slice(1))).join("");

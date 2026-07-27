@@ -1,0 +1,84 @@
+{
+  "name": "@usefy/qr-code",
+  "version": "0.1.0",
+  "description": "QR code generator for React — hand-written ISO/IEC 18004 encoder with Reed–Solomon error correction, SVG/canvas/PNG output, module & eye shapes, gradients, logo embedding with scannability validation, and a zero-dependency RSC-safe headless core",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./headless": {
+      "types": "./dist/headless.d.ts",
+      "import": "./dist/headless.mjs",
+      "require": "./dist/headless.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rimraf dist && tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "size": "node scripts/measure-size.mjs",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@usefy/use-isomorphic-layout-effect": "workspace:*",
+    "@usefy/use-latest": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.0",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "esbuild": "^0.25.12",
+    "jsdom": "^26.0.0",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.16"
+  },
+  "keywords": [
+    "react",
+    "qr",
+    "qrcode",
+    "qr-code",
+    "barcode",
+    "generator",
+    "svg",
+    "canvas",
+    "reed-solomon",
+    "headless",
+    "rsc"
+  ],
+  "author": "usefy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/qr-code"
+  },
+  "bugs": {
+    "url": "https://github.com/mirunamu00/usefy/issues"
+  },
+  "homepage": "https://usefy-web.vercel.app/packages/qr-code",
+  "publishConfig": {
+    "access": "public"
+  }
+}

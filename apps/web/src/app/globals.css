@@ -37,6 +37,7 @@
   --accent-network-indicator: #1971c2;
   --accent-scroll-progress: #e8590c;
   --accent-diff-viewer: #9c36b5;
+  --accent-qr-code: #087f5b;
   color-scheme: light;
 }
 
@@ -68,6 +69,7 @@
     --accent-network-indicator: #74c0fc;
     --accent-scroll-progress: #ffa94d;
     --accent-diff-viewer: #e599f7;
+    --accent-qr-code: #63e6be;
     color-scheme: dark;
   }
 }
@@ -100,6 +102,7 @@
   --accent-network-indicator: #74c0fc;
   --accent-scroll-progress: #ffa94d;
   --accent-diff-viewer: #e599f7;
+  --accent-qr-code: #63e6be;
   color-scheme: dark;
 }
 
@@ -538,6 +541,58 @@ html[data-js] .reveal.is-visible { opacity: 1; transform: none; }
   50% { background: color-mix(in srgb, #37b24d 55%, transparent); }
 }
 
+/* qr-code card: a real, scannable code (encoded by the package itself) with a
+   scanner beam sweeping down it. Dark modules on a light plate in both themes —
+   the polarity scanners actually expect, and the one this package warns about
+   inverting. The accent belongs to the beam. */
+.demo-qr {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.demo-qr-plate {
+  display: block;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 2px;
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06);
+}
+.demo-qr-code {
+  display: block;
+  height: 3.9rem;
+  width: 3.9rem;
+}
+.demo-qr-beam {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 4.6rem;
+  transform: translateX(-50%);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--accent) 55%, transparent) 46%,
+    color-mix(in srgb, var(--accent) 75%, transparent) 50%,
+    color-mix(in srgb, var(--accent) 55%, transparent) 54%,
+    transparent 100%
+  );
+  opacity: 0;
+}
+.pcard:hover .demo-qr-beam,
+.pcard.demo-live .demo-qr-beam {
+  opacity: 1;
+  animation: qr-scan 2.6s ease-in-out infinite;
+}
+@keyframes qr-scan {
+  0% { transform: translateX(-50%) translateY(-105%); }
+  50% { transform: translateX(-50%) translateY(105%); }
+  100% { transform: translateX(-50%) translateY(-105%); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -549,5 +604,7 @@ html[data-js] .reveal.is-visible { opacity: 1; transform: none; }
   html[data-js] .reveal { opacity: 1; transform: none; }
   .demo-toast { opacity: 1; transform: none; }
   .demo-sig-main, .demo-sig-tail { stroke-dashoffset: 0; }
+  /* The code itself is the point; the beam is decoration, so it just goes. */
+  .demo-qr-beam { display: none; }
   .hero-spot { display: none; }
 }

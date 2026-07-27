@@ -116,6 +116,35 @@ export const generatedPackages: PackageEntry[] = [
     "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/network-indicator/README.md"
   },
   {
+    "slug": "qr-code",
+    "name": "@usefy/qr-code",
+    "displayName": "QRCode",
+    "kind": "component",
+    "family": "standalone",
+    "tagline": "QR code generator for React — hand-written ISO/IEC 18004 encoder with Reed–Solomon error correction, SVG/canvas/PNG output, module & eye shapes, gradients, logo embedding with scannability validation, and a zero-dependency RSC-safe headless core",
+    "subtitle": "QR code generator for React — hand-written ISO/IEC 18004 encoder, SVG/canvas/PNG output, module & eye shapes, gradients, logo embedding with scannability validation, zero dependencies",
+    "keywords": [
+      "qr",
+      "qrcode",
+      "qr-code",
+      "barcode",
+      "generator",
+      "svg",
+      "canvas",
+      "reed-solomon",
+      "headless",
+      "rsc"
+    ],
+    "version": "0.1.0",
+    "category": "component",
+    "quickStart": "import { QRCode } from \"@usefy/qr-code\";\n\nfunction ShareLink() {\n  return <QRCode value=\"https://usefy.dev\" size={200} level=\"Q\" title=\"Open usefy.dev\" />;\n}",
+    "apiMarkdown": "### `<QRCode />`\n\n| Prop | Type | Default | Description |\n|---|---|---|---|\n| `value` | `string \\| Uint8Array` | — | The data to encode. Bytes are passed through verbatim, with no ECI header |\n| `size` | `number` | `160` | Rendered width and height in px |\n| `render` | `\"svg\" \\| \"canvas\"` | `\"svg\"` | SVG scales and server-renders; canvas is cheaper with many codes on screen |\n| `controllerRef` | `Ref<QRCodeController>` | — | Imperative handle for exports and downloads |\n| `title` | `string` | — | Accessible name. Without one the code is `aria-hidden` |\n| `onError` | `(error: Error) => void` | — | Called when encoding fails; the component renders nothing |\n| `throwOnError` | `boolean` | `false` | Throw during render instead, for an error boundary |\n| `dpr` | `number` | `min(devicePixelRatio, 2)` | Backing-store scale for `render=\"canvas\"` |\n| `className` / `style` | — | — | Forwarded to the root element |\n\nPlus every option in [Options](#options).\n\n### `QRCodeController`\n\n| Method | Returns | Description |\n|---|---|---|\n| `getMatrix()` | `QRMatrix \\| null` | The encoded symbol |\n| `toSVG(options?)` | `string` | A standalone SVG document |\n| `toPNG(options?)` | `Promise<{ dataURL, blob }>` | Rasterized PNG |\n| `download(format?, filename?)` | `Promise<void>` | Triggers a browser download (`\"png\"` or `\"svg\"`) |\n\n### `useQRCode(options)`\n\n```tsx\nconst { matrix, error, svgProps, canvasRef, toSVG, toPNG, download } = useQRCode({\n  value: \"https://usefy.dev\",\n  level: \"Q\",\n});\n```\n\n| Field | Type | Description |\n|---|---|---|\n| `matrix` | `QRMatrix \\| null` | The encoded symbol, `null` when encoding failed |\n| `error` | `Error \\| null` | The encoding failure. Never thrown by the hook |\n| `svgProps` | `QRSVGProps \\| null` | Structured SVG data for rendering as JSX |\n| `canvasRef` | `(el: HTMLCanvasElement \\| null) => void` | Attach to a `<canvas>` to have it drawn and kept in sync |\n| `toSVG` / `toPNG` / `download` | — | As on the controller |\n\n---",
+    "storybookUrl": "https://mirunamu00.github.io/usefy/?path=/story/qr-code--default",
+    "npmUrl": "https://www.npmjs.com/package/@usefy/qr-code",
+    "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/qr-code",
+    "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/qr-code/README.md"
+  },
+  {
     "slug": "scroll-progress",
     "name": "@usefy/scroll-progress",
     "displayName": "ScrollProgress",

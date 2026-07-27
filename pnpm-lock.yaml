@@ -59,6 +59,9 @@ importers:
       '@usefy/network-indicator':
         specifier: workspace:*
         version: link:../../packages/network-indicator
+      '@usefy/qr-code':
+        specifier: workspace:*
+        version: link:../../packages/qr-code
       '@usefy/scroll-progress':
         specifier: workspace:*
         version: link:../../packages/scroll-progress
@@ -390,6 +393,9 @@ importers:
       '@usefy/network-indicator':
         specifier: workspace:*
         version: link:../../packages/network-indicator
+      '@usefy/qr-code':
+        specifier: workspace:*
+        version: link:../../packages/qr-code
       '@usefy/scroll-progress':
         specifier: workspace:*
         version: link:../../packages/scroll-progress
@@ -3318,6 +3324,58 @@ importers:
         specifier: ^4.0.16
         version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@2.7.0)(jsdom@26.1.0)(lightningcss@1.32.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
 
+  packages/qr-code:
+    dependencies:
+      '@usefy/use-isomorphic-layout-effect':
+        specifier: workspace:*
+        version: link:../hooks/use-isomorphic-layout-effect
+      '@usefy/use-latest':
+        specifier: workspace:*
+        version: link:../hooks/use-latest
+    devDependencies:
+      '@testing-library/react':
+        specifier: ^16.3.0
+        version: 16.3.1(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.7))(@types/react@19.2.7)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@types/qrcode':
+        specifier: ^1.5.6
+        version: 1.5.6
+      '@types/react':
+        specifier: ^19.0.0
+        version: 19.2.7
+      '@types/react-dom':
+        specifier: ^19.0.0
+        version: 19.2.3(@types/react@19.2.7)
+      esbuild:
+        specifier: ^0.25.12
+        version: 0.25.12
+      jsdom:
+        specifier: ^26.0.0
+        version: 26.1.0
+      jsqr:
+        specifier: ^1.4.0
+        version: 1.4.0
+      qrcode:
+        specifier: ^1.5.4
+        version: 1.5.4
+      react:
+        specifier: ^19.0.0
+        version: 19.2.3
+      react-dom:
+        specifier: ^19.0.0
+        version: 19.2.3(react@19.2.3)
+      rimraf:
+        specifier: ^6.0.1
+        version: 6.1.2
+      tsup:
+        specifier: ^8.3.5
+        version: 8.5.1(@swc/core@1.15.7)(jiti@2.7.0)(postcss@8.5.19)(typescript@5.9.3)(yaml@2.8.2)
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+      vitest:
+        specifier: ^4.0.16
+        version: 4.0.16(@types/node@25.0.3)(@vitest/browser-playwright@4.0.16)(@vitest/ui@4.0.16)(jiti@2.7.0)(jsdom@26.1.0)(lightningcss@1.32.0)(msw@2.12.4(@types/node@25.0.3)(typescript@5.9.3))(sass@1.97.2)(yaml@2.8.2)
+
   packages/scroll-progress:
     dependencies:
       '@usefy/use-isomorphic-layout-effect':
@@ -5376,6 +5434,9 @@ packages:
   '@types/node@25.0.3':
     resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
 
+  '@types/qrcode@1.5.6':
+    resolution: {integrity: sha512-te7NQcV2BOvdj2b1hCAHzAoMNuj65kNBMz0KBaxM6c3VGBOhU0dURQKOtH8CFNI/dsKkwlv32p26qYQTWoB5bw==}
+
   '@types/react-dom@19.2.3':
     resolution: {integrity: sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==}
     peerDependencies:
@@ -6196,6 +6257,9 @@ packages:
 
   diffable-html@4.1.0:
     resolution: {integrity: sha512-++kyNek+YBLH8cLXS+iTj/Hiy2s5qkRJEJ8kgu/WHbFrVY2vz9xPFUT+fii2zGF0m1CaojDlQJjkfrCt7YWM1g==}
+
+  dijkstrajs@1.0.3:
+    resolution: {integrity: sha512-qiSlmBq9+BCdCA/L46dw8Uy93mloxsPSbwnm5yrKn2vMPiy8KyAskTF6zuV/j5BMsmOGZDPs7KjU+mjb670kfA==}
 
   dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
@@ -7088,6 +7152,9 @@ packages:
   jsonfile@4.0.0:
     resolution: {integrity: sha512-m6F1R3z8jjlf2imQHS2Qez5sjKWQzbuuhuJ/FKYFRZvPE3PuHcSMVZzfsLhGVOkfd20obL5SWEBew5ShlquNxg==}
 
+  jsqr@1.4.0:
+    resolution: {integrity: sha512-dxLob7q65Xg2DvstYkRpkYtmKm2sPJ9oFhrhmudT1dZvNFFTlroai3AWSpLey/w5vMcLBXRgOJsbXpdN9HzU/A==}
+
   kleur@3.0.3:
     resolution: {integrity: sha512-eTIzlVOSUR+JxdDFepEYcBMtZ9Qqdef+rnzWdRZuMbOywu5tO2w2N7rqjoANZ5k9vywhL6Br1VRjUIgTQx4E8w==}
     engines: {node: '>=6'}
@@ -7742,6 +7809,10 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  pngjs@5.0.0:
+    resolution: {integrity: sha512-40QW5YalBNfQo5yRYmiw7Yz6TKKVr3h6970B2YE+3fQpsWcrbj1PzJgxeJ19DRQjhMbKPIuMY8rFaXc8moolVw==}
+    engines: {node: '>=10.13.0'}
+
   pngjs@7.0.0:
     resolution: {integrity: sha512-LKWqWJRhstyYo9pGvgor/ivk2w94eSjE3RGVuzLGlr3NmD8bf7RcYGze1mNdEHRP6TRP6rMuDHk5t44hnTRyow==}
     engines: {node: '>=14.19.0'}
@@ -7849,6 +7920,11 @@ packages:
 
   pure-rand@7.0.1:
     resolution: {integrity: sha512-oTUZM/NAZS8p7ANR3SHh30kXB+zK2r2BPcEn/awJIbOvq82WoMN4p62AWWp3Hhw50G0xMsw1mhIBLqHw64EcNQ==}
+
+  qrcode@1.5.4:
+    resolution: {integrity: sha512-1ca71Zgiu6ORjHqFBDpnSMTR2ReToX4l1Au1VFLyVeBTFavzQnv5JxMFr3ukHVKpSrSA2MCk0lNJSykjUfz7Zg==}
+    engines: {node: '>=10.13.0'}
+    hasBin: true
 
   quansync@0.2.11:
     resolution: {integrity: sha512-AifT7QEbW9Nri4tAwR5M/uzpBuqfZf+zwaEM/QkzEjj7NBuFD2rBuy0K3dE+8wltbezDV7JMA0WfnCPYRSYbXA==}
@@ -10716,6 +10792,10 @@ snapshots:
     dependencies:
       undici-types: 7.16.0
 
+  '@types/qrcode@1.5.6':
+    dependencies:
+      '@types/node': 25.0.3
+
   '@types/react-dom@19.2.3(@types/react@19.2.7)':
     dependencies:
       '@types/react': 19.2.7
@@ -11544,6 +11624,8 @@ snapshots:
   diffable-html@4.1.0:
     dependencies:
       htmlparser2: 3.10.1
+
+  dijkstrajs@1.0.3: {}
 
   dir-glob@3.0.1:
     dependencies:
@@ -12726,6 +12808,8 @@ snapshots:
     optionalDependencies:
       graceful-fs: 4.2.11
 
+  jsqr@1.4.0: {}
+
   kleur@3.0.3: {}
 
   leven@3.1.0: {}
@@ -13566,6 +13650,8 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.2
 
+  pngjs@5.0.0: {}
+
   pngjs@7.0.0:
     optional: true
 
@@ -13679,6 +13765,12 @@ snapshots:
   punycode@2.3.1: {}
 
   pure-rand@7.0.1: {}
+
+  qrcode@1.5.4:
+    dependencies:
+      dijkstrajs: 1.0.3
+      pngjs: 5.0.0
+      yargs: 15.4.1
 
   quansync@0.2.11: {}
 

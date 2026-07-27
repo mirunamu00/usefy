@@ -58,6 +58,7 @@
 | `@usefy/confetti` | Canvas confetti & celebration engine — pooled particle physics, presets, custom shapes, headless core |
 | `@usefy/signature-pad` | Electronic signature input — hand-written ink engine with velocity-based stroke width, PNG/SVG/JSON exports, headless core |
 | `@usefy/diff-viewer` | Text diff viewer — linear-space Myers engine, word-level highlighting, collapsible context, row virtualization, headless core |
+| `@usefy/qr-code` | QR code generator — hand-written ISO/IEC 18004 encoder, SVG/canvas/PNG output, module & eye shapes, gradients, logo safety validation, RSC-safe headless core |
 
 ---
 
@@ -428,6 +429,42 @@ function Review({ before, after }) {
 
 ---
 
+### @usefy/qr-code
+
+<a href="https://www.npmjs.com/package/@usefy/qr-code" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/qr-code.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/qr-code" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/qr-code.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/qr-code" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/qr-code?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+QR code generator — a hand-written ISO/IEC 18004 encoder (Reed–Solomon over
+GF(256), optimal mode segmentation, penalty-scored mask selection) feeding SVG,
+canvas and PNG from one geometry pipeline. Module and finder-eye shapes,
+gradients, and logo embedding with `logoSafety()` measuring occlusion against
+what the error-correction level can actually recover. The headless entry ships
+no `"use client"` and no React, so a server component renders a code with zero
+client JavaScript. Zero dependencies.
+
+```bash
+pnpm add @usefy/qr-code
+```
+
+```tsx
+import { QRCode } from "@usefy/qr-code";
+
+function ShareLink() {
+  return <QRCode value="https://usefy.dev" size={200} level="Q" title="Open usefy.dev" />;
+}
+```
+
+<a href="./packages/qr-code/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -444,6 +481,7 @@ function Review({ before, after }) {
 | Confetti / celebrations | `pnpm add @usefy/confetti` | `import { fireConfetti } from "@usefy/confetti"` |
 | Signature input | `pnpm add @usefy/signature-pad` | `import { SignaturePad } from "@usefy/signature-pad"` |
 | Text diff viewer | `pnpm add @usefy/diff-viewer` | `import { DiffViewer } from "@usefy/diff-viewer"` |
+| QR codes | `pnpm add @usefy/qr-code` | `import { QRCode } from "@usefy/qr-code"` |
 
 ### Peer Dependencies
 
@@ -650,6 +688,19 @@ Also ships a zero-React `@usefy/signature-pad/headless` entry (engine + ink math
 | `myersDiff`, `myersDiffBounded`, `splitLines`, `tokenizeWords`, `normalizeLine`, `similarity`, `inlineSegments`, `buildHunks`, `resolveOptions` | The pure, hand-testable diff core (CJK-aware, linear-space Myers) |
 
 Also ships a zero-React `@usefy/diff-viewer/headless` entry (engine + tokenizer + hunks + types, zero dependencies) and a `@usefy/diff-viewer/styles.css` export (styles otherwise inject at runtime).
+
+### @usefy/qr-code
+
+| Export | Description |
+| ------ | ----------- |
+| `QRCode` | The component — `render="svg" \| "canvas"`, every styling option as a prop, imperative `controllerRef` (`toSVG`/`toPNG`/`download`/`getMatrix`), `onError`/`throwOnError`, DOM passthrough |
+| `useQRCode` | `{ matrix, error, svgProps, canvasRef, toSVG, toPNG, download }` — the encoded symbol plus structured SVG data for markup you render yourself |
+| `encodeQR` | The ISO/IEC 18004 encoder — versions 1–40, L/M/Q/H, mixed-mode segmentation, ECI, forced version/mask |
+| `toSVG`, `toSVGProps`, `drawToCanvas`, `toPNG` | Four outputs from one matrix; `toSVGProps` is the zero-client-JS server-rendering path |
+| `logoSafety`, `contrastRatio`, `MAX_SAFE_MODULE_GAP` | Scannability analysis — logo occlusion vs the level's recovery budget, WCAG contrast, and the measured per-shape gap ceilings |
+| `matrixToPaths`, `segment`, `penaltyScore`, `maskAt`, `dataCapacityBits` | The pure encoder and geometry internals (hand-testable math) |
+
+Also ships a zero-React, **no-`"use client"`** `@usefy/qr-code/headless` entry (encoder + renderers + types, zero dependencies) that a React Server Component can import directly.
 
 ---
 
