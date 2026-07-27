@@ -18,6 +18,7 @@
     "@usefy/diff-viewer": "workspace:*",
     "@usefy/memory-monitor": "workspace:*",
     "@usefy/network-indicator": "workspace:*",
+    "@usefy/qr-code": "workspace:*",
     "@usefy/scroll-progress": "workspace:*",
     "@usefy/signature-pad": "workspace:*",
     "@usefy/spotlight-tour": "workspace:*",

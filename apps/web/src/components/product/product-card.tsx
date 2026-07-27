@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useHover } from "@usefy/use-hover";
 import { useIntersectionObserver } from "@usefy/use-intersection-observer";
 import { useMergedRefs } from "@usefy/use-merged-refs";
+import { encodeQR, toSVGProps } from "@usefy/qr-code/headless";
 import type { ProductMeta } from "@/data/products";
 import { cn } from "@/lib/cn";
 
@@ -27,6 +28,19 @@ const ROLL_NAMES = [
   "useMediaQuery",
   "useOnClickOutside",
 ];
+
+/**
+ * The QR card shows a genuine code, encoded once at module scope. Encoding is
+ * a pure function, so this costs nothing per render and the card demonstrates
+ * the product rather than a drawing of it.
+ */
+const QR_DEMO = toSVGProps(encodeQR("https://usefy.dev/packages/qr-code", { level: "M" }), {
+  // The spec's full quiet zone and dark-on-light polarity, because a card that
+  // claims to show a scannable code should not model what the package warns
+  // about. The accent colours the scanning beam, not the modules.
+  margin: 4,
+  bg: null,
+});
 
 export interface ProductCardProps {
   name: string;
@@ -278,6 +292,21 @@ function DemoStage({ demo }: { demo: ProductMeta["demo"] }) {
           <div className="demo-diff-row text-fg-subtle">
             <span className="demo-diff-sign" />  return total;
           </div>
+        </div>
+      );
+
+    case "qr-scan":
+      return (
+        <div className="demo-qr h-[4.5rem]" aria-hidden="true">
+          {/* A real code, encoded by the package itself at module scope. */}
+          <span className="demo-qr-plate">
+            <svg viewBox={QR_DEMO.viewBox} className="demo-qr-code" role="presentation">
+              {QR_DEMO.paths.map((path, index) => (
+                <path key={index} d={path.d} fill="#0f172a" />
+              ))}
+            </svg>
+          </span>
+          <span className="demo-qr-beam" />
         </div>
       );
 

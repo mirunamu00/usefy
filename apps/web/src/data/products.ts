@@ -28,6 +28,7 @@ export interface ProductMeta {
     | "network-pulse"
     | "progress-fill"
     | "diff-lines"
+    | "qr-scan"
     | "none";
 }
 
@@ -41,6 +42,7 @@ export const PRODUCTS: ProductMeta[] = [
   { slug: "network-indicator", role: "Connectivity status", accentVar: "--accent-network-indicator", demo: "network-pulse" },
   { slug: "scroll-progress", role: "Reading progress", accentVar: "--accent-scroll-progress", demo: "progress-fill" },
   { slug: "diff-viewer", role: "Text diffing", accentVar: "--accent-diff-viewer", demo: "diff-lines" },
+  { slug: "qr-code", role: "QR generation", accentVar: "--accent-qr-code", demo: "qr-scan" },
 ];
 
 const BY_SLUG = new Map(PRODUCTS.map((p) => [p.slug, p]));
@@ -56,6 +58,7 @@ const LIVE_DEMO_SLUGS = new Set([
   "memory-monitor",
   "network-indicator",
   "diff-viewer",
+  "qr-code",
 ]);
 
 export function hasLiveDemo(slug: string): boolean {
