@@ -1,5 +1,12 @@
 # @usefy/web
 
+## 0.0.3
+
+### Patch Changes
+
+- Updated dependencies [3e5d0cc]
+  - @usefy/qr-code@0.2.0
+
 ## 0.0.2
 
 ### Patch Changes
