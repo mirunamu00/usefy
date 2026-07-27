@@ -183,6 +183,27 @@ body {
   border-radius: 6px;
 }
 
+/* Same ring, drawn inside the box — for controls that live in a clipping
+   scroller (the hero tab strip), where a 2px-offset ring would be cut off. */
+.focusable-inset:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: -3px;
+  border-radius: 6px;
+}
+
+/* Horizontal strips that must stay scrollable on narrow viewports without
+   showing scrollbar chrome — the partially-clipped item is the affordance.
+   Setting overflow-x alone computes overflow-y to `auto`, so an element even
+   1px taller than the strip raises a stray vertical scrollbar; pin it hidden. */
+.rail-scroll {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.rail-scroll::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes rise {
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }

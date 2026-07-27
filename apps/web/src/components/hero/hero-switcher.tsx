@@ -83,43 +83,49 @@ export function HeroSwitcher({ tabs }: { tabs: HeroTab[] }) {
         <span className="ml-2 truncate font-mono text-xs text-white/40">{active.file}</span>
       </div>
 
-      <div
-        role="tablist"
-        aria-label="usefy products"
-        className="flex items-center gap-1 overflow-x-auto border-b px-2"
-        style={{ borderColor: "var(--code-border)" }}
-      >
-        {tabs.map((t) => (
-          <button
-            key={t.id}
-            id={`${uid}-tab-${t.id}`}
-            role="tab"
-            aria-selected={activeId === t.id}
-            aria-controls={`${uid}-panel`}
-            tabIndex={activeId === t.id ? 0 : -1}
-            onClick={() => selectTab(t.id)}
-            onKeyDown={(e) => {
-              let next: HeroTab | undefined;
-              const i = tabs.findIndex((x) => x.id === activeId);
-              if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
-              else if (e.key === "ArrowLeft") next = tabs[(i + tabs.length - 1) % tabs.length];
-              else if (e.key === "Home") next = tabs[0];
-              else if (e.key === "End") next = tabs[tabs.length - 1];
-              if (!next) return;
-              e.preventDefault();
-              selectTab(next.id);
-              document.getElementById(`${uid}-tab-${next.id}`)?.focus();
-            }}
-            className={cn(
-              "focusable -mb-px shrink-0 border-b-2 px-2.5 py-2 font-mono text-[11px] transition-colors",
-              activeId === t.id
-                ? "border-brand text-white"
-                : "border-transparent text-white/40 hover:text-white/70",
-            )}
-          >
-            {t.label}
-          </button>
-        ))}
+      {/* The rule lives on the wrapper, not the scroller: the strip is pulled
+          1px down over it so the active tab's underline overlaps the rule
+          instead of stacking above it. Keeping that -1px on the scroller
+          rather than on the tabs is what stops the tabs from overflowing
+          their own scroll container and raising a stray vertical scrollbar. */}
+      <div className="border-b" style={{ borderColor: "var(--code-border)" }}>
+        <div
+          role="tablist"
+          aria-label="usefy products"
+          className="rail-scroll -mb-px flex items-center gap-1 px-2"
+        >
+          {tabs.map((t) => (
+            <button
+              key={t.id}
+              id={`${uid}-tab-${t.id}`}
+              role="tab"
+              aria-selected={activeId === t.id}
+              aria-controls={`${uid}-panel`}
+              tabIndex={activeId === t.id ? 0 : -1}
+              onClick={() => selectTab(t.id)}
+              onKeyDown={(e) => {
+                let next: HeroTab | undefined;
+                const i = tabs.findIndex((x) => x.id === activeId);
+                if (e.key === "ArrowRight") next = tabs[(i + 1) % tabs.length];
+                else if (e.key === "ArrowLeft") next = tabs[(i + tabs.length - 1) % tabs.length];
+                else if (e.key === "Home") next = tabs[0];
+                else if (e.key === "End") next = tabs[tabs.length - 1];
+                if (!next) return;
+                e.preventDefault();
+                selectTab(next.id);
+                document.getElementById(`${uid}-tab-${next.id}`)?.focus();
+              }}
+              className={cn(
+                "focusable-inset shrink-0 border-b-2 px-2.5 py-2 font-mono text-[11px] transition-colors",
+                activeId === t.id
+                  ? "border-brand text-white"
+                  : "border-transparent text-white/40 hover:text-white/70",
+              )}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       <div id={`${uid}-panel`} role="tabpanel" aria-labelledby={`${uid}-tab-${activeId}`}>
