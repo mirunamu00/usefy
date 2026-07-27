@@ -45,9 +45,21 @@ make usefy a me-too component kit — not the point.
    deps (parser/highlighter) rather than bundling them.
 4. **Can the browser-QA pipeline prove it?** Its quality is something you can
    *see or measure* (CLAUDE.md "Quality bar").
-5. **Is the gap real — verified, not assumed?** Check the incumbents' npm
-   publish dates + weekly downloads before committing (the diff-viewer lesson:
-   the "stalled" fork was actually the actively-maintained, more-used one).
+5. **Is the reason honest — checked, not invented?** Look up the incumbents'
+   npm publish dates and weekly downloads before committing.
+
+   **A living incumbent is not a veto.** Every standalone here shipped against
+   one: `confetti` against canvas-confetti at 8.8M weekly, `spotlight-tour`
+   against a driver.js released nine days earlier, `virtual-keyboard` against a
+   react-simple-keyboard released three days earlier. If "the market must be
+   empty" were the rule, none of them would exist.
+
+   What this gate catches is a **false premise** — writing "nobody maintains
+   this" in the SPEC when the numbers say otherwise (the diff-viewer lesson:
+   the "stalled" fork was actually the actively-maintained, more-used one), or
+   not being able to state a reason at all. "It completes a set we already
+   ship" and "it shares an engine we already wrote" are perfectly good reasons.
+   "The incumbent is dead" is only a good reason when it's true.
 6. **Is there an independent oracle?** Something outside our own code that can
    say "this output is correct" — a reference implementation to diff against, a
    consumer that reads the output back, a closed-form answer, a published test
@@ -137,19 +149,30 @@ into these rounds; that is the normal cost, not an overrun.
 Ordered by how squarely they hit the usefy character — a starting point, reorder
 to taste:
 
-1. **qr-scanner** — the only candidate that is **self-verifying**: our own
-   encoder generates the ground truth, so "read back all 160 version × level
-   combinations" is an automated suite nothing else on this list can match. Half
-   the engine (GF(256) arithmetic) already ships in `@usefy/qr-code`, and the
-   pair makes a generate/scan set. *Risks, stated plainly:* the image-processing
-   half — binarization, locator detection, perspective correction — has no
-   shortcut and is where the estimate blows up; camera permissions and device
-   variance make browser QA harder (a fake media stream handles the automated
-   part); and jsQR / zxing-js are established, so gate ⑤ matters more than usual.
-   One lead worth chasing: during the qr-code build a valid version-23 symbol
-   failed to decode in jsQR — and the reference encoder's byte-identical matrix
-   failed too, so it was the decoder's limit, not ours. One data point, not a
-   market analysis.
+1. **qr-scanner** — completes the generate/scan set with `@usefy/qr-code`, and
+   is the only candidate that is **self-verifying**: our own encoder produces
+   the ground truth, so "read back all 160 version × level combinations" is an
+   automated suite nothing else here can match. The GF(256) arithmetic in
+   `@usefy/qr-code` (`galois.ts`, `reedSolomon.ts`) already covers the
+   Reed–Solomon half.
+
+   *The honest premise* — the scanner ecosystem is **healthy**, not abandoned
+   (see the measured table below). The reason to build it is the set, the
+   shared engine and the oracle; it is **not** "nobody maintains one." Do not
+   write that in the SPEC.
+
+   *Design constraint that follows from the data:* the hard half is image
+   processing, and `zxing-wasm` does it in WASM. A pure-TS decoder risks being
+   visibly slower on a mid-range phone, which fails the house quality bar on its
+   own terms. The answer is to make that a feature — **use the platform's
+   `BarcodeDetector` where available and fall back to our own engine
+   everywhere else**. That is a better product than either, and it takes the
+   demand the `barcode-detector` polyfill (1.3M weekly) demonstrates.
+
+   Both halves — native path and fallback engine, image *and* camera — are in
+   scope for the first release. See CLAUDE.md, "Build it properly the first
+   time": shipping the file-decode half and deferring the camera would make it
+   worse than what it replaces.
 2. **json-viewer** — the cheapest good option. Reuses diff-viewer's windowing
    and big-payload guards directly, and `JSON.parse` is a free oracle for the
    parse half. Least new ground of anything here.
@@ -162,6 +185,43 @@ to taste:
    maximal "wow per package." Projection math has closed-form answers to check
    against, but the rest is visual.
 
-**Before committing:** run the §"gap is real" check — npm publish dates +
-weekly downloads of the incumbents — then write the SPEC and go through the
-phased build + review loop like the shipped nine.
+**Before committing:** run gate ⑤ — npm publish dates + weekly downloads of the
+incumbents — then write the SPEC and go through the phased build + review loop
+like the shipped nine.
+
+---
+
+## Gate ⑤ data (measured 2026-07-27)
+
+Recorded so the next person doesn't re-measure, and so nobody writes "the
+incumbent is dead" without checking. Weekly downloads / last publish.
+
+**qr-scanner** — healthy ecosystem. The top-downloaded package looks abandoned,
+which is exactly the trap: `jsqr` 1.8M / 63 mo and `html5-qrcode` 1.2M / 39 mo
+are stale, but the live half is `zxing-wasm` 1.4M / 0.3 mo, `@zxing/library`
+1.4M / 2.9 mo, `barcode-detector` 1.3M / 0.5 mo, `@zxing/browser` 832k / 0.7 mo,
+and there *are* maintained React wrappers — `@yudiel/react-qr-scanner` 242k /
+2.5 mo, `react-zxing` 72k / 1.8 mo. Note `barcode-detector` polyfills a native
+browser API; the platform is absorbing this capability.
+
+**json-viewer** — the most fragmented. `react-json-view` 1.4M but **64.6 mo**
+stale, with an actively-maintained fork (`@microlink/react-json-view` 585k /
+0.1 mo) — the diff-viewer pattern again. Alternatives: `react-json-view-lite`
+1.6M / 10.6 mo, `react-json-tree` 1.0M / 16.8 mo, `json-edit-react` 330k /
+1.1 mo. The angle to verify is **virtualization for huge payloads**, where
+`react-json-view` is known to struggle and the lite alternatives don't really
+window — and where diff-viewer's hand-written engine already applies.
+
+**image-cropper** — no gap of any kind. `react-easy-crop` 2.7M / 0.1 mo,
+`react-image-crop` 2.3M / 1.2 mo, `cropperjs` 1.6M / 3.7 mo, all current.
+
+**audio-waveform** — `wavesurfer.js` 1.2M / 0.3 mo with an official React
+wrapper (`@wavesurfer/react` 264k). Well served.
+
+**globe** — smaller and steady: `cobe` 309k / 4.3 mo, `three-globe` 238k /
+3.7 mo, `globe.gl` 181k / 2.3 mo, `react-globe.gl` 129k / 2.3 mo.
+
+**For calibration — what the shipped ones faced:** canvas-confetti 8.8M /
+9.0 mo · signature_pad 2.4M / 7.7 mo · driver.js 1.3M / **0.3 mo** ·
+react-joyride 1.2M / 0.6 mo · react-simple-keyboard 122k / **0.1 mo** ·
+react-diff-viewer-continued 792k / 0.4 mo. Living incumbents, every time.
