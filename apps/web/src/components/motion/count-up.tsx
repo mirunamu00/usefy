@@ -21,22 +21,29 @@ export function CountUp({
   duration?: number;
   className?: string;
 }) {
-  const { ref, inView } = useIntersectionObserver({ threshold: 0.4 });
+  // triggerOnce: the first entry is all we need. Without it `inView` flips back
+  // to false on scroll-out, which would tear the observer's state back down.
+  const { ref, inView } = useIntersectionObserver({ threshold: 0.4, triggerOnce: true });
   const reducedMotion = useReducedMotion();
   const [value, setValue] = useState(to);
   const armed = useRef(false);
-  const started = useRef(false);
+  // Latched in state, never read from `inView` directly: the count must survive
+  // being scrolled out of view mid-animation instead of freezing part-way.
+  const [started, setStarted] = useState(false);
 
   // Pre-paint: JS is definitely running, so it's safe to arm the animation.
   useLayoutEffect(() => {
-    if (armed.current || started.current) return;
+    if (armed.current) return;
     armed.current = true;
     if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) setValue(0);
   }, []);
 
   useEffect(() => {
-    if (!inView || started.current) return;
-    started.current = true;
+    if (inView) setStarted(true);
+  }, [inView]);
+
+  useEffect(() => {
+    if (!started) return;
 
     if (reducedMotion) {
       setValue(to);
@@ -53,7 +60,7 @@ export function CountUp({
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [inView, reducedMotion, to, duration]);
+  }, [started, reducedMotion, to, duration]);
 
   return (
     <span ref={ref} className={className}>
