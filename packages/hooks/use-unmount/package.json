@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-unmount",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-unmount",
   "description": "A React hook that executes a callback when the component unmounts",
   "main": "./dist/index.js",

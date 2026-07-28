@@ -1,5 +1,11 @@
 # @usefy/use-measure
 
+## 1.1.0
+
+### Patch Changes
+
+- @usefy/use-resize-observer@1.1.0
+
 ## 1.0.0
 
 ### Major Changes

@@ -1,5 +1,7 @@
 # @usefy/use-history-state
 
+## 1.1.0
+
 ## 1.0.0
 
 ### Major Changes

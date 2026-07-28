@@ -1,5 +1,19 @@
 # @usefy/spotlight-tour
 
+## 0.2.2
+
+### Patch Changes
+
+- @usefy/use-controllable-state@1.1.0
+- @usefy/use-focus-trap@1.1.0
+- @usefy/use-hotkeys@1.1.0
+- @usefy/use-isomorphic-layout-effect@1.1.0
+- @usefy/use-latest@1.1.0
+- @usefy/use-mutation-observer@1.1.0
+- @usefy/use-reduced-motion@1.1.0
+- @usefy/use-resize-observer@1.1.0
+- @usefy/use-scroll-lock@1.1.0
+
 ## 0.2.1
 
 ### Patch Changes

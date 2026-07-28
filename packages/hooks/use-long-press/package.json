@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-long-press",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-long-press",
   "description": "A React hook for long-press gestures with a time threshold and movement cancellation — mouse and touch, with onStart/onFinish/onCancel callbacks",
   "main": "./dist/index.js",

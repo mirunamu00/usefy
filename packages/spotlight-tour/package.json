@@ -1,6 +1,6 @@
 {
   "name": "@usefy/spotlight-tour",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "React onboarding tour with a tracking spotlight overlay, animated step transitions, headless hook, and enterprise a11y",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-timeout",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-timeout",
   "description": "A React hook for declarative setTimeout with automatic cleanup and controls",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-latest",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-latest",
   "description": "A React hook that returns a ref always holding the latest value",
   "main": "./dist/index.js",

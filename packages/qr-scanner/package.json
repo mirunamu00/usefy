@@ -1,6 +1,6 @@
 {
   "name": "@usefy/qr-scanner",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "QR code scanner for React — the platform's native BarcodeDetector where it exists, a hand-written ISO/IEC 18004 decoder where it doesn't: camera and still image, Reed–Solomon error correction, perspective correction, ECI, and a zero-dependency headless core",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",

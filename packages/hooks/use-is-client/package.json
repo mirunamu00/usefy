@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-is-client",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-is-client",
   "description": "A React hook that returns true once the component has hydrated on the client (SSR-safe)",
   "main": "./dist/index.js",

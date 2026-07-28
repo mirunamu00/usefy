@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-debounce",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-debounce",
   "description": "A React hook for value debouncing with leading/trailing edge and maxWait options",
   "main": "./dist/index.js",

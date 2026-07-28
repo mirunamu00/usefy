@@ -1,5 +1,82 @@
 # @usefy/usefy
 
+## 1.1.0
+
+### Patch Changes
+
+- Updated dependencies [a71ab92]
+  - @usefy/use-user-media@1.1.0
+  - @usefy/use-async@1.1.0
+  - @usefy/use-async-fn@1.1.0
+  - @usefy/use-click-any-where@1.1.0
+  - @usefy/use-controllable-state@1.1.0
+  - @usefy/use-cookie@1.1.0
+  - @usefy/use-copy-to-clipboard@1.1.0
+  - @usefy/use-counter@1.1.0
+  - @usefy/use-dark-mode@1.1.0
+  - @usefy/use-debounce@1.1.0
+  - @usefy/use-debounce-callback@1.1.0
+  - @usefy/use-disclosure@1.1.0
+  - @usefy/use-document-title@1.1.0
+  - @usefy/use-event-callback@1.1.0
+  - @usefy/use-event-listener@1.1.0
+  - @usefy/use-focus-trap@1.1.0
+  - @usefy/use-focus-within@1.1.0
+  - @usefy/use-geolocation@1.1.0
+  - @usefy/use-history-state@1.1.0
+  - @usefy/use-hotkeys@1.1.0
+  - @usefy/use-hover@1.1.0
+  - @usefy/use-idle@1.1.0
+  - @usefy/use-infinite-scroll@1.1.0
+  - @usefy/use-init@1.1.0
+  - @usefy/use-intersection-observer@1.1.0
+  - @usefy/use-interval@1.1.0
+  - @usefy/use-is-client@1.1.0
+  - @usefy/use-is-first-render@1.1.0
+  - @usefy/use-isomorphic-layout-effect@1.1.0
+  - @usefy/use-key-press@1.1.0
+  - @usefy/use-latest@1.1.0
+  - @usefy/use-list@1.1.0
+  - @usefy/use-local-storage@1.1.0
+  - @usefy/use-long-press@1.1.0
+  - @usefy/use-map@1.1.0
+  - @usefy/use-measure@1.1.0
+  - @usefy/use-media-query@1.1.0
+  - @usefy/use-memory-monitor@1.1.0
+  - @usefy/use-merged-refs@1.1.0
+  - @usefy/use-mount@1.1.0
+  - @usefy/use-mutation-observer@1.1.0
+  - @usefy/use-network-state@1.1.0
+  - @usefy/use-object-state@1.1.0
+  - @usefy/use-on-click-outside@1.1.0
+  - @usefy/use-page-visibility@1.1.0
+  - @usefy/use-pagination@1.1.0
+  - @usefy/use-permission@1.1.0
+  - @usefy/use-polling@1.1.0
+  - @usefy/use-preferred-color-scheme@1.1.0
+  - @usefy/use-previous@1.1.0
+  - @usefy/use-queue@1.1.0
+  - @usefy/use-raf-state@1.1.0
+  - @usefy/use-reduced-motion@1.1.0
+  - @usefy/use-resize-observer@1.1.0
+  - @usefy/use-script@1.1.0
+  - @usefy/use-scroll-lock@1.1.0
+  - @usefy/use-scroll-position@1.1.0
+  - @usefy/use-selection@1.1.0
+  - @usefy/use-session-storage@1.1.0
+  - @usefy/use-set@1.1.0
+  - @usefy/use-signal@1.1.0
+  - @usefy/use-stack@1.1.0
+  - @usefy/use-step@1.1.0
+  - @usefy/use-throttle@1.1.0
+  - @usefy/use-throttle-callback@1.1.0
+  - @usefy/use-timeout@1.1.0
+  - @usefy/use-timer@1.1.0
+  - @usefy/use-toggle@1.1.0
+  - @usefy/use-unmount@1.1.0
+  - @usefy/use-update-effect@1.1.0
+  - @usefy/use-window-size@1.1.0
+
 ## 1.0.0
 
 ### Major Changes

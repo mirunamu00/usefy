@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-selection",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-selection",
   "description": "A React hook for managing multi/single selection state for lists and tables, backed by a Set",
   "main": "./dist/index.js",

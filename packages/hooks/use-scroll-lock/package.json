@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-scroll-lock",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-scroll-lock",
   "description": "A React hook to lock body scroll for modals, drawers, and menus — with iOS handling, a nested lock counter, and scroll-position restore",
   "main": "./dist/index.js",

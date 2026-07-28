@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-focus-within",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-focus-within",
   "description": "A React hook that tracks whether keyboard focus is anywhere within a subtree — focusin/focusout based, SSR-safe, with onFocus/onBlur edge callbacks",
   "main": "./dist/index.js",

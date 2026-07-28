@@ -1,5 +1,13 @@
 # @usefy/network-indicator
 
+## 0.1.1
+
+### Patch Changes
+
+- @usefy/use-event-callback@1.1.0
+- @usefy/use-network-state@1.1.0
+- @usefy/use-timeout@1.1.0
+
 ## 0.1.0
 
 ### Minor Changes

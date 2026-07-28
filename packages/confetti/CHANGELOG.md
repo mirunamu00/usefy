@@ -1,5 +1,14 @@
 # @usefy/confetti
 
+## 0.2.1
+
+### Patch Changes
+
+- @usefy/use-isomorphic-layout-effect@1.1.0
+- @usefy/use-latest@1.1.0
+- @usefy/use-page-visibility@1.1.0
+- @usefy/use-reduced-motion@1.1.0
+
 ## 0.2.0
 
 ### Minor Changes

@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-step",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-step",
   "description": "A React hook for multi-step navigation (wizards, forms, carousels)",
   "main": "./dist/index.js",

@@ -1,5 +1,7 @@
 # @usefy/use-geolocation
 
+## 1.1.0
+
 ## 1.0.0
 
 ### Major Changes
