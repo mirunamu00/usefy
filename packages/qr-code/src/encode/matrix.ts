@@ -125,14 +125,76 @@ export function drawFunctionPatterns(raw: RawMatrix): void {
 }
 
 /**
- * Snake the codewords through every non-function module: two columns at a
- * time, right to left, alternating upward and downward, skipping the vertical
- * timing pattern column. Leftover "remainder" modules stay light.
+ * The reserved-module map for a version: `1` where a function pattern (finder,
+ * separator, timing, alignment, format or version information) lives.
+ *
+ * Exported because a **decoder** needs exactly the same map to know which
+ * modules to skip — `@usefy/qr-scanner` reads it from here rather than
+ * restating the geometry, so the two halves of the format can never disagree
+ * about where the data starts.
  */
-export function drawCodewords(raw: RawMatrix, codewords: Readonly<Uint8Array>): void {
-  const { size } = raw;
-  let bit = 0;
-  const totalBits = codewords.length * 8;
+export function functionPatternMap(version: number): Uint8Array {
+  const size = versionSize(version);
+  const raw: RawMatrix = {
+    version,
+    size,
+    // The level only selects placeholder format bits, which are overwritten
+    // once the mask is known; it does not affect which modules are reserved.
+    level: "L",
+    modules: new Uint8Array(size * size),
+    reserved: new Uint8Array(size * size),
+  };
+  drawFunctionPatterns(raw);
+  return raw.reserved;
+}
+
+/**
+ * Memoized traversals, keyed by version.
+ *
+ * Both halves of the format walk this order on every symbol — the encoder once
+ * per encode, the scanner up to four times per *frame* (a mirrored retry and an
+ * inverted pass each repeat it). Rebuilding it means a throwaway function-
+ * pattern map plus a `Uint32Array(size²)`, which at version 40 is a quarter of
+ * a megabyte of garbage per attempt, at up to twelve frames a second.
+ *
+ * Bounded by construction: there are only 40 versions, and the largest entry is
+ * 118 KB, so a process that encoded or scanned every version would hold about
+ * 1.5 MB — far less than one frame's worth of the garbage this avoids.
+ */
+const orderCache = new Map<number, Uint32Array>();
+
+/**
+ * The order in which codeword bits occupy modules: two columns at a time,
+ * right to left, alternating upward and downward, skipping the vertical timing
+ * pattern column and every function module.
+ *
+ * Returns row-major module indices, one per data bit, longest-first. The
+ * length is the symbol's raw data-module count, so the trailing entries beyond
+ * `totalCodewords * 8` are the remainder modules.
+ *
+ * Shared with the decoder (`@usefy/qr-scanner`), which walks the identical
+ * order in reverse. Keeping one traversal for both directions is what makes
+ * "the scanner reads what the encoder wrote" a structural guarantee instead of
+ * a pair of loops that have to be kept in step by hand.
+ *
+ * **The returned array is shared and must not be mutated.** It is memoized per
+ * version precisely so that neither encoding nor scanning allocates it per
+ * symbol; handing out a copy would undo that (118 KB at version 40, several
+ * times per camera frame). Copy it yourself if you need to write to it.
+ */
+export function codewordModuleOrder(version: number): Uint32Array {
+  const cached = orderCache.get(version);
+  if (cached) return cached;
+
+  const order = traverseDataModules(versionSize(version), functionPatternMap(version));
+  orderCache.set(version, order);
+  return order;
+}
+
+/** The one implementation of the zig-zag walk. */
+function traverseDataModules(size: number, reserved: Readonly<Uint8Array>): Uint32Array {
+  const order = new Uint32Array(size * size);
+  let count = 0;
 
   for (let right = size - 1; right >= 1; right -= 2) {
     if (right === 6) right = 5; // skip the vertical timing pattern
@@ -142,11 +204,30 @@ export function drawCodewords(raw: RawMatrix, codewords: Readonly<Uint8Array>): 
         const upward = ((right + 1) & 2) === 0;
         const y = upward ? size - 1 - vert : vert;
         const index = y * size + x;
-        if (raw.reserved[index] === 1 || bit >= totalBits) continue;
-        raw.modules[index] = (codewords[bit >>> 3]! >>> (7 - (bit & 7))) & 1;
-        bit++;
+        if (reserved[index] === 1) continue;
+        order[count++] = index;
       }
     }
+  }
+
+  return order.slice(0, count);
+}
+
+/**
+ * Snake the codewords through every non-function module, in the order
+ * `codewordModuleOrder` defines. Leftover "remainder" modules stay light.
+ *
+ * Consumes the *published* order rather than re-walking `raw.reserved`, so the
+ * encoder and any decoder are provably reading one description of the
+ * traversal — and, because that order is memoized, encoding allocates nothing
+ * for it after the first symbol of a given version.
+ */
+export function drawCodewords(raw: RawMatrix, codewords: Readonly<Uint8Array>): void {
+  const order = codewordModuleOrder(raw.version);
+  const totalBits = Math.min(codewords.length * 8, order.length);
+
+  for (let bit = 0; bit < totalBits; bit++) {
+    raw.modules[order[bit]!] = (codewords[bit >>> 3]! >>> (7 - (bit & 7))) & 1;
   }
 }
 

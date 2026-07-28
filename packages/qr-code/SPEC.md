@@ -709,7 +709,10 @@ One matrix, one geometry layer, four output surfaces.
 - `@usefy/signature-pad` — canvas/DPR/export/color-sanitization precedents.
 - `@usefy/confetti` — tsup/measure-size/banner precedents.
 - `@usefy/diff-viewer` — pure-engine + golden-test precedent.
-- Future `@usefy/qr-scanner` — the decode counterpart (STANDALONE-IDEAS).
+- `@usefy/qr-scanner` — the decode counterpart. It consumes this package's
+  GF(256) arithmetic, capacity tables, BCH words and module traversal from
+  `./headless` rather than restating them, which is why those are exported and
+  documented as load-bearing public API.
 
 ### B. Prior art surveyed (2026-07-27, with live npm figures — §1.2)
 - [node-qrcode](https://github.com/soldair/node-qrcode) — encoder reference.
