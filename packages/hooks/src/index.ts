@@ -657,3 +657,21 @@ export {
   type UseScriptOptions,
   type UseScriptReturn,
 } from "@usefy/use-script";
+
+// useUserMedia — camera and microphone streams: `getUserMedia` lifecycle,
+// device enumeration and switching, torch control, and the teardown guarantee
+// that no track outlives the component (a leaked one keeps the camera light
+// on). `const camera = useUserMedia({ facingMode: 'environment' })` →
+// `{ stream, status, error, start, stop, devices, switchDevice, setTorch, … }`.
+// Acquisition is opt-in: a permission prompt nobody asked for is the fastest
+// way to be denied permanently. The generic helpers (`stopStream`,
+// `withVideoPreferences`, …) stay package-only to avoid umbrella collisions.
+export {
+  useUserMedia,
+  UserMediaError,
+  isUserMediaSupported,
+  type UserMediaStatus,
+  type UserMediaErrorReason,
+  type UseUserMediaOptions,
+  type UseUserMediaReturn,
+} from "@usefy/use-user-media";

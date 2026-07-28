@@ -176,6 +176,7 @@ All packages require React 18 or 19:
 | <a href="https://www.npmjs.com/package/@usefy/use-idle" target="_blank" rel="noopener noreferrer">@usefy/use-idle</a> | Report user inactivity after a timeout, with throttled activity listeners, visibility awareness, and SSR support | <a href="https://www.npmjs.com/package/@usefy/use-idle" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-idle.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![98%](https://img.shields.io/badge/coverage-98%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-permission" target="_blank" rel="noopener noreferrer">@usefy/use-permission</a> | Read Permissions API status with live updates — `{ state, status, isSupported, error }`, keyed on descriptor contents, SSR-safe, accepts any permission name | <a href="https://www.npmjs.com/package/@usefy/use-permission" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-permission.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![100%](https://img.shields.io/badge/coverage-100%25-brightgreen?style=flat-square) |
 | <a href="https://www.npmjs.com/package/@usefy/use-script" target="_blank" rel="noopener noreferrer">@usefy/use-script</a> | Load an external script with `idle/loading/ready/error` status, `<script>` deduplication across components, and ref-counted cleanup — SSR-safe and StrictMode-safe | <a href="https://www.npmjs.com/package/@usefy/use-script" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-script.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![96%](https://img.shields.io/badge/coverage-96%25-brightgreen?style=flat-square) |
+| <a href="https://www.npmjs.com/package/@usefy/use-user-media" target="_blank" rel="noopener noreferrer">@usefy/use-user-media</a> | Camera and microphone streams — `getUserMedia` lifecycle, device enumeration and switching, torch, normalized errors, and a teardown guarantee (no track outlives the component) | <a href="https://www.npmjs.com/package/@usefy/use-user-media" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/npm/v/@usefy/use-user-media.svg?style=flat-square&color=007acc" alt="npm version" /></a> | ![97%](https://img.shields.io/badge/coverage-97%25-brightgreen?style=flat-square) |
 
 ---
 
@@ -1893,6 +1894,27 @@ function MouseFollower() {
 ```
 
 A drop-in replacement for `useState` whose setter **batches** every update to `requestAnimationFrame`, so a burst of rapid `setState` calls (scroll, resize, pointer move, animation loops) coalesces to **at most one commit per frame** — smoother UI and far fewer wasted re-renders. The API matches `useState` exactly: a direct initial value **or** a lazy `() => T` initializer (forwarded to the underlying `useState`, so it runs once), and a setter that accepts a next value **or** a functional updater `(prev) => next`. **Coalescing is last-write-wins**: if the setter is called several times before the frame fires, the earlier frames are cancelled and only the latest call commits — functional updaters follow the same rule (three `setState(n => n+1)` in one frame commit `1`, not `3`; to accumulate within a frame, set an absolute value instead). The setter is referentially **stable** (`useCallback([])`), safe as a child prop or effect dependency. Any pending frame is **cancelled on unmount** (no setState after unmount), it never touches `requestAnimationFrame` at import time (**SSR-safe**, falling back to a synchronous update when rAF is unavailable), and it is **StrictMode / concurrent-safe** (no leaked or double-applied frames).
+
+</details>
+
+<details>
+<summary><strong>useUserMedia</strong> — Camera and microphone streams, with a teardown you can rely on</summary>
+
+```tsx
+import { useUserMedia } from "@usefy/use-user-media";
+
+// Opt-in by default: nothing opens until you ask.
+const camera = useUserMedia({ facingMode: "environment" });
+
+<video ref={(el) => el && (el.srcObject = camera.stream)} autoPlay playsInline muted />;
+<button onClick={camera.start}>Start camera</button>;
+
+// Switching and torch
+if (camera.devices.length > 1) camera.switchDevice();
+if (camera.isTorchSupported) await camera.setTorch(true);
+```
+
+`getUserMedia` looks like a one-line API and is not. This wraps the parts that only become obvious after they have gone wrong in front of someone: **every track is stopped** on unmount, on `stop()`, and when a stream is replaced — including a stream that arrives *after* the component unmounted, because the user answered the permission sheet late and nobody is going to render it. Acquisition is **race-safe**: a superseded request releases its stream instead of quietly re-opening the camera, so out-of-order resolutions cannot leave the wrong one live. `status` distinguishes `prompting` from `error`, because a UI must not show "camera unavailable" over the top of the permission dialog, and every `DOMException` is normalized to a `reason` (`denied · not-found · in-use · over-constrained · unsupported`) with a message a user can act on. `facingMode` is passed as a preference (a laptop with only a front camera still opens it) while an explicit `deviceId` is passed as `exact` (a device the user picked is not a suggestion). Device labels only appear after the first grant, so enumeration runs then and refreshes on `devicechange`. Torch is capability-probed and returns `false` rather than lying when a device advertises support and then refuses. **Nothing opens on mount unless you pass `autoStart`** — a permission prompt nobody asked for is the fastest way to be denied permanently. SSR-safe and StrictMode-safe.
 
 </details>
 
