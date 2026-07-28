@@ -22,6 +22,7 @@ well-known standalone libraries, not to design-system parts:
 | `qr-code` | qrcode + qrcode.react + qr-code-styling, in one engine |
 | `spotlight-tour` | react-joyride / driver.js |
 | `virtual-keyboard` | react-simple-keyboard |
+| `qr-scanner` | jsQR / zxing-js / @yudiel/react-qr-scanner, plus the native `BarcodeDetector` |
 | `memory-monitor` / `network-indicator` / `scroll-progress` | self-contained dev/status widgets |
 
 **usefy is NOT a UI kit.** We do **not** ship the primitives a design system
@@ -76,7 +77,7 @@ Pure, hand-testable cores — the strongest house-test fit, like the Myers engin
 
 | Idea | What it is | The engine / depth | Reuse |
 |---|---|---|---|
-| **qr-scanner** | Camera / image → decode | Binarization, locator-pattern detection, perspective correction, grid sampling, then Reed–Solomon *decoding* — **half the engine already exists**: `@usefy/qr-code`'s `galois.ts` + `reedSolomon.ts` give the GF(256) arithmetic, so only syndromes + an error locator are new. Pairs with `qr-code` as a generate/scan set | permission, event-listener |
+| ~~**qr-scanner**~~ | ~~Camera / image → decode~~ | **Shipped** (see "What shipping `qr-scanner` taught us") | — |
 | **word-cloud** | Text → laid-out word cloud | Spiral placement with collision detection, frequency scaling, rotation, canvas/SVG output — a real layout algorithm | measure, resize-observer |
 | **calendar-heatmap** | GitHub-style contribution grid | Date bucketing, week/month layout, color scales, tooltips, locale weeks — a self-contained data-viz feature (react-calendar-heatmap) | media-query |
 
@@ -144,50 +145,73 @@ into these rounds; that is the normal cost, not an overrun.
 
 ---
 
+## What shipping `qr-scanner` taught us
+
+The #1 pick shipped. Four things are worth carrying forward, because each cost
+real time and each is likely to recur.
+
+**The oracle was everything it promised, and then some.** `@usefy/qr-code`
+generating the ground truth turned "does it read every symbol" into a 160-combination
+automated suite that passed on the *first* run of the bit-level decoder. But
+agreeing with our own encoder only proves the two halves are consistent — so a
+separate interop suite reads symbols from `node-qrcode` (a completely separate
+implementation, every version group, level and mask) and compares recall against
+jsQR on a degraded corpus. Budget for both: the second one is what proves
+*correctness* rather than *consistency*.
+
+**Browser QA found what 300 unit tests could not.** Two real defects surfaced
+only when a symbol was drawn to a canvas and read back: a rotated, antialiased
+symbol lost one of its three finder patterns (the diagonal cross-check compared
+run lengths against a value that has no fixed expectation — a diagonal chord is
+√2 × the side when axis-aligned and 1 × at 45°), and the damage demo's blots
+landed on the finder patterns, so it demonstrated nothing about error
+correction. Neither was reachable from the synthetic corpus. **The browser pass
+is not a formality.**
+
+**A benchmark can overturn a design decision — let it.** `maxDimension: 800`
+was in the SPEC from the start as "a decode budget". Measured, it *cost* about
+twice what it saved at every camera resolution, because reading every source
+pixel is comparable to one detection pass over them. The cap now applies only
+past a 2.5× reduction, and the resampler was rewritten to be separable; together
+those made every benchmark row 1.3–4× faster. Write the benchmark before
+defending the number.
+
+**Two review rounds, and both earned their keep.** Round 1 found a real bug (two
+symbols could share a finder pattern, with a *vacuous* test guarding it), a
+claim in the code that was simply false (the post-correction syndrome check does
+not detect miscorrection — a miscorrected word is a valid codeword), and six
+exports published with no consumer. Round 2 covered the React and camera layer.
+Roughly a third of the effort, as `qr-code` also found.
+
+Two claims we wrote and then had to retract, both because they *sounded* right:
+mirroring is **not** detectable from finder-pattern geometry (the patterns are
+identical squares; of the two corner labellings, one always has "normal"
+handedness), and a `sideEffects: false` manifest silently deletes a worker entry
+that exists only for its side effect. Both were caught by measurement rather
+than reasoning.
+
+---
+
 ## Shortlist (strongest picks right now)
 
 Ordered by how squarely they hit the usefy character — a starting point, reorder
 to taste:
 
-1. **qr-scanner** — completes the generate/scan set with `@usefy/qr-code`, and
-   is the only candidate that is **self-verifying**: our own encoder produces
-   the ground truth, so "read back all 160 version × level combinations" is an
-   automated suite nothing else here can match. The GF(256) arithmetic in
-   `@usefy/qr-code` (`galois.ts`, `reedSolomon.ts`) already covers the
-   Reed–Solomon half.
-
-   *The honest premise* — the scanner ecosystem is **healthy**, not abandoned
-   (see the measured table below). The reason to build it is the set, the
-   shared engine and the oracle; it is **not** "nobody maintains one." Do not
-   write that in the SPEC.
-
-   *Design constraint that follows from the data:* the hard half is image
-   processing, and `zxing-wasm` does it in WASM. A pure-TS decoder risks being
-   visibly slower on a mid-range phone, which fails the house quality bar on its
-   own terms. The answer is to make that a feature — **use the platform's
-   `BarcodeDetector` where available and fall back to our own engine
-   everywhere else**. That is a better product than either, and it takes the
-   demand the `barcode-detector` polyfill (1.3M weekly) demonstrates.
-
-   Both halves — native path and fallback engine, image *and* camera — are in
-   scope for the first release. See CLAUDE.md, "Build it properly the first
-   time": shipping the file-decode half and deferring the camera would make it
-   worse than what it replaces.
-2. **json-viewer** — the cheapest good option. Reuses diff-viewer's windowing
+1. **json-viewer** — the cheapest good option. Reuses diff-viewer's windowing
    and big-payload guards directly, and `JSON.parse` is a free oracle for the
    parse half. Least new ground of anything here.
-3. **image-cropper** — substantial gesture + canvas engine, clear standalone
+2. **image-cropper** — substantial gesture + canvas engine, clear standalone
    demand, inherits the confetti/signature-pad canvas know-how. Weakest on gate
    ⑥: geometry and feel, with no external oracle to check the output against.
-4. **audio-waveform** — a real DSP-ish engine (peaks + seek), striking demo,
+3. **audio-waveform** — a real DSP-ish engine (peaks + seek), striking demo,
    nothing UI-primitive about it. Synthetic signals give it a partial oracle.
-5. **globe** — pure projection engine, an unforgettable landing-page card;
+4. **globe** — pure projection engine, an unforgettable landing-page card;
    maximal "wow per package." Projection math has closed-form answers to check
    against, but the rest is visual.
 
 **Before committing:** run gate ⑤ — npm publish dates + weekly downloads of the
 incumbents — then write the SPEC and go through the phased build + review loop
-like the shipped nine.
+like the shipped ten.
 
 ---
 
