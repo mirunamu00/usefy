@@ -1,5 +1,13 @@
 # @usefy/scroll-progress
 
+## 0.1.1
+
+### Patch Changes
+
+- @usefy/use-isomorphic-layout-effect@1.1.0
+- @usefy/use-scroll-position@1.1.0
+- @usefy/use-window-size@1.1.0
+
 ## 0.1.0
 
 ### Minor Changes

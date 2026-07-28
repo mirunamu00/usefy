@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-async-fn",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-async-fn",
   "description": "A React hook for running a manual-trigger async function with idle/pending/success/error lifecycle tracking and race-safe stale-response guarding",
   "main": "./dist/index.js",

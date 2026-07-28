@@ -1,5 +1,13 @@
 # @usefy/virtual-keyboard
 
+## 1.0.2
+
+### Patch Changes
+
+- @usefy/use-controllable-state@1.1.0
+- @usefy/use-long-press@1.1.0
+- @usefy/use-on-click-outside@1.1.0
+
 ## 1.0.1
 
 ### Patch Changes

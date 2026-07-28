@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-polling",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-polling",
   "description": "A React hook to poll an async function on an interval — non-overlapping self-scheduling ticks, pause/resume, an enabled gate, and exponential backoff",
   "main": "./dist/index.js",

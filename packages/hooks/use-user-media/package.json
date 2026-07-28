@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-user-media",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-user-media",
   "description": "A React hook for camera and microphone streams — getUserMedia lifecycle, device switching, torch, and guaranteed teardown",
   "main": "./dist/index.js",

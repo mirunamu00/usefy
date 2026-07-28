@@ -1,5 +1,12 @@
 # @usefy/use-hotkeys
 
+## 1.1.0
+
+### Patch Changes
+
+- @usefy/use-event-listener@1.1.0
+- @usefy/use-latest@1.1.0
+
 ## 1.0.0
 
 ### Major Changes

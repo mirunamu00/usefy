@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-scroll-position",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-scroll-position",
   "description": "A React hook for tracking the throttled scroll position (x, y) of the window or a given element",
   "main": "./dist/index.js",

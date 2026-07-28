@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-queue",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-queue",
   "description": "A React hook for managing FIFO queue state with immutable updates",
   "main": "./dist/index.js",

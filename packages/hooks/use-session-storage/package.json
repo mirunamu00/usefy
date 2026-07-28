@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-session-storage",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-session-storage",
   "description": "A React hook for persisting state in sessionStorage",
   "main": "./dist/index.js",

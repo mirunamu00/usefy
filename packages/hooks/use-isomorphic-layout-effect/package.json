@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-isomorphic-layout-effect",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-isomorphic-layout-effect",
   "description": "An SSR-safe useLayoutEffect that falls back to useEffect on the server",
   "main": "./dist/index.js",

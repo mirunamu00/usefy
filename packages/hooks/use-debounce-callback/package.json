@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-debounce-callback",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-debounce-callback",
   "description": "A React hook for debouncing callback functions",
   "main": "./dist/index.js",

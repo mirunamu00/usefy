@@ -1,6 +1,6 @@
 {
   "name": "@usefy/use-idle",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "homepage": "https://usefy-web.vercel.app/packages/use-idle",
   "description": "A React hook that reports user inactivity after a timeout, with throttled activity listeners, visibility awareness, and SSR support",
   "main": "./dist/index.js",
