@@ -53,6 +53,7 @@
     "@usefy/use-list": "workspace:*",
     "@usefy/use-queue": "workspace:*",
     "@usefy/use-history-state": "workspace:*",
+    "@usefy/use-user-media": "workspace:*",
     "@usefy/use-step": "workspace:*",
     "@usefy/use-window-size": "workspace:*",
     "@usefy/use-is-client": "workspace:*",

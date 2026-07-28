@@ -1,0 +1,65 @@
+{
+  "name": "@usefy/use-user-media",
+  "version": "1.0.0",
+  "homepage": "https://usefy-web.vercel.app/packages/use-user-media",
+  "description": "A React hook for camera and microphone streams — getUserMedia lifecycle, device switching, torch, and guaranteed teardown",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "clean": "rimraf dist"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.1",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "jsdom": "^27.3.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^4.0.16"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/hooks/use-user-media"
+  },
+  "license": "MIT",
+  "keywords": [
+    "react",
+    "hooks",
+    "getusermedia",
+    "camera",
+    "webcam",
+    "microphone",
+    "mediastream",
+    "mediadevices",
+    "torch",
+    "useUserMedia"
+  ]
+}

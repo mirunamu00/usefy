@@ -28,6 +28,8 @@
     "@usefy/memory-monitor": "workspace:*",
     "@usefy/network-indicator": "workspace:*",
     "@usefy/qr-code": "workspace:*",
+    "@usefy/qr-scanner": "workspace:*",
+    "@usefy/use-user-media": "workspace:*",
     "@usefy/scroll-progress": "workspace:*",
     "@usefy/signature-pad": "workspace:*",
     "@usefy/spotlight-tour": "workspace:*",

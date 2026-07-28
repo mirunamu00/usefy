@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDir": ".",
+    "composite": false,
+    "types": ["vitest/globals"],
+    // DOM.Iterable buys `for…of` over NodeList/MediaDeviceInfo lists. WebWorker
+    // is deliberately NOT in this list: its globals collide with DOM's, so
+    // src/worker.ts types its own scope locally instead.
+    "lib": ["ES2020", "DOM", "DOM.Iterable"]
+  },
+  "include": ["src/**/*", "vitest.setup.ts"],
+  "exclude": ["node_modules", "dist"]
+}

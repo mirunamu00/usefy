@@ -62,6 +62,44 @@ describe("the ./headless surface", () => {
     }
   });
 
+  it("exports the spec primitives a decoder needs", () => {
+    // These are shared with @usefy/qr-scanner so the two halves of the format
+    // read from one description of ISO/IEC 18004 (SPEC §4.3). Removing one is a
+    // breaking change even though nothing in this package would notice.
+    for (const name of [
+      "gfExp",
+      "gfMul",
+      "gfDiv",
+      "rsEncode",
+      "ecCodewordsPerBlock",
+      "numEcBlocks",
+      "totalCodewords",
+      "formatInfoBits",
+      "versionInfoBits",
+      "functionPatternMap",
+      "codewordModuleOrder",
+    ]) {
+      expect(headless, `missing export: ${name}`).toHaveProperty(name);
+    }
+  });
+
+  it("publishes nothing the scanner does not actually import", () => {
+    // An export carries a breaking-change contract forever. The first draft of
+    // this surface shipped five more primitives on the theory that a decoder
+    // would want them; none was ever referenced. Un-exporting after release
+    // would be a major bump, so the list is kept honest here instead.
+    for (const name of [
+      "gfLog",
+      "polyMul",
+      "PRIMITIVE",
+      "generatorPoly",
+      "MODE_INDICATOR",
+      "EC_FORMAT_BITS",
+    ]) {
+      expect(headless, `unused export: ${name}`).not.toHaveProperty(name);
+    }
+  });
+
   it("exports no React component or hook — that is what the root entry is for", () => {
     expect(headless).not.toHaveProperty("QRCode");
     expect(headless).not.toHaveProperty("useQRCode");

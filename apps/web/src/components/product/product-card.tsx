@@ -310,6 +310,26 @@ function DemoStage({ demo }: { demo: ProductMeta["demo"] }) {
         </div>
       );
 
+    case "qr-viewfinder":
+      return (
+        <div className="demo-scan h-[4.5rem]" aria-hidden="true">
+          {/* The camera's view: a real code, slightly askew, the way one
+              actually arrives in a viewfinder. */}
+          <span className="demo-scan-frame">
+            <svg viewBox={QR_DEMO.viewBox} className="demo-scan-code" role="presentation">
+              {QR_DEMO.paths.map((path, index) => (
+                <path key={index} d={path.d} fill="#0f172a" />
+              ))}
+            </svg>
+            <span className="demo-scan-lock" />
+          </span>
+          <span className="demo-scan-bracket demo-scan-tl" />
+          <span className="demo-scan-bracket demo-scan-tr" />
+          <span className="demo-scan-bracket demo-scan-bl" />
+          <span className="demo-scan-bracket demo-scan-br" />
+        </div>
+      );
+
     case "none":
       return null;
   }

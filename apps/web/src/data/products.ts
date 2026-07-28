@@ -29,6 +29,7 @@ export interface ProductMeta {
     | "progress-fill"
     | "diff-lines"
     | "qr-scan"
+    | "qr-viewfinder"
     | "none";
 }
 
@@ -43,6 +44,7 @@ export const PRODUCTS: ProductMeta[] = [
   { slug: "scroll-progress", role: "Reading progress", accentVar: "--accent-scroll-progress", demo: "progress-fill" },
   { slug: "diff-viewer", role: "Text diffing", accentVar: "--accent-diff-viewer", demo: "diff-lines" },
   { slug: "qr-code", role: "QR generation", accentVar: "--accent-qr-code", demo: "qr-scan" },
+  { slug: "qr-scanner", role: "QR scanning", accentVar: "--accent-qr-scanner", demo: "qr-viewfinder" },
 ];
 
 const BY_SLUG = new Map(PRODUCTS.map((p) => [p.slug, p]));
@@ -59,6 +61,7 @@ const LIVE_DEMO_SLUGS = new Set([
   "network-indicator",
   "diff-viewer",
   "qr-code",
+  "qr-scanner",
 ]);
 
 export function hasLiveDemo(slug: string): boolean {
