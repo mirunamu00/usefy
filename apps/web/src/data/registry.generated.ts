@@ -145,6 +145,35 @@ export const generatedPackages: PackageEntry[] = [
     "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/qr-code/README.md"
   },
   {
+    "slug": "qr-scanner",
+    "name": "@usefy/qr-scanner",
+    "displayName": "QRScanner",
+    "kind": "component",
+    "family": "standalone",
+    "tagline": "QR code scanner for React — the platform's native BarcodeDetector where it exists, a hand-written ISO/IEC 18004 decoder where it doesn't: camera and still image, Reed–Solomon error correction, perspective correction, ECI, and a zero-dependency headless core",
+    "subtitle": "QR code scanner for React — the platform's native BarcodeDetector where it exists, a hand-written ISO/IEC 18004 decoder where it doesn't. Camera and still image, Reed–Solomon error correction, zero dependencies.",
+    "keywords": [
+      "qr",
+      "qrcode",
+      "qr-scanner",
+      "barcode",
+      "scanner",
+      "decoder",
+      "camera",
+      "barcodedetector",
+      "reed-solomon",
+      "headless"
+    ],
+    "version": "0.1.0",
+    "category": "component",
+    "quickStart": "import { QRScanner } from \"@usefy/qr-scanner\";\n\nexport function CheckIn() {\n  return (\n    <QRScanner\n      onScan={(result) => {\n        // A QR payload is untrusted input. Show it, validate it, then act.\n        console.log(result.text, result.symbol?.version);\n      }}\n    />\n  );\n}",
+    "apiMarkdown": "### `<QRScanner />`\n\n| Prop | Type | Default | Description |\n|---|---|---|---|\n| `onScan` | `(result, all) => void` | — | Fired once per distinct value (see `dedupeMs`) |\n| `onFrame` | `(results) => void` | — | Fired for **every** decode, repeats included |\n| `onError` | `(error) => void` | — | Camera and environment failures |\n| `source` | `\"camera\" \\| \"file\"` | `\"camera\"` | `\"file\"` never opens a camera |\n| `accent` | `string` | `\"#22d3ee\"` | Viewfinder and highlight colour |\n| `paused` | `boolean` | — | Hold the loop; the camera stays open. Controllable — pair with `defaultPaused` / `onPausedChange`, or just use `pause()` / `resume()` |\n| `defaultPaused` | `boolean` | `false` | Initial paused state when `paused` is not supplied |\n| `onPausedChange` | `(paused) => void` | — | Fired whenever the paused state changes, from either side |\n| `facingMode` | `\"environment\" \\| \"user\"` | `\"environment\"` | Preferred camera |\n| `deviceId` | `string` | — | Open one specific camera |\n| `scanRate` | `number` | `12` | Maximum decodes per second |\n| `dedupeMs` | `number` | `1500` | How long a repeated value is suppressed |\n| `stopOnHide` | `boolean` | `false` | Release the camera when the tab is hidden |\n| `showTorch` / `showSwitch` / `showFileFallback` | `boolean` | `true` | Control visibility |\n| `decoder` | `Decoder` | — | Decode elsewhere, e.g. a worker |\n| `controllerRef` | `Ref<QRScannerController>` | — | `start` / `stop` / `pause` / `resume` / `scanFile` / `capture` |\n\nEverything in [Options](#options) is accepted too, and any other prop is forwarded to the wrapper element.\n\n### `useQRScanner(options)`\n\nReturns `{ videoRef, state, result, results, error, start, stop, pause, resume, devices, activeDeviceId, selectDevice, switchCamera, isTorchSupported, torch, setTorch, scanFile, capture }`.\n\n`state` is one of `idle · prompting · scanning · paused · denied · unsupported · error` — enough to render every case without inspecting the error.\n\n### Decoding functions\n\n| Function | Description |\n|---|---|\n| `decode(source, options?)` | Any image source → results, choosing an engine |\n| `decodeFile(blob, options?)` | The same, named for the call site |\n| `decodeFirst(source, options?)` | One result or `null` |\n| `decodeImageData(image, options?)` | **Synchronous**, DOM-free, internal engine only |\n| `isNativeSupported()` | Whether the platform can decode QR natively |\n\n### Result\n\n```ts\ninterface QRScanResult {\n  text: string;                      // the decoded value\n  bytes: Uint8Array;                 // raw payload, before any charset\n  segments: QRScanSegment[];         // as the symbol carried them\n  symbol?: QRSymbolInfo;             // internal engine only — see Engines\n  corners: Quad;                     // TL, TR, BR, BL in source-image pixels\n  center: Point;\n  engine: \"native\" | \"internal\";\n  timestamp: number;\n}\n\ninterface QRSymbolInfo {\n  version: number;                   // 1–40\n  size: number;                      // 4v + 17\n  level: \"L\" | \"M\" | \"Q\" | \"H\";\n  mask: number;                      // 0–7\n  mirrored: boolean;\n  inverted: boolean;\n  errorsCorrected: number;           // codewords Reed–Solomon repaired\n  structuredAppend?: { index: number; total: number; parity: number };\n  fnc1?: \"gs1\" | \"aim\";\n}\n```\n\n---",
+    "storybookUrl": "https://mirunamu00.github.io/usefy/?path=/story/qr-scanner--default",
+    "npmUrl": "https://www.npmjs.com/package/@usefy/qr-scanner",
+    "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/qr-scanner",
+    "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/qr-scanner/README.md"
+  },
+  {
     "slug": "scroll-progress",
     "name": "@usefy/scroll-progress",
     "displayName": "ScrollProgress",
@@ -1959,6 +1988,33 @@ export const generatedPackages: PackageEntry[] = [
     "npmUrl": "https://www.npmjs.com/package/@usefy/use-update-effect",
     "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/hooks/use-update-effect",
     "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/hooks/use-update-effect/README.md"
+  },
+  {
+    "slug": "use-user-media",
+    "name": "@usefy/use-user-media",
+    "displayName": "useUserMedia",
+    "kind": "hook",
+    "family": "hooks",
+    "tagline": "A React hook for camera and microphone streams — getUserMedia lifecycle, device switching, torch, and guaranteed teardown",
+    "subtitle": "Camera and microphone streams — getUserMedia lifecycle, device switching, torch, and a teardown you can rely on.",
+    "keywords": [
+      "getusermedia",
+      "camera",
+      "webcam",
+      "microphone",
+      "mediastream",
+      "mediadevices",
+      "torch",
+      "useUserMedia"
+    ],
+    "version": "1.0.0",
+    "category": "sensors",
+    "quickStart": "import { useUserMedia } from \"@usefy/use-user-media\";\n\nfunction CameraPreview() {\n  const camera = useUserMedia({ facingMode: \"environment\" });\n\n  if (camera.status === \"unsupported\") return <p>No camera here.</p>;\n  if (camera.status === \"denied\") return <p>{camera.error?.message}</p>;\n\n  return camera.stream ? (\n    <video\n      ref={(element) => {\n        if (element) element.srcObject = camera.stream;\n      }}\n      autoPlay\n      playsInline\n      muted\n    />\n  ) : (\n    <button onClick={camera.start}>Start camera</button>\n  );\n}",
+    "apiMarkdown": "### `useUserMedia(options?)`\n\n#### Options\n\n| Option | Type | Default | Description |\n|---|---|---|---|\n| `constraints` | `MediaStreamConstraints` | `{ video: true }` | What to request |\n| `autoStart` | `boolean` | `false` | Acquire on mount |\n| `facingMode` | `\"user\" \\| \"environment\"` | — | Preferred camera; merged as a *preference*, not `exact` |\n| `deviceId` | `string` | — | Open one specific device (as `exact`) |\n| `onStream` | `(stream) => void` | — | Called whenever a new stream becomes available |\n| `onError` | `(error: UserMediaError) => void` | — | Called when acquisition fails |\n\nChanging `facingMode` or `deviceId` while a stream is live re-acquires automatically — the usual way to build a \"flip camera\" button.\n\n#### Returns\n\n| Field | Type | Description |\n|---|---|---|\n| `stream` | `MediaStream \\| null` | The live stream |\n| `status` | `UserMediaStatus` | `idle · prompting · granted · denied · unsupported · error` |\n| `error` | `UserMediaError \\| null` | Cleared by a successful `start()` |\n| `isSupported` | `boolean` | Whether this environment can open a stream at all |\n| `start()` | `() => Promise<MediaStream \\| null>` | Request (or re-request) a stream |\n| `stop()` | `() => void` | Stop every track. Safe to call repeatedly |\n| `devices` | `MediaDeviceInfo[]` | Video inputs — empty until permission is granted once |\n| `activeDeviceId` | `string \\| null` | The device the current stream came from |\n| `selectDevice(id)` | `(id) => Promise<MediaStream \\| null>` | Open a specific device |\n| `switchDevice()` | `() => Promise<MediaStream \\| null>` | Cycle to the next camera |\n| `isTorchSupported` | `boolean` | Whether the active camera reports a torch |\n| `torch` | `boolean` | Current torch state |\n| `setTorch(on)` | `(on) => Promise<boolean>` | Resolves `false` if the camera refused |\n\n### `UserMediaError`\n\n`{ name: \"UserMediaError\", reason, message, cause }` where `reason` is one of `denied · not-found · in-use · over-constrained · unsupported · unknown`.\n\n### Helpers\n\n`isUserMediaSupported()`, `isEnumerationSupported()`, `stopStream()`, `supportsTorch()`, `activeDeviceIdOf()`, `withVideoPreferences()`, `toUserMediaError()`.",
+    "storybookUrl": "https://mirunamu00.github.io/usefy/?path=/docs/hooks-useusermedia--docs",
+    "npmUrl": "https://www.npmjs.com/package/@usefy/use-user-media",
+    "githubUrl": "https://github.com/mirunamu00/usefy/tree/master/packages/hooks/use-user-media",
+    "readmeUrl": "https://github.com/mirunamu00/usefy/blob/master/packages/hooks/use-user-media/README.md"
   },
   {
     "slug": "use-window-size",

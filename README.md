@@ -59,6 +59,7 @@
 | `@usefy/signature-pad` | Electronic signature input — hand-written ink engine with velocity-based stroke width, PNG/SVG/JSON exports, headless core |
 | `@usefy/diff-viewer` | Text diff viewer — linear-space Myers engine, word-level highlighting, collapsible context, row virtualization, headless core |
 | `@usefy/qr-code` | QR code generator — hand-written ISO/IEC 18004 encoder, SVG/canvas/PNG output, module & eye shapes, gradients, logo safety validation, RSC-safe headless core |
+| `@usefy/qr-scanner` | QR code scanner — native `BarcodeDetector` with a hand-written ISO/IEC 18004 decoder fallback, camera and still image, Reed–Solomon error correction, optional Web Worker |
 
 ---
 
@@ -108,7 +109,7 @@ function App() {
 - `useSelection` — Multi/single selection state for lists and tables (Set-based, checkbox-ready)
 - `useHistoryState` — Undo/redo state history with time-travel
 - `useStep` — Multi-step navigation for wizards, forms, and carousels
-- `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useScrollPosition`, `useGeolocation`, `useWindowSize`, `useNetworkState`, `usePageVisibility`, `useIdle`, `usePermission`, `useScript` — Browser APIs & element measurement
+- `useIntersectionObserver`, `useResizeObserver`, `useMutationObserver`, `useMeasure`, `useScrollPosition`, `useGeolocation`, `useWindowSize`, `useNetworkState`, `usePageVisibility`, `useIdle`, `usePermission`, `useUserMedia`, `useScript` — Browser APIs & element measurement
 - `useAsyncFn`, `useAsync`, `usePolling` — Async lifecycle tracking (manual-trigger / auto-run / interval polling with backoff and AbortController cancellation)
 - `useSignal` — Event-driven communication
 - `useMemoryMonitor` — Memory monitoring hook
@@ -465,6 +466,44 @@ function ShareLink() {
 
 ---
 
+### @usefy/qr-scanner
+
+<a href="https://www.npmjs.com/package/@usefy/qr-scanner" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/qr-scanner.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/qr-scanner" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/qr-scanner.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/qr-scanner" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/qr-scanner?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+QR code scanner — the platform's `BarcodeDetector` where it exists, and a
+hand-written ISO/IEC 18004 decoder where it does not: adaptive binarization,
+sub-pixel finder detection, four-point perspective correction, Reed–Solomon
+error *correction*, ECI and Kanji. Camera **and** still image, so a desktop
+without a webcam is a first-class case rather than an error state. Corners come
+back in source pixels with a helper that maps them through `object-fit`, and an
+optional `./worker` entry moves decoding off the main thread. The counterpart to
+`@usefy/qr-code`, sharing its ISO tables so the two cannot disagree.
+
+```bash
+pnpm add @usefy/qr-scanner
+```
+
+```tsx
+import { QRScanner } from "@usefy/qr-scanner";
+
+function CheckIn() {
+  // A QR payload is untrusted input — validate before acting on it.
+  return <QRScanner onScan={(result) => console.log(result.text)} />;
+}
+```
+
+<a href="./packages/qr-scanner/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -482,6 +521,7 @@ function ShareLink() {
 | Signature input | `pnpm add @usefy/signature-pad` | `import { SignaturePad } from "@usefy/signature-pad"` |
 | Text diff viewer | `pnpm add @usefy/diff-viewer` | `import { DiffViewer } from "@usefy/diff-viewer"` |
 | QR codes | `pnpm add @usefy/qr-code` | `import { QRCode } from "@usefy/qr-code"` |
+| QR scanning | `pnpm add @usefy/qr-scanner` | `import { QRScanner } from "@usefy/qr-scanner"` |
 
 ### Peer Dependencies
 
@@ -558,6 +598,7 @@ Some packages may have additional peer dependencies (check individual package do
 | `useClickAnyWhere` | Global click detection |
 | `useCopyToClipboard` | Clipboard operations |
 | `useGeolocation` | Device geolocation with tracking |
+| `useUserMedia` | Camera & microphone streams with guaranteed teardown |
 | `useIntersectionObserver` | Element visibility detection |
 | `useResizeObserver` | Element size tracking (content/border/device-pixel box) with debounce/throttle and SSR |
 | `useWindowSize` | Window size tracking with debounce/throttle and SSR support |
@@ -610,6 +651,7 @@ Some packages may have additional peer dependencies (check individual package do
 | `useIdle` | Report user inactivity after a timeout, with throttled activity listeners, visibility awareness, and SSR support |
 | `usePermission` | Read Permissions API status with live updates — `{ state, status, isSupported, error }`, SSR-safe, accepts any permission name |
 | `useScript` | Load an external script with `idle/loading/ready/error` status, `<script>` deduplication across components, and ref-counted cleanup — SSR-safe |
+| `useUserMedia` | Camera and microphone streams — `getUserMedia` lifecycle, device enumeration and switching, torch, normalized errors, and a teardown guarantee (no track outlives the component) |
 
 ### @usefy/memory-monitor
 
@@ -701,6 +743,22 @@ Also ships a zero-React `@usefy/diff-viewer/headless` entry (engine + tokenizer 
 | `matrixToPaths`, `segment`, `penaltyScore`, `maskAt`, `dataCapacityBits` | The pure encoder and geometry internals (hand-testable math) |
 
 Also ships a zero-React, **no-`"use client"`** `@usefy/qr-code/headless` entry (encoder + renderers + types, zero dependencies) that a React Server Component can import directly.
+
+### @usefy/qr-scanner
+
+| Export | Description |
+| ------ | ----------- |
+| `QRScanner` | The component — camera preview, viewfinder overlay, torch and camera-switch controls, file/drop/paste fallback, `source="camera" \| "file"`, imperative `controllerRef` |
+| `useQRScanner` | `{ videoRef, state, result, results, error, start, stop, pause, resume, devices, switchCamera, setTorch, scanFile, capture }` — the camera and the loop with no UI attached |
+| `decode`, `decodeFile`, `decodeFirst` | Any image source → results, choosing between the native and internal engines |
+| `decodeImageData` | Synchronous, DOM-free decode — what the worker and the tests use |
+| `isNativeSupported`, `decodeWithNative` | The platform `BarcodeDetector` path, probed once and cached |
+| `createWorkerDecoder` | Wrap a `Worker` running the `./worker` entry — no blob URLs, CSP-safe |
+| `mapCorners`, `mapPointToElement`, `cornersToPolygon` | Source-pixel geometry → element pixels, through `object-fit` and front-camera mirroring |
+| `joinStructuredAppend` | Assemble a multi-symbol payload, reporting what is still missing |
+| `toGray`, `binarize`, `findFinderPatterns`, `sampleGrid`, `rsDecode`, `parseSegments` | The pure decode stages, individually (hand-testable math) |
+
+Also ships a zero-React, **no-`"use client"`** `@usefy/qr-scanner/headless` entry and a `@usefy/qr-scanner/worker` entry, both importable from a server component or a Web Worker.
 
 ---
 

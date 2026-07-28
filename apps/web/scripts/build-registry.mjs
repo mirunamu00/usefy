@@ -43,6 +43,7 @@ const CATEGORY = {
   "use-local-storage": "storage", "use-session-storage": "storage", "use-cookie": "storage",
   // Browser & device
   "use-geolocation": "sensors", "use-network-state": "sensors", "use-permission": "sensors",
+  "use-user-media": "sensors",
   "use-page-visibility": "sensors", "use-media-query": "sensors",
   "use-preferred-color-scheme": "sensors", "use-reduced-motion": "sensors",
   "use-dark-mode": "sensors", "use-window-size": "sensors", "use-memory-monitor": "sensors",
@@ -66,7 +67,7 @@ const CATEGORY = {
   "network-indicator": "component", "scroll-progress": "component",
   "spotlight-tour": "component", "confetti": "component",
   "signature-pad": "component", "diff-viewer": "component",
-  "qr-code": "component",
+  "qr-code": "component", "qr-scanner": "component",
 };
 
 /** The package directories to scan, relative to packages/. */
@@ -81,6 +82,7 @@ const PACKAGE_DIRS = [
   "signature-pad",
   "diff-viewer",
   "qr-code",
+  "qr-scanner",
 ];
 
 /** @param {string} dir */
@@ -94,7 +96,7 @@ function listDirs(dir) {
  * would otherwise render as "QrCode" instead of the name people import.
  * @type {Record<string, string>}
  */
-const DISPLAY_NAME_OVERRIDES = { "qr-code": "QRCode" };
+const DISPLAY_NAME_OVERRIDES = { "qr-code": "QRCode", "qr-scanner": "QRScanner" };
 
 /**
  * hooks slug → hook identifier: "use-toggle" → "useToggle".

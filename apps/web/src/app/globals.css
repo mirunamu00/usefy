@@ -38,6 +38,7 @@
   --accent-scroll-progress: #e8590c;
   --accent-diff-viewer: #9c36b5;
   --accent-qr-code: #087f5b;
+  --accent-qr-scanner: #d6336c;
   color-scheme: light;
 }
 
@@ -70,6 +71,7 @@
     --accent-scroll-progress: #ffa94d;
     --accent-diff-viewer: #e599f7;
     --accent-qr-code: #63e6be;
+    --accent-qr-scanner: #faa2c1;
     color-scheme: dark;
   }
 }
@@ -103,6 +105,7 @@
   --accent-scroll-progress: #ffa94d;
   --accent-diff-viewer: #e599f7;
   --accent-qr-code: #63e6be;
+  --accent-qr-scanner: #faa2c1;
   color-scheme: dark;
 }
 
@@ -593,6 +596,72 @@ html[data-js] .reveal.is-visible { opacity: 1; transform: none; }
   100% { transform: translateX(-50%) translateY(-105%); }
 }
 
+/* qr-scanner: a viewfinder locking onto a code. Where the generator's card
+   sweeps a beam *down* a symbol, the scanner's brackets close *in* on one and a
+   highlight snaps over it — the moment a scanner is judged by. The code sits
+   slightly askew, because that is how one actually arrives in a camera. */
+.demo-scan {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.demo-scan-frame {
+  position: relative;
+  display: block;
+  border-radius: 6px;
+  background: #ffffff;
+  padding: 2px;
+  transform: rotate(-7deg);
+  box-shadow: 0 0 0 1px rgb(0 0 0 / 0.06);
+}
+.demo-scan-code {
+  display: block;
+  height: 3.1rem;
+  width: 3.1rem;
+}
+.demo-scan-lock {
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--accent) 22%, transparent);
+  box-shadow: inset 0 0 0 2px var(--accent);
+  opacity: 0;
+}
+.demo-scan-bracket {
+  position: absolute;
+  height: 0.85rem;
+  width: 0.85rem;
+  border: 2px solid var(--accent);
+  opacity: 0.75;
+}
+.demo-scan-tl { top: 0.35rem; left: 1.5rem; border-right: 0; border-bottom: 0; border-top-left-radius: 4px; }
+.demo-scan-tr { top: 0.35rem; right: 1.5rem; border-left: 0; border-bottom: 0; border-top-right-radius: 4px; }
+.demo-scan-bl { bottom: 0.35rem; left: 1.5rem; border-right: 0; border-top: 0; border-bottom-left-radius: 4px; }
+.demo-scan-br { bottom: 0.35rem; right: 1.5rem; border-left: 0; border-top: 0; border-bottom-right-radius: 4px; }
+
+.pcard:hover .demo-scan-bracket,
+.pcard.demo-live .demo-scan-bracket {
+  animation: qr-lock-brackets 2.8s ease-in-out infinite;
+}
+.pcard:hover .demo-scan-lock,
+.pcard.demo-live .demo-scan-lock {
+  animation: qr-lock-flash 2.8s ease-in-out infinite;
+}
+/* The brackets and the highlight are driven by one duration and one easing, so
+   the lock lands exactly as the brackets finish closing rather than drifting
+   against them. */
+@keyframes qr-lock-brackets {
+  0%, 100% { transform: scale(1.18); opacity: 0.45; }
+  45%, 80% { transform: scale(1); opacity: 1; }
+}
+@keyframes qr-lock-flash {
+  0%, 40% { opacity: 0; }
+  50%, 78% { opacity: 1; }
+  90%, 100% { opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -606,5 +675,9 @@ html[data-js] .reveal.is-visible { opacity: 1; transform: none; }
   .demo-sig-main, .demo-sig-tail { stroke-dashoffset: 0; }
   /* The code itself is the point; the beam is decoration, so it just goes. */
   .demo-qr-beam { display: none; }
+  /* The scanner's card keeps its *end* state — brackets closed, code locked —
+     because that is the thing being illustrated. Only the motion goes. */
+  .demo-scan-bracket { transform: scale(1); opacity: 1; }
+  .demo-scan-lock { opacity: 1; }
   .hero-spot { display: none; }
 }
