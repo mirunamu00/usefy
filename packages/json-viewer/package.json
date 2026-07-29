@@ -1,0 +1,98 @@
+{
+  "name": "@usefy/json-viewer",
+  "version": "0.1.0",
+  "description": "Virtualized JSON tree viewer for React — bounded DOM at any payload size via a lazy order-statistic index, chunked search, and a zero-dependency headless core",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js"
+    },
+    "./headless": {
+      "types": "./dist/headless.d.ts",
+      "import": "./dist/headless.mjs",
+      "require": "./dist/headless.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "scripts": {
+    "build": "rimraf dist && tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "bench": "node scripts/bench-tree.mjs",
+    "size": "node scripts/measure-size.mjs",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "@usefy/use-controllable-state": "workspace:*",
+    "@usefy/use-copy-to-clipboard": "workspace:*",
+    "@usefy/use-debounce-callback": "workspace:*",
+    "@usefy/use-event-callback": "workspace:*",
+    "@usefy/use-event-listener": "workspace:*",
+    "@usefy/use-isomorphic-layout-effect": "workspace:*",
+    "@usefy/use-merged-refs": "workspace:*",
+    "@usefy/use-on-click-outside": "workspace:*",
+    "@usefy/use-raf-state": "workspace:*",
+    "@usefy/use-resize-observer": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^22.10.2",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "esbuild": "^0.25.12",
+    "jsdom": "^26.0.0",
+    "jsonpath-plus": "^10.3.0",
+    "postcss": "^8.4.49",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "rimraf": "^6.0.1",
+    "sass": "^1.83.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^4.0.16"
+  },
+  "keywords": [
+    "react",
+    "json",
+    "json-viewer",
+    "json-tree",
+    "tree-view",
+    "virtualized",
+    "virtual-scroll",
+    "large-json",
+    "inspector",
+    "headless"
+  ],
+  "author": "usefy",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mirunamu00/usefy.git",
+    "directory": "packages/json-viewer"
+  },
+  "bugs": {
+    "url": "https://github.com/mirunamu00/usefy/issues"
+  },
+  "homepage": "https://usefy-web.vercel.app/packages/json-viewer",
+  "publishConfig": {
+    "access": "public"
+  }
+}

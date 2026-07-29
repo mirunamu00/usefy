@@ -30,6 +30,22 @@ const ROLL_NAMES = [
 ];
 
 /**
+ * Rows for the json-viewer card.
+ *
+ * Deliberately a *window* into the middle of a document — the indices start at
+ * 4905, not at 0 — because "you are somewhere inside something enormous" is
+ * what the package is for.
+ */
+const JSON_ROWS = [
+  { key: "4905", value: "{ 6 keys }" },
+  { key: "4906", value: "{ 6 keys }" },
+  { key: "4907", value: "{ 6 keys }" },
+  { key: "4908", value: "{ 6 keys }" },
+  { key: "4909", value: "{ 6 keys }" },
+  { key: "4910", value: "{ 6 keys }" },
+];
+
+/**
  * The QR card shows a genuine code, encoded once at module scope. Encoding is
  * a pure function, so this costs nothing per render and the card demonstrates
  * the product rather than a drawing of it.
@@ -307,6 +323,23 @@ function DemoStage({ demo }: { demo: ProductMeta["demo"] }) {
             </svg>
           </span>
           <span className="demo-qr-beam" />
+        </div>
+      );
+
+    case "json-tree":
+      return (
+        <div
+          className="demo-json h-[4.5rem] font-mono text-[11px] leading-5 text-fg-subtle"
+          aria-hidden="true"
+        >
+          <ul>
+            {[...JSON_ROWS, ...JSON_ROWS].map((row, index) => (
+              <li key={`${row.key}-${index}`} className="whitespace-nowrap">
+                <span className="demo-json-key">{row.key}</span>: {row.value}
+              </li>
+            ))}
+          </ul>
+          <span className="demo-json-count">375,006 rows</span>
         </div>
       );
 

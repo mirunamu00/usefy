@@ -1,0 +1,487 @@
+// @usefy/json-viewer styles.
+//
+// Every consumer-facing knob is a CSS custom property on `.root`, so themes
+// are overridable without knowing a single generated class name. `:global()`
+// is deliberately unused — the build-time scoper has leaked unscoped rules
+// through it before (@usefy/virtual-keyboard).
+
+.root {
+  --usefy-json-row-height: 22px;
+  --usefy-json-indent: 14px;
+  --usefy-json-font: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  --usefy-json-size: 12.5px;
+
+  --usefy-json-bg: #ffffff;
+  --usefy-json-fg: #1f2328;
+  --usefy-json-muted: #6b7280;
+  --usefy-json-border: #e4e7eb;
+  --usefy-json-surface: #f7f8fa;
+  --usefy-json-hover: rgba(15, 23, 42, 0.045);
+  --usefy-json-active: rgba(37, 99, 235, 0.12);
+  --usefy-json-focus: #2563eb;
+  --usefy-json-guide: rgba(15, 23, 42, 0.1);
+
+  --usefy-json-key: #6f42c1;
+  --usefy-json-string: #0a7d33;
+  --usefy-json-number: #0550ae;
+  --usefy-json-boolean: #b45309;
+  --usefy-json-null: #6b7280;
+  --usefy-json-special: #b91c1c;
+  --usefy-json-punct: #6b7280;
+
+  --usefy-json-match: rgba(250, 204, 21, 0.45);
+  --usefy-json-match-current: rgba(249, 115, 22, 0.55);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  box-sizing: border-box;
+  border: 1px solid var(--usefy-json-border);
+  border-radius: 8px;
+  background: var(--usefy-json-bg);
+  color: var(--usefy-json-fg);
+  font-family: var(--usefy-json-font);
+  font-size: var(--usefy-json-size);
+  line-height: var(--usefy-json-row-height);
+  overflow: hidden;
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+}
+
+@mixin dark-tokens {
+  --usefy-json-bg: #0d1117;
+  --usefy-json-fg: #e6edf3;
+  --usefy-json-muted: #8b949e;
+  --usefy-json-border: #30363d;
+  --usefy-json-surface: #161b22;
+  --usefy-json-hover: rgba(255, 255, 255, 0.06);
+  --usefy-json-active: rgba(56, 139, 253, 0.24);
+  --usefy-json-focus: #58a6ff;
+  --usefy-json-guide: rgba(255, 255, 255, 0.12);
+
+  --usefy-json-key: #d2a8ff;
+  --usefy-json-string: #7ee787;
+  --usefy-json-number: #79c0ff;
+  --usefy-json-boolean: #ffa657;
+  --usefy-json-null: #8b949e;
+  --usefy-json-special: #ff7b72;
+  --usefy-json-punct: #8b949e;
+
+  --usefy-json-match: rgba(210, 153, 34, 0.5);
+  --usefy-json-match-current: rgba(219, 109, 40, 0.7);
+}
+
+// Three spots, the house pattern: the media query is the default signal, and
+// an explicit theme attribute wins in both directions.
+@media (prefers-color-scheme: dark) {
+  .root:not([data-usefy-theme="light"]) {
+    @include dark-tokens;
+  }
+}
+
+.root[data-usefy-theme="dark"] {
+  @include dark-tokens;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--usefy-json-border);
+  background: var(--usefy-json-surface);
+}
+
+.spacerFlex {
+  flex: 1 1 auto;
+}
+
+.count {
+  color: var(--usefy-json-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.button {
+  appearance: none;
+  border: 1px solid var(--usefy-json-border);
+  border-radius: 5px;
+  background: var(--usefy-json-bg);
+  color: var(--usefy-json-fg);
+  font: inherit;
+  line-height: 1.4;
+  padding: 2px 8px;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background: var(--usefy-json-hover);
+  }
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: 1px;
+  }
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--usefy-json-border);
+  background: var(--usefy-json-surface);
+}
+
+.input {
+  flex: 1 1 auto;
+  min-width: 0;
+  appearance: none;
+  border: 1px solid var(--usefy-json-border);
+  border-radius: 5px;
+  background: var(--usefy-json-bg);
+  color: var(--usefy-json-fg);
+  font: inherit;
+  padding: 2px 8px;
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: -1px;
+  }
+
+  &::placeholder {
+    color: var(--usefy-json-muted);
+  }
+}
+
+.progress {
+  color: var(--usefy-json-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.notice {
+  color: var(--usefy-json-special);
+  white-space: nowrap;
+}
+
+.scroll {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  contain: strict;
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: -2px;
+  }
+}
+
+.sizer {
+  position: relative;
+  width: 100%;
+}
+
+.rows {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  will-change: transform;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  height: var(--usefy-json-row-height);
+  padding-right: 8px;
+  white-space: pre;
+  cursor: default;
+
+  &:hover {
+    background: var(--usefy-json-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: -2px;
+  }
+}
+
+.rowActive {
+  background: var(--usefy-json-active);
+}
+
+.rowMatch {
+  box-shadow: inset 3px 0 0 var(--usefy-json-match);
+}
+
+.rowMatchCurrent {
+  box-shadow: inset 3px 0 0 var(--usefy-json-match-current);
+  background: var(--usefy-json-match);
+}
+
+.guides {
+  display: flex;
+  flex: 0 0 auto;
+  height: 100%;
+}
+
+.guide {
+  width: var(--usefy-json-indent);
+  height: 100%;
+  flex: 0 0 auto;
+  border-left: 1px solid var(--usefy-json-guide);
+}
+
+.twisty {
+  flex: 0 0 auto;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  appearance: none;
+  border: 0;
+  padding: 0;
+  margin: 0 2px 0 0;
+  background: transparent;
+  color: var(--usefy-json-muted);
+  cursor: pointer;
+  border-radius: 3px;
+
+  &:hover {
+    color: var(--usefy-json-fg);
+    background: var(--usefy-json-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: 0;
+  }
+}
+
+.twistyGlyph {
+  display: block;
+  transition: transform 120ms ease;
+  transform: rotate(0deg);
+}
+
+.twistyOpen .twistyGlyph {
+  transform: rotate(90deg);
+}
+
+.twistySpacer {
+  flex: 0 0 auto;
+  width: 18px;
+}
+
+.key {
+  color: var(--usefy-json-key);
+  flex: 0 0 auto;
+}
+
+.punct {
+  color: var(--usefy-json-punct);
+  flex: 0 0 auto;
+}
+
+.value {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.string {
+  color: var(--usefy-json-string);
+}
+.number {
+  color: var(--usefy-json-number);
+}
+.boolean {
+  color: var(--usefy-json-boolean);
+}
+.null {
+  color: var(--usefy-json-null);
+}
+.special {
+  color: var(--usefy-json-special);
+}
+.container {
+  color: var(--usefy-json-punct);
+}
+
+// A chip rather than a trailing word: `42 number` reads as two values, while a
+// bordered badge reads as metadata about the one value there is.
+.type {
+  flex: 0 0 auto;
+  color: var(--usefy-json-muted);
+  border: 1px solid var(--usefy-json-border);
+  border-radius: 3px;
+  margin-left: 8px;
+  padding: 0 4px;
+  font-size: 0.78em;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+}
+
+.more {
+  flex: 0 0 auto;
+  appearance: none;
+  border: 1px solid var(--usefy-json-border);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--usefy-json-muted);
+  font: inherit;
+  font-size: 0.85em;
+  line-height: 1.2;
+  padding: 0 4px;
+  margin-left: 6px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--usefy-json-fg);
+    background: var(--usefy-json-hover);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: 1px;
+  }
+}
+
+.actions {
+  flex: 0 0 auto;
+  display: flex;
+  gap: 2px;
+  margin-left: auto;
+  padding-left: 8px;
+  opacity: 0;
+  transition: opacity 120ms ease;
+}
+
+// Opacity rather than visibility or display: the buttons stay in the
+// accessibility tree and stay focusable, so they are never a hover-only
+// affordance.
+//
+// The active row only reveals them while the tree itself has focus. Showing
+// them permanently on whichever row happens to be active reads as two stray
+// words parked at the end of a line — and the row that is active on first
+// paint is the root, so it would be the first thing a visitor sees.
+.row:hover .actions,
+.row:focus-within .actions,
+.scroll:focus-within .rowActive .actions {
+  opacity: 1;
+}
+
+.action {
+  appearance: none;
+  border: 1px solid var(--usefy-json-border);
+  border-radius: 4px;
+  background: var(--usefy-json-bg);
+  color: var(--usefy-json-muted);
+  font: inherit;
+  font-size: 0.85em;
+  line-height: 1.2;
+  padding: 0 5px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--usefy-json-fg);
+    background: var(--usefy-json-hover);
+  }
+
+  &:focus-visible {
+    opacity: 1;
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: 1px;
+  }
+}
+
+.overlay {
+  position: absolute;
+  z-index: 2;
+  max-width: min(560px, calc(100% - 24px));
+  max-height: 260px;
+  overflow: auto;
+  padding: 8px 10px;
+  border: 1px solid var(--usefy-json-border);
+  border-radius: 6px;
+  background: var(--usefy-json-bg);
+  color: var(--usefy-json-fg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.5;
+
+  &:focus-visible {
+    outline: 2px solid var(--usefy-json-focus);
+    outline-offset: -2px;
+  }
+}
+
+.overlayBar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  color: var(--usefy-json-muted);
+}
+
+.overlayText {
+  margin: 0;
+  font: inherit;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.parsing {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  color: var(--usefy-json-muted);
+  padding: 24px;
+}
+
+.error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1 1 auto;
+  color: var(--usefy-json-special);
+  padding: 16px;
+  white-space: pre-wrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .twistyGlyph,
+  .actions {
+    transition: none;
+  }
+}

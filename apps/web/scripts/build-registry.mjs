@@ -68,6 +68,7 @@ const CATEGORY = {
   "spotlight-tour": "component", "confetti": "component",
   "signature-pad": "component", "diff-viewer": "component",
   "qr-code": "component", "qr-scanner": "component",
+  "json-viewer": "component",
 };
 
 /** The package directories to scan, relative to packages/. */
@@ -83,6 +84,7 @@ const PACKAGE_DIRS = [
   "diff-viewer",
   "qr-code",
   "qr-scanner",
+  "json-viewer",
 ];
 
 /** @param {string} dir */

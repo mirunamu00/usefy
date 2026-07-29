@@ -60,6 +60,7 @@
 | `@usefy/diff-viewer` | Text diff viewer — linear-space Myers engine, word-level highlighting, collapsible context, row virtualization, headless core |
 | `@usefy/qr-code` | QR code generator — hand-written ISO/IEC 18004 encoder, SVG/canvas/PNG output, module & eye shapes, gradients, logo safety validation, RSC-safe headless core |
 | `@usefy/qr-scanner` | QR code scanner — native `BarcodeDetector` with a hand-written ISO/IEC 18004 decoder fallback, camera and still image, Reed–Solomon error correction, optional Web Worker |
+| `@usefy/json-viewer` | Virtualized JSON tree viewer — bounded DOM at any payload size, chunked whole-document search, `Map`/`Set`/`BigInt`/cycle support, RSC-safe headless engine |
 
 ---
 
@@ -504,6 +505,43 @@ function CheckIn() {
 
 ---
 
+### @usefy/json-viewer
+
+<a href="https://www.npmjs.com/package/@usefy/json-viewer" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/v/@usefy/json-viewer.svg?style=flat-square&color=007acc" alt="npm version" />
+</a>
+<a href="https://www.npmjs.com/package/@usefy/json-viewer" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/npm/dm/@usefy/json-viewer.svg?style=flat-square&color=007acc" alt="npm downloads" />
+</a>
+<a href="https://bundlephobia.com/package/@usefy/json-viewer" target="_blank" rel="noopener noreferrer">
+  <img src="https://img.shields.io/bundlephobia/minzip/@usefy/json-viewer?style=flat-square&color=007acc" alt="bundle size" />
+</a>
+
+Collapsible JSON tree whose **DOM stays bounded no matter how big the payload
+is** — a 50 MB document with millions of nodes scrolls and expands at full
+speed, because rows are computed on demand from an order-statistic index built
+only over the *expanded* spine of the tree. Chunked search covers the whole
+document including collapsed subtrees without blocking the main thread; `Map`,
+`Set`, `Date`, `BigInt`, `undefined`, functions and reference cycles all render
+as what they are. Copy a path as a JS accessor, an RFC 6901 pointer or a
+JSONPath. Full ARIA tree semantics, and the engine ships headless.
+
+```bash
+pnpm add @usefy/json-viewer
+```
+
+```tsx
+import { JsonViewer } from "@usefy/json-viewer";
+
+function ResponseInspector({ payload }) {
+  return <JsonViewer data={payload} height={480} />;
+}
+```
+
+<a href="./packages/json-viewer/README.md"><strong>View full documentation →</strong></a>
+
+---
+
 ## Quick Start
 
 ### Choose Your Package
@@ -522,6 +560,7 @@ function CheckIn() {
 | Text diff viewer | `pnpm add @usefy/diff-viewer` | `import { DiffViewer } from "@usefy/diff-viewer"` |
 | QR codes | `pnpm add @usefy/qr-code` | `import { QRCode } from "@usefy/qr-code"` |
 | QR scanning | `pnpm add @usefy/qr-scanner` | `import { QRScanner } from "@usefy/qr-scanner"` |
+| JSON tree viewer | `pnpm add @usefy/json-viewer` | `import { JsonViewer } from "@usefy/json-viewer"` |
 
 ### Peer Dependencies
 
@@ -759,6 +798,20 @@ Also ships a zero-React, **no-`"use client"`** `@usefy/qr-code/headless` entry (
 | `toGray`, `binarize`, `findFinderPatterns`, `sampleGrid`, `rsDecode`, `parseSegments` | The pure decode stages, individually (hand-testable math) |
 
 Also ships a zero-React, **no-`"use client"`** `@usefy/qr-scanner/headless` entry and a `@usefy/qr-scanner/worker` entry, both importable from a server component or a Web Worker.
+
+### @usefy/json-viewer
+
+| Export | Description |
+| ------ | ----------- |
+| `JsonViewer` | The component — windowed ARIA tree, search bar, toolbar, copy path/value, full-value overlay, `theme`, `renderValue`, imperative `controllerRef` |
+| `useJsonTree` | `{ model, rowCount, toggle, expand, collapse, expandTo, expandAll, collapseAll }` — the model bound to React with no UI attached |
+| `createJsonTree` | The engine — `rowCount`, `rowAt`, `rowIndexOf`, `toggle`, `expandAll`, `get/setExpandedPaths`, `version` |
+| `searchJson` | Chunked, cancelable scan of the whole value with progress and a reported result cap |
+| `formatPath`, `parsePath`, `pathToPointer`, `pathToJsonPath`, `resolvePath` | Path formatting and resolution — JS accessor, RFC 6901, RFC 9535 |
+| `serializeSubtree` | Re-serialize any subtree, rendering `Map`/`Set`/`BigInt`/`Date`/cycles that `JSON.stringify` throws on or drops |
+| `classify`, `childAccessor`, `previewOf`, `displayOf`, `SparseOrder`, `DenseOrder` | The pure value model and order-statistic index (hand-testable) |
+
+Also ships a zero-React, **no-`"use client"`** `@usefy/json-viewer/headless` entry (importable from a server component) and a `@usefy/json-viewer/styles.css` export (styles otherwise inject at runtime).
 
 ---
 

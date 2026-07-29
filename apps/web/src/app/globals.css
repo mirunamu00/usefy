@@ -39,6 +39,7 @@
   --accent-diff-viewer: #9c36b5;
   --accent-qr-code: #087f5b;
   --accent-qr-scanner: #d6336c;
+  --accent-json-viewer: #5c940d;
   color-scheme: light;
 }
 
@@ -72,6 +73,7 @@
     --accent-diff-viewer: #e599f7;
     --accent-qr-code: #63e6be;
     --accent-qr-scanner: #faa2c1;
+    --accent-json-viewer: #c0eb75;
     color-scheme: dark;
   }
 }
@@ -106,6 +108,7 @@
   --accent-diff-viewer: #e599f7;
   --accent-qr-code: #63e6be;
   --accent-qr-scanner: #faa2c1;
+  --accent-json-viewer: #c0eb75;
   color-scheme: dark;
 }
 
@@ -660,6 +663,39 @@ html[data-js] .reveal.is-visible { opacity: 1; transform: none; }
   0%, 40% { opacity: 0; }
   50%, 78% { opacity: 1; }
   90%, 100% { opacity: 0; }
+}
+
+/* json-viewer card: rows stream past a small fixed window while the counter
+   says how big the document actually is — the package's whole pitch in one
+   frame. The window is the DOM; the number is the data. */
+.demo-json {
+  position: relative;
+  overflow: hidden;
+}
+.demo-json ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  animation: json-scroll 7s linear infinite;
+  animation-play-state: paused;
+}
+.pcard:hover .demo-json ul,
+.pcard.demo-live .demo-json ul { animation-play-state: running; }
+@keyframes json-scroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(-50%); }
+}
+.demo-json-key { color: var(--accent); }
+.demo-json-count {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: 4px;
+  padding: 0 5px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 
 @media (prefers-reduced-motion: reduce) {

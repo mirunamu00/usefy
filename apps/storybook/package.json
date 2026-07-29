@@ -25,6 +25,7 @@
     "@usefy/use-memory-monitor": "workspace:*",
     "@usefy/confetti": "workspace:*",
     "@usefy/diff-viewer": "workspace:*",
+    "@usefy/json-viewer": "workspace:*",
     "@usefy/memory-monitor": "workspace:*",
     "@usefy/network-indicator": "workspace:*",
     "@usefy/qr-code": "workspace:*",
