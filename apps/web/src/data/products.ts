@@ -30,6 +30,7 @@ export interface ProductMeta {
     | "diff-lines"
     | "qr-scan"
     | "qr-viewfinder"
+    | "json-tree"
     | "none";
 }
 
@@ -45,6 +46,7 @@ export const PRODUCTS: ProductMeta[] = [
   { slug: "diff-viewer", role: "Text diffing", accentVar: "--accent-diff-viewer", demo: "diff-lines" },
   { slug: "qr-code", role: "QR generation", accentVar: "--accent-qr-code", demo: "qr-scan" },
   { slug: "qr-scanner", role: "QR scanning", accentVar: "--accent-qr-scanner", demo: "qr-viewfinder" },
+  { slug: "json-viewer", role: "JSON inspection", accentVar: "--accent-json-viewer", demo: "json-tree" },
 ];
 
 const BY_SLUG = new Map(PRODUCTS.map((p) => [p.slug, p]));
@@ -62,6 +64,7 @@ const LIVE_DEMO_SLUGS = new Set([
   "diff-viewer",
   "qr-code",
   "qr-scanner",
+  "json-viewer",
 ]);
 
 export function hasLiveDemo(slug: string): boolean {

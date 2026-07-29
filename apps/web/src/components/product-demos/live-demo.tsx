@@ -22,6 +22,7 @@ const DEMOS: Record<string, ComponentType> = {
   "diff-viewer": dynamic(() => import("./diff-viewer-demo").then((m) => m.DiffViewerDemo), { ssr: false, loading: Loading }),
   "qr-code": dynamic(() => import("./qr-code-demo").then((m) => m.QRCodeDemo), { ssr: false, loading: Loading }),
   "qr-scanner": dynamic(() => import("./qr-scanner-demo").then((m) => m.QRScannerDemo), { ssr: false, loading: Loading }),
+  "json-viewer": dynamic(() => import("./json-viewer-demo").then((m) => m.JsonViewerDemo), { ssr: false, loading: Loading }),
 };
 
 /** The per-product live demo, or null when a package has none. Keep the slug
