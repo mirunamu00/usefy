@@ -1,6 +1,6 @@
 {
   "name": "@usefy/json-viewer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Virtualized JSON tree viewer for React — bounded DOM at any payload size via a lazy order-statistic index, chunked search, and a zero-dependency headless core",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
