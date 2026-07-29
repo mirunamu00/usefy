@@ -10,11 +10,24 @@ CLAUDE.md.
 
 ---
 
-## Next up — `json-viewer` (decided 2026-07-28)
+## ~~Next up~~ — `json-viewer` **shipped** (decided 2026-07-28, built 2026-07-29)
 
-**The next standalone package to build is `json-viewer`.** Not yet started; this
-section is the decision and its evidence, so the build can begin from here
-instead of re-litigating the pick.
+**`json-viewer` is built.** The implementation contract is
+`packages/json-viewer/SPEC.md`, which supersedes this section for anything about
+scope, API or milestones. What follows is the *decision record* — the evidence
+that justified the pick, kept because the corrections in it were expensive to
+work out and would otherwise be re-litigated.
+
+**What it cost, against the estimate.** "Effort below `qr-scanner`" held. The
+engine landed against its oracle on the first run; the review round found five
+real defects and two false claims, and every one of them was in the layer
+*around* the engine — `expandAll` throwing away the user's expansion state when
+the budget refused, a controlled prop that stopped being authoritative, a
+`Map` cycle overflowing the stack and being reported as "too large", escape
+sequences eaten by the path parser, and arrow keys re-centring the viewport on
+every press. Roughly a third of the effort again, exactly as `qr-code` and
+`qr-scanner` predicted. The lesson repeats: **the hard part is never the
+algorithm you were worried about.**
 
 ### The angle, verified rather than assumed
 
@@ -179,8 +192,8 @@ The `diff-viewer` line — virtualization, big-input guards, parser/render seams
 
 | Idea | What it is | The engine / depth | Reuse |
 |---|---|---|---|
-| **json-viewer** | Collapsible JSON / tree explorer | **Decided — see "Next up"** | resize-observer, intersection-observer, copy-to-clipboard |
-| **virtualized-list** | Windowing engine, headless-first | Fixed/variable-row windowing, scroll anchoring, `aria-rowcount/index` — we already hand-wrote one *inside* diff-viewer. **Weakest on the list right now**: `@tanstack/react-virtual` 19.6M/wk · 0.2 mo and `react-window` 6.5M/wk · 0.2 mo, with no differentiating angle. Extract it *after* `json-viewer` ships, when two real consumers can shape the abstraction | resize-observer, isomorphic-layout-effect |
+| ~~**json-viewer**~~ | ~~Collapsible JSON / tree explorer~~ | **Shipped** (see the decision record at the top) | — |
+| **virtualized-list** | Windowing engine, headless-first | Fixed/variable-row windowing, scroll anchoring, `aria-rowcount/index` — hand-written twice now, inside `diff-viewer` and `json-viewer`. **Still weakest on the list**: `@tanstack/react-virtual` 19.6M/wk · 0.2 mo and `react-window` 6.5M/wk · 0.2 mo, with no differentiating angle. The "wait for two consumers" condition is now met, so the extraction is at least *shapeable* — but note how little the two share: diff-viewer windows a static list, json-viewer windows one whose length changes on every toggle and which outgrows the browser's element-height cap. The abstraction may be smaller than it looks | resize-observer, isomorphic-layout-effect |
 | **markdown-viewer** | Render markdown safely | Bring-your-own-parser seam (like diff-viewer's highlighter seam), safe rendering, heading anchors + TOC, no `dangerouslySetInnerHTML` on raw input | intersection-observer |
 | **mentions** | `@mention` textarea | Trigger detection, caret-anchored dropdown positioning, token parsing, keyboard nav, serialized value — a self-contained rich-input feature | controllable-state, hotkeys, on-click-outside |
 
@@ -278,10 +291,10 @@ than reasoning.
 Ordered by how squarely they hit the usefy character — a starting point, reorder
 to taste:
 
-1. ~~**json-viewer**~~ — **decided, see "Next up" at the top.** (Its old
-   justification here — "the cheapest good option, reuses diff-viewer's
+1. ~~**json-viewer**~~ — **shipped** (see the decision record at the top). Its
+   old justification here — "the cheapest good option, reuses diff-viewer's
    windowing directly" — was wrong on both counts; the corrections are in that
-   section.)
+   section.
 2. **image-cropper** — substantial gesture + canvas engine, clear standalone
    demand, inherits the confetti/signature-pad canvas know-how. Weakest on gate
    ⑥: geometry and feel, with no external oracle to check the output against.
