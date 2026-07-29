@@ -1,5 +1,12 @@
 # @usefy/web
 
+## 0.0.5
+
+### Patch Changes
+
+- Updated dependencies [e5d6c19]
+  - @usefy/json-viewer@0.2.0
+
 ## 0.0.4
 
 ### Patch Changes
