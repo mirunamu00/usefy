@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /*
+   * The stories are designed on a light surface — zinc ink on white, hairline
+   * borders, no dark variants. Storybook's canvas is transparent by default, so
+   * without pinning this a browser set to dark shows its own ground through the
+   * page and every zinc heading lands dark-on-dark. Setting `color-scheme` too
+   * keeps native controls (checkbox, select, scrollbar) in the same palette.
+   */
+  :root {
+    color-scheme: light;
+  }
+
+  html,
+  body {
+    background-color: #ffffff;
+    color: #18181b;
+  }
+}

@@ -34,7 +34,7 @@ function Switch({
       onClick={() => setValue((prev) => !prev)}
       className={value ? storyTheme.buttonPrimary : storyTheme.buttonNeutral}
     >
-      {value ? "🟢 On" : "⚪ Off"}
+      {value ? "On" : "Off"}
     </button>
   );
 }

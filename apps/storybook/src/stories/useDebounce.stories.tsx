@@ -28,8 +28,8 @@ function SearchInputDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-xl mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Search Input with Debounce</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Search Input with Debounce</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Type to search. API calls are debounced by 500ms.
       </p>
 
@@ -38,10 +38,10 @@ function SearchInputDemo() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder="Type to search..."
-        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-md border border-zinc-200 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
       />
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel + " overflow-hidden"}>
           <strong className={storyTheme.statText}>Current Input:</strong>{" "}
           <span
@@ -70,7 +70,7 @@ function SearchInputDemo() {
 
       {searchResults.length > 0 && (
         <div>
-          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
+          <h3 className="text-sm font-bold text-zinc-400 mb-3">
             Search Results:
           </h3>
           <ul className="list-none p-0 space-y-2">
@@ -78,7 +78,7 @@ function SearchInputDemo() {
               <li
                 key={index}
                 className={
-                  storyTheme.listItem + " break-words overflow-wrap-anywhere p-3 bg-slate-50 rounded-xl border border-slate-100 text-slate-700"
+                  storyTheme.listItem + " break-words overflow-wrap-anywhere p-3 bg-zinc-50 rounded-md border border-zinc-100 text-zinc-700"
                 }
               >
                 {result}
@@ -122,8 +122,8 @@ function FormValidationDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Form Validation</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Form Validation</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Email validation is debounced by 800ms to avoid excessive checks.
       </p>
 
@@ -137,20 +137,20 @@ function FormValidationDemo() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
-          className={storyTheme.input + " truncate w-full p-3 rounded-xl border border-slate-300"}
+          className={storyTheme.input + " truncate w-full p-3 rounded-md border border-zinc-300"}
         />
       </div>
 
       {isValidating && (
-        <div className={storyTheme.messageInfo + " text-indigo-600 font-medium animate-pulse"}>Validating...</div>
+        <div className={storyTheme.messageInfo + " text-violet-600 font-medium"}>Validating...</div>
       )}
 
       {validationMessage && !isValidating && (
         <div
           className={
             validationMessage.startsWith("✓")
-              ? storyTheme.messageSuccess + " bg-emerald-50 text-emerald-700 p-3 rounded-xl border border-emerald-100"
-              : storyTheme.messageError + " bg-rose-50 text-rose-700 p-3 rounded-xl border border-rose-100"
+              ? storyTheme.messageSuccess + " bg-emerald-50 text-emerald-700 p-3 rounded-md border border-emerald-100"
+              : storyTheme.messageError + " bg-red-50 text-red-700 p-3 rounded-md border border-red-100"
           }
         >
           {validationMessage}
@@ -181,8 +181,8 @@ function AutoSaveDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-2xl mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Auto-save Editor</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Auto-save Editor</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Content is automatically saved 1 second after you stop typing.
       </p>
 
@@ -191,10 +191,10 @@ function AutoSaveDemo() {
         onChange={(e) => setContent(e.target.value)}
         placeholder="Start typing..."
         rows={10}
-        className={storyTheme.textareaMono + " mb-6 overflow-auto break-words w-full p-4 rounded-2xl border border-slate-200 shadow-inner bg-slate-50 focus:bg-white transition-colors"}
+        className={storyTheme.textareaMono + " mb-6 overflow-auto break-words w-full p-4 rounded-md border border-zinc-200 shadow-inner bg-zinc-50 focus:bg-white transition-colors"}
       />
 
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex justify-between items-center"}>
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-100 flex justify-between items-center"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Characters:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{content.length}</span>
@@ -259,13 +259,13 @@ function WindowResizeDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-xl mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Window Resize</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Window Resize</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Resize your browser window. Expensive calculations are debounced by
         300ms.
       </p>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current Size:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>
@@ -290,8 +290,8 @@ function WindowResizeDemo() {
         </div>
       </div>
 
-      <p className="text-sm text-slate-500 m-0 bg-amber-50 p-4 rounded-xl border border-amber-100 text-amber-800">
-        💡 Without debouncing, expensive operations would run {resizeCount}{" "}
+      <p className="text-sm text-zinc-500 m-0 bg-amber-50 p-4 rounded-md border border-amber-100 text-amber-800">
+        Without debouncing, expensive operations would run {resizeCount}{" "}
         times instead of {expensiveCalcCount} times!
       </p>
     </div>
@@ -334,8 +334,8 @@ function APIRequestDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>API Request</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>API Request</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Search triggers an API request after 600ms of inactivity.
       </p>
 
@@ -344,10 +344,10 @@ function APIRequestDemo() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Search database..."
-        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm"}
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-md border border-zinc-200 shadow-sm"}
       />
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-4 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-4 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>API Requests Made:</strong>{" "}
           <span className={storyTheme.statValue}>{requestCount}</span>
@@ -355,13 +355,13 @@ function APIRequestDemo() {
       </div>
 
       {isLoading && (
-        <div className={storyTheme.infoBox + " p-8 text-center bg-slate-50 rounded-2xl"}>
-          <p className={storyTheme.infoText + " m-0 text-slate-500 animate-pulse"}>Loading data...</p>
+        <div className={storyTheme.infoBox + " p-8 text-center bg-zinc-50 rounded-md"}>
+          <p className={storyTheme.infoText + " m-0 text-zinc-500"}>Loading data...</p>
         </div>
       )}
 
       {!isLoading && data && (
-        <div className={storyTheme.messageSuccess + " bg-emerald-50 border border-emerald-100 rounded-2xl p-5"}>
+        <div className={storyTheme.messageSuccess + " bg-emerald-50 border border-emerald-100 rounded-md p-5"}>
           <h3 className="text-lg font-semibold mb-2">Results Found</h3>
           <div className={storyTheme.statLabel + " overflow-hidden"}>
             <strong className={storyTheme.statText}>Query:</strong>{" "}
@@ -417,8 +417,8 @@ function SliderDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Slider Debounce</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Slider Debounce</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Drag the slider. Expensive calculations only run after 500ms of
         inactivity.
       </p>
@@ -430,12 +430,12 @@ function SliderDemo() {
           max="100"
           value={value}
           onChange={(e) => setValue(Number(e.target.value))}
-          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+          className="w-full h-2 bg-zinc-200 rounded-lg appearance-none cursor-pointer accent-violet-600"
         />
       </div>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
-        <div className="text-3xl font-bold mb-4 text-gray-800">
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
+        <div className="text-3xl font-bold mb-4 text-zinc-800">
           Current: {value}%
         </div>
         <div className={storyTheme.statValue + " text-2xl mb-4"}>
@@ -455,15 +455,15 @@ function SliderDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.cardInfo + " bg-indigo-50 border border-indigo-100 rounded-2xl p-5"}>
-        <div className="font-bold mb-2 text-gray-800">
+      <div className={storyTheme.cardInfo + " bg-violet-50 border border-violet-100 rounded-md p-5"}>
+        <div className="font-bold mb-2 text-zinc-800">
           Simulated Expensive Calculation Result:
         </div>
-        <div className="font-mono text-xl text-indigo-600">
+        <div className="font-mono text-xl text-violet-600">
           {(debouncedValue * 123.456).toFixed(2)}
         </div>
         <p className={storyTheme.infoText + " mt-2 mb-0"}>
-          💡 This expensive calculation ran {expensiveUpdateCount} times instead
+          This expensive calculation ran {expensiveUpdateCount} times instead
           of {immediateUpdateCount} times!
         </p>
       </div>
@@ -503,8 +503,8 @@ function LeadingEdgeDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Leading vs Trailing</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Leading vs Trailing</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Click the button multiple times quickly. Leading edge fires immediately,
         trailing edge fires after 1 second of inactivity.
       </p>
@@ -512,27 +512,27 @@ function LeadingEdgeDemo() {
       <button
         onClick={() => setClicks((prev) => prev + 1)}
         className={storyTheme.buttonFull + " mb-5"}
-        style={{ background: 'linear-gradient(to right, #4f46e5, #7c3aed)', color: 'white', padding: '1rem', borderRadius: '1rem', fontWeight: 'bold', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)' }}
+        style={{ background: '#7c3aed', color: 'white', padding: '1rem', borderRadius: '6px', fontWeight: 'bold', boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)" }}
       >
         Click Me! (Clicked {clicks} times)
       </button>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Immediate Updates:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{immediateCount}</span>
         </div>
-        <div className={storyTheme.messageSuccess + " mb-2 p-3 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100"}>
+        <div className={storyTheme.messageSuccess + " mb-2 p-3 bg-emerald-50 text-emerald-700 rounded-md border border-emerald-100"}>
           <strong>Leading Edge (fires immediately):</strong> {leadingCount}
         </div>
-        <div className={storyTheme.cardInfo + " p-3 bg-indigo-50 text-indigo-700 rounded-xl border border-indigo-100"}>
+        <div className={storyTheme.cardInfo + " p-3 bg-violet-50 text-violet-700 rounded-md border border-violet-100"}>
           <strong>Trailing Edge (fires after delay):</strong> {trailingCount}
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
         <p className={storyTheme.infoText}>
-          💡 <strong>Leading edge</strong> is useful for actions that should
+          <strong>Leading edge</strong> is useful for actions that should
           happen immediately on first interaction (like showing a tooltip).
           <strong> Trailing edge</strong> is better for actions that should wait
           until user activity stops (like API calls).
@@ -567,8 +567,8 @@ function MaxWaitDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-2xl mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Max Wait Option</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Max Wait Option</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Type continuously without stopping. Regular debounce waits indefinitely,
         but maxWait ensures update happens within 5 seconds maximum.
       </p>
@@ -578,27 +578,27 @@ function MaxWaitDemo() {
         onChange={(e) => setInput(e.target.value)}
         placeholder="Keep typing without stopping for more than 2 seconds..."
         rows={8}
-        className={storyTheme.textareaMono + " mb-6 overflow-auto break-words w-full p-4 rounded-2xl border border-slate-200 shadow-inner"}
+        className={storyTheme.textareaMono + " mb-6 overflow-auto break-words w-full p-4 rounded-md border border-zinc-200 shadow-inner"}
       />
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Characters:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{input.length}</span>
         </div>
-        <div className={storyTheme.cardInfo + " mb-2 p-3 bg-slate-100 rounded-xl"}>
+        <div className={storyTheme.cardInfo + " mb-2 p-3 bg-zinc-100 rounded-md"}>
           <strong>Regular Debounce (2s delay):</strong> {regularUpdateCount}{" "}
           updates
         </div>
-        <div className={storyTheme.messageSuccess + " p-3 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100"}>
+        <div className={storyTheme.messageSuccess + " p-3 bg-emerald-50 text-emerald-700 rounded-md border border-emerald-100"}>
           <strong>With MaxWait (2s delay, 5s max):</strong> {maxWaitUpdateCount}{" "}
           updates
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " bg-amber-50 border border-amber-100 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " bg-amber-50 border border-amber-100 rounded-md p-5"}>
         <p className={storyTheme.infoText}>
-          💡 <strong>maxWait</strong> ensures that even if the user keeps typing
+          <strong>maxWait</strong> ensures that even if the user keeps typing
           continuously, the debounced value will update at least once every 5
           seconds. This is useful for auto-save features where you want to
           ensure changes are saved periodically even during continuous editing.
@@ -810,7 +810,7 @@ export const AutoSave: Story = {
     docs: {
       description: {
         story:
-          "Auto-save content after user stops typing. Prevents excessive save operations while providing a seamless user experience.",
+          "Saves one second after the last keystroke, so typing a paragraph costs one save request instead of one per character.",
       },
       source: {
         code: `import { useDebounce } from "@usefy/use-debounce";

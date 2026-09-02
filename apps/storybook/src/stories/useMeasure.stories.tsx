@@ -34,7 +34,7 @@ function BoundsDemo() {
       <div
         ref={ref}
         data-testid="measure-box"
-        className="mx-auto mb-6 grid place-items-center text-white font-semibold bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-xl"
+        className="mx-auto mb-6 grid place-items-center text-white font-semibold bg-violet-600 rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
         style={{
           resize: "both",
           overflow: "auto",
@@ -82,16 +82,16 @@ function ResponsiveDemo() {
       <div
         ref={ref}
         data-testid="responsive-box"
-        className="mx-auto p-6 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-inner"
+        className="mx-auto p-6 bg-zinc-50 rounded-md shadow-inner"
         style={{ resize: "horizontal", overflow: "auto", width: 480, minWidth: 200 }}
       >
         <div
           className={`gap-4 ${isCompact ? "flex flex-col" : "flex flex-row items-center"}`}
         >
-          <div className="flex-1 p-4 bg-white rounded-lg shadow text-center font-semibold text-gray-700">
+          <div className="flex-1 p-4 bg-white rounded-lg shadow text-center font-semibold text-zinc-700">
             Panel A
           </div>
-          <div className="flex-1 p-4 bg-white rounded-lg shadow text-center font-semibold text-gray-700">
+          <div className="flex-1 p-4 bg-white rounded-lg shadow text-center font-semibold text-zinc-700">
             Panel B
           </div>
         </div>

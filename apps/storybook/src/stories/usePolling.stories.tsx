@@ -118,7 +118,7 @@ function BackoffDemo() {
         consecutive failures back off exponentially; a success resets the delay
       </p>
 
-      <label className="flex items-center gap-2 mb-4 text-sm text-gray-700">
+      <label className="flex items-center gap-2 mb-4 text-sm text-zinc-700">
         <input
           type="checkbox"
           data-testid="fail-toggle"
@@ -143,12 +143,12 @@ function BackoffDemo() {
 
       {status === "error" && (
         <div className={storyTheme.messageError} data-testid="backoff-error">
-          ❌ {error?.message} — retrying with a growing delay…
+          {error?.message} — retrying with a growing delay…
         </div>
       )}
       {status === "success" && (
         <div className={storyTheme.messageSuccess} data-testid="backoff-ok">
-          ✅ Healthy — polling at the base interval
+          Healthy — polling at the base interval
         </div>
       )}
     </div>

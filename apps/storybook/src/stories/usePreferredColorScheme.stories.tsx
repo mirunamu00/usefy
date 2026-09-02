@@ -22,15 +22,15 @@ function Demo() {
       </p>
 
       <div
-        className={`p-8 rounded-xl shadow-xl mb-6 ${
+        className={`p-8 rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.08)] mb-6 ${
           scheme === "dark"
-            ? "bg-gray-900 text-gray-100"
-            : "bg-white text-gray-900 border-2 border-gray-200"
+            ? "bg-zinc-900 text-zinc-100"
+            : "bg-white text-zinc-900 border border-zinc-200"
         }`}
         data-testid="scheme-box"
       >
         <p className="text-2xl font-bold m-0" data-testid="scheme">
-          {scheme === "dark" ? "🌙 dark" : "☀️ light"}
+          {scheme === "dark" ? "dark" : "light"}
         </p>
       </div>
 
@@ -63,7 +63,7 @@ function Demo() {
           System (real hook value):{" "}
           <span className={storyTheme.statValue} data-testid="system">{systemScheme}</span>
         </p>
-        <p className="text-gray-500 text-sm mt-2">
+        <p className="text-zinc-500 text-sm mt-2">
           The buttons simulate the preference for this demo. In a real app the
           value comes from the OS — change it via DevTools → Rendering → “Emulate
           CSS prefers-color-scheme”, or your OS appearance settings.

@@ -113,10 +113,10 @@ function PinDemo() {
         {[0, 1, 2, 3].map((i) => (
           <span
             key={i}
-            className={`h-4 w-4 rounded-full border-2 ${
+            className={`h-4 w-4 rounded-full border ${
               i < pin.length
-                ? "bg-indigo-500 border-indigo-500"
-                : "border-gray-300"
+                ? "bg-violet-600 border-violet-500"
+                : "border-zinc-300"
             }`}
           />
         ))}
@@ -134,7 +134,7 @@ function PinDemo() {
       </div>
 
       <div className={`${unlocked ? storyTheme.messageSuccess : storyTheme.messageInfo} mt-5`}>
-        {unlocked ? "🔓 PIN complete" : `Enter ${4 - pin.length} more digit(s)`}
+        {unlocked ? "PIN complete" : `Enter ${4 - pin.length} more digit(s)`}
       </div>
     </div>
   );
@@ -399,12 +399,12 @@ function PinPad() {
       await userEvent.click(within(group).getByRole("button", { name: digit }));
     }
     await waitFor(() =>
-      expect(canvas.getByText("🔓 PIN complete")).toBeInTheDocument()
+      expect(canvas.getByText("PIN complete")).toBeInTheDocument()
     );
 
     // maxLength blocks a fifth digit.
     await userEvent.click(within(group).getByRole("button", { name: "5" }));
-    await expect(canvas.getByText("🔓 PIN complete")).toBeInTheDocument();
+    await expect(canvas.getByText("PIN complete")).toBeInTheDocument();
 
     // Clear resets the PIN.
     await userEvent.click(within(group).getByRole("button", { name: "Clear" }));
@@ -576,7 +576,7 @@ function FloatingDemo() {
         layouts={qwertyLayout}
         onChange={setValue}
         trigger={
-          <span className={storyTheme.buttonPrimary}>⌨️ Open keyboard</span>
+          <span className={storyTheme.buttonPrimary}>Open keyboard</span>
         }
       />
 
@@ -619,7 +619,7 @@ function FloatingSearch() {
         layouts={qwertyLayout}
         onChange={setValue}
         // \`trigger\` content must be NON-interactive — it is wrapped in a <button>.
-        trigger={<span>⌨️ Open keyboard</span>}
+        trigger={<span>Open keyboard</span>}
         // For an icon-only trigger, name it via triggerLabel="Open keyboard".
         // Uncontrolled by default (starts closed because a trigger is present).
         // Or drive it yourself: open={open} onOpenChange={setOpen}
@@ -857,10 +857,10 @@ function SecurePinDemo() {
         {[0, 1, 2, 3].map((i) => (
           <span
             key={i}
-            className={`h-4 w-4 rounded-full border-2 ${
+            className={`h-4 w-4 rounded-full border ${
               i < pin.length
-                ? "bg-indigo-500 border-indigo-500"
-                : "border-gray-300"
+                ? "bg-violet-600 border-violet-500"
+                : "border-zinc-300"
             }`}
           />
         ))}
@@ -928,7 +928,7 @@ function SecurePin() {
     await waitFor(() => {
       const filled = canvas
         .getByTestId("secure-dots")
-        .querySelectorAll(".bg-indigo-500");
+        .querySelectorAll(".bg-violet-600");
       expect(filled.length).toBe(3);
     });
   },

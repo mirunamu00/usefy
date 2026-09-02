@@ -45,7 +45,7 @@ const meta: Meta<typeof Confetti> = {
 \`\`\`tsx
 import { fireConfetti } from "@usefy/confetti";
 
-<button onClick={() => fireConfetti()}>🎉 Celebrate</button>
+<button onClick={() => fireConfetti()}>Celebrate</button>
 \`\`\``,
       },
     },
@@ -97,7 +97,7 @@ const QUICK_START_CODE = `import { fireConfetti } from "@usefy/confetti";
 function ShipItButton() {
   return (
     <button onClick={() => fireConfetti({ origin: { y: 0.8 }, spread: 70 })}>
-      🚀 Ship it
+      Ship it
     </button>
   );
 }`;
@@ -125,7 +125,7 @@ export const QuickStart: Story = {
         className={storyTheme.buttonPrimary}
         onClick={() => void fireConfetti({ origin: { y: 0.8 }, spread: 70 })}
       >
-        🚀 Ship it
+        Ship it
       </button>
     </div>
   ),
@@ -165,12 +165,12 @@ function PresetGallery() {
   return (
     <>
       <Confetti controllerRef={confetti} />
-      <button onClick={() => play(celebration)}>🎉 Celebration</button>
-      <button onClick={() => play(fireworks)}>🎆 Fireworks</button>
-      <button onClick={() => play(sideCannons)}>🎊 Side cannons</button>
-      <button onClick={() => play(pride)}>🏳️‍🌈 Pride</button>
-      <button onClick={() => play(stars)}>⭐ Stars</button>
-      <button onClick={toggleSnow}>{snowing ? "⏹ Stop snow" : "❄️ Snow"}</button>
+      <button onClick={() => play(celebration)}>Celebration</button>
+      <button onClick={() => play(fireworks)}>Fireworks</button>
+      <button onClick={() => play(sideCannons)}>Side cannons</button>
+      <button onClick={() => play(pride)}>‍Pride</button>
+      <button onClick={() => play(stars)}>Stars</button>
+      <button onClick={toggleSnow}>{snowing ? "Stop snow" : "Snow"}</button>
       <button onClick={() => confetti.current?.clear()}>Clear</button>
     </>
   );
@@ -217,22 +217,22 @@ export const PresetGallery: Story = {
           <Confetti controllerRef={confetti} />
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
             <button type="button" data-testid="preset-celebration" className={storyTheme.buttonPrimary} onClick={() => play(celebration)}>
-              🎉 Celebration
+              Celebration
             </button>
             <button type="button" data-testid="preset-fireworks" className={storyTheme.buttonPrimary} onClick={() => play(fireworks)}>
-              🎆 Fireworks
+              Fireworks
             </button>
             <button type="button" data-testid="preset-side-cannons" className={storyTheme.buttonPrimary} onClick={() => play(sideCannons)}>
-              🎊 Side cannons
+              Side cannons
             </button>
             <button type="button" data-testid="preset-pride" className={storyTheme.buttonPrimary} onClick={() => play(pride)}>
-              🏳️‍🌈 Pride
+              ‍Pride
             </button>
             <button type="button" data-testid="preset-stars" className={storyTheme.buttonPrimary} onClick={() => play(stars)}>
-              ⭐ Stars
+              Stars
             </button>
             <button type="button" data-testid="preset-snow" className={snowing ? storyTheme.buttonDanger : storyTheme.buttonSecondary} onClick={toggleSnow}>
-              {snowing ? "⏹ Stop snow" : "❄️ Snow"}
+              {snowing ? "Stop snow" : "Snow"}
             </button>
             <button type="button" data-testid="preset-clear" className={storyTheme.buttonNeutral} onClick={() => confetti.current?.clear()}>
               Clear
@@ -252,7 +252,7 @@ export const PresetGallery: Story = {
             }}
           >
             <span style={{ color: "rgba(255,255,255,0.55)", fontSize: 14 }}>
-              ❄️ The white snowfall shows best over this night sky
+              The white snowfall shows best over this night sky
             </span>
           </div>
         </div>
@@ -335,7 +335,7 @@ export const EmojiAndBrandShapes: Story = {
                 confetti.current?.fire({ shapes: emojiMix, count: 60, spread: 80 })
               }
             >
-              🎉 Emoji burst
+              Emoji burst
             </button>
             <button
               type="button"
@@ -439,8 +439,8 @@ export const OriginFromClick: Story = {
             }}
           >
             <Confetti variant="inline" controllerRef={confetti} />
-            <span style={{ color: "#6366f1", fontWeight: 600 }}>
-              Click anywhere in here ✨
+            <span style={{ color: "#7c3aed", fontWeight: 600 }}>
+              Click anywhere in here 
             </span>
           </div>
         </div>
@@ -469,7 +469,7 @@ function CardCelebration() {
         }}
       />
       <button disabled={isActive} onClick={() => fire({ origin: { y: 0.9 } })}>
-        {isActive ? "Celebrating…" : "🎉 Celebrate in this card"}
+        {isActive ? "Celebrating…" : "Celebrate in this card"}
       </button>
     </div>
   );
@@ -493,7 +493,7 @@ export const UseConfettiInline: Story = {
           <h2 className={storyTheme.title}>useConfetti</h2>
           <p className={storyTheme.subtitle}>
             A component-scoped canvas: the confetti stays inside the card, and
-            the button reflects the engine's idle↔active state.
+            the button reflects the engine's idleactive state.
           </p>
           <div
             className={storyTheme.card}
@@ -523,7 +523,7 @@ export const UseConfettiInline: Story = {
               disabled={isActive}
               onClick={() => void fire({ origin: { y: 0.9 }, spread: 70 })}
             >
-              {isActive ? "Celebrating…" : "🎉 Celebrate in this card"}
+              {isActive ? "Celebrating…" : "Celebrate in this card"}
             </button>
           </div>
         </div>

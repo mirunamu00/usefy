@@ -43,7 +43,7 @@ function ImmediateDemo() {
         full async lifecycle — auto-runs on mount, abortable, resettable
       </p>
 
-      <label className="flex items-center gap-2 mb-4 text-sm text-gray-700">
+      <label className="flex items-center gap-2 mb-4 text-sm text-zinc-700">
         <input
           type="checkbox"
           data-testid="fail-toggle"
@@ -88,12 +88,12 @@ function ImmediateDemo() {
 
       {status === "success" && (
         <div className={storyTheme.messageSuccess} data-testid="result">
-          ✅ Loaded {data?.name} (#{data?.id})
+          Loaded {data?.name} (#{data?.id})
         </div>
       )}
       {status === "error" && (
         <div className={storyTheme.messageError} data-testid="error">
-          ❌ {error?.message}
+          {error?.message}
         </div>
       )}
     </div>

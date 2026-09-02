@@ -167,7 +167,7 @@ export const Default: Story = {
 
 function TabStatus() {
   const visible = usePageVisibility();
-  return <span>{visible ? "👀 Active" : "💤 Background"}</span>;
+  return <span>{visible ? "Active" : "Background"}</span>;
 }`,
       },
     },

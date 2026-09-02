@@ -126,8 +126,8 @@ type Story = StoryObj<typeof QRCode>;
 function Panel({ children, label }: { children: React.ReactNode; label: string }) {
   return (
     <div className="flex flex-col items-center gap-2">
-      <div className="rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">{children}</div>
-      <span className="text-xs font-semibold text-gray-600">{label}</span>
+      <div className="rounded-md bg-white p-3">{children}</div>
+      <span className="text-xs font-semibold text-zinc-600">{label}</span>
     </div>
   );
 }
@@ -153,8 +153,8 @@ function Choices<T extends string>({
           onClick={() => onChange(option)}
           className={
             option === value
-              ? "rounded-lg border-2 border-indigo-500 bg-indigo-50 px-3 py-1.5 text-sm font-semibold text-indigo-700"
-              : "rounded-lg border-2 border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 hover:border-gray-300"
+              ? "rounded-lg border border-violet-500 bg-violet-50 px-3 py-1.5 text-sm font-semibold text-violet-700"
+              : "rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-600 hover:border-zinc-300"
           }
         >
           {option}
@@ -205,7 +205,7 @@ function Share() {
       <div className="flex justify-center">
         <QRCode {...args} />
       </div>
-      <p className="mt-4 break-all text-xs text-gray-500">{String(args.value)}</p>
+      <p className="mt-4 break-all text-xs text-zinc-500">{String(args.value)}</p>
     </div>
   ),
 };
@@ -338,7 +338,7 @@ function ShapesDemo() {
         <div>
           <label className={storyTheme.label} htmlFor="module-gap">
             Module gap — {moduleGap.toFixed(2)}{" "}
-            <span className={gapIsRisky ? "text-red-600" : "text-green-700"}>
+            <span className={gapIsRisky ? "text-red-600" : "text-emerald-700"}>
               (measured safe up to {safeGap} for “{moduleShape}”)
             </span>
           </label>
@@ -424,7 +424,7 @@ const GRADIENTS = {
     type: "linear" as const,
     rotation: 45,
     stops: [
-      { offset: 0, color: "#6366f1" },
+      { offset: 0, color: "#7c3aed" },
       { offset: 1, color: "#ec4899" },
     ],
   },
@@ -514,7 +514,7 @@ function GradientCode() {
         type: "linear",
         rotation: 45,
         stops: [
-          { offset: 0, color: "#6366f1" },
+          { offset: 0, color: "#7c3aed" },
           { offset: 1, color: "#ec4899" },
         ],
       }}
@@ -606,7 +606,7 @@ function LogoDemo() {
         <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-black/10">
           <div
             className={`h-full rounded-full transition-[width] duration-200 ${
-              safety.safe ? "bg-green-600" : "bg-red-600"
+              safety.safe ? "bg-emerald-600" : "bg-red-600"
             }`}
             style={{ width: `${Math.min(100, (safety.occludedRatio / safety.ecBudget) * 100)}%` }}
           />
@@ -674,7 +674,7 @@ function ExportDemo() {
           {preview ? (
             <img src={preview} alt="Rendered PNG of the QR code" width={180} height={180} />
           ) : (
-            <div className="flex h-[180px] w-[180px] items-center justify-center rounded-lg border-2 border-dashed border-gray-300 p-4 text-center text-xs text-gray-400">
+            <div className="flex h-[180px] w-[180px] items-center justify-center rounded-lg border-2 border-dashed border-zinc-300 p-4 text-center text-xs text-zinc-400">
               Press “Render PNG” to rasterize
             </div>
           )}
@@ -795,7 +795,7 @@ function WifiDemo() {
         onChange={(event) => setPassword(event.target.value)}
       />
 
-      <label className="mt-4 flex items-center gap-2 text-sm font-medium text-gray-700">
+      <label className="mt-4 flex items-center gap-2 text-sm font-medium text-zinc-700">
         <input
           type="checkbox"
           data-testid="wifi-hidden"
@@ -813,7 +813,7 @@ function WifiDemo() {
         )}
       </div>
 
-      <pre className="mt-4 overflow-x-auto rounded-lg bg-gray-100 p-3 text-xs text-gray-700">
+      <pre className="mt-4 overflow-x-auto rounded-lg bg-zinc-100 p-3 text-xs text-zinc-700">
         {payload}
       </pre>
     </div>
@@ -867,19 +867,19 @@ function OnDark() {
     },
   },
   render: () => (
-    <div className="rounded-2xl bg-slate-900 p-10 text-center font-sans">
+    <div className="rounded-md bg-zinc-900 p-10 text-center font-sans">
       <h2 className="mb-2 text-2xl font-bold text-white">On a dark surface</h2>
-      <p className="mb-6 text-sm text-slate-400">
+      <p className="mb-6 text-sm text-zinc-400">
         Scanners expect dark modules on a light field — so the quiet zone stays light even when the
         page is not.
       </p>
       <div className="flex flex-wrap justify-center gap-8">
         <div className="flex flex-col items-center gap-2">
           <QRCode value={DEMO_URL} size={180} level="Q" bg="#ffffff" margin={4} />
-          <span className="text-xs font-semibold text-green-400">Light quiet zone — scans</span>
+          <span className="text-xs font-semibold text-emerald-400">Light quiet zone — scans</span>
         </div>
         <div className="flex flex-col items-center gap-2">
-          <div className="rounded-xl bg-white p-3">
+          <div className="rounded-md bg-white p-3">
             <QRCode
               value={DEMO_URL}
               size={156}
@@ -889,7 +889,7 @@ function OnDark() {
               fg="#0f172a"
             />
           </div>
-          <span className="text-xs font-semibold text-slate-300">Framed in a light card</span>
+          <span className="text-xs font-semibold text-zinc-300">Framed in a light card</span>
         </div>
       </div>
     </div>

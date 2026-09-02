@@ -27,26 +27,26 @@ function BasicUsageDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Basic Usage</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Basic Usage</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Scroll down to see the element enter and exit the viewport.
       </p>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 grid grid-cols-2 gap-4"}>
-        <div className="flex flex-col items-center justify-center p-3 bg-slate-50 rounded-xl">
-          <strong className="text-slate-500 text-xs uppercase tracking-wider mb-1">inView</strong>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200 grid grid-cols-2 gap-4"}>
+        <div className="flex flex-col items-center justify-center p-3 bg-zinc-50 rounded-md">
+          <strong className="text-zinc-500 text-xs mb-1">inView</strong>
           <span
             data-testid="in-view"
             className={
-              inView ? "text-green-600 font-bold" : "text-red-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-red-500 font-bold"
             }
           >
             {inView ? "true ✓" : "false ✗"}
           </span>
         </div>
-        <div className="flex flex-col items-center justify-center p-3 bg-slate-50 rounded-xl">
-          <strong className="text-slate-500 text-xs uppercase tracking-wider mb-1">Ratio</strong>
-          <span data-testid="ratio" className="text-slate-900 font-mono font-bold text-lg">
+        <div className="flex flex-col items-center justify-center p-3 bg-zinc-50 rounded-md">
+          <strong className="text-zinc-500 text-xs mb-1">Ratio</strong>
+          <span data-testid="ratio" className="text-zinc-900 font-mono font-bold text-lg">
             {entry ? `${Math.round(entry.intersectionRatio * 100)}%` : "N/A"}
           </span>
         </div>
@@ -59,7 +59,7 @@ function BasicUsageDemo() {
           height: "300px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -69,14 +69,14 @@ function BasicUsageDemo() {
             height: "350px",
             background: "white",
             border: "1px dashed #cbd5e1",
-            borderRadius: "1rem",
+            borderRadius: "6px",
             marginBottom: "16px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <p className="text-gray-500 p-4">⬇️ Scroll down</p>
+          <p className="text-zinc-500 p-4">Scroll down</p>
         </div>
 
         <div
@@ -85,9 +85,9 @@ function BasicUsageDemo() {
           style={{
             height: "120px",
             background: inView
-              ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-              : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            borderRadius: "1.5rem",
+              ? "#10b981"
+              : "#ef4444",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -100,7 +100,7 @@ function BasicUsageDemo() {
               : "0 10px 25px rgba(239, 68, 68, 0.4)",
           }}
         >
-          {inView ? "👁️ Visible!" : "👻 Not Visible"}
+          {inView ? "Visible!" : "Not Visible"}
         </div>
 
         <div
@@ -108,14 +108,14 @@ function BasicUsageDemo() {
             height: "200px",
             background: "white",
             border: "1px dashed #cbd5e1",
-            borderRadius: "1rem",
+            borderRadius: "6px",
             marginTop: "16px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
           }}
         >
-          <p className="text-gray-500 p-4">⬆️ Scroll up</p>
+          <p className="text-zinc-500 p-4">Scroll up</p>
         </div>
       </div>
     </div>
@@ -144,17 +144,17 @@ function ThresholdDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Threshold</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Threshold</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Set multiple threshold values to track element visibility ratio in
         detail.
         <br />
-        <code className="bg-gray-100 px-2 py-1 rounded text-sm">
+        <code className="bg-zinc-100 px-2 py-1 rounded text-sm">
           threshold: [0, 0.25, 0.5, 0.75, 1.0]
         </code>
       </p>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current Visibility:</strong>{" "}
           <span data-testid="visibility" className={storyTheme.statValue}>
@@ -168,7 +168,7 @@ function ThresholdDemo() {
             width: "100%",
             height: "24px",
             background: "#e5e7eb",
-            borderRadius: "12px",
+            borderRadius: "6px",
             overflow: "hidden",
             marginTop: "12px",
           }}
@@ -178,9 +178,9 @@ function ThresholdDemo() {
             style={{
               width: `${currentThreshold * 100}%`,
               height: "100%",
-              background: "linear-gradient(90deg, #6366f1, #a855f7)",
+              background: "#7c3aed",
               transition: "width 0.2s ease",
-              borderRadius: "12px",
+              borderRadius: "6px",
             }}
           />
         </div>
@@ -198,8 +198,8 @@ function ThresholdDemo() {
               key={t}
               className={`text-xs ${
                 currentThreshold >= t
-                  ? "text-indigo-600 font-bold"
-                  : "text-gray-400"
+                  ? "text-violet-600 font-bold"
+                  : "text-zinc-400"
               }`}
             >
               {t * 100}%
@@ -215,7 +215,7 @@ function ThresholdDemo() {
           height: "250px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -227,10 +227,8 @@ function ThresholdDemo() {
           data-testid="threshold-target"
           style={{
             height: "200px",
-            background: `linear-gradient(135deg, 
-              hsl(${260 + currentThreshold * 50}, 80%, 50%) 0%, 
-              hsl(${280 + currentThreshold * 50}, 80%, 60%) 100%)`,
-            borderRadius: "1.5rem",
+            background: `hsl(${260 + currentThreshold * 50}, 80%, 50%)`,
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -256,8 +254,8 @@ function RootMarginDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Root Margin</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Root Margin</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         rootMargin adjusts the detection boundary around the scroll container.
         <br />
         <strong>+50px</strong> = detect 50px earlier (preload),{" "}
@@ -337,7 +335,7 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between items-center"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200 flex justify-between items-center"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>rootMargin:</strong>{" "}
           <span className={storyTheme.statValue}>{rootMargin}</span>
@@ -347,7 +345,7 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
           <span
             data-testid="in-view"
             className={
-              inView ? "text-green-600 font-bold" : "text-red-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-red-500 font-bold"
             }
           >
             {inView ? "true" : "false"}
@@ -361,7 +359,7 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
           height: "300px",
           overflowY: "auto",
           border: "4px solid #cbd5e1",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "0",
           position: "relative",
           background: "#f8fafc",
@@ -378,7 +376,7 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
             borderBottom: "1px dashed #d1d5db",
           }}
         >
-          ⬇️ Scroll down slowly and watch when detection happens
+          Scroll down slowly and watch when detection happens
         </div>
 
         <div
@@ -387,8 +385,8 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
           style={{
             height: "120px",
             background: inView
-              ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-              : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+              ? "#10b981"
+              : "#ef4444",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -402,7 +400,7 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
           }}
         >
           <div style={{ fontSize: "2rem", marginBottom: "8px" }}>
-            {inView ? "👁️ DETECTED!" : "👻 NOT DETECTED"}
+            {inView ? "DETECTED!" : "NOT DETECTED"}
           </div>
           <div
             style={{
@@ -432,14 +430,14 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
             borderTop: "1px dashed #d1d5db",
           }}
         >
-          ⬆️ Scroll up to test again
+          Scroll up to test again
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <div className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <div className={storyTheme.infoText + " text-zinc-600"}>
           <p style={{ margin: 0 }}>
-            💡 <strong>Understanding rootMargin:</strong>
+            <strong>Understanding rootMargin:</strong>
           </p>
           <ul
             style={{
@@ -462,7 +460,7 @@ function RootMarginChild({ rootMargin }: { rootMargin: string }) {
             </li>
           </ul>
           <p style={{ margin: "0.75rem 0 0 0" }}>
-            💡 Scroll slowly to see exactly when the red→green color change
+            Scroll slowly to see exactly when the red→green color change
             happens!
           </p>
         </div>
@@ -479,8 +477,8 @@ function TriggerOnceDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Trigger Once</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Trigger Once</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         When triggerOnce is true, the element stops being observed after
         entering view once.
         <br />
@@ -552,7 +550,7 @@ function TriggerOnceChild({
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-2"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200 space-y-2"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>triggerOnce:</strong>{" "}
           <span
@@ -573,7 +571,7 @@ function TriggerOnceChild({
           <span
             data-testid="current-in-view"
             className={
-              inView ? "text-green-600 font-bold" : "text-red-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-red-500 font-bold"
             }
           >
             {inView ? "true" : "false"}
@@ -588,7 +586,7 @@ function TriggerOnceChild({
           height: "200px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -601,7 +599,7 @@ function TriggerOnceChild({
             justifyContent: "center",
           }}
         >
-          <span className="text-gray-400">⬇️ Scroll down</span>
+          <span className="text-zinc-400">Scroll down</span>
         </div>
 
         <div
@@ -610,9 +608,9 @@ function TriggerOnceChild({
           style={{
             height: "80px",
             background: inView
-              ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-              : "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
-            borderRadius: "1.5rem",
+              ? "#10b981"
+              : "#f59e0b",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -622,9 +620,9 @@ function TriggerOnceChild({
           }}
         >
           {triggerOnce && triggerCount > 0
-            ? "🔒 Locked (no longer tracked)"
+            ? "Locked (no longer tracked)"
             : inView
-            ? "👁️ Visible!"
+            ? "Visible!"
             : "Waiting..."}
         </div>
 
@@ -649,8 +647,8 @@ function EnabledDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Enabled</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Enabled</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Dynamically enable/disable the observer with the enabled option.
       </p>
 
@@ -660,11 +658,11 @@ function EnabledDemo() {
         className={enabled ? storyTheme.buttonSuccess : storyTheme.buttonDanger}
       >
         {enabled
-          ? "✅ Observing (click to disable)"
-          : "⏸️ Paused (click to enable)"}
+          ? "Observing (click to disable)"
+          : "Paused (click to enable)"}
       </button>
 
-      <div className={storyTheme.statBox + " mt-6 mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between"}>
+      <div className={storyTheme.statBox + " mt-6 mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200 flex justify-between"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>enabled:</strong>{" "}
           <span data-testid="enabled-value" className={storyTheme.statValue}>
@@ -676,7 +674,7 @@ function EnabledDemo() {
           <span
             data-testid="in-view"
             className={
-              inView ? "text-green-600 font-bold" : "text-gray-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-zinc-500 font-bold"
             }
           >
             {inView ? "true" : "false"}
@@ -691,7 +689,7 @@ function EnabledDemo() {
           height: "200px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
           opacity: enabled ? 1 : 0.5,
@@ -708,9 +706,9 @@ function EnabledDemo() {
             background: !enabled
               ? "#9ca3af"
               : inView
-              ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-              : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            borderRadius: "1.5rem",
+              ? "#10b981"
+              : "#ef4444",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -720,9 +718,9 @@ function EnabledDemo() {
           }}
         >
           {!enabled
-            ? "⏸️ Observation Disabled"
+            ? "Observation Disabled"
             : inView
-            ? "👁️ Visible"
+            ? "Visible"
             : "Not Visible"}
         </div>
 
@@ -739,8 +737,8 @@ function InitialIsIntersectingDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Initial Is Intersecting</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Initial Is Intersecting</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Set the initial intersection state for SSR/SSG environments.
         <br />
         Useful when you need to display above-the-fold content immediately.
@@ -803,7 +801,7 @@ function InitialIsIntersectingChild({
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 space-y-2"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200 space-y-2"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>
             initialIsIntersecting:
@@ -817,7 +815,7 @@ function InitialIsIntersectingChild({
           <span
             data-testid="in-view"
             className={
-              inView ? "text-green-600 font-bold" : "text-red-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-red-500 font-bold"
             }
           >
             {inView ? "true" : "false"}
@@ -837,9 +835,9 @@ function InitialIsIntersectingChild({
         style={{
           height: "80px",
           background: inView
-            ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-            : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-          borderRadius: "1.5rem",
+            ? "#10b981"
+            : "#ef4444",
+          borderRadius: "6px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -848,12 +846,12 @@ function InitialIsIntersectingChild({
           transition: "all 0.3s ease",
         }}
       >
-        {inView ? "👁️ In View" : "❌ Not In View"}
+        {inView ? "In View" : "Not In View"}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
-          💡 When initialIsIntersecting is true, it displays "In View"
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
+          When initialIsIntersecting is true, it displays "In View"
           immediately on first render. This is useful for controlling initial
           state in server-side rendering.
         </p>
@@ -892,21 +890,21 @@ function OnChangeDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>OnChange Callback</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>OnChange Callback</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Get notified whenever the intersection state changes via the onChange
         callback.
         <br />
         Useful for sending analytics events or state synchronization.
       </p>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current State:</strong>{" "}
           <span
             data-testid="current-state"
             className={
-              inView ? "text-green-600 font-bold" : "text-red-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-red-500 font-bold"
             }
           >
             {inView ? "In View" : "Out of View"}
@@ -921,7 +919,7 @@ function OnChangeDemo() {
           height: "180px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -934,9 +932,9 @@ function OnChangeDemo() {
           style={{
             height: "80px",
             background: inView
-              ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-              : "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
-            borderRadius: "1.5rem",
+              ? "#10b981"
+              : "#7c3aed",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -952,22 +950,22 @@ function OnChangeDemo() {
       </div>
 
       {/* Event Log */}
-      <div className={storyTheme.card + " mt-6 bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
-        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
-          📋 Event Logs
+      <div className={storyTheme.card + " mt-6 bg-zinc-900 rounded-md p-6 shadow-sm border border-zinc-800"}>
+        <h3 className="text-sm font-bold text-zinc-400 mb-3">
+          Event Logs
         </h3>
         {logs.length === 0 ? (
-          <p className="text-gray-500 italic">No logs yet...</p>
+          <p className="text-zinc-500 italic">No logs yet...</p>
         ) : (
           <ul className="list-none p-0 m-0 max-h-40 overflow-auto">
             {logs.map((log, index) => (
               <li
                 key={index}
                 data-testid={`log-${index}`}
-                className={`font-mono text-xs mb-1 p-2 rounded border-l-4 ${
+                className={`font-mono text-xs mb-1 p-2 rounded ${
                   log.inView
-                    ? "border-green-500 bg-green-900/20 text-green-400"
-                    : "border-red-500 bg-red-900/20 text-red-400"
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "bg-red-50 text-red-700"
                 } flex justify-between`}
               >
                 [{log.time}] inView: {log.inView ? "true" : "false"}, ratio:{" "}
@@ -988,8 +986,8 @@ function DelayDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Delay</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Delay</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         The <code>delay</code> option delays the{" "}
         <strong>creation of the IntersectionObserver</strong>, not individual
         intersection events.
@@ -999,10 +997,10 @@ function DelayDemo() {
       </p>
 
       <div
-        className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}
+        className={storyTheme.infoBox + " bg-zinc-50 border border-zinc-200 rounded-md p-5"}
         style={{ marginBottom: "16px", fontSize: "0.85rem" }}
       >
-        <strong>💡 How delay works:</strong>
+        <strong>How delay works:</strong>
         <ul style={{ margin: "8px 0 0 16px", paddingLeft: "0" }}>
           <li>
             • <strong>Before delay:</strong> No observation occurs (observer not
@@ -1113,7 +1111,7 @@ function DelayChild({ delay }: { delay: number }) {
 
   return (
     <>
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>delay:</strong>{" "}
           <span data-testid="delay-value" className={storyTheme.statValue}>
@@ -1126,13 +1124,13 @@ function DelayChild({ delay }: { delay: number }) {
             data-testid="observer-status"
             className={
               observerCreated
-                ? "text-green-600 font-bold"
-                : "text-yellow-600 font-bold"
+                ? "text-emerald-600 font-bold"
+                : "text-amber-600 font-bold"
             }
           >
             {observerCreated
-              ? "✅ Created & Observing"
-              : `⏳ Creating in ${delay - elapsedTime}ms...`}
+              ? "Created & Observing"
+              : `Creating in ${delay - elapsedTime}ms...`}
           </span>
         </div>
         {delay > 0 && !observerCreated && (
@@ -1149,7 +1147,7 @@ function DelayChild({ delay }: { delay: number }) {
                 style={{
                   height: "100%",
                   width: `${progressPercent}%`,
-                  background: "linear-gradient(90deg, #f59e0b, #d97706)",
+                  background: "#f59e0b",
                   transition: "width 0.1s ease",
                 }}
               />
@@ -1161,7 +1159,7 @@ function DelayChild({ delay }: { delay: number }) {
           <span
             data-testid="in-view"
             className={
-              inView ? "text-green-600 font-bold" : "text-gray-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-zinc-500 font-bold"
             }
           >
             {observerCreated
@@ -1179,11 +1177,11 @@ function DelayChild({ delay }: { delay: number }) {
         style={{
           height: "80px",
           background: !observerCreated
-            ? "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)"
+            ? "#f59e0b"
             : inView
-            ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-            : "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
-          borderRadius: "1.5rem",
+            ? "#10b981"
+            : "#7c3aed",
+          borderRadius: "6px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -1193,9 +1191,9 @@ function DelayChild({ delay }: { delay: number }) {
         }}
       >
         {!observerCreated
-          ? `⏳ Observer creates in ${delay - elapsedTime}ms...`
+          ? `Observer creates in ${delay - elapsedTime}ms...`
           : inView
-          ? "👁️ In View (observing)"
+          ? "In View (observing)"
           : "Not in View (observing)"}
       </div>
 
@@ -1234,8 +1232,8 @@ function CustomRootDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Custom Root Container</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Custom Root Container</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Use a custom scroll container instead of the browser viewport with the
         root option.
       </p>
@@ -1271,7 +1269,7 @@ function CustomRootDemo() {
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>root:</strong>{" "}
           <span data-testid="root-type" className={storyTheme.statValue}>
@@ -1283,7 +1281,7 @@ function CustomRootDemo() {
           <span
             data-testid="in-view"
             className={
-              inView ? "text-green-600 font-bold" : "text-red-500 font-bold"
+              inView ? "text-emerald-600 font-bold" : "text-red-500 font-bold"
             }
           >
             {inView ? "true" : "false"}
@@ -1297,8 +1295,8 @@ function CustomRootDemo() {
         style={{
           height: "200px",
           overflowY: "auto",
-          border: useCustomRoot ? "4px solid #818cf8" : "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          border: useCustomRoot ? "4px solid #ede9fe" : "1px solid #e2e8f0",
+          borderRadius: "6px",
           padding: "16px",
           transition: "border-color 0.3s ease",
         }}
@@ -1307,7 +1305,7 @@ function CustomRootDemo() {
           style={{
             height: "250px",
             background: "white",
-            borderRadius: "1rem",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1315,7 +1313,7 @@ function CustomRootDemo() {
             border: "1px dashed #cbd5e1",
           }}
         >
-          ⬇️ Scroll down to see target element
+          Scroll down to see target element
         </div>
 
         <div
@@ -1324,9 +1322,9 @@ function CustomRootDemo() {
           style={{
             height: "120px",
             background: inView
-              ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-              : "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
-            borderRadius: "1.5rem",
+              ? "#10b981"
+              : "#ef4444",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1335,14 +1333,14 @@ function CustomRootDemo() {
             transition: "all 0.3s ease",
           }}
         >
-          {inView ? "👁️ Visible in Container!" : "👻 Not Visible in Container"}
+          {inView ? "Visible in Container!" : "Not Visible in Container"}
         </div>
 
         <div
           style={{
             height: "200px",
             background: "white",
-            borderRadius: "1rem",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1350,14 +1348,14 @@ function CustomRootDemo() {
             border: "1px dashed #cbd5e1",
           }}
         >
-          ⬆️ Scroll up
+          Scroll up
         </div>
       </div>
 
       {useCustomRoot && (
-        <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-          <p className={storyTheme.infoText + " text-slate-600"}>
-            💡 The purple border indicates the current root container.
+        <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+          <p className={storyTheme.infoText + " text-zinc-600"}>
+            The purple border indicates the current root container.
             Intersection is detected only when scrolling within this container.
           </p>
         </div>
@@ -1382,8 +1380,8 @@ function EntryDetailsDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Entry Details</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Entry Details</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         View all detailed information provided by the entry object.
       </p>
 
@@ -1393,7 +1391,7 @@ function EntryDetailsDemo() {
           height: "200px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
           marginBottom: "20px",
@@ -1407,9 +1405,9 @@ function EntryDetailsDemo() {
           style={{
             height: "100px",
             background: inView
-              ? "linear-gradient(135deg, #10b981 0%, #059669 100%)"
-              : "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
-            borderRadius: "1.5rem",
+              ? "#10b981"
+              : "#7c3aed",
+            borderRadius: "6px",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1427,9 +1425,9 @@ function EntryDetailsDemo() {
         <div style={{ height: "120px" }} />
       </div>
 
-      <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4">
-          📊 Entry Properties
+      <div className={storyTheme.card + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="text-sm font-bold text-zinc-400 mb-4">
+          Entry Properties
         </h3>
 
         <div className="space-y-2">
@@ -1439,7 +1437,7 @@ function EntryDetailsDemo() {
               data-testid="is-intersecting"
               className={
                 entry?.isIntersecting
-                  ? "text-green-600 font-bold"
+                  ? "text-emerald-600 font-bold"
                   : "text-red-500 font-bold"
               }
             >
@@ -1468,7 +1466,7 @@ function EntryDetailsDemo() {
             <strong className={storyTheme.statText}>boundingClientRect:</strong>{" "}
             <span
               data-testid="bounding-rect"
-              className="text-xs font-mono text-gray-600 break-all"
+              className="text-xs font-mono text-zinc-600 break-all"
             >
               {entry
                 ? `{top: ${Math.round(
@@ -1486,7 +1484,7 @@ function EntryDetailsDemo() {
             <strong className={storyTheme.statText}>intersectionRect:</strong>{" "}
             <span
               data-testid="intersection-rect"
-              className="text-xs font-mono text-gray-600 break-all"
+              className="text-xs font-mono text-zinc-600 break-all"
             >
               {entry
                 ? `{width: ${Math.round(
@@ -1543,11 +1541,11 @@ function LazyLoadingDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>🖼️ Lazy Loading Images</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Lazy Loading Images</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Images load only when they enter the viewport.
         <br />
-        <code className="bg-gray-100 px-2 py-1 rounded text-sm">
+        <code className="bg-zinc-100 px-2 py-1 rounded text-sm">
           triggerOnce: true
         </code>{" "}
         loads them only once.
@@ -1559,7 +1557,7 @@ function LazyLoadingDemo() {
           height: "400px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -1587,11 +1585,11 @@ function LazyImage({ src, alt }: { src: string; alt: string }) {
       style={{
         minHeight: "200px",
         marginBottom: "16px",
-        borderRadius: "1.5rem",
+        borderRadius: "6px",
         overflow: "hidden",
         background: loaded
           ? "transparent"
-          : "linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%)",
+          : "#f3f4f6",
         position: "relative",
       }}
     >
@@ -1606,7 +1604,7 @@ function LazyImage({ src, alt }: { src: string; alt: string }) {
             color: "#9ca3af",
           }}
         >
-          <span>📷 Scroll to load</span>
+          <span>Scroll to load</span>
         </div>
       )}
 
@@ -1640,7 +1638,7 @@ function LazyImage({ src, alt }: { src: string; alt: string }) {
               width: "40px",
               height: "40px",
               border: "4px solid #e5e7eb",
-              borderTopColor: "#6366f1",
+              borderTopColor: "#7c3aed",
               borderRadius: "50%",
               animation: "spin 1s linear infinite",
             }}
@@ -1685,18 +1683,18 @@ function InfiniteScrollDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>♾️ Infinite Scroll</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Infinite Scroll</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Automatically loads more items when the sentinel element becomes
         visible.
         <br />
-        <code className="bg-gray-100 px-2 py-1 rounded text-sm">
+        <code className="bg-zinc-100 px-2 py-1 rounded text-sm">
           rootMargin: "100px"
         </code>{" "}
         preloads ahead of time.
       </p>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex justify-between"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200 flex justify-between"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Loaded Items:</strong>{" "}
           <span data-testid="item-count" className={storyTheme.statValue}>
@@ -1707,7 +1705,7 @@ function InfiniteScrollDemo() {
           <strong className={storyTheme.statText}>Sentinel Status:</strong>{" "}
           <span
             data-testid="sentinel-status"
-            className={inView ? "text-green-600 font-bold" : "text-gray-500"}
+            className={inView ? "text-emerald-600 font-bold" : "text-zinc-500"}
           >
             {inView ? "Visible (loading triggered)" : "Not visible"}
           </span>
@@ -1721,7 +1719,7 @@ function InfiniteScrollDemo() {
           height: "300px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -1734,7 +1732,7 @@ function InfiniteScrollDemo() {
               marginBottom: "8px",
               background: "white",
               border: "1px solid #e2e8f0",
-              borderRadius: "1rem",
+              borderRadius: "6px",
               display: "flex",
               alignItems: "center",
               gap: "12px",
@@ -1744,7 +1742,7 @@ function InfiniteScrollDemo() {
               style={{
                 width: "32px",
                 height: "32px",
-                background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+                background: "#7c3aed",
                 borderRadius: "50%",
                 display: "flex",
                 alignItems: "center",
@@ -1756,7 +1754,7 @@ function InfiniteScrollDemo() {
             >
               {item}
             </span>
-            <span className="text-gray-700">Item #{item}</span>
+            <span className="text-zinc-700">Item #{item}</span>
           </div>
         ))}
 
@@ -1784,7 +1782,7 @@ function InfiniteScrollDemo() {
                   width: "20px",
                   height: "20px",
                   border: "3px solid #e5e7eb",
-                  borderTopColor: "#6366f1",
+                  borderTopColor: "#7c3aed",
                   borderRadius: "50%",
                   animation: "spin 1s linear infinite",
                 }}
@@ -1792,9 +1790,9 @@ function InfiniteScrollDemo() {
               <span>Loading...</span>
             </div>
           ) : items.length >= 30 ? (
-            <span>✅ All items loaded!</span>
+            <span>All items loaded!</span>
           ) : (
-            <span>⬇️ Scroll more to load</span>
+            <span>Scroll more to load</span>
           )}
         </div>
       </div>
@@ -1815,8 +1813,8 @@ function ScrollAnimationDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>✨ Scroll Animations</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Scroll Animations</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Trigger animations when elements enter the viewport.
         <br />
         Check out various animation effects.
@@ -1828,7 +1826,7 @@ function ScrollAnimationDemo() {
           height: "400px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "24px",
           background: "#f8fafc",
         }}
@@ -1841,31 +1839,31 @@ function ScrollAnimationDemo() {
             justifyContent: "center",
           }}
         >
-          <span className="text-gray-400">⬇️ Scroll to see animations</span>
+          <span className="text-zinc-400">Scroll to see animations</span>
         </div>
 
         <AnimatedCard animation="fadeIn" delay={0}>
-          <h3>📥 Fade In</h3>
+          <h3>Fade In</h3>
           <p>Smooth fade-in effect</p>
         </AnimatedCard>
 
         <AnimatedCard animation="slideLeft" delay={100}>
-          <h3>⬅️ Slide from Left</h3>
+          <h3>Slide from Left</h3>
           <p>Slides in from the left</p>
         </AnimatedCard>
 
         <AnimatedCard animation="slideRight" delay={200}>
-          <h3>➡️ Slide from Right</h3>
+          <h3>Slide from Right</h3>
           <p>Slides in from the right</p>
         </AnimatedCard>
 
         <AnimatedCard animation="scaleUp" delay={300}>
-          <h3>📈 Scale Up</h3>
+          <h3>Scale Up</h3>
           <p>Grows from small to full size</p>
         </AnimatedCard>
 
         <AnimatedCard animation="slideUp" delay={400}>
-          <h3>⬆️ Slide Up</h3>
+          <h3>Slide Up</h3>
           <p>Slides up from bottom</p>
         </AnimatedCard>
 
@@ -1927,8 +1925,8 @@ function AnimatedCard({
         padding: "20px",
         marginBottom: "16px",
         background: "white",
-        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        borderRadius: "1.5rem",
+        boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
+        borderRadius: "6px",
         ...getAnimationStyles(),
       }}
     >
@@ -1959,8 +1957,8 @@ function ScrollProgressDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>📊 Scroll Progress Tracking</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Scroll Progress Tracking</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Track scroll progress using multiple thresholds.
         <br />
         Useful for reading progress indicators, video autoplay, etc.
@@ -1986,13 +1984,13 @@ function ScrollProgressDemo() {
           style={{
             width: `${progress}%`,
             height: "100%",
-            background: "linear-gradient(90deg, #6366f1, #a855f7, #ec4899)",
+            background: "#7c3aed",
             transition: "width 0.1s ease",
           }}
         />
       </div>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Progress:</strong>{" "}
           <span
@@ -2011,7 +2009,7 @@ function ScrollProgressDemo() {
           height: "300px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -2023,10 +2021,8 @@ function ScrollProgressDemo() {
           data-testid="progress-target"
           style={{
             height: "400px",
-            background: `linear-gradient(180deg, 
-              hsl(260, 80%, ${50 + progress * 0.3}%) 0%, 
-              hsl(${260 + progress}, 80%, 60%) 100%)`,
-            borderRadius: "1.5rem",
+            background: `hsl(260, 80%, ${50 + progress * 0.3}%)`,
+            borderRadius: "6px",
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
@@ -2064,8 +2060,8 @@ function SectionNavigationDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>🧭 Section Navigation</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Section Navigation</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Automatically detect the visible section and highlight the navigation.
       </p>
 
@@ -2078,8 +2074,8 @@ function SectionNavigationDemo() {
           gap: "8px",
           padding: "12px",
           background: "white",
-          borderRadius: "1rem",
-          boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+          borderRadius: "6px",
+          boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
           marginBottom: "20px",
           zIndex: 10,
           flexWrap: "wrap",
@@ -2098,7 +2094,7 @@ function SectionNavigationDemo() {
               transition: "all 0.2s ease",
               background:
                 activeSection === section
-                  ? "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)"
+                  ? "#7c3aed"
                   : "#f3f4f6",
               color: activeSection === section ? "white" : "#6b7280",
             }}
@@ -2114,7 +2110,7 @@ function SectionNavigationDemo() {
           height: "300px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1.5rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -2149,7 +2145,7 @@ function SectionItem({
   });
 
   const colors = [
-    ["#6366f1", "#a855f7"],
+    ["#7c3aed", "#7c3aed"],
     ["#10b981", "#059669"],
     ["#f59e0b", "#d97706"],
     ["#ef4444", "#dc2626"],
@@ -2163,8 +2159,8 @@ function SectionItem({
       style={{
         height: "200px",
         marginBottom: "16px",
-        background: `linear-gradient(135deg, ${colors[index][0]} 0%, ${colors[index][1]} 100%)`,
-        borderRadius: "1.5rem",
+        background: `${colors[index][0]}`,
+        borderRadius: "6px",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -2176,7 +2172,7 @@ function SectionItem({
         transition: "all 0.3s ease",
       }}
     >
-      📌 {name} Section
+      {name} Section
     </div>
   );
 }
@@ -2394,15 +2390,15 @@ const { ref } = useIntersectionObserver({
 
     // 1. Verify initial rootMargin is 0px (default button selected)
     const defaultButton = canvas.getByTestId("margin-0");
-    await expect(defaultButton).toHaveClass("from-indigo-500");
+    await expect(defaultButton).toHaveClass("bg-violet-600");
 
     // 2. Click +50px button and verify it's selected
     const expandButton = canvas.getByTestId("margin-50");
     await user.click(expandButton);
 
     await waitFor(async () => {
-      await expect(expandButton).toHaveClass("from-indigo-500");
-      await expect(defaultButton).not.toHaveClass("from-indigo-500");
+      await expect(expandButton).toHaveClass("bg-violet-600");
+      await expect(defaultButton).not.toHaveClass("bg-violet-600");
     });
 
     // 3. Click -50px button and verify it's selected
@@ -2410,8 +2406,8 @@ const { ref } = useIntersectionObserver({
     await user.click(shrinkButton);
 
     await waitFor(async () => {
-      await expect(shrinkButton).toHaveClass("from-indigo-500");
-      await expect(expandButton).not.toHaveClass("from-indigo-500");
+      await expect(shrinkButton).toHaveClass("bg-violet-600");
+      await expect(expandButton).not.toHaveClass("bg-violet-600");
     });
   },
 };

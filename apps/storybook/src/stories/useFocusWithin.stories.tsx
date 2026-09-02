@@ -26,20 +26,20 @@ function FormHighlightDemo() {
         ref={ref}
         onSubmit={(e) => e.preventDefault()}
         data-testid="card"
-        className={`rounded-2xl border-2 p-6 transition-all duration-200 ${
+        className={`rounded-md border p-6 transition-all duration-200 ${
           focused
-            ? "border-indigo-500 bg-indigo-50 shadow-[0_0_0_4px_rgba(99,102,241,0.15)]"
-            : "border-gray-200 bg-white shadow-sm"
+            ? "border-violet-500 bg-violet-50 shadow-[0_0_0_4px_rgba(99,102,241,0.15)]"
+            : "border-zinc-200 bg-white shadow-sm"
         }`}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold text-gray-800">Contact</h3>
+          <h3 className="text-lg font-semibold text-zinc-800">Contact</h3>
           <span
             data-testid="badge"
             className={`rounded-full px-3 py-1 text-xs font-semibold ${
               focused
-                ? "bg-indigo-500 text-white"
-                : "bg-gray-100 text-gray-500"
+                ? "bg-violet-600 text-white"
+                : "bg-zinc-100 text-zinc-500"
             }`}
           >
             {focused ? "focused" : "idle"}
@@ -110,8 +110,8 @@ function EdgeCallbacksDemo() {
       <div
         ref={ref}
         data-testid="group"
-        className={`rounded-2xl border-2 p-6 transition-colors duration-200 ${
-          focused ? "border-indigo-500 bg-indigo-50" : "border-gray-200 bg-white"
+        className={`rounded-md border p-6 transition-colors duration-200 ${
+          focused ? "border-violet-500 bg-violet-50" : "border-zinc-200 bg-white"
         }`}
       >
         <div className={storyTheme.buttonGroup}>
@@ -138,7 +138,7 @@ function EdgeCallbacksDemo() {
 
       <div className={`${storyTheme.card} mt-4`}>
         <div className={storyTheme.statLabel}>Transition log</div>
-        <div data-testid="log" className="font-mono text-sm text-gray-700">
+        <div data-testid="log" className="font-mono text-sm text-zinc-700">
           {log.length === 0 ? "—" : log.join(" → ")}
         </div>
       </div>
@@ -163,7 +163,7 @@ It listens for the **bubbling** \`focusin\` / \`focusout\` events (the non-bubbl
 - **\`[ref, focused]\` tuple** - attach the callback ref, read the boolean
 - **No flicker** - focus moving between two children keeps \`focused\` true
 - **Robust \`relatedTarget: null\` handling** - defers to \`document.activeElement\` on the next microtask when the browser reports an unreliable \`relatedTarget\`
-- **Edge callbacks** - optional \`onFocus\` / \`onBlur\` fire only on the subtree's \`false ↔ true\` transitions
+- **Edge callbacks** - optional \`onFocus\` / \`onBlur\` fire only on the subtree's \`false true\` transitions
 - **Callback ref** - listeners attach/detach exactly on mount/unmount; SSR-safe and StrictMode-safe
 
 ## Basic Usage

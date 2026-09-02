@@ -45,13 +45,13 @@ function ModalDemo({ enabled = true }: { enabled?: boolean }) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div
             ref={modalRef}
-            className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+            className="bg-white rounded-md p-8 max-w-md w-full mx-4 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
             data-testid="modal"
           >
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <h3 className="text-xl font-bold text-zinc-800 mb-4">
               Modal Content
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-zinc-600 mb-6">
               Click anywhere outside this modal to close it.
             </p>
             <button
@@ -65,7 +65,7 @@ function ModalDemo({ enabled = true }: { enabled?: boolean }) {
         </div>
       )}
 
-      <div className={storyTheme.statBox + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mt-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Outside clicks: </span>
           <span className={storyTheme.statValue} data-testid="click-count">
@@ -75,7 +75,7 @@ function ModalDemo({ enabled = true }: { enabled?: boolean }) {
         <p className={storyTheme.statLabel + " mt-2"}>
           <span className={storyTheme.statTextSecondary}>Modal: </span>
           <span
-            className={isOpen ? "text-green-600" : "text-gray-500"}
+            className={isOpen ? "text-emerald-600" : "text-zinc-500"}
             data-testid="modal-status"
           >
             {isOpen ? "Open" : "Closed"}
@@ -122,13 +122,13 @@ function DropdownDemo() {
         {isOpen && (
           <div
             ref={menuRef}
-            className="absolute top-full left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden z-10"
+            className="absolute top-full left-0 mt-2 w-48 bg-white rounded-md shadow-sm border border-zinc-200 overflow-hidden z-10"
             data-testid="dropdown-menu"
           >
             {menuItems.map((item) => (
               <button
                 key={item}
-                className="w-full px-4 py-3 text-left text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                className="w-full px-4 py-3 text-left text-zinc-700 hover:bg-violet-50 hover:text-violet-600 transition-colors"
                 onClick={() => {
                   alert(`Clicked: ${item}`);
                   setIsOpen(false);
@@ -141,8 +141,8 @@ function DropdownDemo() {
         )}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-8 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           Click outside both the button and menu to close the dropdown.
           <br />
           Clicking the button toggles the menu without triggering outside click.
@@ -200,7 +200,7 @@ function ExcludeRefsDemo() {
         {notifications.map((id) => (
           <div
             key={id}
-            className="bg-indigo-600 text-white px-4 py-3 rounded-lg shadow-lg animate-pulse"
+            className="bg-violet-600 text-white px-4 py-3 rounded-lg shadow-sm"
           >
             Notification #{id.slice(-4)}
           </div>
@@ -211,13 +211,13 @@ function ExcludeRefsDemo() {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-40">
           <div
             ref={modalRef}
-            className="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+            className="bg-white rounded-md p-8 max-w-md w-full mx-4 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
             data-testid="modal"
           >
-            <h3 className="text-xl font-bold text-gray-800 mb-4">
+            <h3 className="text-xl font-bold text-zinc-800 mb-4">
               Modal with Excluded Area
             </h3>
-            <p className="text-gray-600 mb-4">
+            <p className="text-zinc-600 mb-4">
               Click the button below to add notifications.
               <br />
               Clicking on notifications won't close this modal!
@@ -241,11 +241,11 @@ function ExcludeRefsDemo() {
         </div>
       )}
 
-      <div className={storyTheme.statBox + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mt-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Modal: </span>
           <span
-            className={isOpen ? "text-green-600" : "text-gray-500"}
+            className={isOpen ? "text-emerald-600" : "text-zinc-500"}
             data-testid="modal-status"
           >
             {isOpen ? "Open" : "Closed"}
@@ -289,10 +289,10 @@ function ConditionalDemo() {
           setIsListening((prev) => !prev);
         }}
         data-testid="toggle-listener-btn"
-        className={`w-full py-4 px-6 text-lg font-semibold border-none rounded-xl cursor-pointer transition-all duration-300 mb-6 ${
+        className={`w-full py-4 px-6 text-lg font-semibold border-none rounded-md cursor-pointer transition-all duration-200 mb-6 ${
           isListening
-            ? "bg-gradient-to-br from-green-500 to-green-600 text-white shadow-[0_6px_20px_rgba(16,185,129,0.4)]"
-            : "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-[0_6px_20px_rgba(239,68,68,0.4)]"
+            ? "bg-emerald-500 text-white"
+            : "bg-red-500 text-white"
         }`}
       >
         Listener: {isListening ? "Active" : "Inactive"}
@@ -300,10 +300,10 @@ function ConditionalDemo() {
 
       <div
         ref={boxRef}
-        className={`p-8 rounded-xl transition-all duration-300 cursor-pointer ${
+        className={`p-8 rounded-md transition-all duration-200 cursor-pointer ${
           isOpen
-            ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-xl"
-            : "bg-gray-100 text-gray-700"
+            ? "bg-violet-600 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+            : "bg-zinc-100 text-zinc-700"
         }`}
         onClick={() => setIsOpen(true)}
         data-testid="target-box"
@@ -318,11 +318,11 @@ function ConditionalDemo() {
         </p>
       </div>
 
-      <div className={storyTheme.statBox + " mt-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mt-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Listener: </span>
           <span
-            className={isListening ? "text-green-600" : "text-red-500"}
+            className={isListening ? "text-emerald-600" : "text-red-500"}
             data-testid="listener-status"
           >
             {isListening ? "Active" : "Inactive"}
@@ -385,10 +385,10 @@ function ShouldExcludeDemo() {
       {isOpen && (
         <div
           ref={menuRef}
-          className="bg-white rounded-xl p-6 shadow-xl border border-slate-200 mb-6"
+          className="bg-white rounded-md p-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-zinc-200 mb-6"
           data-testid="menu"
         >
-          <p className="text-gray-700 font-semibold mb-4">
+          <p className="text-zinc-700 font-semibold mb-4">
             Menu Content - Click outside to close
           </p>
           <button
@@ -419,11 +419,11 @@ function ShouldExcludeDemo() {
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <p className={storyTheme.statLabel}>
           <span className={storyTheme.statTextSecondary}>Menu: </span>
           <span
-            className={isOpen ? "text-green-600" : "text-gray-500"}
+            className={isOpen ? "text-emerald-600" : "text-zinc-500"}
             data-testid="menu-status"
           >
             {isOpen ? "Open" : "Closed"}
@@ -601,7 +601,7 @@ function DropdownExample() {
             width: "12rem",
             background: "white",
             borderRadius: "0.5rem",
-            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
             border: "1px solid #e5e7eb",
             zIndex: 10,
           }}
@@ -704,7 +704,7 @@ function ExcludeRefsExample() {
           <div
             key={id}
             style={{
-              background: "#4f46e5",
+              background: "#7c3aed",
               color: "white",
               padding: "0.75rem 1rem",
               borderRadius: "0.5rem",
@@ -810,7 +810,7 @@ function ConditionalExample() {
           padding: "2rem",
           borderRadius: "0.5rem",
           cursor: "pointer",
-          background: isOpen ? "linear-gradient(to bottom right, #6366f1, #9333ea)" : "#f3f4f6",
+          background: isOpen ? "#7c3aed" : "#f3f4f6",
           color: isOpen ? "white" : "#374151",
         }}
       >
@@ -907,7 +907,7 @@ function CustomExcludeExample() {
             background: "white",
             borderRadius: "0.5rem",
             padding: "1.5rem",
-            boxShadow: "0 10px 15px rgba(0,0,0,0.1)",
+            boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
             border: "1px solid #e5e7eb",
             marginBottom: "1.5rem",
           }}

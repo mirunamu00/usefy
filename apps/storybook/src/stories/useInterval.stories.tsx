@@ -30,7 +30,7 @@ function IntervalDemo({
 
       <div
         data-testid="count-display"
-        className="p-8 mb-8 rounded-2xl text-center text-4xl font-bold bg-gradient-to-br from-indigo-50 to-indigo-100 text-indigo-800 shadow-lg"
+        className="p-8 mb-8 rounded-md text-center text-4xl font-bold bg-violet-50 text-violet-800 shadow-sm"
       >
         <span data-testid="count">{count}</span>
       </div>
@@ -40,8 +40,8 @@ function IntervalDemo({
           data-testid="running-badge"
           className={`px-4 py-2 rounded-full text-sm font-semibold ${
             isRunning
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-100 text-gray-500"
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-zinc-100 text-zinc-500"
           }`}
         >
           {isRunning ? "Running" : "Stopped"}
@@ -265,7 +265,7 @@ function ManualControlDemo({
       <p className={storyTheme.subtitle}>Starts stopped — click Start</p>
       <div
         data-testid="count-display"
-        className="p-8 mb-8 rounded-2xl text-center text-4xl font-bold bg-gradient-to-br from-indigo-50 to-indigo-100 text-indigo-800 shadow-lg"
+        className="p-8 mb-8 rounded-md text-center text-4xl font-bold bg-violet-50 text-violet-800 shadow-sm"
       >
         <span data-testid="count">{count}</span>
       </div>
@@ -274,8 +274,8 @@ function ManualControlDemo({
           data-testid="running-badge"
           className={`px-4 py-2 rounded-full text-sm font-semibold ${
             isRunning
-              ? "bg-green-100 text-green-700"
-              : "bg-gray-100 text-gray-500"
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-zinc-100 text-zinc-500"
           }`}
         >
           {isRunning ? "Running" : "Stopped"}

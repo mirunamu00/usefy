@@ -67,7 +67,7 @@ function TodoDemo() {
         {todos.map((todo, i) => (
           <li
             key={todo.id}
-            className="flex items-center gap-3 px-4 py-3 bg-white border border-gray-200 rounded-lg"
+            className="flex items-center gap-3 px-4 py-3 bg-white border border-zinc-200 rounded-lg"
             data-testid={`todo-${todo.id}`}
           >
             <input
@@ -78,7 +78,7 @@ function TodoDemo() {
             />
             <span
               className={`flex-1 ${
-                todo.completed ? "line-through text-gray-400" : "text-gray-700"
+                todo.completed ? "line-through text-zinc-400" : "text-zinc-700"
               }`}
             >
               {todo.text}
@@ -93,7 +93,7 @@ function TodoDemo() {
           </li>
         ))}
         {todos.length === 0 && (
-          <li className="text-gray-400 italic text-sm">No todos yet</li>
+          <li className="text-zinc-400 italic text-sm">No todos yet</li>
         )}
       </ul>
 
@@ -106,7 +106,7 @@ function TodoDemo() {
           / {todos.length}
         </p>
         <button
-          className="text-sm text-gray-500 hover:text-gray-700"
+          className="text-sm text-zinc-500 hover:text-zinc-700"
           onClick={clear}
           data-testid="clear-btn"
         >
@@ -135,7 +135,7 @@ function NumberListDemo() {
         {nums.map((n, i) => (
           <span
             key={`${n}-${i}`}
-            className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold"
+            className="inline-flex items-center justify-center w-10 h-10 rounded-lg bg-violet-600 text-white font-bold"
           >
             {n}
           </span>

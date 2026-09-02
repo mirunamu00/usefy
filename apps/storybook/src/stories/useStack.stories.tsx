@@ -48,7 +48,7 @@ function UndoStackDemo() {
           <span className={storyTheme.statValue} data-testid="size">
             {history.length}
           </span>{" "}
-          <span className="text-gray-500 text-sm" data-testid="top">
+          <span className="text-zinc-500 text-sm" data-testid="top">
             {top ? `top → ${top.label}` : "empty"}
           </span>
         </p>
@@ -59,12 +59,12 @@ function UndoStackDemo() {
               key={snap.id}
               className={`px-3 py-2 rounded-md text-sm border ${
                 i === 0
-                  ? "border-indigo-500 bg-indigo-50 text-indigo-700 font-medium"
-                  : "border-gray-200 bg-white text-gray-700"
+                  ? "border-violet-500 bg-violet-50 text-violet-700 font-medium"
+                  : "border-zinc-200 bg-white text-zinc-700"
               }`}
               data-testid={`item-${snap.id}`}
             >
-              {i === 0 ? "▶ " : ""}
+              {i === 0 && <span className={storyTheme.badgeAccent + " mr-2"}>Top</span>}
               {snap.label}
             </li>
           ))}
@@ -106,7 +106,7 @@ function UndoStackDemo() {
       <div className={`${storyTheme.statBox} mt-4`}>
         <p className={storyTheme.statLabel}>
           Undone:{" "}
-          <span className="text-gray-600 text-sm" data-testid="log">
+          <span className="text-zinc-600 text-sm" data-testid="log">
             {log.length ? log.join(" → ") : "nothing yet"}
           </span>
         </p>
@@ -160,7 +160,7 @@ function NumberStackDemo() {
           <span className={storyTheme.statValue} data-testid="count">
             {stack.length}
           </span>{" "}
-          <span className="text-gray-500 text-sm" data-testid="values">
+          <span className="text-zinc-500 text-sm" data-testid="values">
             [{stack.join(", ")}]
           </span>
         </p>

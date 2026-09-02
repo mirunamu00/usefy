@@ -88,7 +88,7 @@ export default meta;
 type Story = StoryObj<typeof SignaturePad>;
 
 const padFrame =
-  "rounded-xl border-2 border-gray-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.05)]";
+  "rounded-md border border-zinc-200 bg-white";
 
 // ============================================================================
 // A stored signature (for ReadOnlyRestore) — generated deterministically so
@@ -166,7 +166,7 @@ function BasicPadDemo() {
           data-testid="basic-undo"
           style={!pad.canUndo ? { opacity: 0.4, cursor: "not-allowed" } : undefined}
         >
-          ↩ Undo
+          Undo
         </button>
         <button
           className={storyTheme.buttonNeutral}
@@ -175,7 +175,7 @@ function BasicPadDemo() {
           data-testid="basic-redo"
           style={!pad.canRedo ? { opacity: 0.4, cursor: "not-allowed" } : undefined}
         >
-          ↪ Redo
+          Redo
         </button>
         <button
           className={storyTheme.buttonDanger}
@@ -274,7 +274,7 @@ function ExportPreviewDemo() {
         <div className="mt-5 grid grid-cols-2 gap-4">
           <div className={storyTheme.card}>
             <div className={storyTheme.label}>PNG (trimmed, white bg)</div>
-            <div className="rounded-lg border border-gray-200 bg-[repeating-conic-gradient(#f1f5f9_0%_25%,white_0%_50%)] bg-[length:16px_16px] p-2">
+            <div className="rounded-lg border border-zinc-200 bg-[repeating-conic-gradient(#f1f5f9_0%_25%,white_0%_50%)] bg-[length:16px_16px] p-2">
               {png && <img src={png} alt="signature as PNG" data-testid="export-png" style={{ maxWidth: "100%" }} />}
             </div>
             {png && (
@@ -286,7 +286,7 @@ function ExportPreviewDemo() {
           <div className={storyTheme.card}>
             <div className={storyTheme.label}>SVG (vector, transparent)</div>
             <div
-              className="rounded-lg border border-gray-200 bg-[repeating-conic-gradient(#f1f5f9_0%_25%,white_0%_50%)] bg-[length:16px_16px] p-2 [&>svg]:max-w-full [&>svg]:h-auto"
+              className="rounded-lg border border-zinc-200 bg-[repeating-conic-gradient(#f1f5f9_0%_25%,white_0%_50%)] bg-[length:16px_16px] p-2 [&>svg]:max-w-full [&>svg]:h-auto"
               data-testid="export-svg"
               dangerouslySetInnerHTML={svg ? { __html: svg } : undefined}
             />
@@ -448,7 +448,7 @@ function GuidelineFormDemo() {
               src={preview}
               alt="submitted signature"
               data-testid="guideline-preview"
-              className="rounded-lg border border-gray-200 bg-white"
+              className="rounded-lg border border-zinc-200 bg-white"
               style={{ maxWidth: "100%" }}
             />
           </div>
@@ -584,12 +584,12 @@ export const DarkSurface: Story = {
   },
   render: () => (
     <div className={storyTheme.container}>
-      <div className="rounded-2xl bg-slate-900 p-6 shadow-[0_8px_24px_rgba(2,6,23,0.5)]">
-        <h2 className="mb-1 text-xl font-semibold text-slate-100">Sign to authorize</h2>
-        <p className="mb-4 text-sm text-slate-400">
+      <div className="rounded-md bg-zinc-900 p-6">
+        <h2 className="mb-1 text-xl font-semibold text-zinc-100">Sign to authorize</h2>
+        <p className="mb-4 text-sm text-zinc-400">
           Light ink on a dark surface — the canvas itself is transparent.
         </p>
-        <div className="rounded-xl border-2 border-slate-700" style={{ height: 200 }}>
+        <div className="rounded-md border border-zinc-700" style={{ height: 200 }}>
           <SignaturePad penColor="#e2e8f0" guideline={{ color: "#334155" }} />
         </div>
       </div>
@@ -607,7 +607,7 @@ function InteractionTestDemo() {
   return (
     <div className={storyTheme.container}>
       <p className={storyTheme.infoText}>
-        ⚠ This story auto-runs a synthetic pointer sequence and drives the pad
+        This story auto-runs a synthetic pointer sequence and drives the pad
         by itself — it is a test, not a demo. Use “BasicPad” for the real
         experience.
       </p>

@@ -10,10 +10,10 @@ function getBreakpoint(width: number): {
   label: string;
   color: string;
 } {
-  if (width < 640) return { label: "Mobile", color: "from-rose-500 to-pink-600" };
+  if (width < 640) return { label: "Mobile", color: "bg-red-600" };
   if (width < 1024)
-    return { label: "Tablet", color: "from-amber-500 to-orange-600" };
-  return { label: "Desktop", color: "from-indigo-500 to-purple-600" };
+    return { label: "Tablet", color: "bg-amber-600" };
+  return { label: "Desktop", color: "bg-violet-600" };
 }
 
 // ============ Demo Components ============
@@ -66,7 +66,7 @@ function BreakpointDemo() {
       </p>
 
       <div
-        className={`p-8 rounded-xl bg-gradient-to-br ${breakpoint.color} text-white shadow-xl transition-all duration-300`}
+        className={`p-8 rounded-md ${breakpoint.color} text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all duration-200`}
         data-testid="breakpoint-box"
       >
         <p className="text-3xl font-bold m-0" data-testid="breakpoint-label">
@@ -77,7 +77,7 @@ function BreakpointDemo() {
         </p>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 mt-6 text-sm text-gray-600">
+      <div className="grid grid-cols-3 gap-2 mt-6 text-sm text-zinc-600">
         <div>Mobile &lt; 640</div>
         <div>Tablet &lt; 1024</div>
         <div>Desktop ≥ 1024</div>

@@ -248,10 +248,10 @@ const CUSTOM_APPEARANCE_CODE = `import { NetworkIndicator } from "@usefy/network
   position="bottom"
   offlineMessage={
     <span>
-      ⚠️ Connection lost — changes will sync when you're back.
+      Connection lost — changes will sync when you're back.
     </span>
   }
-  onlineMessage={<span>✅ Connection restored</span>}
+  onlineMessage={<span>Connection restored</span>}
   onlineDuration={5000}
   style={{ fontSize: 16, letterSpacing: 0.2 }}
 />`;
@@ -260,9 +260,9 @@ export const CustomAppearance: Story = {
   args: {
     position: "bottom",
     offlineMessage: (
-      <span>⚠️ Connection lost — changes will sync when you're back.</span>
+      <span>Connection lost — changes will sync when you're back.</span>
     ),
-    onlineMessage: <span>✅ Connection restored</span>,
+    onlineMessage: <span>Connection restored</span>,
     onlineDuration: 5000,
     style: { fontSize: 16, letterSpacing: 0.2 },
   },
@@ -324,10 +324,10 @@ const RENDER_PROP_CODE = `import { NetworkIndicator } from "@usefy/network-indic
           borderRadius: 999,
           color: "#fff",
           background: online ? "#059669" : "#334155",
-          boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+          boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
         }}
       >
-        {online ? "🟢 Reconnected" : "📡 Offline — retrying…"}
+        {online ? "Reconnected" : "Offline — retrying…"}
       </div>
     );
   }}
@@ -367,10 +367,10 @@ export const RenderProp: Story = {
                 borderRadius: 999,
                 color: "#fff",
                 background: online ? "#059669" : "#334155",
-                boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+                boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
               }}
             >
-              {online ? "🟢 Reconnected" : "📡 Offline — retrying…"}
+              {online ? "Reconnected" : "Offline — retrying…"}
             </div>
           );
         }}

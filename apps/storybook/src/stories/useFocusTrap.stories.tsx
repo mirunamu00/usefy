@@ -49,9 +49,9 @@ function ModalTrapDemo() {
             role="dialog"
             aria-modal="true"
             aria-label="Sign up"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-md bg-white p-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
           >
-            <h3 className="mb-4 text-lg font-semibold text-gray-800">Sign up</h3>
+            <h3 className="mb-4 text-lg font-semibold text-zinc-800">Sign up</h3>
 
             <label className={storyTheme.label} htmlFor="ft-name">
               Name
@@ -137,9 +137,9 @@ function CustomInitialFocusDemo() {
             role="dialog"
             aria-modal="true"
             aria-label="Edit profile"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-md bg-white p-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
           >
-            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+            <h3 className="mb-4 text-lg font-semibold text-zinc-800">
               Edit profile
             </h3>
 

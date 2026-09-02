@@ -47,7 +47,7 @@ function CommandPaletteDemo() {
 
       {open && (
         <div
-          className="mt-6 p-4 bg-white rounded-xl border border-gray-200 shadow-xl text-left"
+          className="mt-6 p-4 bg-white rounded-md border border-zinc-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)] text-left"
           data-testid="palette"
         >
           <input

@@ -27,8 +27,8 @@ function SearchInputDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-xl mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Debounced Callback</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Debounced Callback</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Type to search. The search function is debounced by 500ms.
       </p>
 
@@ -40,25 +40,25 @@ function SearchInputDemo() {
           handleSearch(e.target.value);
         }}
         placeholder="Search..."
-        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-md border border-zinc-200 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
       />
 
       <div className={storyTheme.buttonGroupFull + " flex gap-3 mb-6"}>
         <button
           onClick={handleSearch.cancel}
-          className={storyTheme.buttonDanger + " flex-1 py-3 rounded-xl font-bold bg-rose-100 text-rose-700 hover:bg-rose-200 transition-colors"}
+          className={storyTheme.buttonDanger + " flex-1 py-3 rounded-md font-bold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"}
         >
           Cancel
         </button>
         <button
           onClick={handleSearch.flush}
-          className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-xl font-bold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"}
+          className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-md font-bold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"}
         >
           Search Now
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel + " overflow-hidden"}>
           <strong className={storyTheme.statText}>Current Input:</strong>{" "}
           <span
@@ -77,7 +77,7 @@ function SearchInputDemo() {
 
       {searchResults.length > 0 && (
         <div>
-          <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">
+          <h3 className="text-sm font-bold text-zinc-400 mb-3">
             Search Results:
           </h3>
           <ul className="list-none p-0 space-y-2">
@@ -85,7 +85,7 @@ function SearchInputDemo() {
               <li
                 key={index}
                 className={
-                  storyTheme.listItem + " break-words overflow-wrap-anywhere p-3 bg-slate-50 rounded-xl border border-slate-100 text-slate-700"
+                  storyTheme.listItem + " break-words overflow-wrap-anywhere p-3 bg-zinc-50 rounded-md border border-zinc-100 text-zinc-700"
                 }
               >
                 {result}
@@ -119,15 +119,15 @@ function AutoSaveFormDemo() {
 
   return (
     <div className="p-8 max-w-[600px] mx-auto font-sans">
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Auto-save Form</h2>
-      <p className="text-gray-500 mb-6 text-[0.95rem]">
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Auto-save Form</h2>
+      <p className="text-zinc-500 mb-6 text-[0.95rem]">
         Form auto-saves 1 second after you stop typing.
       </p>
 
       <div className="mb-4">
         <label
           htmlFor="name"
-          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
+          className="block mb-2 font-semibold text-zinc-700 text-[0.95rem]"
         >
           Name
         </label>
@@ -137,14 +137,14 @@ function AutoSaveFormDemo() {
           value={formData.name}
           onChange={(e) => updateField("name", e.target.value)}
           placeholder="Enter your name"
-          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300"}
+          className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300"}
         />
       </div>
 
       <div className="mb-4">
         <label
           htmlFor="email"
-          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
+          className="block mb-2 font-semibold text-zinc-700 text-[0.95rem]"
         >
           Email
         </label>
@@ -154,14 +154,14 @@ function AutoSaveFormDemo() {
           value={formData.email}
           onChange={(e) => updateField("email", e.target.value)}
           placeholder="Enter your email"
-          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300"}
+          className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300"}
         />
       </div>
 
       <div className="mb-4">
         <label
           htmlFor="bio"
-          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
+          className="block mb-2 font-semibold text-zinc-700 text-[0.95rem]"
         >
           Bio
         </label>
@@ -184,21 +184,21 @@ function AutoSaveFormDemo() {
         </button>
         <button
           onClick={handleSave.flush}
-          className="flex-1 py-3 px-4 text-[0.95rem] bg-green-600 text-white border-none rounded-lg cursor-pointer hover:bg-green-700 transition-colors"
+          className="flex-1 py-3 px-4 text-[0.95rem] bg-emerald-600 text-white border-none rounded-lg cursor-pointer hover:bg-emerald-700 transition-colors"
         >
           Save Now
         </button>
       </div>
 
-      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="p-5 bg-zinc-100 rounded-md">
         <div className="mb-2 text-[0.95rem]">
-          <strong className="text-gray-700">Save Count:</strong>{" "}
+          <strong className="text-zinc-700">Save Count:</strong>{" "}
           <span className={storyTheme.statValue}>{saveCount}</span>
         </div>
         {lastSaved && (
           <div className="text-[0.95rem]">
-            <strong className="text-gray-700">Last Saved:</strong>{" "}
-            <span className="text-gray-500">
+            <strong className="text-zinc-700">Last Saved:</strong>{" "}
+            <span className="text-zinc-500">
               {lastSaved.toLocaleTimeString()}
             </span>
           </div>
@@ -226,7 +226,7 @@ function LeadingEdgeDemo() {
   return (
     <div className="p-8 max-w-[600px] font-sans">
       <h2 className={storyTheme.title}>Leading Edge Callback</h2>
-      <p className="text-gray-500 mb-6 text-[0.95rem]">
+      <p className="text-zinc-500 mb-6 text-[0.95rem]">
         Click rapidly. The callback fires immediately on the first click, then
         waits 500ms before allowing another.
       </p>
@@ -241,13 +241,13 @@ function LeadingEdgeDemo() {
         Click Me!
       </button>
 
-      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="p-5 bg-zinc-100 rounded-md">
         <div className="mb-2 text-[0.95rem]">
-          <strong className="text-gray-700">Total Clicks:</strong>{" "}
-          <span className="text-gray-500">{clickCount}</span>
+          <strong className="text-zinc-700">Total Clicks:</strong>{" "}
+          <span className="text-zinc-500">{clickCount}</span>
         </div>
         <div className="text-[0.95rem]">
-          <strong className="text-gray-700">Processed (Debounced):</strong>{" "}
+          <strong className="text-zinc-700">Processed (Debounced):</strong>{" "}
           <span className={storyTheme.statValue}>{processedCount}</span>
         </div>
       </div>
@@ -273,7 +273,7 @@ function MaxWaitDemo() {
   return (
     <div className="p-8 max-w-[600px] font-sans">
       <h2 className={storyTheme.title}>MaxWait Option</h2>
-      <p className="text-gray-500 mb-6 text-[0.95rem]">
+      <p className="text-zinc-500 mb-6 text-[0.95rem]">
         Keep typing continuously. The callback will fire at most every 5 seconds
         (maxWait), even if you don't stop typing.
       </p>
@@ -286,23 +286,23 @@ function MaxWaitDemo() {
         }}
         placeholder="Keep typing without stopping..."
         rows={6}
-        className="w-full py-3.5 px-4 text-base border-2 border-gray-200 rounded-xl mb-5 outline-none transition-all duration-200 shadow-[0_1px_3px_rgba(0,0,0,0.1)] font-mono resize-y focus:border-[#667eea] focus:shadow-[0_0_0_3px_rgba(102,126,234,0.1)] overflow-auto break-words"
+        className="w-full py-3.5 px-4 text-base border border-zinc-200 rounded-md mb-5 outline-none transition-all duration-200 font-mono resize-y focus:border-[#667eea] focus:ring-1 focus:ring-violet-600 overflow-auto break-words"
       />
 
-      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="p-5 bg-zinc-100 rounded-md">
         <div className="mb-2 text-[0.95rem]">
-          <strong className="text-gray-700">Characters:</strong>{" "}
-          <span className="text-gray-500">{input.length}</span>
+          <strong className="text-zinc-700">Characters:</strong>{" "}
+          <span className="text-zinc-500">{input.length}</span>
         </div>
         <div className="text-[0.95rem]">
-          <strong className="text-gray-700">Callback Invocations:</strong>{" "}
+          <strong className="text-zinc-700">Callback Invocations:</strong>{" "}
           <span className={storyTheme.statValue}>{updateCount}</span>
         </div>
       </div>
 
-      <div className="mt-4 p-4 bg-yellow-100 rounded-lg">
-        <p className="m-0 text-sm text-yellow-800">
-          💡 <strong>maxWait</strong> ensures the callback runs at least once
+      <div className="mt-4 p-4 bg-amber-100 rounded-lg">
+        <p className="m-0 text-sm text-amber-800">
+          <strong>maxWait</strong> ensures the callback runs at least once
           every 5 seconds, preventing indefinite delays during continuous input.
         </p>
       </div>
@@ -720,7 +720,7 @@ function CancelDemo() {
   return (
     <div className="p-8 max-w-[600px] font-sans">
       <h2 className={storyTheme.title}>Cancel Pending Callback</h2>
-      <p className="text-gray-500 mb-6 text-[0.95rem]">
+      <p className="text-zinc-500 mb-6 text-[0.95rem]">
         Type and click cancel before 2 seconds to prevent submission. The cancel
         button clears any pending debounced callbacks.
       </p>
@@ -728,7 +728,7 @@ function CancelDemo() {
       <div className="mb-4">
         <label
           htmlFor="cancel-input"
-          className="block mb-2 font-semibold text-gray-700 text-[0.95rem]"
+          className="block mb-2 font-semibold text-zinc-700 text-[0.95rem]"
         >
           Input Field
         </label>
@@ -763,40 +763,40 @@ function CancelDemo() {
             setCancelCount(0);
             setLastSubmitted("");
           }}
-          className="flex-1 py-3 px-4 text-[0.95rem] bg-gray-600 text-white border-none rounded-lg cursor-pointer transition-colors duration-200 font-semibold hover:bg-gray-700"
+          className="flex-1 py-3 px-4 text-[0.95rem] bg-zinc-600 text-white border-none rounded-lg cursor-pointer transition-colors duration-200 font-semibold hover:bg-zinc-700"
         >
           Reset
         </button>
       </div>
 
-      <div className="p-5 bg-gradient-to-br from-gray-100 to-gray-200 rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.05)]">
+      <div className="p-5 bg-zinc-100 rounded-md">
         <div className="mb-2 text-[0.95rem] overflow-hidden">
-          <strong className="text-gray-700">Current Input:</strong>{" "}
-          <span className="text-gray-500 truncate inline-block max-w-full">
+          <strong className="text-zinc-700">Current Input:</strong>{" "}
+          <span className="text-zinc-500 truncate inline-block max-w-full">
             {input || "(empty)"}
           </span>
         </div>
         <div className="mb-2 text-[0.95rem] overflow-hidden">
-          <strong className="text-gray-700">Last Submitted:</strong>{" "}
-          <span className="text-gray-500 truncate inline-block max-w-full">
+          <strong className="text-zinc-700">Last Submitted:</strong>{" "}
+          <span className="text-zinc-500 truncate inline-block max-w-full">
             {lastSubmitted || "(none)"}
           </span>
         </div>
         <div className="mb-2 text-[0.95rem]">
-          <strong className="text-gray-700">Submit Count:</strong>{" "}
+          <strong className="text-zinc-700">Submit Count:</strong>{" "}
           <span className={storyTheme.statValue}>{submitCount}</span>
         </div>
         <div className="text-[0.95rem]">
-          <strong className="text-gray-700">Cancel Count:</strong>{" "}
+          <strong className="text-zinc-700">Cancel Count:</strong>{" "}
           <span className="text-red-600 font-bold text-[1.1rem]">
             {cancelCount}
           </span>
         </div>
       </div>
 
-      <div className="mt-4 p-4 bg-yellow-100 rounded-lg">
-        <p className="m-0 text-sm text-yellow-800">
-          💡 Try typing something and clicking <strong>Cancel Pending</strong>{" "}
+      <div className="mt-4 p-4 bg-amber-100 rounded-lg">
+        <p className="m-0 text-sm text-amber-800">
+          Try typing something and clicking <strong>Cancel Pending</strong>{" "}
           within 2 seconds. The submission will be prevented!
         </p>
       </div>

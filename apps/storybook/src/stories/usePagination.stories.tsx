@@ -7,14 +7,14 @@ import { storyTheme } from "../styles/storyTheme";
 // ============ Demo Components ============
 
 const pageButton = (active: boolean) =>
-  `min-w-[2.25rem] h-9 px-3 rounded-lg text-sm font-semibold border-2 transition-all duration-150 ${
+  `min-w-[2.25rem] h-9 px-3 rounded-lg text-sm font-semibold border transition-all duration-150 ${
     active
-      ? "border-indigo-500 bg-indigo-500 text-white shadow-[0_4px_12px_rgba(99,102,241,0.3)]"
-      : "border-gray-200 bg-white text-gray-700 hover:border-indigo-400 hover:text-indigo-600"
+      ? "border-violet-600 bg-violet-600 text-white"
+      : "border-zinc-200 bg-white text-zinc-700 hover:border-violet-400 hover:text-violet-600"
   }`;
 
 const navButton =
-  "h-9 px-3 rounded-lg text-sm font-semibold border-2 border-gray-200 bg-white text-gray-700 transition-all duration-150 hover:border-indigo-400 hover:text-indigo-600 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-gray-200 disabled:hover:text-gray-700";
+  "h-9 px-3 rounded-lg text-sm font-semibold border border-zinc-200 bg-white text-zinc-700 transition-all duration-150 hover:border-violet-400 hover:text-violet-600 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-zinc-200 disabled:hover:text-zinc-700";
 
 const ALL_USERS = Array.from({ length: 47 }, (_, i) => ({
   id: i + 1,
@@ -58,7 +58,7 @@ function TablePagerDemo() {
         ))}
       </ul>
 
-      <p className="text-sm text-gray-500 mb-4" data-testid="summary">
+      <p className="text-sm text-zinc-500 mb-4" data-testid="summary">
         Showing <strong>{range.start + 1}</strong>–<strong>{range.end}</strong>{" "}
         of <strong>{ALL_USERS.length}</strong> · Page{" "}
         <strong data-testid="page">{page}</strong> / {pageCount}
@@ -78,7 +78,7 @@ function TablePagerDemo() {
           item.type === "ellipsis" ? (
             <span
               key={`gap-${i}`}
-              className="px-1 text-gray-400 select-none"
+              className="px-1 text-zinc-400 select-none"
               data-testid="ellipsis"
             >
               …
@@ -143,7 +143,7 @@ function EllipsisDemo() {
         </button>
         {items.map((item, i) =>
           item.type === "ellipsis" ? (
-            <span key={`gap-${i}`} className="px-1 text-gray-400 select-none">
+            <span key={`gap-${i}`} className="px-1 text-zinc-400 select-none">
               …
             </span>
           ) : (
@@ -168,7 +168,7 @@ function EllipsisDemo() {
       </nav>
 
       <div className={storyTheme.cardInfo}>
-        <p className="text-sm text-gray-700">
+        <p className="text-sm text-zinc-700">
           Current page: <strong data-testid="page">{page}</strong>
         </p>
       </div>

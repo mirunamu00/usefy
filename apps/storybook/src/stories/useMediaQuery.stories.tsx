@@ -20,8 +20,8 @@ function Demo() {
       <p className={storyTheme.subtitle}>Resize the window — the match updates live</p>
 
       <div
-        className={`p-8 rounded-xl text-white shadow-xl bg-gradient-to-br ${
-          isTablet ? "from-indigo-500 to-purple-600" : "from-rose-500 to-pink-600"
+        className={`p-8 rounded-md text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] ${
+          isTablet ? "bg-violet-600" : "bg-red-600"
         }`}
         data-testid="match"
       >

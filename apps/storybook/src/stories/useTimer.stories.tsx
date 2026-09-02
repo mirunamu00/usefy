@@ -29,31 +29,31 @@ function TimerDemo({
   // Calculate gradient based on progress
   const progressColor =
     timer.progress < 50
-      ? "from-emerald-500 to-teal-500"
+      ? "bg-emerald-600"
       : timer.progress < 80
-      ? "from-amber-500 to-orange-500"
-      : "from-red-500 to-rose-500";
+      ? "bg-amber-600"
+      : "bg-red-600";
 
   return (
     <div className={storyTheme.containerCentered}>
       <h2 className={storyTheme.title + " text-center mb-2"}>{title}</h2>
       <p className={storyTheme.subtitle}>
-        {loop ? "🔄 Loop enabled" : "Countdown Timer"}
+        {loop ? "Loop enabled" : "Countdown Timer"}
       </p>
 
       {/* Timer Display */}
       <div
         data-testid="timer-display"
-        className={`p-10 mb-8 rounded-3xl text-center transition-all duration-300 shadow-2xl ${
+        className={`p-10 mb-8 rounded-lg text-center transition-all duration-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)] ${
           timer.isFinished
-            ? "bg-gradient-to-br from-slate-100 to-slate-200 border border-slate-200"
-            : "bg-gradient-to-br from-slate-900 to-slate-800 border border-slate-800"
+            ? "bg-zinc-100 border border-zinc-200"
+            : "bg-zinc-900 border border-zinc-800"
         }`}
       >
         <div
           data-testid="formatted-time"
-          className={`text-5xl font-mono font-bold tracking-wider ${
-            timer.isFinished ? "text-gray-500" : "text-white"
+          className={`text-5xl font-mono font-bold ${
+            timer.isFinished ? "text-zinc-500" : "text-white"
           }`}
         >
           {timer.time}
@@ -63,14 +63,14 @@ function TimerDemo({
         <div className="mt-6 flex justify-center gap-2">
           <span
             data-testid="status-badge"
-            className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide ${
+            className={`px-3 py-1 rounded-full text-xs font-semibold ${
               timer.isRunning
-                ? "bg-green-500/20 text-green-400"
+                ? "bg-emerald-500/20 text-emerald-400"
                 : timer.isPaused
-                ? "bg-yellow-500/20 text-yellow-400"
+                ? "bg-amber-500/20 text-amber-400"
                 : timer.isFinished
-                ? "bg-gray-500/20 text-gray-500"
-                : "bg-blue-500/20 text-blue-400"
+                ? "bg-zinc-500/20 text-zinc-500"
+                : "bg-violet-600/20 text-violet-400"
             }`}
           >
             {timer.status}
@@ -79,17 +79,17 @@ function TimerDemo({
       </div>
 
       {/* Progress Bar */}
-      <div className={storyTheme.statBox + " mb-8 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <div className="flex justify-between text-sm text-slate-600 mb-3 font-medium">
-          <span className="uppercase tracking-wider text-xs">Progress</span>
-          <span data-testid="progress-value" className="font-bold text-slate-800">
+      <div className={storyTheme.statBox + " mb-8 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <div className="flex justify-between text-sm text-zinc-600 mb-3 font-medium">
+          <span className=" text-xs">Progress</span>
+          <span data-testid="progress-value" className="font-bold text-zinc-800">
             {Math.round(timer.progress)}%
           </span>
         </div>
-        <div className="h-4 bg-slate-100 rounded-full overflow-hidden border border-slate-100">
+        <div className="h-4 bg-zinc-100 rounded-full overflow-hidden border border-zinc-100">
           <div
             data-testid="progress-bar"
-            className={`h-full bg-gradient-to-r ${progressColor} transition-all duration-100 rounded-full`}
+            className={`h-full ${progressColor} transition-all duration-100 rounded-full`}
             style={{ width: `${timer.progress}%` }}
           />
         </div>
@@ -104,18 +104,18 @@ function TimerDemo({
               disabled={timer.isFinished}
               aria-label="Start timer"
               type="button"
-              className={`flex-1 py-4 px-6 text-base font-bold text-white bg-gradient-to-br from-green-500 to-emerald-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0`}
+              className={`flex-1 py-4 px-6 text-base font-bold text-white bg-emerald-500 border-none rounded-md cursor-pointer transition-all duration-200 shadow-sm hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] disabled:opacity-50 disabled:cursor-not-allowed disabled:`}
             >
-              ▶ Start
+              Start
             </button>
           ) : (
             <button
               onClick={timer.pause}
               aria-label="Pause timer"
               type="button"
-              className={`flex-1 py-4 px-6 text-base font-bold text-white bg-gradient-to-br from-amber-500 to-orange-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-lg hover:-translate-y-0.5 hover:shadow-xl`}
+              className={`flex-1 py-4 px-6 text-base font-bold text-white bg-amber-500 border-none rounded-md cursor-pointer transition-all duration-200 shadow-sm hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]`}
             >
-              ⏸ Pause
+              Pause
             </button>
           )}
           <button
@@ -153,7 +153,7 @@ function TimerDemo({
           type="button"
           className={storyTheme.buttonFull}
         >
-          🔄 Restart
+          Restart
         </button>
       </div>
     </div>
@@ -178,12 +178,12 @@ function KitchenTimerDemo() {
   return (
     <div className={storyTheme.containerCentered}>
       <h2 className={storyTheme.title + " text-center mb-2"}>
-        ⏲️ Kitchen Timer
+        Kitchen Timer
       </h2>
       <p className={storyTheme.subtitle}>Set your cooking timer</p>
 
       {/* Preset Buttons */}
-      <div className="flex flex-wrap gap-2 justify-center mb-8 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+      <div className="flex flex-wrap gap-2 justify-center mb-8 bg-white p-4 rounded-md shadow-sm border border-zinc-200">
         {presets.map((min) => (
           <button
             key={min}
@@ -192,10 +192,10 @@ function KitchenTimerDemo() {
               timer.setTime(ms.minutes(min));
             }}
             type="button"
-            className={`px-4 py-2 rounded-xl text-sm font-bold transition-all ${
+            className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${
               presetMinutes === min
-                ? "bg-indigo-600 text-white shadow-md"
-                : "bg-slate-50 text-slate-600 hover:bg-slate-100"
+                ? "bg-violet-600 text-white shadow-sm"
+                : "bg-zinc-50 text-zinc-600 hover:bg-zinc-100"
             }`}
           >
             {min}m
@@ -205,10 +205,10 @@ function KitchenTimerDemo() {
 
       {/* Timer Display */}
       <div
-        className={`p-12 mb-8 rounded-full aspect-square max-w-[280px] mx-auto flex items-center justify-center shadow-2xl border-4 ${
+        className={`p-12 mb-8 rounded-full aspect-square max-w-[280px] mx-auto flex items-center justify-center shadow-[0_4px_12px_rgba(0,0,0,0.08)] border-2 ${
           timer.isFinished
-            ? "bg-gradient-to-br from-green-400 to-emerald-500 animate-pulse border-green-300"
-            : "bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700"
+            ? "bg-emerald-400 border-emerald-300"
+            : "bg-zinc-800 border-zinc-700"
         }`}
       >
         <div
@@ -228,7 +228,7 @@ function KitchenTimerDemo() {
           type="button"
           className={`${storyTheme.buttonPrimary} disabled:opacity-50 disabled:cursor-not-allowed`}
         >
-          {timer.isRunning ? "⏸ Pause" : "▶ Start"}
+          {timer.isRunning ? "Pause" : "Start"}
         </button>
         <button
           onClick={timer.reset}
@@ -372,13 +372,13 @@ function TimerExample() {
       <div>
         {!timer.isRunning ? (
           <button onClick={timer.start} disabled={timer.isFinished}>
-            ▶ Start
+            Start
           </button>
         ) : (
-          <button onClick={timer.pause}>⏸ Pause</button>
+          <button onClick={timer.pause}>Pause</button>
         )}
         <button onClick={timer.reset}>↺ Reset</button>
-        <button onClick={timer.restart}>🔄 Restart</button>
+        <button onClick={timer.restart}>Restart</button>
       </div>
     </div>
   );
@@ -635,7 +635,7 @@ function LoopingTimerExample() {
         <button onClick={timer.pause}>Pause</button>
         <button onClick={timer.reset}>Reset</button>
       </div>
-      <p>💡 This timer automatically restarts when it reaches 0!</p>
+      <p>This timer automatically restarts when it reaches 0!</p>
     </div>
   );
 }`,
@@ -687,7 +687,7 @@ function TimeManipulationExample() {
           -10s
         </button>
       </div>
-      <p>💡 Use addTime() and subtractTime() to adjust the timer dynamically!</p>
+      <p>Use addTime() and subtractTime() to adjust the timer dynamically!</p>
     </div>
   );
 }`,
@@ -751,7 +751,7 @@ function KitchenTimerExample() {
 
   return (
     <div>
-      <h2>⏲️ Kitchen Timer</h2>
+      <h2>Kitchen Timer</h2>
       <p>Set your cooking timer</p>
       <div>
         {presets.map((min) => (
@@ -762,7 +762,7 @@ function KitchenTimerExample() {
               timer.setTime(ms.minutes(min));
             }}
             style={{
-              background: presetMinutes === min ? "#6366f1" : "#f3f4f6",
+              background: presetMinutes === min ? "#7c3aed" : "#f3f4f6",
               color: presetMinutes === min ? "white" : "#4b5563",
             }}
           >
@@ -775,7 +775,7 @@ function KitchenTimerExample() {
       </div>
       <div>
         <button onClick={timer.toggle} disabled={timer.isFinished}>
-          {timer.isRunning ? "⏸ Pause" : "▶ Start"}
+          {timer.isRunning ? "Pause" : "Start"}
         </button>
         <button onClick={timer.reset}>↺ Reset</button>
       </div>

@@ -111,7 +111,7 @@ function ResultCard({ result }: { result: QRScanResult | null }) {
   if (!result) {
     return (
       <div className={storyTheme.card} data-testid="result-empty">
-        <p className="m-0 text-sm text-gray-500">Nothing decoded yet.</p>
+        <p className="m-0 text-sm text-zinc-500">Nothing decoded yet.</p>
       </div>
     );
   }
@@ -119,10 +119,10 @@ function ResultCard({ result }: { result: QRScanResult | null }) {
   const symbol = result.symbol;
   return (
     <div className={storyTheme.cardSuccess} data-testid="result">
-      <p className="m-0 break-all font-mono text-sm font-semibold text-green-900" data-testid="result-text">
+      <p className="m-0 break-all font-mono text-sm font-semibold text-emerald-900" data-testid="result-text">
         {result.text}
       </p>
-      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-green-900/80">
+      <dl className="mt-3 grid grid-cols-2 gap-x-4 gap-y-1 text-xs text-emerald-900/80">
         <dt className="font-semibold">Engine</dt>
         <dd className="m-0">{result.engine}</dd>
         {symbol && (
@@ -297,8 +297,8 @@ async function onFilePicked(file: File) {
               onClick={() => setDegradation(option.id)}
               className={
                 option.id === degradation
-                  ? "rounded-lg border-2 border-indigo-500 bg-indigo-50 px-3 py-1.5 text-sm font-semibold text-indigo-700"
-                  : "rounded-lg border-2 border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 hover:border-gray-300"
+                  ? "rounded-lg border border-violet-500 bg-violet-50 px-3 py-1.5 text-sm font-semibold text-violet-700"
+                  : "rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-600 hover:border-zinc-300"
               }
             >
               {option.label}
@@ -309,7 +309,7 @@ async function onFilePicked(file: File) {
         <div className="mt-5 flex flex-col items-center gap-4">
           <canvas
             ref={canvasRef}
-            className="rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
+            className="rounded-md"
             style={{ width: 320, height: 320 }}
             aria-label="A QR code, optionally degraded"
           />
@@ -377,8 +377,8 @@ export const LiveCamera: Story = {
                 style={{ maxWidth: 320 }}
               />
             ) : (
-              <div className="flex h-[420px] max-w-[320px] flex-col items-center justify-center gap-4 rounded-2xl bg-gray-900 p-6 text-center">
-                <p className="m-0 text-sm text-gray-300">
+              <div className="flex h-[420px] max-w-[320px] flex-col items-center justify-center gap-4 rounded-md bg-zinc-900 p-6 text-center">
+                <p className="m-0 text-sm text-zinc-300">
                   The camera stays closed until you press Start.
                 </p>
                 <button
@@ -394,10 +394,10 @@ export const LiveCamera: Story = {
           </div>
 
           <div className="flex flex-col items-center gap-2">
-            <div className="rounded-xl bg-white p-3 shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+            <div className="rounded-md bg-white p-3">
               <QRCode value={DEMO_URL} size={140} level="Q" title="A code to point the camera at" />
             </div>
-            <span className="text-xs font-semibold text-gray-500">Point at me</span>
+            <span className="text-xs font-semibold text-zinc-500">Point at me</span>
           </div>
         </div>
 
@@ -455,7 +455,7 @@ export const MultipleCodes: Story = {
         <h3 className={storyTheme.title}>Three at once</h3>
         <canvas
           ref={canvasRef}
-          className="w-full rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
+          className="w-full rounded-md"
           aria-label="Three QR codes side by side"
         />
         <button
@@ -471,16 +471,16 @@ export const MultipleCodes: Story = {
           {results.map((result) => (
             <li
               key={result.text}
-              className="flex items-center justify-between rounded-lg bg-gray-50 px-4 py-2 text-sm"
+              className="flex items-center justify-between rounded-lg bg-zinc-50 px-4 py-2 text-sm"
             >
               <span className="font-mono font-semibold">{result.text}</span>
-              <span className="text-xs text-gray-500">
+              <span className="text-xs text-zinc-500">
                 centre {Math.round(result.center.x)}, {Math.round(result.center.y)}
               </span>
             </li>
           ))}
           {results.length === 0 && (
-            <li className="text-sm text-gray-500">Press the button to decode all three.</li>
+            <li className="text-sm text-zinc-500">Press the button to decode all three.</li>
           )}
         </ul>
       </div>
@@ -555,8 +555,8 @@ export const DamageAndRepair: Story = {
               onClick={() => setLevel(option)}
               className={
                 option === level
-                  ? "rounded-lg border-2 border-indigo-500 bg-indigo-50 px-3 py-1.5 text-sm font-semibold text-indigo-700"
-                  : "rounded-lg border-2 border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-600 hover:border-gray-300"
+                  ? "rounded-lg border border-violet-500 bg-violet-50 px-3 py-1.5 text-sm font-semibold text-violet-700"
+                  : "rounded-lg border border-zinc-200 bg-white px-3 py-1.5 text-sm font-medium text-zinc-600 hover:border-zinc-300"
               }
             >
               Level {option}
@@ -566,7 +566,7 @@ export const DamageAndRepair: Story = {
 
         <canvas
           ref={canvasRef}
-          className="rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
+          className="rounded-md"
           style={{ width: 320, height: 320 }}
           aria-label="A QR code with blots painted over it"
         />
@@ -668,7 +668,7 @@ export const EngineComparison: Story = {
 
         <canvas
           ref={canvasRef}
-          className="mt-5 rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
+          className="mt-5 rounded-md"
           style={{ width: 320, height: 320 }}
           aria-label="A QR code"
         />
@@ -683,7 +683,7 @@ export const EngineComparison: Story = {
 
         <table className="mt-5 w-full border-collapse text-sm">
           <thead>
-            <tr className="border-b border-gray-200 text-left text-xs uppercase text-gray-500">
+            <tr className="border-b border-zinc-200 text-left text-xs text-zinc-500">
               <th className="py-2">Engine</th>
               <th className="py-2">Value</th>
               <th className="py-2">Metadata</th>
@@ -691,10 +691,10 @@ export const EngineComparison: Story = {
           </thead>
           <tbody data-testid="engine-rows">
             {rows.map((row) => (
-              <tr key={row.engine} className="border-b border-gray-100">
+              <tr key={row.engine} className="border-b border-zinc-100">
                 <td className="py-2 font-semibold">{row.engine}</td>
                 <td className="max-w-[160px] truncate py-2 font-mono text-xs">{row.text}</td>
-                <td className="py-2 text-xs text-gray-600">{row.detail}</td>
+                <td className="py-2 text-xs text-zinc-600">{row.detail}</td>
               </tr>
             ))}
           </tbody>
@@ -727,7 +727,7 @@ return <video ref={scanner.videoRef} playsInline muted />;`,
       <div className={storyTheme.container}>
         <h3 className={storyTheme.title}>useQRScanner</h3>
 
-        <div className="overflow-hidden rounded-2xl bg-black" style={{ maxWidth: 320 }}>
+        <div className="overflow-hidden rounded-md bg-black" style={{ maxWidth: 320 }}>
           <video
             ref={scanner.videoRef}
             playsInline
@@ -852,7 +852,7 @@ const decoder = createWorkerDecoder(worker);
         <h3 className={storyTheme.title}>Off the main thread</h3>
         <canvas
           ref={canvasRef}
-          className="rounded-xl shadow-[0_2px_10px_rgba(0,0,0,0.12)]"
+          className="rounded-md"
           style={{ width: 320, height: 320 }}
           aria-label="A QR code"
         />
@@ -864,7 +864,7 @@ const decoder = createWorkerDecoder(worker);
         >
           Decode in a worker
         </button>
-        <p className="mt-3 font-mono text-sm text-gray-600" data-testid="worker-status">
+        <p className="mt-3 font-mono text-sm text-zinc-600" data-testid="worker-status">
           {status}
         </p>
         <div className="mt-3">
@@ -937,9 +937,9 @@ export const DarkSurface: Story = {
   render: function Dark() {
     const [result, setResult] = useState<QRScanResult | null>(null);
     return (
-      <div className="mx-auto max-w-[420px] rounded-2xl bg-[#0b0f14] p-8 font-sans">
+      <div className="mx-auto max-w-[420px] rounded-md bg-[#0b0f14] p-8 font-sans">
         <h3 className="mb-2 text-xl font-semibold text-white">On a dark surface</h3>
-        <p className="mb-6 text-sm text-gray-400">
+        <p className="mb-6 text-sm text-zinc-400">
           File-only mode, so nothing opens a camera here.
         </p>
         <QRScanner source="file" accent="#a78bfa" onScan={setResult} style={{ maxWidth: 340 }} />

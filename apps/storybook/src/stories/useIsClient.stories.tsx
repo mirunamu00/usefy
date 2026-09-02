@@ -13,8 +13,8 @@ function Demo() {
         Returns <code>false</code> on the server / first render, <code>true</code> after hydration
       </p>
       <div
-        className={`p-8 rounded-xl text-white shadow-xl bg-gradient-to-br ${
-          isClient ? "from-emerald-500 to-teal-600" : "from-gray-400 to-gray-500"
+        className={`p-8 rounded-md text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] ${
+          isClient ? "bg-emerald-600" : "bg-zinc-400"
         }`}
         data-testid="env"
       >

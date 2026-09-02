@@ -19,8 +19,8 @@ function ButtonClickDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Throttled Click</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Throttled Click</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Click rapidly! The callback executes at most once per second, with the
         first click firing immediately (leading edge).
       </p>
@@ -30,7 +30,7 @@ function ButtonClickDemo() {
           setClickCount((prev) => prev + 1);
           throttledClick();
         }}
-        className={storyTheme.buttonFull + " mb-6 py-4 rounded-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"}
+        className={storyTheme.buttonFull + " mb-6 py-4 rounded-md font-bold bg-violet-600 shadow-sm hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all"}
       >
         Click Me Rapidly!
       </button>
@@ -39,20 +39,20 @@ function ButtonClickDemo() {
         <button
           onClick={throttledClick.cancel}
           aria-label="Cancel throttle"
-          className={storyTheme.buttonDanger + " flex-1 py-3 rounded-xl font-bold bg-rose-100 text-rose-700 hover:bg-rose-200 transition-colors"}
+          className={storyTheme.buttonDanger + " flex-1 py-3 rounded-md font-bold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"}
         >
           Cancel
         </button>
         <button
           onClick={throttledClick.flush}
           aria-label="Flush throttle"
-          className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-xl font-bold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"}
+          className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-md font-bold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"}
         >
           Flush Now
         </button>
       </div>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Total Clicks:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{clickCount}</span>
@@ -73,9 +73,9 @@ function ButtonClickDemo() {
         )}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
         <p className={storyTheme.infoText}>
-          💡 <strong>Throttle</strong> limits execution rate. Unlike debounce,
+          <strong>Throttle</strong> limits execution rate. Unlike debounce,
           the first click fires immediately and subsequent clicks are blocked
           for 1 second.
         </p>
@@ -108,8 +108,8 @@ function MouseMoveDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-2xl mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Mouse Tracker</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Mouse Tracker</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Move your mouse inside the box. Position updates are throttled to 100ms
         intervals.
       </p>
@@ -118,7 +118,7 @@ function MouseMoveDemo() {
         ref={containerRef}
         onMouseMove={handleMouseMove}
         data-testid="mouse-area"
-        className="w-full h-[200px] bg-indigo-50 rounded-2xl border-2 border-dashed border-indigo-200 flex items-center justify-center mb-6 relative overflow-hidden cursor-crosshair"
+        className="w-full h-[200px] bg-violet-50 rounded-md border-2 border-dashed border-violet-200 flex items-center justify-center mb-6 relative overflow-hidden cursor-crosshair"
       >
         <div
           style={{
@@ -126,14 +126,14 @@ function MouseMoveDemo() {
             left: position.x - 10,
             top: position.y - 10,
           }}
-          className="w-5 h-5 bg-indigo-500 rounded-full pointer-events-none transition-all duration-[50ms] shadow-[0_2px_8px_rgba(99,102,241,0.4)]"
+          className="w-5 h-5 bg-violet-600 rounded-full pointer-events-none transition-all duration-[50ms]"
         />
-        <span className="text-indigo-900 text-sm opacity-70 pointer-events-none">
+        <span className="text-violet-900 text-sm opacity-70 pointer-events-none">
           Move mouse here
         </span>
       </div>
 
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100 grid grid-cols-3 gap-4"}>
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-100 grid grid-cols-3 gap-4"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Position:</strong>{" "}
           <span className={storyTheme.statTextSecondary + " font-mono"}>
@@ -174,8 +174,8 @@ function ScrollTrackerDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-2xl mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Scroll Tracker</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Scroll Tracker</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Scroll inside the box. Position updates are throttled to 150ms
         intervals, reducing performance overhead.
       </p>
@@ -184,14 +184,14 @@ function ScrollTrackerDemo() {
         ref={containerRef}
         onScroll={handleScroll}
         data-testid="scroll-area"
-        className="w-full h-[200px] overflow-y-scroll bg-slate-50 rounded-2xl border border-slate-200 mb-6 shadow-inner"
+        className="w-full h-[200px] overflow-y-scroll bg-zinc-50 rounded-md border border-zinc-200 mb-6 shadow-inner"
       >
         <div className="h-[800px] p-4">
           {Array.from({ length: 20 }, (_, i) => (
             <div
               key={i}
-              className={`p-3 mb-2 rounded-lg font-medium text-indigo-900 ${
-                i % 2 === 0 ? "bg-indigo-200" : "bg-indigo-300"
+              className={`p-3 mb-2 rounded-lg font-medium text-violet-900 ${
+                i % 2 === 0 ? "bg-violet-200" : "bg-violet-300"
               }`}
             >
               Scroll Item {i + 1}
@@ -200,7 +200,7 @@ function ScrollTrackerDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100 grid grid-cols-3 gap-4"}>
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-100 grid grid-cols-3 gap-4"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Scroll Position:</strong>{" "}
           <span className={storyTheme.statTextSecondary + " font-mono"}>
@@ -237,8 +237,8 @@ function LeadingOnlyDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Leading Edge</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Leading Edge</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Only the first click fires immediately. Subsequent clicks within 1
         second are completely ignored (no trailing execution).
       </p>
@@ -248,12 +248,12 @@ function LeadingOnlyDemo() {
           setClickCount((prev) => prev + 1);
           throttledClick();
         }}
-        className="w-full py-6 px-8 text-xl bg-gradient-to-br from-rose-500 to-rose-600 text-white border-none rounded-2xl cursor-pointer mb-6 transition-all duration-200 shadow-lg font-bold hover:from-rose-600 hover:to-rose-700 hover:shadow-xl active:scale-[0.98]"
+        className="w-full py-6 px-8 text-xl bg-red-500 text-white border-none rounded-md cursor-pointer mb-6 transition-all duration-200 shadow-sm font-bold hover:from-red-600 hover:to-red-700 hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
       >
         Click (Leading Only)
       </button>
 
-      <div className="p-6 bg-gradient-to-br from-rose-50 to-rose-100 rounded-2xl shadow-sm border border-rose-100">
+      <div className="p-6 bg-red-50 rounded-md shadow-sm border border-red-100">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Total Clicks:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{clickCount}</span>
@@ -266,9 +266,9 @@ function LeadingOnlyDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 bg-rose-50 border border-rose-200 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-red-50 border border-red-200 rounded-md p-5"}>
         <p className={storyTheme.infoText + " text-red-900"}>
-          💡 <strong>Leading only</strong>: Perfect for immediate feedback
+          <strong>Leading only</strong>: Perfect for immediate feedback
           actions like button clicks where you don't want any delayed execution.
         </p>
       </div>
@@ -295,8 +295,8 @@ function TrailingOnlyDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Trailing Edge</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Trailing Edge</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Type continuously. The value is processed every 500ms, but only at the
         end of each interval (no immediate execution).
       </p>
@@ -309,10 +309,10 @@ function TrailingOnlyDemo() {
           throttledProcess(e.target.value);
         }}
         placeholder="Type continuously..."
-        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm"}
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-md border border-zinc-200 shadow-sm"}
       />
 
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Current Input:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>
@@ -331,9 +331,9 @@ function TrailingOnlyDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
         <p className={storyTheme.infoText}>
-          💡 <strong>Trailing only</strong>: The callback waits 500ms after the
+          <strong>Trailing only</strong>: The callback waits 500ms after the
           first call before executing, then fires at regular intervals.
         </p>
       </div>
@@ -370,8 +370,8 @@ function ControlMethodsDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Control Methods</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Control Methods</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Test cancel, flush, and pending methods. Throttle interval is 2 seconds.
       </p>
 
@@ -383,7 +383,7 @@ function ControlMethodsDemo() {
           throttledProcess(e.target.value);
         }}
         placeholder="Type something..."
-        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm"}
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-md border border-zinc-200 shadow-sm"}
       />
 
       <div className={storyTheme.buttonGroup + " mb-6 flex gap-3"}>
@@ -393,7 +393,7 @@ function ControlMethodsDemo() {
             addLog("Cancelled pending");
           }}
           aria-label="Cancel"
-          className={storyTheme.buttonDanger + " flex-1 py-3 rounded-xl font-bold bg-rose-100 text-rose-700 hover:bg-rose-200 transition-colors"}
+          className={storyTheme.buttonDanger + " flex-1 py-3 rounded-md font-bold bg-red-100 text-red-700 hover:bg-red-200 transition-colors"}
         >
           Cancel
         </button>
@@ -403,28 +403,28 @@ function ControlMethodsDemo() {
             addLog("Flushed");
           }}
           aria-label="Flush"
-          className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-xl font-bold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"}
+          className={storyTheme.buttonSuccess + " flex-1 py-3 rounded-md font-bold bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-colors"}
         >
           Flush
         </button>
       </div>
 
       <div
-        className={`p-4 rounded-2xl mb-6 transition-all duration-200 text-center ${
+        className={`p-4 rounded-md mb-6 transition-all duration-200 text-center ${
           isPending
-            ? storyTheme.infoBox + " border-2 border-yellow-400"
-            : "bg-green-50 border-2 border-green-500"
+            ? storyTheme.infoBox + " border border-amber-400"
+            : "bg-emerald-50 border border-emerald-500"
         }`}
       >
         <div className="text-[0.95rem] font-semibold">
           Status:{" "}
-          <span className={isPending ? "text-yellow-700" : "text-green-600"}>
-            {isPending ? "⏳ Pending" : "✅ Idle"}
+          <span className={isPending ? "text-amber-700" : "text-emerald-600"}>
+            {isPending ? "Pending" : "Idle"}
           </span>
         </div>
       </div>
 
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Last Processed:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>
@@ -435,10 +435,10 @@ function ControlMethodsDemo() {
           <strong className={storyTheme.statText}>Action Log:</strong>
           <ul className="mt-2 mb-0 pl-0 list-none text-sm font-mono">
             {actionLog.length === 0 ? (
-              <li className="text-gray-400">No actions yet</li>
+              <li className="text-zinc-400">No actions yet</li>
             ) : (
               actionLog.map((log, i) => (
-                <li key={i} className="text-gray-500 mb-1">
+                <li key={i} className="text-zinc-500 mb-1">
                   {log}
                 </li>
               ))
@@ -469,8 +469,8 @@ function BothEdgesDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Both Edges</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Both Edges</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Default behavior: fires <strong>immediately</strong> on first click
         (leading edge), then <strong>once more</strong> after the interval if
         there were additional clicks (trailing edge).
@@ -481,12 +481,12 @@ function BothEdgesDemo() {
           setClickCount((prev) => prev + 1);
           throttledClick();
         }}
-        className={storyTheme.buttonFull + " mb-6 py-4 rounded-2xl font-bold bg-gradient-to-r from-indigo-500 to-purple-600 shadow-lg hover:shadow-xl active:scale-[0.98] transition-all"}
+        className={storyTheme.buttonFull + " mb-6 py-4 rounded-md font-bold bg-violet-600 shadow-sm hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all"}
       >
         Click (Both Edges)
       </button>
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Total Clicks:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{clickCount}</span>
@@ -503,9 +503,9 @@ function BothEdgesDemo() {
         )}
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
         <p className={storyTheme.infoText}>
-          💡 <strong>Both edges</strong>: Best balance for most use cases.
+          <strong>Both edges</strong>: Best balance for most use cases.
           Provides immediate feedback AND ensures the final state is captured.
         </p>
       </div>
@@ -530,8 +530,8 @@ function BothDisabledDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>Both Disabled</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>Both Disabled</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Both leading and trailing disabled. The callback{" "}
         <strong>never executes</strong>. This is generally not useful but
         demonstrates the behavior.
@@ -542,33 +542,33 @@ function BothDisabledDemo() {
           setClickCount((prev) => prev + 1);
           throttledClick();
         }}
-        className="w-full py-6 px-8 text-xl bg-gradient-to-br from-slate-400 to-slate-500 text-white border-none rounded-2xl cursor-pointer mb-6 transition-all duration-200 shadow-none font-bold"
+        className="w-full py-6 px-8 text-xl bg-zinc-400 text-white border-none rounded-md cursor-pointer mb-6 transition-all duration-200 shadow-none font-bold"
       >
         Click (Nothing Happens)
       </button>
 
-      <div className="p-6 bg-gradient-to-br from-slate-100 to-slate-200 rounded-2xl shadow-sm border border-slate-200">
+      <div className="p-6 bg-zinc-100 rounded-md shadow-sm border border-zinc-200">
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Total Clicks:</strong>{" "}
           <span className={storyTheme.statTextSecondary}>{clickCount}</span>
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Processed:</strong>{" "}
-          <span className="text-gray-500 font-bold text-[1.1rem]">
+          <span className="text-zinc-500 font-bold text-[1.1rem]">
             {processedCount}
           </span>
         </div>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Status:</strong>{" "}
           <span className="text-red-600 font-bold">
-            Callback never executes! 🚫
+            Callback never executes! 
           </span>
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " mt-6 bg-rose-50 border border-rose-200 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-red-50 border border-red-200 rounded-md p-5"}>
         <p className={storyTheme.infoText + " text-red-900"}>
-          ⚠️ <strong>Both edges disabled</strong>: This configuration completely
+          <strong>Both edges disabled</strong>: This configuration completely
           disables the callback. Matches Lodash behavior where{" "}
           <code className="bg-red-100 px-1 py-0.5 rounded">
             {"{leading: false, trailing: false}"}
@@ -599,8 +599,8 @@ function ApiRateLimiterDemo() {
 
   return (
     <div className={storyTheme.container + " max-w-md mx-auto"}>
-      <h2 className={storyTheme.title + " text-3xl font-extrabold tracking-tight text-slate-900 mb-4"}>API Rate Limiter</h2>
-      <p className={storyTheme.subtitle + " text-slate-500 mb-8"}>
+      <h2 className={storyTheme.title + " text-3xl font-semibold tracking-tight text-zinc-900 mb-4"}>API Rate Limiter</h2>
+      <p className={storyTheme.subtitle + " text-zinc-500 mb-8"}>
         Type to search. API calls are throttled to maximum 1 request per second,
         preventing rate limit issues.
       </p>
@@ -615,10 +615,10 @@ function ApiRateLimiterDemo() {
           }
         }}
         placeholder="Search API..."
-        className={storyTheme.input + " mb-6 w-full p-4 rounded-2xl border border-slate-200 shadow-sm"}
+        className={storyTheme.input + " mb-6 w-full p-4 rounded-md border border-zinc-200 shadow-sm"}
       />
 
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-100"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-100"}>
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Total API Calls:</strong>{" "}
           <span className={storyTheme.statValue}>{callCount}</span>
@@ -641,9 +641,9 @@ function ApiRateLimiterDemo() {
         </div>
       </div>
 
-      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
+      <div className={storyTheme.infoBox + " bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
         <p className={storyTheme.infoText}>
-          💡 <strong>Use case</strong>: Prevent hitting API rate limits while
+          <strong>Use case</strong>: Prevent hitting API rate limits while
           still providing responsive search as the user types.
         </p>
       </div>
@@ -742,7 +742,7 @@ function ButtonClickExample() {
         <p>Processed (Throttled): {processedCount}</p>
         {lastProcessedTime && <p>Last Processed: {lastProcessedTime}</p>}
       </div>
-      <p>💡 Throttle limits execution rate. Unlike debounce, the first click fires immediately and subsequent clicks are blocked for 1 second.</p>
+      <p>Throttle limits execution rate. Unlike debounce, the first click fires immediately and subsequent clicks are blocked for 1 second.</p>
     </div>
   );
 }`,
@@ -837,9 +837,9 @@ function MouseMoveExample() {
         style={{
           width: "100%",
           height: "200px",
-          background: "#eef2ff",
+          background: "#ede9fe",
           borderRadius: "0.5rem",
-          border: "2px dashed #a5b4fc",
+          border: "2px dashed #ede9fe",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -854,7 +854,7 @@ function MouseMoveExample() {
             top: position.y - 10,
             width: "20px",
             height: "20px",
-            background: "#6366f1",
+            background: "#7c3aed",
             borderRadius: "50%",
             pointerEvents: "none",
           }}
@@ -949,14 +949,14 @@ function ScrollTrackerExample() {
           width: "100%",
           height: "200px",
           overflowY: "scroll",
-          background: "#eef2ff",
+          background: "#ede9fe",
           borderRadius: "0.5rem",
-          border: "2px solid #a5b4fc",
+          border: "2px solid #ede9fe",
         }}
       >
         <div style={{ height: "800px", padding: "1rem" }}>
           {Array.from({ length: 20 }, (_, i) => (
-            <div key={i} style={{ padding: "0.75rem", marginBottom: "0.5rem", borderRadius: "0.5rem", background: i % 2 === 0 ? "#c7d2fe" : "#a5b4fc" }}>
+            <div key={i} style={{ padding: "0.75rem", marginBottom: "0.5rem", borderRadius: "0.5rem", background: i % 2 === 0 ? "#c7d2fe" : "#ede9fe" }}>
               Scroll Item {i + 1}
             </div>
           ))}
@@ -1055,7 +1055,7 @@ function LeadingOnlyExample() {
         <p>Total Clicks: {clickCount}</p>
         <p>Processed: {processedCount}</p>
       </div>
-      <p>💡 Leading only: Perfect for immediate feedback actions like button clicks where you don't want any delayed execution.</p>
+      <p>Leading only: Perfect for immediate feedback actions like button clicks where you don't want any delayed execution.</p>
     </div>
   );
 }`,
@@ -1157,7 +1157,7 @@ function TrailingOnlyExample() {
         <p>Last Processed: {processedValue || "(none)"}</p>
         <p>Process Count: {processedCount}</p>
       </div>
-      <p>💡 Trailing only: The callback waits 500ms after the first call before executing, then fires at regular intervals.</p>
+      <p>Trailing only: The callback waits 500ms after the first call before executing, then fires at regular intervals.</p>
     </div>
   );
 }`,
@@ -1265,7 +1265,7 @@ function ControlMethodsExample() {
         </button>
       </div>
       <div>
-        <p>Status: {isPending ? "⏳ Pending" : "✅ Idle"}</p>
+        <p>Status: {isPending ? "Pending" : "Idle"}</p>
       </div>
       <div>
         <p>Last Processed: {processedValue || "(none)"}</p>
@@ -1380,7 +1380,7 @@ function BothEdgesExample() {
         <p>Total Clicks: {clickCount}</p>
         <p>Processed: {processedCount}</p>
       </div>
-      <p>💡 Both edges: Best balance for most use cases. Provides immediate feedback AND ensures the final state is captured.</p>
+      <p>Both edges: Best balance for most use cases. Provides immediate feedback AND ensures the final state is captured.</p>
     </div>
   );
 }`,
@@ -1474,9 +1474,9 @@ function BothDisabledExample() {
       <div>
         <p>Total Clicks: {clickCount}</p>
         <p>Processed: {processedCount}</p>
-        <p>Status: Callback never executes! 🚫</p>
+        <p>Status: Callback never executes! </p>
       </div>
-      <p>⚠️ Both edges disabled: This configuration completely disables the callback. Matches Lodash behavior where {leading: false, trailing: false} means "nothing happens".</p>
+      <p>Both edges disabled: This configuration completely disables the callback. Matches Lodash behavior where {leading: false, trailing: false} means "nothing happens".</p>
     </div>
   );
 }`,
@@ -1583,7 +1583,7 @@ function ApiRateLimiterExample() {
         </ul>
       </div>
       <p>
-        💡 Use case: Prevent hitting API rate limits while still providing responsive
+        Use case: Prevent hitting API rate limits while still providing responsive
         search as the user types.
       </p>
     </div>

@@ -26,7 +26,7 @@ function Demo() {
             {count}
           </span>
         </p>
-        <p className="text-gray-500 text-sm mt-2" data-testid="trend">
+        <p className="text-zinc-500 text-sm mt-2" data-testid="trend">
           {prev === undefined ? "First render" : count > prev ? "↑ increased" : "↓ decreased"}
         </p>
       </div>

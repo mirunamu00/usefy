@@ -26,10 +26,10 @@ function ToggleDemo({
         data-testid="state-display"
         role="status"
         aria-live="polite"
-        className={`p-8 mb-8 rounded-2xl text-center text-3xl font-bold transition-all duration-300 drop-shadow-[0_1px_2px_rgba(0,0,0,0.1)] ${
+        className={`p-8 mb-8 rounded-md text-center text-3xl font-bold transition-all duration-200 ${
           value
-            ? "bg-gradient-to-br from-green-50 to-green-100 text-green-800 shadow-[0_10px_25px_rgba(16,185,129,0.3)]"
-            : "bg-gradient-to-br from-red-50 to-red-100 text-red-800 shadow-[0_10px_25px_rgba(239,68,68,0.3)]"
+            ? "bg-emerald-50 text-emerald-800"
+            : "bg-red-50 text-red-800"
         }`}
       >
         State: {value ? "TRUE" : "FALSE"}
@@ -50,7 +50,7 @@ function ToggleDemo({
           onClick={setTrue}
           aria-label="Set state to true"
           type="button"
-          className="w-full py-3.5 px-6 text-base font-semibold text-white bg-gradient-to-br from-green-500 to-green-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(16,185,129,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(16,185,129,0.4)]"
+          className="w-full py-3.5 px-6 text-base font-semibold text-white bg-emerald-500 border-none rounded-md cursor-pointer transition-all duration-200"
         >
           ✓ Set True
         </button>
@@ -59,7 +59,7 @@ function ToggleDemo({
           onClick={setFalse}
           aria-label="Set state to false"
           type="button"
-          className="w-full py-3.5 px-6 text-base font-semibold text-white bg-gradient-to-br from-red-500 to-red-600 border-none rounded-xl cursor-pointer transition-all duration-200 shadow-[0_4px_12px_rgba(239,68,68,0.3)] hover:-translate-y-0.5 hover:shadow-[0_6px_16px_rgba(239,68,68,0.4)]"
+          className="w-full py-3.5 px-6 text-base font-semibold text-white bg-red-500 border-none rounded-md cursor-pointer transition-all duration-200"
         >
           ✕ Set False
         </button>
@@ -68,7 +68,7 @@ function ToggleDemo({
           onClick={() => setValue(!value)}
           aria-label="Set state to opposite value"
           type="button"
-          className="w-full py-3.5 px-6 text-base font-semibold text-gray-700 bg-white border-2 border-gray-300 rounded-xl cursor-pointer transition-all duration-200 shadow-[0_2px_8px_rgba(0,0,0,0.1)] hover:-translate-y-0.5 hover:bg-gray-50 hover:shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+          className="w-full py-3.5 px-6 text-base font-semibold text-zinc-700 bg-white border border-zinc-300 rounded-md cursor-pointer transition-all duration-200 hover:bg-zinc-50"
         >
           ⟲ Set Value (opposite)
         </button>
@@ -301,7 +301,7 @@ function SetValueExample() {
         <button onClick={() => setValue(true)}>Set to True</button>
         <button onClick={() => setValue(false)}>Set to False</button>
       </div>
-      <p>💡 Use setValue() to set the state to any boolean value directly.</p>
+      <p>Use setValue() to set the state to any boolean value directly.</p>
     </div>
   );
 }`,
@@ -363,7 +363,7 @@ function IdempotentExample() {
         <button onClick={setFalse}>✕ Set False</button>
       </div>
       <p>
-        💡 Calling setTrue() or setFalse() multiple times has the same effect
+        Calling setTrue() or setFalse() multiple times has the same effect
         as calling it once. These operations are idempotent.
       </p>
     </div>

@@ -38,12 +38,12 @@ function TimeoutDemo({
       {/* Status Display */}
       <div
         data-testid="status-display"
-        className={`p-8 mb-8 rounded-2xl text-center text-2xl font-bold transition-all duration-300 ${
+        className={`p-8 mb-8 rounded-md text-center text-2xl font-bold transition-all duration-200 ${
           executed
-            ? "bg-gradient-to-br from-green-50 to-green-100 text-green-800 shadow-lg"
+            ? "bg-emerald-50 text-emerald-800 shadow-sm"
             : isPending
-            ? "bg-gradient-to-br from-amber-50 to-amber-100 text-amber-800 shadow-lg"
-            : "bg-gradient-to-br from-gray-50 to-gray-100 text-gray-600"
+            ? "bg-amber-50 text-amber-800 shadow-sm"
+            : "bg-zinc-50 text-zinc-600"
         }`}
       >
         <span data-testid="message">{message}</span>
@@ -56,7 +56,7 @@ function TimeoutDemo({
           className={`px-4 py-2 rounded-full text-sm font-semibold ${
             isPending
               ? "bg-amber-100 text-amber-700"
-              : "bg-gray-100 text-gray-500"
+              : "bg-zinc-100 text-zinc-500"
           }`}
         >
           {isPending ? "Pending..." : "Not Pending"}
@@ -115,14 +115,14 @@ function ToastDemo() {
       {show ? (
         <div
           data-testid="toast"
-          className="p-6 mb-6 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl shadow-lg text-center"
+          className="p-6 mb-6 bg-violet-600 text-white rounded-md shadow-sm text-center"
         >
           This toast will disappear in 3 seconds!
         </div>
       ) : (
         <div
           data-testid="toast-dismissed"
-          className="p-6 mb-6 bg-gray-100 text-gray-500 rounded-xl text-center"
+          className="p-6 mb-6 bg-zinc-100 text-zinc-500 rounded-md text-center"
         >
           Toast dismissed
         </div>
@@ -135,7 +135,7 @@ function ToastDemo() {
           className={`px-4 py-2 rounded-full text-sm font-semibold ${
             isPending
               ? "bg-amber-100 text-amber-700"
-              : "bg-gray-100 text-gray-500"
+              : "bg-zinc-100 text-zinc-500"
           }`}
         >
           {isPending ? "Pending..." : "Not Pending"}
@@ -197,16 +197,16 @@ function DebouncedInputDemo() {
 
       <div className={storyTheme.statBox}>
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">Status:</span>
+          <span className="text-zinc-600">Status:</span>
           <span
             data-testid="save-status"
-            className={isSaving ? "text-amber-600" : "text-green-600"}
+            className={isSaving ? "text-amber-600" : "text-emerald-600"}
           >
             {isSaving ? "Saving..." : "Saved"}
           </span>
         </div>
-        <div className="mt-2 pt-2 border-t border-gray-200">
-          <span className="text-gray-600">Last saved: </span>
+        <div className="mt-2 pt-2 border-t border-zinc-200">
+          <span className="text-zinc-600">Last saved: </span>
           <span data-testid="saved-value" className="font-mono">
             {savedValue || "(empty)"}
           </span>
@@ -260,16 +260,16 @@ function DelayedRedirectDemo() {
 
       <div
         data-testid="redirect-status"
-        className={`p-8 mb-8 rounded-2xl text-center transition-all duration-300 ${
+        className={`p-8 mb-8 rounded-md text-center transition-all duration-200 ${
           redirected
-            ? "bg-gradient-to-br from-green-50 to-green-100"
-            : "bg-gradient-to-br from-blue-50 to-indigo-100"
+            ? "bg-emerald-50"
+            : "bg-violet-50"
         }`}
       >
         {redirected ? (
           <>
             <div className="text-4xl mb-2">Redirected!</div>
-            <div className="text-gray-600">
+            <div className="text-zinc-600">
               You would be on the dashboard now
             </div>
           </>
@@ -277,11 +277,11 @@ function DelayedRedirectDemo() {
           <>
             <div
               data-testid="countdown"
-              className="text-5xl font-bold text-indigo-600 mb-2"
+              className="text-5xl font-bold text-violet-600 mb-2"
             >
               {countdown}
             </div>
-            <div className="text-gray-600">seconds until redirect</div>
+            <div className="text-zinc-600">seconds until redirect</div>
           </>
         )}
       </div>
@@ -354,28 +354,28 @@ function NotificationDemo() {
         {notification ? (
           <div
             data-testid="notification"
-            className="p-4 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-xl shadow-lg animate-pulse"
+            className="p-4 bg-violet-600 text-white rounded-md shadow-sm"
           >
             {notification}
           </div>
         ) : (
-          <div className="text-gray-400 italic">No notifications</div>
+          <div className="text-zinc-400 italic">No notifications</div>
         )}
       </div>
 
       {/* Status */}
       <div className={storyTheme.statBox + " mb-6"}>
         <div className="flex justify-between items-center">
-          <span className="text-gray-600">Total shown:</span>
+          <span className="text-zinc-600">Total shown:</span>
           <span data-testid="notification-count" className="font-bold">
             {count}
           </span>
         </div>
         <div className="flex justify-between items-center mt-2">
-          <span className="text-gray-600">Timer:</span>
+          <span className="text-zinc-600">Timer:</span>
           <span
             data-testid="notification-pending"
-            className={isPending ? "text-amber-600" : "text-gray-500"}
+            className={isPending ? "text-amber-600" : "text-zinc-500"}
           >
             {isPending ? "Active" : "Inactive"}
           </span>

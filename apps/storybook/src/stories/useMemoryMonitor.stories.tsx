@@ -65,14 +65,14 @@ function MemoryMonitorDemo({
 
       {/* Support Status */}
       {!isSupported && (
-        <div className="mb-6 p-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl">
-          <h3 className="font-semibold text-yellow-800 mb-2">
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-300 rounded-md">
+          <h3 className="font-semibold text-amber-800 mb-2">
             Limited Support
           </h3>
-          <p className="text-sm text-yellow-700 mb-2">
+          <p className="text-sm text-amber-700 mb-2">
             Support Level: {supportLevel}
           </p>
-          <p className="text-sm text-yellow-700">
+          <p className="text-sm text-amber-700">
             Memory monitoring is not fully supported in this browser.
           </p>
         </div>
@@ -80,15 +80,15 @@ function MemoryMonitorDemo({
 
       {/* Monitoring Status */}
       <div
-        className={`mb-6 p-4 rounded-xl border-2 ${
+        className={`mb-6 p-4 rounded-md border ${
           isMonitoring
-            ? "bg-green-50 border-green-300"
-            : "bg-gray-50 border-gray-300"
+            ? "bg-emerald-50 border-emerald-300"
+            : "bg-zinc-50 border-zinc-300"
         }`}
         data-testid="monitoring-status"
       >
         <div className="flex justify-between items-center">
-          <span className="font-semibold text-gray-800">
+          <span className="font-semibold text-zinc-800">
             Status: {isMonitoring ? "Monitoring" : "Stopped"}
           </span>
           <div className="space-x-2">
@@ -117,35 +117,35 @@ function MemoryMonitorDemo({
       {/* Memory Display */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div
-          className={`p-5 rounded-xl border-2 ${
+          className={`p-5 rounded-md border ${
             severity === "critical"
               ? "bg-red-50 border-red-300"
               : severity === "warning"
-              ? "bg-yellow-50 border-yellow-300"
-              : "bg-green-50 border-green-300"
+              ? "bg-amber-50 border-amber-300"
+              : "bg-emerald-50 border-emerald-300"
           }`}
         >
-          <h3 className="font-semibold text-gray-800 mb-3">Heap Used</h3>
+          <h3 className="font-semibold text-zinc-800 mb-3">Heap Used</h3>
           <div
             className="text-4xl font-bold text-center"
             data-testid="heap-used"
           >
             {formatted.heapUsed}
           </div>
-          <p className="text-sm text-gray-600 text-center mt-2">
+          <p className="text-sm text-zinc-600 text-center mt-2">
             Severity: {severity}
           </p>
         </div>
 
-        <div className="p-5 rounded-xl border-2 bg-blue-50 border-blue-300">
-          <h3 className="font-semibold text-gray-800 mb-3">Heap Total</h3>
+        <div className="p-5 rounded-md border bg-violet-50 border-violet-300">
+          <h3 className="font-semibold text-zinc-800 mb-3">Heap Total</h3>
           <div
-            className="text-4xl font-bold text-center text-blue-600"
+            className="text-4xl font-bold text-center text-violet-600"
             data-testid="heap-total"
           >
             {formatted.heapTotal}
           </div>
-          <p className="text-sm text-gray-600 text-center mt-2">
+          <p className="text-sm text-zinc-600 text-center mt-2">
             Limit: {formatted.heapLimit}
           </p>
         </div>
@@ -154,11 +154,11 @@ function MemoryMonitorDemo({
       {/* Leak Detection */}
       {isLeakDetected && (
         <div
-          className="mb-6 p-4 bg-red-50 border-2 border-red-300 rounded-xl"
+          className="mb-6 p-4 bg-red-50 border border-red-300 rounded-md"
           data-testid="leak-alert"
         >
           <h3 className="font-semibold text-red-800 mb-2">
-            ⚠️ Memory Leak Detected
+            Memory Leak Detected
           </h3>
           <p className="text-sm text-red-700">
             Memory usage is continuously increasing. Check for memory leaks in
@@ -169,19 +169,19 @@ function MemoryMonitorDemo({
 
       {/* Trend & History */}
       <div className={storyTheme.card + " mb-6"}>
-        <h3 className="font-semibold text-gray-800 mb-3">
+        <h3 className="font-semibold text-zinc-800 mb-3">
           Statistics & Trend
         </h3>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <p className="text-sm text-gray-600">Trend</p>
+            <p className="text-sm text-zinc-600">Trend</p>
             <p
               className={`text-2xl font-bold ${
                 trend === "increasing"
                   ? "text-red-600"
                   : trend === "decreasing"
-                  ? "text-green-600"
-                  : "text-gray-600"
+                  ? "text-emerald-600"
+                  : "text-zinc-600"
               }`}
               data-testid="trend"
             >
@@ -194,8 +194,8 @@ function MemoryMonitorDemo({
             </p>
           </div>
           <div>
-            <p className="text-sm text-gray-600">History Points</p>
-            <p className="text-2xl font-bold text-indigo-600">
+            <p className="text-sm text-zinc-600">History Points</p>
+            <p className="text-2xl font-bold text-violet-600">
               {history.length}
             </p>
           </div>
@@ -205,7 +205,7 @@ function MemoryMonitorDemo({
       {/* Raw Data */}
       {isSupported && memory && (
         <div className={storyTheme.cardInfo}>
-          <h3 className="font-semibold text-gray-800 mb-2">Raw Data</h3>
+          <h3 className="font-semibold text-zinc-800 mb-2">Raw Data</h3>
           <pre
             className="text-xs bg-white/50 p-3 rounded-lg overflow-x-auto"
             data-testid="raw-data"
@@ -242,8 +242,8 @@ function ThresholdAlertsDemo() {
       </p>
 
       {!isSupported && (
-        <div className="mb-6 p-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl">
-          <p className="text-sm text-yellow-700">
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-300 rounded-md">
+          <p className="text-sm text-amber-700">
             Memory monitoring not fully supported in this browser. Some features
             may be limited.
           </p>
@@ -263,12 +263,12 @@ function ThresholdAlertsDemo() {
         </div>
         <div className="w-full bg-white/20 rounded-full h-4 mb-2">
           <div
-            className={`h-4 rounded-full transition-all duration-300 ${
+            className={`h-4 rounded-full transition-all duration-200 ${
               severity === "critical"
                 ? "bg-red-500"
                 : severity === "warning"
-                ? "bg-yellow-500"
-                : "bg-green-500"
+                ? "bg-amber-500"
+                : "bg-emerald-500"
             }`}
             style={{ width: `${Math.min(usagePercent, 100)}%` }}
             data-testid="usage-bar"
@@ -281,15 +281,15 @@ function ThresholdAlertsDemo() {
 
       {/* Threshold Indicators */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-        <div className="p-4 bg-green-50 border-2 border-green-300 rounded-xl text-center">
-          <div className="text-green-700 font-semibold">Normal</div>
-          <div className="text-sm text-green-600">&lt; 50%</div>
+        <div className="p-4 bg-emerald-50 border border-emerald-300 rounded-md text-center">
+          <div className="text-emerald-700 font-semibold">Normal</div>
+          <div className="text-sm text-emerald-600">&lt; 50%</div>
         </div>
-        <div className="p-4 bg-yellow-50 border-2 border-yellow-300 rounded-xl text-center">
-          <div className="text-yellow-700 font-semibold">Warning</div>
-          <div className="text-sm text-yellow-600">50-90%</div>
+        <div className="p-4 bg-amber-50 border border-amber-300 rounded-md text-center">
+          <div className="text-amber-700 font-semibold">Warning</div>
+          <div className="text-sm text-amber-600">50-90%</div>
         </div>
-        <div className="p-4 bg-red-50 border-2 border-red-300 rounded-xl text-center">
+        <div className="p-4 bg-red-50 border border-red-300 rounded-md text-center">
           <div className="text-red-700 font-semibold">Critical</div>
           <div className="text-sm text-red-600">&gt; 90%</div>
         </div>
@@ -369,7 +369,7 @@ function SnapshotDemo() {
 
       {/* Snapshots List */}
       <div className={storyTheme.card + " mb-6"}>
-        <h3 className="font-semibold text-gray-800 mb-3">
+        <h3 className="font-semibold text-zinc-800 mb-3">
           Snapshots ({snapshots.length})
         </h3>
         <div
@@ -377,12 +377,12 @@ function SnapshotDemo() {
           data-testid="snapshots-list"
         >
           {snapshots.length === 0 ? (
-            <p className="text-gray-400 text-sm">No snapshots yet</p>
+            <p className="text-zinc-400 text-sm">No snapshots yet</p>
           ) : (
             snapshots.map((snapshot, index) => (
               <div
                 key={snapshot.id}
-                className="p-2 bg-gray-50 rounded text-sm font-mono"
+                className="p-2 bg-zinc-50 rounded text-sm font-mono"
               >
                 {index + 1}. {snapshot.id}
               </div>
@@ -397,7 +397,7 @@ function SnapshotDemo() {
           className={storyTheme.cardInfo}
           data-testid="comparison-result"
         >
-          <h3 className="font-semibold text-gray-800 mb-2">
+          <h3 className="font-semibold text-zinc-800 mb-2">
             Comparison Result
           </h3>
           <p className="text-sm">{comparison}</p>
@@ -455,19 +455,19 @@ function HistoryVisualizationDemo() {
 
       {/* Simple Bar Chart */}
       <div className={storyTheme.card}>
-        <h3 className="font-semibold text-gray-800 mb-3">
+        <h3 className="font-semibold text-zinc-800 mb-3">
           Recent History ({history.length} points)
         </h3>
         <div className="flex items-end gap-1 h-40" data-testid="history-chart">
           {history.length === 0 ? (
-            <p className="text-gray-400 text-sm">Collecting data...</p>
+            <p className="text-zinc-400 text-sm">Collecting data...</p>
           ) : (
             history.slice(-20).map((point, index) => {
               const heightPercent = ((point.heapUsed || 0) / maxHeapUsed) * 100;
               return (
                 <div
                   key={index}
-                  className="flex-1 bg-indigo-500 rounded-t transition-all duration-300"
+                  className="flex-1 bg-violet-600 rounded-t transition-all duration-200"
                   style={{ height: `${heightPercent}%` }}
                   title={`${((point.heapUsed || 0) / 1024 / 1024).toFixed(2)} MB`}
                 />
@@ -475,7 +475,7 @@ function HistoryVisualizationDemo() {
             })
           )}
         </div>
-        <div className="mt-3 text-xs text-gray-500 text-center">
+        <div className="mt-3 text-xs text-zinc-500 text-center">
           Max: {(maxHeapUsed / 1024 / 1024).toFixed(2)} MB
         </div>
       </div>
@@ -889,8 +889,8 @@ function ManualMonitor() {
 
 // Chart color constants
 const CHART_COLORS = {
-  primary: "#6366f1", // indigo-500
-  secondary: "#a855f7", // purple-500
+  primary: "#7c3aed", // indigo-500
+  secondary: "#7c3aed", // purple-500
   success: "#22c55e", // green-500
   warning: "#f59e0b", // amber-500
   danger: "#ef4444", // red-500
@@ -1014,23 +1014,23 @@ function OverviewDashboard() {
   const severityColor = SEVERITY_COLORS[severity];
 
   return (
-    <div className="p-8 max-w-[1400px] mx-auto font-sans bg-slate-50 min-h-screen text-slate-900">
+    <div className="p-8 max-w-[1400px] mx-auto font-sans bg-zinc-50 min-h-screen text-zinc-900">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-6">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-3xl font-bold text-zinc-900 tracking-tight">
             Memory Monitor Overview
           </h1>
-          <p className="text-slate-500 mt-2 text-lg">
+          <p className="text-zinc-500 mt-2 text-lg">
             Real-time browser memory monitoring dashboard
           </p>
         </div>
-        <div className="flex items-center gap-3 bg-white p-2 rounded-xl shadow-sm border border-slate-200">
+        <div className="flex items-center gap-3 bg-white p-2 rounded-md shadow-sm border border-zinc-200">
           <span
             className={`px-3 py-1 rounded-full text-sm font-medium ${
               isMonitoring
-                ? "bg-green-100 text-green-700"
-                : "bg-gray-100 text-gray-600"
+                ? "bg-emerald-100 text-emerald-700"
+                : "bg-zinc-100 text-zinc-600"
             }`}
           >
             {isMonitoring ? "● Live" : "○ Paused"}
@@ -1040,7 +1040,7 @@ function OverviewDashboard() {
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               isMonitoring
                 ? "bg-red-500 hover:bg-red-600 text-white"
-                : "bg-indigo-500 hover:bg-indigo-600 text-white"
+                : "bg-violet-600 hover:bg-violet-700 text-white"
             }`}
             data-testid="overview-toggle"
           >
@@ -1048,7 +1048,7 @@ function OverviewDashboard() {
           </button>
           <button
             onClick={requestGC}
-            className="px-4 py-2 rounded-lg font-medium bg-gray-200 hover:bg-gray-300 text-gray-700 transition-all"
+            className="px-4 py-2 rounded-lg font-medium bg-zinc-200 hover:bg-zinc-300 text-zinc-700 transition-all"
             title="Request garbage collection hint"
           >
             GC
@@ -1058,9 +1058,9 @@ function OverviewDashboard() {
 
       {/* Support Warning */}
       {!isSupported && (
-        <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-2xl">
+        <div className="mb-8 p-4 bg-amber-50 border border-amber-200 rounded-md">
           <p className="text-amber-800 font-medium">
-            ⚠️ Limited browser support detected. Support level: {supportLevel}
+            Limited browser support detected. Support level: {supportLevel}
           </p>
           <p className="text-amber-600 text-sm mt-1">
             Available metrics: {availableMetrics.join(", ") || "None"}
@@ -1071,22 +1071,22 @@ function OverviewDashboard() {
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {/* Heap Used Card */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-md p-5 shadow-sm border border-zinc-200 hover:shadow-sm transition-shadow">
           <div className="flex justify-between items-start mb-2">
-            <p className="text-slate-500 text-sm font-medium">Heap Used</p>
-            <div className="p-2 bg-indigo-50 rounded-lg">
-              <div className="w-4 h-4 bg-indigo-500 rounded-full opacity-20" />
+            <p className="text-zinc-500 text-sm font-medium">Heap Used</p>
+            <div className="p-2 bg-violet-50 rounded-lg">
+              <div className="w-4 h-4 bg-violet-600 rounded-full opacity-20" />
             </div>
           </div>
-          <p className="text-3xl font-bold text-slate-800">
+          <p className="text-3xl font-bold text-zinc-800">
             {formatted.heapUsed}
           </p>
-          <p className="text-slate-400 text-xs mt-1 font-medium">of {formatted.heapLimit} allocated</p>
+          <p className="text-zinc-400 text-xs mt-1 font-medium">of {formatted.heapLimit} allocated</p>
         </div>
 
         {/* Usage Percentage Card with mini gauge */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-          <p className="text-slate-500 text-sm font-medium mb-2">Usage</p>
+        <div className="bg-white rounded-md p-5 shadow-sm border border-zinc-200 hover:shadow-sm transition-shadow">
+          <p className="text-zinc-500 text-sm font-medium mb-2">Usage</p>
           <div className="flex items-center gap-3">
             <p className="text-3xl font-bold" style={{ color: severityColor }}>
               {usagePercentage?.toFixed(1) || "0"}%
@@ -1116,72 +1116,73 @@ function OverviewDashboard() {
               </ResponsiveContainer>
             </div>
           </div>
-          <p className="text-slate-400 text-xs mt-1 capitalize font-medium">Status: {severity}</p>
+          <p className="text-zinc-400 text-xs mt-1 capitalize font-medium">Status: {severity}</p>
         </div>
 
         {/* Trend Card */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-          <p className="text-slate-500 text-sm font-medium mb-2">Trend</p>
+        <div className="bg-white rounded-md p-5 shadow-sm border border-zinc-200 hover:shadow-sm transition-shadow">
+          <p className="text-zinc-500 text-sm font-medium mb-2">Trend</p>
           <div className="flex items-center gap-2">
             <span
               className={`text-3xl font-bold ${
                 trend === "increasing"
                   ? "text-red-500"
                   : trend === "decreasing"
-                  ? "text-green-500"
-                  : "text-gray-400"
+                  ? "text-emerald-500"
+                  : "text-zinc-400"
               }`}
             >
               {trend === "increasing" ? "↗" : trend === "decreasing" ? "↘" : "→"}
             </span>
-            <p className="text-lg font-semibold text-slate-700 capitalize">
+            <p className="text-lg font-semibold text-zinc-700 capitalize">
               {trend}
             </p>
           </div>
-          <p className="text-slate-400 text-xs mt-1 font-medium">
+          <p className="text-zinc-400 text-xs mt-1 font-medium">
             Based on {history.length} samples
           </p>
         </div>
 
         {/* Leak Detection Card */}
         <div
-          className={`rounded-2xl p-5 shadow-sm border hover:shadow-md transition-shadow ${
+          className={`rounded-md p-5 shadow-sm border hover:shadow-sm transition-shadow ${
             isLeakDetected
               ? "bg-red-50 border-red-200"
-              : "bg-white border-slate-200"
+              : "bg-white border-zinc-200"
           }`}
         >
-          <p className="text-slate-500 text-sm font-medium mb-2">Leak Detection</p>
+          <p className="text-zinc-500 text-sm font-medium mb-2">Leak Detection</p>
           <div className="flex items-center gap-2">
-            <span className="text-3xl">
-              {isLeakDetected ? "⚠️" : "✅"}
-            </span>
+            <span
+              className={isLeakDetected ? storyTheme.dotDanger : storyTheme.dotActive}
+              aria-hidden="true"
+            />
             <p
               className={`text-lg font-bold ${
-                isLeakDetected ? "text-red-600" : "text-green-600"
+                isLeakDetected ? "text-red-600" : "text-emerald-600"
               }`}
             >
               {isLeakDetected ? "Detected" : "None"}
             </p>
           </div>
-          <p className="text-slate-400 text-xs mt-1 font-medium">
+          <p className="text-zinc-400 text-xs mt-1 font-medium">
             Probability: {leakProbability.toFixed(0)}%
           </p>
         </div>
       </div>
 
       {/* Main Chart - Memory History */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 mb-8">
+      <div className="bg-white rounded-md p-6 shadow-sm border border-zinc-200 mb-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-bold text-slate-800">
+          <h2 className="text-lg font-bold text-zinc-800">
           Memory History (Real-time)
           </h2>
           <div className="flex gap-2">
-            <div className="flex items-center gap-1 text-xs text-slate-500">
-              <div className="w-3 h-3 rounded-full bg-indigo-500"></div> Used
+            <div className="flex items-center gap-1 text-xs text-zinc-500">
+              <div className="w-3 h-3 rounded-full bg-violet-600"></div> Used
             </div>
-            <div className="flex items-center gap-1 text-xs text-slate-500">
-              <div className="w-3 h-3 rounded-full bg-purple-400 opacity-40"></div> Total
+            <div className="flex items-center gap-1 text-xs text-zinc-500">
+              <div className="w-3 h-3 rounded-full bg-violet-400 opacity-40"></div> Total
             </div>
           </div>
         </div>
@@ -1217,7 +1218,7 @@ function OverviewDashboard() {
                     backgroundColor: "white",
                     border: "1px solid #e5e7eb",
                     borderRadius: "8px",
-                    boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+                    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
                   }}
                   formatter={(value) => [`${value} MB`]}
                 />
@@ -1241,7 +1242,7 @@ function OverviewDashboard() {
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="h-full flex items-center justify-center text-gray-400">
+            <div className="h-full flex items-center justify-center text-zinc-400">
               Collecting data...
             </div>
           )}
@@ -1251,28 +1252,28 @@ function OverviewDashboard() {
       {/* Secondary Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Memory Breakdown - Shows both metrics meaningfully */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
-          <h2 className="text-lg font-bold text-slate-800 mb-6">
+        <div className="bg-white rounded-md p-6 shadow-sm border border-zinc-200 h-full">
+          <h2 className="text-lg font-bold text-zinc-800 mb-6">
             Memory Breakdown
           </h2>
           <div className="flex flex-col gap-8" data-testid="distribution-chart">
             {/* Heap Utilization (heapUsed / heapTotal) - usually higher percentage */}
             <div>
               <div className="flex justify-between items-baseline mb-2">
-                <span className="text-sm font-medium text-slate-600">Heap Utilization</span>
-                <span className="text-xl font-bold text-indigo-600">
+                <span className="text-sm font-medium text-zinc-600">Heap Utilization</span>
+                <span className="text-xl font-bold text-violet-600">
                   {heapUsed && heapTotal ? ((heapUsed / heapTotal) * 100).toFixed(1) : "0"}%
                 </span>
               </div>
-              <div className="relative h-4 bg-slate-100 rounded-full overflow-hidden">
+              <div className="relative h-4 bg-zinc-100 rounded-full overflow-hidden">
                 <div
-                  className="absolute top-0 left-0 h-full rounded-full transition-all duration-500 bg-gradient-to-r from-indigo-400 to-indigo-600"
+                  className="absolute top-0 left-0 h-full rounded-full transition-all duration-500 bg-violet-400"
                   style={{
                     width: `${heapUsed && heapTotal ? Math.max((heapUsed / heapTotal) * 100, 2) : 0}%`,
                   }}
                 />
               </div>
-              <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
+              <div className="flex justify-between text-xs text-zinc-400 mt-2 font-medium">
                 <span>{formatted.heapUsed} used</span>
                 <span>{formatted.heapTotal} allocated</span>
               </div>
@@ -1281,12 +1282,12 @@ function OverviewDashboard() {
             {/* Limit Usage (heapUsed / heapLimit) - your 2% case */}
             <div>
               <div className="flex justify-between items-baseline mb-2">
-                <span className="text-sm font-medium text-slate-600">Limit Usage</span>
+                <span className="text-sm font-medium text-zinc-600">Limit Usage</span>
                 <span className="text-xl font-bold" style={{ color: severityColor }}>
                   {usagePercentage?.toFixed(1) || "0"}%
                 </span>
               </div>
-              <div className="relative h-4 bg-slate-100 rounded-full overflow-hidden">
+              <div className="relative h-4 bg-zinc-100 rounded-full overflow-hidden">
                 {/* Threshold markers */}
                 <div className="absolute top-0 bottom-0 w-0.5 bg-amber-400 z-10" style={{ left: "70%" }} />
                 <div className="absolute top-0 bottom-0 w-0.5 bg-red-400 z-10" style={{ left: "90%" }} />
@@ -1300,7 +1301,7 @@ function OverviewDashboard() {
                   }}
                 />
               </div>
-              <div className="flex justify-between text-xs text-slate-400 mt-2 font-medium">
+              <div className="flex justify-between text-xs text-zinc-400 mt-2 font-medium">
                 <span>{formatted.heapUsed} used</span>
                 <span>{formatted.heapLimit} limit</span>
               </div>
@@ -1308,17 +1309,17 @@ function OverviewDashboard() {
 
             {/* Memory values grid */}
             <div className="grid grid-cols-3 gap-3 mt-auto">
-              <div className="text-center p-4 bg-indigo-50 rounded-xl border border-indigo-100">
-                <div className="text-xs text-indigo-600/70 mb-1 font-medium uppercase tracking-wider">Used</div>
-                <div className="font-bold text-indigo-600">{formatted.heapUsed}</div>
+              <div className="text-center p-4 bg-violet-50 rounded-md border border-violet-100">
+                <div className="text-xs text-violet-600/70 mb-1 font-medium">Used</div>
+                <div className="font-bold text-violet-600">{formatted.heapUsed}</div>
               </div>
-              <div className="text-center p-4 bg-purple-50 rounded-xl border border-purple-100">
-                <div className="text-xs text-purple-600/70 mb-1 font-medium uppercase tracking-wider">Allocated</div>
-                <div className="font-bold text-purple-600">{formatted.heapTotal}</div>
+              <div className="text-center p-4 bg-violet-50 rounded-md border border-violet-100">
+                <div className="text-xs text-violet-600/70 mb-1 font-medium">Allocated</div>
+                <div className="font-bold text-violet-600">{formatted.heapTotal}</div>
               </div>
-              <div className="text-center p-4 bg-slate-100 rounded-xl border border-slate-200">
-                <div className="text-xs text-slate-500 mb-1 font-medium uppercase tracking-wider">Limit</div>
-                <div className="font-bold text-slate-600">{formatted.heapLimit}</div>
+              <div className="text-center p-4 bg-zinc-100 rounded-md border border-zinc-200">
+                <div className="text-xs text-zinc-500 mb-1 font-medium">Limit</div>
+                <div className="font-bold text-zinc-600">{formatted.heapLimit}</div>
               </div>
             </div>
 
@@ -1330,7 +1331,7 @@ function OverviewDashboard() {
                     ? "bg-red-100 text-red-700"
                     : severity === "warning"
                     ? "bg-amber-100 text-amber-700"
-                    : "bg-green-100 text-green-700"
+                    : "bg-emerald-100 text-emerald-700"
                 }`}
               >
                 Status: {severity === "critical" ? "Critical" : severity === "warning" ? "Warning" : "Normal"}
@@ -1340,8 +1341,8 @@ function OverviewDashboard() {
         </div>
 
         {/* DOM & Event Listeners Bar Chart */}
-        <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full">
-          <h2 className="text-lg font-bold text-slate-800 mb-6">
+        <div className="bg-white rounded-md p-6 shadow-sm border border-zinc-200 h-full">
+          <h2 className="text-lg font-bold text-zinc-800 mb-6">
             DOM & Event Metrics
           </h2>
           <div className="h-[300px]" data-testid="dom-chart">
@@ -1372,15 +1373,15 @@ function OverviewDashboard() {
       {/* Status & Info Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         {/* Support Info */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-          <h3 className="font-bold text-slate-800 mb-3">Browser Support</h3>
+        <div className="bg-white rounded-md p-5 shadow-sm border border-zinc-200">
+          <h3 className="font-bold text-zinc-800 mb-3">Browser Support</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-500">Support Level</span>
+              <span className="text-zinc-500">Support Level</span>
               <span
                 className={`font-medium ${
                   supportLevel === "full"
-                    ? "text-green-600"
+                    ? "text-emerald-600"
                     : supportLevel === "partial"
                     ? "text-amber-600"
                     : "text-red-600"
@@ -1390,8 +1391,8 @@ function OverviewDashboard() {
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">Available Metrics</span>
-              <span className="font-medium text-gray-700">
+              <span className="text-zinc-500">Available Metrics</span>
+              <span className="font-medium text-zinc-700">
                 {availableMetrics.length}
               </span>
             </div>
@@ -1399,18 +1400,18 @@ function OverviewDashboard() {
         </div>
 
         {/* Heap Details */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-          <h3 className="font-bold text-slate-800 mb-3">Heap Details</h3>
+        <div className="bg-white rounded-md p-5 shadow-sm border border-zinc-200">
+          <h3 className="font-bold text-zinc-800 mb-3">Heap Details</h3>
           <div className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <span className="text-gray-500">Total</span>
-              <span className="font-medium text-gray-700">
+              <span className="text-zinc-500">Total</span>
+              <span className="font-medium text-zinc-700">
                 {formatted.heapTotal}
               </span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-500">Limit</span>
-              <span className="font-medium text-gray-700">
+              <span className="text-zinc-500">Limit</span>
+              <span className="font-medium text-zinc-700">
                 {formatted.heapLimit}
               </span>
             </div>
@@ -1418,34 +1419,34 @@ function OverviewDashboard() {
         </div>
 
         {/* Actions & Snapshots */}
-        <div className="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
-          <h3 className="font-bold text-slate-800 mb-3">Actions</h3>
+        <div className="bg-white rounded-md p-5 shadow-sm border border-zinc-200">
+          <h3 className="font-bold text-zinc-800 mb-3">Actions</h3>
           <div className="flex flex-wrap gap-2 mb-4">
             <button
               onClick={handleTakeSnapshot}
-              className="px-3 py-1.5 text-sm bg-indigo-100 text-indigo-700 rounded-lg hover:bg-indigo-200 transition-colors"
+              className="px-3 py-1.5 text-sm bg-violet-100 text-violet-700 rounded-lg hover:bg-violet-200 transition-colors"
               data-testid="snapshot-btn"
             >
-              📷 Snapshot
+              Snapshot
             </button>
             <button
               onClick={clearHistory}
-              className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-3 py-1.5 text-sm bg-zinc-100 text-zinc-700 rounded-lg hover:bg-zinc-200 transition-colors"
             >
-              🗑️ Clear History
+              Clear History
             </button>
             <button
               onClick={() => setShowRawData(!showRawData)}
-              className="px-3 py-1.5 text-sm bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              className="px-3 py-1.5 text-sm bg-zinc-100 text-zinc-700 rounded-lg hover:bg-zinc-200 transition-colors"
             >
               {showRawData ? "Hide" : "Show"} Raw
             </button>
           </div>
           {/* Snapshots List */}
           {snapshots.length > 0 && (
-            <div className="border-t border-slate-100 pt-3">
+            <div className="border-t border-zinc-100 pt-3">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-xs font-medium text-slate-500">
+                <span className="text-xs font-medium text-zinc-500">
                   Snapshots ({snapshots.length})
                 </span>
                 <button
@@ -1459,11 +1460,11 @@ function OverviewDashboard() {
                 {snapshots.map((snap, idx) => (
                   <div
                     key={snap.id}
-                    className="text-xs bg-slate-50 rounded px-2 py-1 flex justify-between"
+                    className="text-xs bg-zinc-50 rounded px-2 py-1 flex justify-between"
                   >
-                    <span className="text-slate-600">#{idx + 1}</span>
-                    <span className="font-medium text-slate-700">{snap.heapUsed}</span>
-                    <span className="text-slate-400">
+                    <span className="text-zinc-600">#{idx + 1}</span>
+                    <span className="font-medium text-zinc-700">{snap.heapUsed}</span>
+                    <span className="text-zinc-400">
                       {new Date(snap.timestamp).toLocaleTimeString()}
                     </span>
                   </div>
@@ -1476,9 +1477,9 @@ function OverviewDashboard() {
 
       {/* Raw Data Section */}
       {showRawData && memory && (
-        <div className="bg-slate-800 rounded-xl p-6 shadow-sm">
-          <h3 className="font-semibold text-slate-200 mb-3">Raw Memory Data</h3>
-          <pre className="text-sm text-slate-300 overflow-x-auto">
+        <div className="bg-zinc-800 rounded-md p-6 shadow-sm">
+          <h3 className="font-semibold text-zinc-200 mb-3">Raw Memory Data</h3>
+          <pre className="text-sm text-zinc-300 overflow-x-auto">
             {JSON.stringify(
               {
                 memory,

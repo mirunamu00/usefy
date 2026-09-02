@@ -19,10 +19,10 @@ function BasicHoverDemo() {
 
       <div
         ref={ref}
-        className={`p-8 rounded-xl transition-all duration-300 cursor-pointer ${
+        className={`p-8 rounded-md transition-all duration-200 cursor-pointer ${
           isHovered
-            ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-xl scale-105"
-            : "bg-gray-100 text-gray-700"
+            ? "bg-violet-600 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] scale-105"
+            : "bg-zinc-100 text-zinc-700"
         }`}
         data-testid="hover-box"
       >
@@ -61,10 +61,10 @@ function TupleDestructuringDemo() {
 
       <div
         ref={ref}
-        className={`p-8 rounded-xl transition-all duration-300 cursor-pointer ${
+        className={`p-8 rounded-md transition-all duration-200 cursor-pointer ${
           isHovered
-            ? "bg-gradient-to-br from-pink-500 to-rose-500 text-white shadow-xl"
-            : "bg-gray-100 text-gray-700"
+            ? "bg-violet-600 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+            : "bg-zinc-100 text-zinc-700"
         }`}
         data-testid="tuple-box"
       >
@@ -93,10 +93,10 @@ function DelayedHoverDemo() {
 
       <div
         ref={ref}
-        className={`p-8 rounded-xl transition-all duration-300 cursor-pointer ${
+        className={`p-8 rounded-md transition-all duration-200 cursor-pointer ${
           isHovered
-            ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-xl"
-            : "bg-gray-100 text-gray-700"
+            ? "bg-emerald-500 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+            : "bg-zinc-100 text-zinc-700"
         }`}
         data-testid="delayed-box"
       >
@@ -112,7 +112,7 @@ function DelayedHoverDemo() {
             {isHovered ? "Hovered" : "Not Hovered"}
           </span>
         </p>
-        <p className="text-gray-500 text-sm mt-2">
+        <p className="text-zinc-500 text-sm mt-2">
           Notice the delay when hovering and leaving
         </p>
       </div>
@@ -145,11 +145,11 @@ function TooltipDemo() {
         </button>
         {isHovered && (
           <div
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-gray-900 text-white text-sm rounded-lg whitespace-nowrap shadow-lg"
+            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-3 px-4 py-2 bg-zinc-900 text-white text-sm rounded-lg whitespace-nowrap shadow-sm"
             data-testid="tooltip"
           >
             This is a helpful tooltip!
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-gray-900" />
+            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-zinc-900" />
           </div>
         )}
       </div>
@@ -183,13 +183,13 @@ function DropdownDemo() {
         </button>
         {isHovered && (
           <div
-            className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-xl border border-gray-200 py-2 z-10"
+            className="absolute top-full left-0 mt-2 w-48 bg-white rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08)] border border-zinc-200 py-2 z-10"
             data-testid="dropdown-menu"
           >
             {menuItems.map((item, index) => (
               <button
                 key={item}
-                className="w-full text-left px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition-colors"
+                className="w-full text-left px-4 py-2 text-zinc-700 hover:bg-violet-50 hover:text-violet-600 transition-colors"
                 data-testid={`menu-item-${index}`}
               >
                 {item}
@@ -211,19 +211,19 @@ function CardPreviewDemo() {
       id: 1,
       title: "React Hooks",
       description: "Learn about React hooks and state management",
-      color: "from-blue-500 to-cyan-500",
+      color: "bg-violet-600",
     },
     {
       id: 2,
       title: "TypeScript",
       description: "Type-safe development with TypeScript",
-      color: "from-indigo-500 to-purple-500",
+      color: "bg-violet-600",
     },
     {
       id: 3,
       title: "Testing",
       description: "Write robust tests for your applications",
-      color: "from-pink-500 to-rose-500",
+      color: "bg-violet-600",
     },
   ];
 
@@ -257,16 +257,16 @@ function HoverCard({
   return (
     <div
       ref={ref}
-      className={`p-6 rounded-xl border-2 transition-all duration-300 cursor-pointer ${
+      className={`p-6 rounded-md border transition-all duration-200 cursor-pointer ${
         isHovered
-          ? `border-transparent bg-gradient-to-br ${color} text-white shadow-xl -translate-y-2`
-          : "border-gray-200 bg-white text-gray-700"
+          ? `border-transparent ${color} text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] -translate-y-2`
+          : "border-zinc-200 bg-white text-zinc-700"
       }`}
       data-testid={`card-${title.toLowerCase().replace(" ", "-")}`}
     >
       <h3 className="font-bold text-lg mb-2">{title}</h3>
       <p
-        className={`text-sm transition-opacity duration-300 ${
+        className={`text-sm transition-opacity duration-200 ${
           isHovered ? "opacity-100" : "opacity-60"
         }`}
       >
@@ -299,11 +299,11 @@ function ConditionalDemo() {
 
       <div className="mb-6">
         <label className="flex items-center justify-center gap-3 cursor-pointer">
-          <span className="text-gray-700 font-medium">Hover Detection:</span>
+          <span className="text-zinc-700 font-medium">Hover Detection:</span>
           <button
             onClick={() => setEnabled(!enabled)}
             className={`relative w-14 h-7 rounded-full transition-colors duration-200 ${
-              enabled ? "bg-indigo-500" : "bg-gray-300"
+              enabled ? "bg-violet-600" : "bg-zinc-300"
             }`}
             data-testid="toggle-enabled"
           >
@@ -313,7 +313,7 @@ function ConditionalDemo() {
               }`}
             />
           </button>
-          <span className="text-gray-500 text-sm">
+          <span className="text-zinc-500 text-sm">
             ({enabled ? "Enabled" : "Disabled"})
           </span>
         </label>
@@ -321,12 +321,12 @@ function ConditionalDemo() {
 
       <div
         ref={ref}
-        className={`p-8 rounded-xl transition-all duration-300 cursor-pointer ${
+        className={`p-8 rounded-md transition-all duration-200 cursor-pointer ${
           !enabled
-            ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+            ? "bg-zinc-200 text-zinc-400 cursor-not-allowed"
             : isHovered
-            ? "bg-gradient-to-br from-amber-500 to-orange-500 text-white shadow-xl scale-105"
-            : "bg-gray-100 text-gray-700"
+            ? "bg-amber-500 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] scale-105"
+            : "bg-zinc-100 text-zinc-700"
         }`}
         data-testid="conditional-box"
       >
@@ -382,10 +382,10 @@ function CallbackDemo() {
         <div className="flex-1">
           <div
             ref={ref}
-            className={`p-8 rounded-xl transition-all duration-300 cursor-pointer text-center ${
+            className={`p-8 rounded-md transition-all duration-200 cursor-pointer text-center ${
               isHovered
-                ? "bg-gradient-to-br from-violet-500 to-purple-600 text-white shadow-xl"
-                : "bg-gray-100 text-gray-700"
+                ? "bg-violet-600 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+                : "bg-zinc-100 text-zinc-700"
             }`}
             data-testid="callback-box"
           >
@@ -397,10 +397,10 @@ function CallbackDemo() {
 
         <div className="flex-1">
           <div className={storyTheme.card}>
-            <h3 className="font-semibold text-gray-700 mb-3">Event Log:</h3>
+            <h3 className="font-semibold text-zinc-700 mb-3">Event Log:</h3>
             <div className="h-48 overflow-y-auto">
               {events.length === 0 ? (
-                <p className="text-gray-400 text-sm italic">
+                <p className="text-zinc-400 text-sm italic">
                   Hover over the box to see events...
                 </p>
               ) : (
@@ -410,7 +410,7 @@ function CallbackDemo() {
                       key={index}
                       className={`py-1 px-2 rounded ${
                         event.includes("Entered")
-                          ? "bg-green-50 text-green-700"
+                          ? "bg-emerald-50 text-emerald-700"
                           : "bg-red-50 text-red-700"
                       }`}
                       data-testid={`event-${index}`}
@@ -446,10 +446,10 @@ function MobileTouchDemo() {
 
       <button
         ref={ref}
-        className={`px-8 py-4 rounded-xl font-semibold transition-all duration-300 cursor-pointer ${
+        className={`px-8 py-4 rounded-md font-semibold transition-all duration-200 cursor-pointer ${
           isHovered
-            ? "bg-gradient-to-br from-sky-500 to-blue-600 text-white shadow-xl scale-105"
-            : "bg-gray-100 text-gray-700"
+            ? "bg-violet-600 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] scale-105"
+            : "bg-zinc-100 text-zinc-700"
         }`}
         data-testid="touch-button"
       >
@@ -463,7 +463,7 @@ function MobileTouchDemo() {
             {isHovered ? "Active" : "Inactive"}
           </span>
         </p>
-        <p className="text-gray-500 text-sm mt-2">
+        <p className="text-zinc-500 text-sm mt-2">
           Stays active for 1.5s after the touch ends
         </p>
       </div>

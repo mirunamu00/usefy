@@ -63,7 +63,7 @@ function AutoAwayDemo() {
       <h2 className={storyTheme.title}>Auto-Away Presence</h2>
       <p className={storyTheme.subtitle}>
         After <strong>2 seconds</strong> of inactivity the user is marked away —
-        exactly how chat apps flip your status to 🌙. Move the mouse to come
+        exactly how chat apps flip your status to . Move the mouse to come
         back online.
       </p>
 
@@ -71,7 +71,7 @@ function AutoAwayDemo() {
         <p className={storyTheme.statLabel}>
           Status:{" "}
           <span className={storyTheme.statValue} data-testid="presence-value">
-            {idle ? "🌙 Away" : "🟢 Online"}
+            {idle ? "Away" : "Online"}
           </span>
         </p>
         <p className={`${storyTheme.statLabel} mt-2`}>
@@ -168,7 +168,7 @@ export const Default: Story = {
 function AwayBadge() {
   const idle = useIdle(60_000); // one minute
 
-  return <span>{idle ? "💤 Away" : "🟢 Active"}</span>;
+  return <span>{idle ? "Away" : "Active"}</span>;
 }`,
       },
     },
@@ -188,7 +188,7 @@ export const AutoAway: Story = {
     docs: {
       description: {
         story:
-          "Drive presence state from `idle` — flip the user to 🌙 Away after a period of inactivity, the classic chat/collaboration pattern.",
+          "Drive presence state from `idle` — flip the user to Away after a period of inactivity, the classic chat/collaboration pattern.",
       },
       source: {
         language: "tsx",

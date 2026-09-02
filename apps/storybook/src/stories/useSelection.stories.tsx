@@ -43,7 +43,7 @@ function TableDemo() {
 
       <table className="w-full border-collapse" data-testid="table">
         <thead>
-          <tr className="border-b-2 border-gray-200">
+          <tr className="border-b-2 border-zinc-200">
             <th className="w-10 px-3 py-2 text-left">
               <input
                 type="checkbox"
@@ -56,10 +56,10 @@ function TableDemo() {
                 aria-label="Select all rows"
               />
             </th>
-            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-3 py-2 text-left text-sm font-semibold text-zinc-600">
               Name
             </th>
-            <th className="px-3 py-2 text-left text-sm font-semibold text-gray-600">
+            <th className="px-3 py-2 text-left text-sm font-semibold text-zinc-600">
               Role
             </th>
           </tr>
@@ -68,8 +68,8 @@ function TableDemo() {
           {USERS.map((user) => (
             <tr
               key={user.id}
-              className={`border-b border-gray-100 transition-colors ${
-                isSelected(user) ? "bg-indigo-50" : "bg-white"
+              className={`border-b border-zinc-100 transition-colors ${
+                isSelected(user) ? "bg-violet-50" : "bg-white"
               }`}
               data-testid={`row-${user.id}`}
             >
@@ -82,10 +82,10 @@ function TableDemo() {
                   aria-label={`Select ${user.name}`}
                 />
               </td>
-              <td className="px-3 py-2 font-medium text-gray-800">
+              <td className="px-3 py-2 font-medium text-zinc-800">
                 {user.name}
               </td>
-              <td className="px-3 py-2 text-gray-500">{user.role}</td>
+              <td className="px-3 py-2 text-zinc-500">{user.role}</td>
             </tr>
           ))}
         </tbody>
@@ -97,7 +97,7 @@ function TableDemo() {
           <span className={storyTheme.statValue} data-testid="count">
             {selected.length}
           </span>{" "}
-          <span className="text-gray-500 text-sm" data-testid="selected-names">
+          <span className="text-zinc-500 text-sm" data-testid="selected-names">
             [{selected.map((u) => u.name).join(", ")}]
           </span>
         </p>
@@ -144,10 +144,10 @@ function SingleSelectDemo() {
         {USERS.map((user) => (
           <li key={user.id}>
             <label
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg border-2 cursor-pointer transition-colors ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg border cursor-pointer transition-colors ${
                 isSelected(user)
-                  ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                  : "border-gray-200 bg-white text-gray-700"
+                  ? "border-violet-500 bg-violet-50 text-violet-700"
+                  : "border-zinc-200 bg-white text-zinc-700"
               }`}
               data-testid={`single-row-${user.id}`}
             >

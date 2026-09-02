@@ -23,7 +23,7 @@ function LifecycleDemo() {
         run a manual-trigger async function &amp; track its lifecycle
       </p>
 
-      <label className="flex items-center gap-2 mb-4 text-sm text-gray-700">
+      <label className="flex items-center gap-2 mb-4 text-sm text-zinc-700">
         <input
           type="checkbox"
           data-testid="fail-toggle"
@@ -59,12 +59,12 @@ function LifecycleDemo() {
 
       {state.status === "success" && (
         <div className={`${storyTheme.messageSuccess}`} data-testid="result">
-          ✅ Loaded {state.data?.name} (#{state.data?.id})
+          Loaded {state.data?.name} (#{state.data?.id})
         </div>
       )}
       {state.status === "error" && (
         <div className={`${storyTheme.messageError}`} data-testid="error">
-          ❌ {state.error?.message}
+          {state.error?.message}
         </div>
       )}
     </div>

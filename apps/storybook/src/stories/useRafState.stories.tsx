@@ -40,11 +40,11 @@ function PointerFollowerDemo() {
       <div
         ref={areaRef}
         data-testid="area"
-        className="relative mb-5 h-64 overflow-hidden rounded-xl border-2 border-gray-200 bg-gradient-to-br from-indigo-50 via-white to-purple-50 shadow-inner"
+        className="relative mb-5 h-64 overflow-hidden rounded-md border border-zinc-200 bg-violet-50 shadow-inner"
       >
         <div
           data-testid="dot"
-          className="pointer-events-none absolute h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 shadow-[0_4px_12px_rgba(99,102,241,0.5)]"
+          className="pointer-events-none absolute h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full bg-violet-600"
           style={{ left: pos.x, top: pos.y }}
         />
       </div>

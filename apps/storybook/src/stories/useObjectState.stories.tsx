@@ -75,7 +75,7 @@ function SettingsDemo() {
           />
         </div>
 
-        <label className="flex items-center gap-2 font-medium text-gray-700">
+        <label className="flex items-center gap-2 font-medium text-zinc-700">
           <input
             type="checkbox"
             checked={settings.notifications}
@@ -89,7 +89,7 @@ function SettingsDemo() {
       <div className={`${storyTheme.statBox} mt-5`}>
         <p className={storyTheme.statLabel}>Current state:</p>
         <pre
-          className="text-[0.8rem] text-gray-700 m-0 whitespace-pre-wrap"
+          className="text-[0.8rem] text-zinc-700 m-0 whitespace-pre-wrap"
           data-testid="state-json"
         >
           {JSON.stringify(settings, null, 2)}

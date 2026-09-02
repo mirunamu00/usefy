@@ -49,7 +49,7 @@ function TaskQueueDemo() {
           <span className={storyTheme.statValue} data-testid="size">
             {queue.length}
           </span>{" "}
-          <span className="text-gray-500 text-sm" data-testid="next">
+          <span className="text-zinc-500 text-sm" data-testid="next">
             {next ? `next → ${next.label}` : "empty"}
           </span>
         </p>
@@ -59,12 +59,12 @@ function TaskQueueDemo() {
               key={task.id}
               className={`px-3 py-2 rounded-md text-sm border ${
                 i === 0
-                  ? "border-indigo-500 bg-indigo-50 text-indigo-700 font-medium"
-                  : "border-gray-200 bg-white text-gray-700"
+                  ? "border-violet-500 bg-violet-50 text-violet-700 font-medium"
+                  : "border-zinc-200 bg-white text-zinc-700"
               }`}
               data-testid={`item-${task.id}`}
             >
-              {i === 0 ? "▶ " : ""}
+              {i === 0 && <span className={storyTheme.badgeAccent + " mr-2"}>Next</span>}
               {task.label}
             </li>
           ))}
@@ -106,7 +106,7 @@ function TaskQueueDemo() {
       <div className={`${storyTheme.statBox} mt-4`}>
         <p className={storyTheme.statLabel}>
           Processed:{" "}
-          <span className="text-gray-600 text-sm" data-testid="log">
+          <span className="text-zinc-600 text-sm" data-testid="log">
             {log.length ? log.join(" → ") : "nothing yet"}
           </span>
         </p>
@@ -158,7 +158,7 @@ function PrintQueueDemo() {
           <span className={storyTheme.statValue} data-testid="count">
             {queue.length}
           </span>{" "}
-          <span className="text-gray-500 text-sm" data-testid="ids">
+          <span className="text-zinc-500 text-sm" data-testid="ids">
             [{queue.join(", ")}]
           </span>
         </p>

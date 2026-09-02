@@ -25,11 +25,11 @@ function ElementScrollDemo() {
       <div
         ref={ref}
         data-testid="pane"
-        className="mb-5 h-48 overflow-auto rounded-xl border-2 border-gray-200 shadow-inner"
+        className="mb-5 h-48 overflow-auto rounded-md border border-zinc-200 shadow-inner"
       >
-        <div className="relative h-[900px] w-[900px] bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-          <div className="sticky top-2 left-2 inline-block rounded-lg bg-white/80 px-3 py-1 text-sm text-gray-500 shadow">
-            Scroll me in both directions ↔ ↕
+        <div className="relative h-[900px] w-[900px] bg-violet-50">
+          <div className="sticky top-2 left-2 inline-block rounded-lg bg-white/80 px-3 py-1 text-sm text-zinc-500 shadow">
+            Scroll me in both directions 
           </div>
         </div>
       </div>
@@ -70,10 +70,10 @@ function NoThrottleDemo() {
         With <code>throttleMs: 0</code> the progress bar follows every frame
       </p>
 
-      <div className="mb-4 h-3 w-full overflow-hidden rounded-full bg-gray-200">
+      <div className="mb-4 h-3 w-full overflow-hidden rounded-full bg-zinc-200">
         <div
           data-testid="progress"
-          className="h-full bg-gradient-to-r from-indigo-500 to-purple-600 transition-[width] duration-75"
+          className="h-full bg-violet-600 transition-[width] duration-75"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -81,9 +81,9 @@ function NoThrottleDemo() {
       <div
         ref={ref}
         data-testid="pane"
-        className="h-48 overflow-auto rounded-xl border-2 border-gray-200 shadow-inner"
+        className="h-48 overflow-auto rounded-md border border-zinc-200 shadow-inner"
       >
-        <div style={{ height }} className="bg-gradient-to-b from-white to-indigo-50" />
+        <div style={{ height }} className="bg-white" />
       </div>
 
       <div className={`${storyTheme.statBox} mt-5`}>

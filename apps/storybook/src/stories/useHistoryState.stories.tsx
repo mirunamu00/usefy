@@ -35,11 +35,11 @@ function CounterHistoryDemo() {
           <span className={storyTheme.statValue} data-testid="count">
             {state}
           </span>{" "}
-          <span className="text-gray-500 text-sm" data-testid="position">
+          <span className="text-zinc-500 text-sm" data-testid="position">
             (step {currentIndex + 1} / {history.length})
           </span>
         </p>
-        <p className="mt-2 text-sm text-gray-500" data-testid="timeline">
+        <p className="mt-2 text-sm text-zinc-500" data-testid="timeline">
           [{history.join(", ")}]
         </p>
       </div>
@@ -117,8 +117,8 @@ function TextHistoryDemo() {
                 onClick={() => goTo(i)}
                 className={`w-full text-left px-3 py-2 rounded-md text-sm border ${
                   i === currentIndex
-                    ? "border-indigo-500 bg-indigo-50 text-indigo-700 font-medium"
-                    : "border-gray-200 bg-white text-gray-600"
+                    ? "border-violet-500 bg-violet-50 text-violet-700 font-medium"
+                    : "border-zinc-200 bg-white text-zinc-600"
                 }`}
                 data-testid={`snapshot-${i}`}
               >

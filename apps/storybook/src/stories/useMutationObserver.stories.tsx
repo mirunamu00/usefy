@@ -135,8 +135,8 @@ function AttributeDemo() {
         data-testid="attr-box"
         className={
           active
-            ? "mx-auto mb-5 grid place-items-center text-white font-semibold rounded-xl h-28 bg-gradient-to-br from-green-500 to-emerald-600 shadow-xl"
-            : "mx-auto mb-5 grid place-items-center text-white font-semibold rounded-xl h-28 bg-gradient-to-br from-indigo-500 to-purple-600 shadow-xl"
+            ? "mx-auto mb-5 grid place-items-center text-white font-semibold rounded-md h-28 bg-emerald-500 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
+            : "mx-auto mb-5 grid place-items-center text-white font-semibold rounded-md h-28 bg-violet-600 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
         }
       >
         {active ? "active" : "idle"}

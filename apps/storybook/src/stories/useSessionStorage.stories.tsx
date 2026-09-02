@@ -28,11 +28,11 @@ function SessionStorageDemo({
       </p>
 
       {/* Current Value Display */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <label className={storyTheme.statLabel + " mb-2"}>Stored Value:</label>
         <div
           data-testid="stored-value"
-          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-800"
+          className="text-lg font-mono bg-zinc-50 p-4 rounded-md border border-zinc-200 text-zinc-800"
         >
           {value}
         </div>
@@ -46,7 +46,7 @@ function SessionStorageDemo({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter new value..."
-          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+          className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
           data-testid="value-input"
         />
       </div>
@@ -73,8 +73,8 @@ function SessionStorageDemo({
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           Storage Key: <code className="font-mono">{storageKey}</code>
         </p>
       </div>
@@ -110,14 +110,14 @@ function FormPersistenceDemo() {
       </p>
 
       {/* Progress Indicator */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className="flex justify-between items-center">
           <span className={storyTheme.statText}>Current Step:</span>
           <span className={storyTheme.statValue + " font-bold"}>{formData.step} / 3</span>
         </div>
-        <div className="w-full bg-slate-200 rounded-full h-2.5 mt-2">
+        <div className="w-full bg-zinc-200 rounded-full h-2.5 mt-2">
           <div
-            className="bg-indigo-600 h-2 rounded-full transition-all duration-300"
+            className="bg-violet-600 h-2 rounded-full transition-all duration-200"
             style={{ width: `${(formData.step / 3) * 100}%` }}
             data-testid="progress-bar"
           />
@@ -135,7 +135,7 @@ function FormPersistenceDemo() {
               setFormData((prev) => ({ ...prev, name: e.target.value }))
             }
             placeholder="Your name"
-            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+            className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
             data-testid="name-input"
           />
         </div>
@@ -148,7 +148,7 @@ function FormPersistenceDemo() {
               setFormData((prev) => ({ ...prev, email: e.target.value }))
             }
             placeholder="your@email.com"
-            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+            className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
             data-testid="email-input"
           />
         </div>
@@ -194,10 +194,10 @@ function FormPersistenceDemo() {
       </button>
 
       {/* Current Data Display */}
-      <div className={storyTheme.card + " mt-6 bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
-        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">📦 Session Data:</h3>
+      <div className={storyTheme.card + " mt-6 bg-zinc-900 rounded-md p-6 shadow-sm border border-zinc-800"}>
+        <h3 className="text-sm font-bold text-zinc-400 mb-3">Session Data:</h3>
         <pre
-          className="font-mono text-sm bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 overflow-auto text-slate-300"
+          className="font-mono text-sm bg-zinc-800/50 p-4 rounded-md border border-zinc-700/50 overflow-auto text-zinc-300"
           data-testid="form-data"
         >
           {JSON.stringify(formData, null, 2)}
@@ -221,9 +221,9 @@ function CounterDemo() {
       </p>
 
       {/* Counter Display */}
-      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-3xl shadow-2xl text-center"}>
+      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08)] text-center"}>
         <div
-          className="text-8xl font-black text-white m-0 drop-shadow-sm"
+          className="text-8xl font-semibold text-white m-0"
           data-testid="counter-value"
         >
           {count}
@@ -234,21 +234,21 @@ function CounterDemo() {
       <div className="flex gap-3 justify-center flex-wrap">
         <button
           onClick={() => setCount((c) => c - 1)}
-          className={storyTheme.buttonSecondary + " flex-1 py-3 rounded-xl font-bold"}
+          className={storyTheme.buttonSecondary + " flex-1 py-3 rounded-md font-bold"}
           data-testid="decrement"
         >
           - Decrement
         </button>
         <button
           onClick={() => setCount((c) => c + 1)}
-          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-xl font-bold shadow-lg"}
+          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-md font-bold shadow-sm"}
           data-testid="increment"
         >
           + Increment
         </button>
         <button
           onClick={resetCount}
-          className={storyTheme.buttonNeutral + " px-6 py-3 rounded-xl font-bold"}
+          className={storyTheme.buttonNeutral + " px-6 py-3 rounded-md font-bold"}
           data-testid="reset-counter"
         >
           Reset
@@ -278,11 +278,11 @@ function SessionBehaviorDemo() {
       </p>
 
       {/* View Count */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className="text-center">
           <div className={storyTheme.statText}>Story Views This Session</div>
           <div
-            className="text-4xl font-bold text-indigo-600 mt-2"
+            className="text-4xl font-bold text-violet-600 mt-2"
             data-testid="view-count"
           >
             {viewCount}
@@ -291,33 +291,33 @@ function SessionBehaviorDemo() {
       </div>
 
       {/* Comparison Table */}
-      <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-slate-800 mb-4">
+      <div className={storyTheme.card + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-4">
           localStorage vs sessionStorage
         </h3>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-gray-200">
+            <tr className="border-b border-zinc-200">
               <th className="text-left py-2 font-medium">Feature</th>
               <th className="text-left py-2 font-medium">localStorage</th>
               <th className="text-left py-2 font-medium">sessionStorage</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-zinc-100">
               <td className="py-2">Persistence</td>
-              <td className="py-2 text-green-600">Permanent</td>
+              <td className="py-2 text-emerald-600">Permanent</td>
               <td className="py-2 text-amber-600">Until tab closes</td>
             </tr>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-zinc-100">
               <td className="py-2">Tab sharing</td>
-              <td className="py-2 text-green-600">Shared across tabs</td>
+              <td className="py-2 text-emerald-600">Shared across tabs</td>
               <td className="py-2 text-amber-600">Per-tab only</td>
             </tr>
-            <tr className="border-b border-gray-100">
+            <tr className="border-b border-zinc-100">
               <td className="py-2">Refresh survives</td>
-              <td className="py-2 text-green-600">Yes</td>
-              <td className="py-2 text-green-600">Yes</td>
+              <td className="py-2 text-emerald-600">Yes</td>
+              <td className="py-2 text-emerald-600">Yes</td>
             </tr>
             <tr>
               <td className="py-2">Use case</td>
@@ -329,8 +329,8 @@ function SessionBehaviorDemo() {
       </div>
 
       {/* Tips */}
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>Tip:</strong> Use sessionStorage for temporary data that
           should be cleared when the user closes the tab, like form drafts or
           multi-step wizard progress.
@@ -356,11 +356,11 @@ function TabIsolationDemo() {
       </p>
 
       {/* Tab ID Display */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <div className="text-center">
           <div className={storyTheme.statText}>This Tab's ID</div>
           <div
-            className="text-2xl font-mono font-bold text-indigo-600 mt-2"
+            className="text-2xl font-mono font-bold text-violet-600 mt-2"
             data-testid="tab-id"
           >
             {tabId}
@@ -369,10 +369,10 @@ function TabIsolationDemo() {
       </div>
 
       {/* Message Display */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <label className={storyTheme.statLabel + " mb-2"}>Session Message:</label>
         <div
-          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 min-h-[60px] text-slate-800"
+          className="text-lg font-mono bg-zinc-50 p-4 rounded-md border border-zinc-200 min-h-[60px] text-zinc-800"
           data-testid="tab-message"
         >
           {message || "(empty)"}
@@ -399,16 +399,16 @@ function TabIsolationDemo() {
       </div>
 
       {/* Warning Box */}
-      <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5 mb-6">
+      <div className="bg-amber-50 border border-amber-200 rounded-md p-5 mb-6">
         <p className="text-amber-800 text-sm leading-relaxed">
-          <strong>⚠️ Important:</strong> Each browser tab has its own separate
+          <strong>Important:</strong> Each browser tab has its own separate
           sessionStorage. Changes made here will NOT appear in other tabs!
         </p>
       </div>
 
       {/* Instructions */}
-      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>How to verify:</strong>
           <br />
           1. Open this page in another browser tab
@@ -453,8 +453,8 @@ function ComponentSyncDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>How it works:</strong>
           <br />
           All three components use{" "}
@@ -510,14 +510,14 @@ function SyncedSessionComponent({
 
   return (
     <div
-      className={`p-8 rounded-2xl border-2 ${
+      className={`p-8 rounded-md border ${
         borderColors[color as keyof typeof borderColors]
       } ${bgColors[color as keyof typeof bgColors]}`}
       data-testid={`session-sync-component-${name
         .toLowerCase()
         .replace(" ", "-")}`}
     >
-      <h3 className="font-semibold text-slate-800 mb-4 text-center">{name}</h3>
+      <h3 className="font-semibold text-zinc-800 mb-4 text-center">{name}</h3>
 
       {/* Count Display */}
       <div
@@ -566,7 +566,7 @@ function SyncedSessionComponent({
         </button>
         <button
           onClick={resetCount}
-          className="px-4 py-2 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold transition-colors"
+          className="px-4 py-2 rounded-lg bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-semibold transition-colors"
           data-testid={`session-sync-reset-${name
             .toLowerCase()
             .replace(" ", "-")}`}
@@ -758,12 +758,12 @@ function FormPersistenceExample() {
       <p>Form data persists during your session - refresh won't lose your progress!</p>
       <div>
         <p>Current Step: {formData.step} / 3</p>
-        <div style={{ width: "100%", background: "#e5e7eb", height: "8px", borderRadius: "9999px" }}>
+        <div style={{ width: "100%", background: "#e5e7eb", height: "8px", borderRadius: "6px" }}>
           <div
             style={{
-              background: "#4f46e5",
+              background: "#7c3aed",
               height: "8px",
-              borderRadius: "9999px",
+              borderRadius: "6px",
               width: \`\${(formData.step / 3) * 100}%\`,
             }}
           />
@@ -1039,7 +1039,7 @@ function TabIsolationExample() {
       </div>
       <div style={{ background: "#fef3c7", border: "1px solid #fde68a", padding: "1rem", borderRadius: "0.5rem" }}>
         <p>
-          <strong>⚠️ Important:</strong> Each browser tab has its own separate sessionStorage.
+          <strong>Important:</strong> Each browser tab has its own separate sessionStorage.
           Changes made here will NOT appear in other tabs!
         </p>
       </div>

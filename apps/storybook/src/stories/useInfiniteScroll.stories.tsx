@@ -30,7 +30,7 @@ function Row({ n }: { n: number }) {
         marginBottom: "8px",
         background: "white",
         border: "1px solid #e2e8f0",
-        borderRadius: "0.75rem",
+        borderRadius: "6px",
         display: "flex",
         alignItems: "center",
         gap: "12px",
@@ -41,7 +41,7 @@ function Row({ n }: { n: number }) {
           width: "30px",
           height: "30px",
           flexShrink: 0,
-          background: "linear-gradient(135deg, #6366f1 0%, #a855f7 100%)",
+          background: "#7c3aed",
           borderRadius: "50%",
           display: "flex",
           alignItems: "center",
@@ -53,7 +53,7 @@ function Row({ n }: { n: number }) {
       >
         {n}
       </span>
-      <span className="text-gray-700">Item #{n}</span>
+      <span className="text-zinc-700">Item #{n}</span>
     </div>
   );
 }
@@ -104,7 +104,7 @@ function FeedDemo() {
         <div className={storyTheme.statLabel}>
           <strong className={storyTheme.statText}>Status:</strong>{" "}
           <span
-            className={loading ? "text-amber-600 font-bold" : "text-gray-500"}
+            className={loading ? "text-amber-600 font-bold" : "text-zinc-500"}
             data-testid="status"
           >
             {loading ? "loading…" : hasMore ? "idle" : "done"}
@@ -119,7 +119,7 @@ function FeedDemo() {
           height: "300px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
         }}
@@ -134,7 +134,7 @@ function FeedDemo() {
             data-testid="sentinel"
             style={{ padding: "16px", textAlign: "center", color: "#9ca3af" }}
           >
-            {loading ? "Loading more…" : "⬇️ Scroll to load more"}
+            {loading ? "Loading more…" : "Scroll to load more"}
           </div>
         ) : (
           <div
@@ -146,7 +146,7 @@ function FeedDemo() {
               fontWeight: 600,
             }}
           >
-            ✅ You're all caught up
+            You're all caught up
           </div>
         )}
       </div>
@@ -194,7 +194,7 @@ function PausableDemo() {
           onClick={() => setEnabled((e) => !e)}
           className={enabled ? storyTheme.buttonSuccess : storyTheme.buttonDanger}
         >
-          {enabled ? "✅ Auto-loading (click to pause)" : "⏸️ Paused (click to resume)"}
+          {enabled ? "Auto-loading (click to pause)" : "Paused (click to resume)"}
         </button>
       </div>
 
@@ -220,7 +220,7 @@ function PausableDemo() {
           height: "260px",
           overflowY: "auto",
           border: "1px solid #e2e8f0",
-          borderRadius: "1rem",
+          borderRadius: "6px",
           padding: "16px",
           background: "#f8fafc",
           opacity: enabled ? 1 : 0.6,
@@ -234,7 +234,7 @@ function PausableDemo() {
           data-testid="sentinel"
           style={{ padding: "16px", textAlign: "center", color: "#9ca3af" }}
         >
-          {loading ? "Loading more…" : enabled ? "⬇️ Scroll to load" : "Paused"}
+          {loading ? "Loading more…" : enabled ? "Scroll to load" : "Paused"}
         </div>
       </div>
     </div>

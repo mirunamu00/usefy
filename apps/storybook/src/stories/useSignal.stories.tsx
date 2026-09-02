@@ -34,9 +34,9 @@ function SignalDemo({
       </p>
 
       {/* Signal Value Display */}
-      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-3xl shadow-2xl text-center"}>
+      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08)] text-center"}>
         <div
-          className="text-8xl font-black text-white m-0 drop-shadow-sm"
+          className="text-8xl font-semibold text-white m-0"
           data-testid="signal-value"
         >
           {signal}
@@ -48,7 +48,7 @@ function SignalDemo({
       <div className="mb-8">
         <button
           onClick={emit}
-          className={storyTheme.buttonPrimary + " w-full py-4 text-lg shadow-lg hover:shadow-xl transition-all"}
+          className={storyTheme.buttonPrimary + " w-full py-4 text-lg shadow-sm hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-all"}
           data-testid="emit-button"
         >
           Emit Signal
@@ -56,8 +56,8 @@ function SignalDemo({
       </div>
 
       {/* Info Display */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-slate-800 mb-4">Signal Info</h3>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-4">Signal Info</h3>
         <div className="space-y-3 font-mono text-sm">
           <p>
             <span className={storyTheme.statLabel}>Name:</span>{" "}
@@ -92,17 +92,17 @@ function SignalDemo({
       </div>
 
       {/* Event Log */}
-      <div className={storyTheme.card + " bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
-        <h3 className="font-bold text-slate-400 uppercase tracking-wider mb-3 text-sm">Event Log</h3>
+      <div className={storyTheme.card + " bg-zinc-900 rounded-md p-6 shadow-sm border border-zinc-800"}>
+        <h3 className="font-bold text-zinc-400 mb-3 text-sm">Event Log</h3>
         <div
-          className="font-mono text-sm bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 min-h-[100px] text-slate-300"
+          className="font-mono text-sm bg-zinc-800/50 p-4 rounded-md border border-zinc-700/50 min-h-[100px] text-zinc-300"
           data-testid="event-log"
         >
           {logs.length === 0 ? (
-            <span className="text-slate-500 italic">No events yet</span>
+            <span className="text-zinc-500 italic">No events yet</span>
           ) : (
             logs.map((log, i) => (
-              <div key={i} className="text-indigo-400 border-b border-slate-700/50 last:border-0 py-1">
+              <div key={i} className="text-violet-400 border-b border-zinc-700/50 last:border-0 py-1">
                 {log}
               </div>
             ))
@@ -136,8 +136,8 @@ function MultiSubscriberDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-8 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>How it works:</strong>
           <br />
           All components subscribe to the same signal name. When the emitter
@@ -152,13 +152,13 @@ function SignalEmitter({ signalName }: { signalName: string }) {
   const { emit, info } = useSignal(signalName);
 
   return (
-    <div className={storyTheme.gradientBox + " p-8 rounded-2xl shadow-lg"}>
+    <div className={storyTheme.gradientBox + " p-8 rounded-md shadow-sm"}>
       <h3 className="text-white font-semibold text-center mb-4">
         Signal Emitter
       </h3>
       <button
         onClick={emit}
-        className="w-full py-3 bg-white text-indigo-600 font-bold rounded-xl hover:bg-indigo-50 transition-colors shadow-sm"
+        className="w-full py-3 bg-white text-violet-600 font-bold rounded-md hover:bg-violet-50 transition-colors shadow-sm"
         data-testid="multi-emit-button"
       >
         Emit to {info.subscriberCount} subscribers
@@ -185,22 +185,22 @@ function SignalSubscriber({
 
   return (
     <div
-      className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}
+      className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"}
       data-testid={`subscriber-${name.toLowerCase().replace(" ", "-")}`}
     >
-      <h4 className="font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">{name}</h4>
+      <h4 className="font-semibold text-zinc-800 mb-4 border-b border-zinc-100 pb-2">{name}</h4>
       <div className="flex justify-between items-center">
-        <span className="text-gray-600">Signal:</span>
+        <span className="text-zinc-600">Signal:</span>
         <span
-          className="text-2xl font-bold text-indigo-600"
+          className="text-2xl font-bold text-violet-600"
           data-testid={`signal-${name.toLowerCase().replace(" ", "-")}`}
         >
           {signal}
         </span>
       </div>
       <div className="flex justify-between items-center mt-2">
-        <span className="text-gray-600">Received:</span>
-        <span className="text-lg font-semibold text-green-600">{received}</span>
+        <span className="text-zinc-600">Received:</span>
+        <span className="text-lg font-semibold text-emerald-600">{received}</span>
       </div>
     </div>
   );
@@ -222,9 +222,9 @@ function OptionsDemo() {
       </p>
 
       {/* emitOnMount Option */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-slate-800 mb-3">emitOnMount Option</h3>
-        <p className="text-sm text-slate-600 mb-4">
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-3">emitOnMount Option</h3>
+        <p className="text-sm text-zinc-600 mb-4">
           Automatically emit when component mounts
         </p>
         <button
@@ -246,23 +246,23 @@ function OptionsDemo() {
       </div>
 
       {/* onEmit Callback */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-slate-800 mb-3">onEmit Callback</h3>
-        <p className="text-sm text-slate-600 mb-4">
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-3">onEmit Callback</h3>
+        <p className="text-sm text-zinc-600 mb-4">
           Execute callback when emit is called
         </p>
         <OnEmitCallbackComponent
           onLog={(msg) => setOnEmitCallback((prev) => [...prev.slice(-4), msg])}
         />
         <div
-          className="mt-4 font-mono text-sm bg-white p-3 rounded-lg border border-slate-200"
+          className="mt-4 font-mono text-sm bg-white p-3 rounded-lg border border-zinc-200"
           data-testid="callback-log"
         >
           {onEmitCallback.length === 0 ? (
-            <span className="text-slate-400 italic">No callbacks yet</span>
+            <span className="text-zinc-400 italic">No callbacks yet</span>
           ) : (
             onEmitCallback.map((log, i) => (
-              <div key={i} className="text-green-700">
+              <div key={i} className="text-emerald-700">
                 {log}
               </div>
             ))
@@ -271,9 +271,9 @@ function OptionsDemo() {
       </div>
 
       {/* debounce Option */}
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-slate-800 mb-3">debounce Option</h3>
-        <p className="text-sm text-slate-600 mb-4">
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-3">debounce Option</h3>
+        <p className="text-sm text-zinc-600 mb-4">
           Debounce rapid emit calls (500ms)
         </p>
         <button
@@ -302,13 +302,13 @@ function EmitOnMountComponent() {
 
   return (
     <div
-      className="p-4 bg-green-50 rounded-xl border border-green-200"
+      className="p-4 bg-emerald-50 rounded-md border border-emerald-200"
       data-testid="emit-on-mount-component"
     >
-      <p className="text-green-800">
+      <p className="text-emerald-800">
         Component mounted and emitted! Signal: <strong>{signal}</strong>
       </p>
-      <p className="text-sm text-green-600 mt-1">
+      <p className="text-sm text-emerald-600 mt-1">
         Emit count: {info.emitCount}
       </p>
     </div>
@@ -378,8 +378,8 @@ function IndependentSignalsDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-8 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>Note:</strong> Each signal name creates an independent
           channel. Emitting "alpha" doesn't affect "beta" and vice versa.
         </p>
@@ -401,16 +401,16 @@ function IndependentSignalCard({
 
   const colorClasses = {
     blue: {
-      bg: "bg-blue-50",
-      border: "border-blue-300",
-      button: "bg-blue-500 hover:bg-blue-600",
-      text: "text-blue-600",
+      bg: "bg-violet-50",
+      border: "border-violet-300",
+      button: "bg-violet-600 hover:bg-violet-700",
+      text: "text-violet-600",
     },
     green: {
-      bg: "bg-green-50",
-      border: "border-green-300",
-      button: "bg-green-500 hover:bg-green-600",
-      text: "text-green-600",
+      bg: "bg-emerald-50",
+      border: "border-emerald-300",
+      button: "bg-emerald-500 hover:bg-emerald-600",
+      text: "text-emerald-600",
     },
   };
 
@@ -418,10 +418,10 @@ function IndependentSignalCard({
 
   return (
     <div
-      className={`p-6 rounded-2xl border-2 ${classes.bg} ${classes.border} shadow-sm`}
+      className={`p-6 rounded-md border ${classes.bg} ${classes.border} shadow-sm`}
       data-testid={`independent-${signalName}`}
     >
-      <h3 className="font-semibold text-slate-800 mb-4 text-center">{name}</h3>
+      <h3 className="font-semibold text-zinc-800 mb-4 text-center">{name}</h3>
 
       <div
         className={`text-4xl font-bold text-center mb-4 ${classes.text}`}
@@ -432,13 +432,13 @@ function IndependentSignalCard({
 
       <button
         onClick={emit}
-        className={`w-full py-3 text-white font-bold rounded-xl ${classes.button} transition-colors shadow-sm`}
+        className={`w-full py-3 text-white font-bold rounded-md ${classes.button} transition-colors shadow-sm`}
         data-testid={`independent-emit-${signalName}`}
       >
         Emit "{signalName}"
       </button>
 
-      <p className="text-sm text-gray-500 mt-3 text-center">
+      <p className="text-sm text-zinc-500 mt-3 text-center">
         Subscribers: {info.subscriberCount}
       </p>
     </div>
@@ -476,7 +476,7 @@ function RefreshButton() {
   return (
     <button
       onClick={emit}
-      className={storyTheme.buttonPrimary + " w-full py-4 text-lg shadow-md"}
+      className={storyTheme.buttonPrimary + " w-full py-4 text-lg shadow-sm"}
       data-testid="refresh-dashboard"
     >
       Refresh Dashboard ({info.subscriberCount} widgets)
@@ -503,18 +503,18 @@ function DashboardWidget({ name }: { name: string }) {
 
   return (
     <div
-      className={`p-6 rounded-2xl border transition-all shadow-sm ${
+      className={`p-6 rounded-md border transition-all shadow-sm ${
         loading
-          ? "border-indigo-300 bg-indigo-50 ring-2 ring-indigo-100"
-          : "border-slate-200 bg-white"
+          ? "border-violet-300 bg-violet-50 ring-2 ring-violet-100"
+          : "border-zinc-200 bg-white"
       }`}
       data-testid={`widget-${name.toLowerCase().replace(" ", "-")}`}
     >
-      <h4 className="font-semibold text-slate-800 mb-3">{name}</h4>
+      <h4 className="font-semibold text-zinc-800 mb-3">{name}</h4>
       {loading ? (
-        <div className="text-indigo-600 animate-pulse">Loading...</div>
+        <div className="text-violet-600">Loading...</div>
       ) : (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-zinc-500">
           {lastRefresh ? `Last refresh: ${lastRefresh}` : "Not refreshed yet"}
         </div>
       )}
@@ -558,8 +558,8 @@ function EnabledOptionDemo() {
       </div>
 
       {/* Info */}
-      <div className={storyTheme.infoBox + " mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-8 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>Use case:</strong> Disable subscription when component is
           hidden or when you want to temporarily pause updates.
         </p>
@@ -579,18 +579,18 @@ function EnabledSubscriber({
 
   return (
     <div
-      className={`p-6 rounded-2xl border-2 ${
+      className={`p-6 rounded-md border ${
         enabled
-          ? "border-green-300 bg-green-50"
-          : "border-slate-300 bg-slate-100"
+          ? "border-emerald-300 bg-emerald-50"
+          : "border-zinc-300 bg-zinc-100"
       }`}
       data-testid={`enabled-${name.toLowerCase()}`}
     >
-      <h4 className="font-semibold text-slate-800 mb-3 text-center">{name}</h4>
+      <h4 className="font-semibold text-zinc-800 mb-3 text-center">{name}</h4>
       <div className="text-2xl font-bold text-center mb-2">
         Signal: {signal}
       </div>
-      <div className="text-sm text-center text-gray-500">
+      <div className="text-sm text-center text-zinc-500">
         {enabled ? "Subscribed" : "Not subscribed"}
       </div>
     </div>
@@ -603,7 +603,7 @@ function EnabledEmitter() {
   return (
     <button
       onClick={() => emit()}
-      className={storyTheme.buttonPrimary + " w-full py-3 shadow-md"}
+      className={storyTheme.buttonPrimary + " w-full py-3 shadow-sm"}
       data-testid="enabled-emit"
     >
       Emit Signal ({info.subscriberCount} subscribers)
@@ -640,8 +640,8 @@ function DataPayloadDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-8 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-8 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>How it works:</strong>
           <br />
           emit(data) sets info.data BEFORE incrementing the signal.
@@ -665,21 +665,21 @@ function NotificationEmitter() {
   };
 
   return (
-    <div className={storyTheme.gradientBox + " p-8 rounded-2xl shadow-lg"}>
+    <div className={storyTheme.gradientBox + " p-8 rounded-md shadow-sm"}>
       <h3 className="text-white font-semibold text-center mb-4">
         Send Notification
       </h3>
       <div className="grid grid-cols-2 gap-2">
         <button
           onClick={() => sendNotification("success", "Operation completed!")}
-          className="py-2 bg-green-500 text-white font-semibold rounded-lg hover:bg-green-600 transition-colors"
+          className="py-2 bg-emerald-500 text-white font-semibold rounded-lg hover:bg-emerald-600 transition-colors"
           data-testid="emit-success"
         >
           Success
         </button>
         <button
           onClick={() => sendNotification("warning", "Please review this.")}
-          className="py-2 bg-yellow-500 text-white font-semibold rounded-lg hover:bg-yellow-600 transition-colors"
+          className="py-2 bg-amber-500 text-white font-semibold rounded-lg hover:bg-amber-600 transition-colors"
           data-testid="emit-warning"
         >
           Warning
@@ -693,7 +693,7 @@ function NotificationEmitter() {
         </button>
         <button
           onClick={() => sendNotification("info", "New updates available.")}
-          className="py-2 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 transition-colors"
+          className="py-2 bg-violet-600 text-white font-semibold rounded-lg hover:bg-violet-700 transition-colors"
           data-testid="emit-info"
         >
           Info
@@ -717,18 +717,18 @@ function NotificationReceiver({ name }: { name: string }) {
   }, [signal, info]);
 
   const typeColors = {
-    success: "bg-green-100 border-green-300 text-green-800",
-    warning: "bg-yellow-100 border-yellow-300 text-yellow-800",
+    success: "bg-emerald-100 border-emerald-300 text-emerald-800",
+    warning: "bg-amber-100 border-amber-300 text-amber-800",
     error: "bg-red-100 border-red-300 text-red-800",
-    info: "bg-blue-100 border-blue-300 text-blue-800",
+    info: "bg-violet-100 border-violet-300 text-violet-800",
   };
 
   return (
-    <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"} data-testid={`receiver-${name.toLowerCase().replace(" ", "-")}`}>
-      <h4 className="font-semibold text-slate-800 mb-4 border-b border-slate-100 pb-2">{name}</h4>
+    <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"} data-testid={`receiver-${name.toLowerCase().replace(" ", "-")}`}>
+      <h4 className="font-semibold text-zinc-800 mb-4 border-b border-zinc-100 pb-2">{name}</h4>
       <div className="space-y-2 min-h-[120px]">
         {notifications.length === 0 ? (
-          <p className="text-slate-400 text-sm italic text-center py-8">Waiting for notifications...</p>
+          <p className="text-zinc-400 text-sm italic text-center py-8">Waiting for notifications...</p>
         ) : (
           notifications.map((notif, i) => (
             <div
@@ -744,7 +744,7 @@ function NotificationReceiver({ name }: { name: string }) {
           ))
         )}
       </div>
-      <div className="mt-3 text-xs text-gray-500">
+      <div className="mt-3 text-xs text-zinc-500">
         Signal: {signal} | Last data type:{" "}
         <span data-testid={`last-type-${name.toLowerCase().replace(" ", "-")}`}>
           {info.data?.type ?? "none"}
@@ -776,9 +776,9 @@ function TypedDataDemo() {
       </div>
 
       {/* Code Example */}
-      <div className={storyTheme.card + " mt-8 bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
-        <h4 className="font-bold text-slate-400 uppercase tracking-wider mb-3 text-sm">Usage Example</h4>
-        <pre className="text-xs font-mono bg-slate-800/50 p-4 rounded-xl border border-slate-700/50 overflow-x-auto text-slate-300">
+      <div className={storyTheme.card + " mt-8 bg-zinc-900 rounded-md p-6 shadow-sm border border-zinc-800"}>
+        <h4 className="font-bold text-zinc-400 mb-3 text-sm">Usage Example</h4>
+        <pre className="text-xs font-mono bg-zinc-800/50 p-4 rounded-md border border-zinc-700/50 overflow-x-auto text-zinc-300">
 {`interface CounterAction {
   action: "increment" | "decrement" | "reset";
   value?: number;
@@ -805,7 +805,7 @@ function CounterController() {
   const { emit, info } = useSignal<CounterAction>("counter-action");
 
   return (
-    <div className={storyTheme.gradientBox + " p-8 rounded-2xl shadow-lg h-full flex flex-col justify-center"}>
+    <div className={storyTheme.gradientBox + " p-8 rounded-md shadow-sm h-full flex flex-col justify-center"}>
       <h3 className="text-white font-semibold text-center mb-4">Controller</h3>
       <div className="space-y-2">
         <div className="flex gap-2">
@@ -882,10 +882,10 @@ function CounterDisplay() {
   }, [signal, info]);
 
   return (
-    <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200 h-full flex flex-col justify-center"}>
-      <h3 className="font-semibold text-slate-800 text-center mb-4">Display</h3>
+    <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-200 h-full flex flex-col justify-center"}>
+      <h3 className="font-semibold text-zinc-800 text-center mb-4">Display</h3>
       <div
-        className="text-6xl font-bold text-center text-indigo-600 mb-4"
+        className="text-6xl font-bold text-center text-violet-600 mb-4"
         data-testid="counter-value"
       >
         {count}
@@ -896,17 +896,17 @@ function CounterDisplay() {
             key={i}
             className={`px-2 py-1 text-xs rounded ${
               h.startsWith("+")
-                ? "bg-green-100 text-green-700"
+                ? "bg-emerald-100 text-emerald-700"
                 : h.startsWith("-")
                 ? "bg-red-100 text-red-700"
-                : "bg-gray-100 text-gray-700"
+                : "bg-zinc-100 text-zinc-700"
             }`}
           >
             {h}
           </span>
         ))}
       </div>
-      <div className="text-sm text-center text-gray-500">
+      <div className="text-sm text-center text-zinc-500">
         Signal version: {signal}
       </div>
     </div>
@@ -931,7 +931,7 @@ Returns \`{ signal, emit, info }\`. Put \`signal\` in a \`useEffect\` dependency
 - **\`info\` metadata** — \`name\`, \`subscriberCount\`, \`emitCount\`, \`timestamp\`, and \`data\` (read-on-access snapshots, not independently reactive — drive live UI from \`signal\`)
 - **Options** — \`emitOnMount\` (fire once on mount, StrictMode-safe), \`onEmit\` callback, \`enabled\` to conditionally subscribe, and \`debounce\` (ms) to coalesce rapid emits
 
-⚠️ **What this hook is NOT** — \`useSignal\` is not a global state manager. It's for lightweight event fan-out ("something happened"), not for holding shared state, derived values, or business logic. For that, reach for **React Context**, **Zustand**, **Jotai**, **Recoil**, or **Redux**. \`info.data\` carries event metadata (which item, which action), not application state.
+**What this hook is NOT** — \`useSignal\` is not a global state manager. It's for lightweight event fan-out ("something happened"), not for holding shared state, derived values, or business logic. For that, reach for **React Context**, **Zustand**, **Jotai**, **Recoil**, or **Redux**. \`info.data\` carries event metadata (which item, which action), not application state.
 
 ## Basic Usage
 \`\`\`tsx

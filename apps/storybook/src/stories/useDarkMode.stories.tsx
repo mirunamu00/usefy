@@ -20,12 +20,12 @@ function Demo() {
       <p className={storyTheme.subtitle}>System / light / dark, persisted and synced across tabs</p>
 
       <div
-        className={`p-8 rounded-xl shadow-xl mb-6 ${
-          isDark ? "bg-gray-900 text-gray-100" : "bg-white text-gray-900 border-2 border-gray-200"
+        className={`p-8 rounded-md shadow-[0_4px_12px_rgba(0,0,0,0.08)] mb-6 ${
+          isDark ? "bg-zinc-900 text-zinc-100" : "bg-white text-zinc-900 border border-zinc-200"
         }`}
         data-testid="preview"
       >
-        <p className="text-2xl font-bold m-0">{isDark ? "🌙 Dark" : "☀️ Light"}</p>
+        <p className="text-2xl font-bold m-0">{isDark ? "Dark" : "Light"}</p>
       </div>
 
       <div className={`${storyTheme.buttonGroup} justify-center mb-4`}>
@@ -75,7 +75,7 @@ const meta: Meta<typeof Demo> = {
 ## Basic Usage
 \`\`\`tsx
 const { isDark, toggle } = useDarkMode();
-<button onClick={toggle}>{isDark ? "🌙" : "☀️"}</button>;
+<button onClick={toggle}>{isDark ? "Dark" : "Light"}</button>;
 \`\`\``,
       },
     },
@@ -101,7 +101,7 @@ function ThemeToggle() {
 
   return (
     <div>
-      <button onClick={toggle}>{isDark ? "🌙" : "☀️"}</button>
+      <button onClick={toggle}>{isDark ? "Dark" : "Light"}</button>
       <select value={mode} onChange={(e) => setMode(e.target.value as any)}>
         <option value="system">System</option>
         <option value="light">Light</option>

@@ -20,10 +20,10 @@ function SingleKeyDemo() {
       </p>
 
       <div
-        className={`inline-flex items-center justify-center w-24 h-24 rounded-2xl text-4xl font-bold transition-all duration-150 ${
+        className={`inline-flex items-center justify-center w-24 h-24 rounded-md text-4xl font-bold transition-all duration-150 ${
           pressed
-            ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-xl scale-110"
-            : "bg-gray-100 text-gray-400 shadow"
+            ? "bg-violet-600 text-white shadow-[0_4px_12px_rgba(0,0,0,0.08)] scale-110"
+            : "bg-zinc-100 text-zinc-400 shadow"
         }`}
         data-testid="keycap"
       >
@@ -71,7 +71,7 @@ function CommandPaletteDemo() {
 
       {open && (
         <div
-          className="mt-6 p-4 bg-white rounded-xl border border-gray-200 shadow-xl text-left"
+          className="mt-6 p-4 bg-white rounded-md border border-zinc-200 shadow-[0_4px_12px_rgba(0,0,0,0.08)] text-left"
           data-testid="palette"
         >
           <input
@@ -83,7 +83,7 @@ function CommandPaletteDemo() {
             {["New File", "Open Settings", "Toggle Theme"].map((item) => (
               <li
                 key={item}
-                className="px-3 py-2 rounded-lg text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
+                className="px-3 py-2 rounded-lg text-zinc-700 hover:bg-violet-50 hover:text-violet-600"
               >
                 {item}
               </li>
@@ -138,10 +138,10 @@ function MovementDemo() {
   const right = useKeyPress("d", { matchBy: "code" });
 
   const keyClass = (active: boolean) =>
-    `inline-flex items-center justify-center w-14 h-14 rounded-lg text-lg font-bold uppercase transition-all duration-100 ${
+    `inline-flex items-center justify-center w-14 h-14 rounded-lg text-lg font-bold transition-all duration-100 ${
       active
-        ? "bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg scale-105"
-        : "bg-gray-100 text-gray-500"
+        ? "bg-emerald-500 text-white shadow-sm scale-105"
+        : "bg-zinc-100 text-zinc-500"
     }`;
 
   return (

@@ -29,7 +29,7 @@ function Dashboard({ idPrefix }: { idPrefix: string }) {
           className={storyTheme.buttonNeutral}
           aria-label="Notifications"
         >
-          🔔
+          Notifications
         </button>
       </div>
       <div style={{ display: "flex", gap: 12, marginBottom: 16 }}>
@@ -192,7 +192,7 @@ function App() {
         controllerRef={controller}
         steps={[
           // A centered welcome step — no target.
-          { title: "Welcome aboard! 👋", content: "Let's take a quick look around your new dashboard." },
+          { title: "Welcome aboard!", content: "Let's take a quick look around your new dashboard." },
           { target: "#search", title: "Search", content: "Find any project, deployment, or teammate from here." },
           { target: "#stats", title: "Your numbers", content: "Live counts of projects and deployments.", placement: "bottom" },
           // A gated step: Next stays disabled until the button is clicked.
@@ -239,7 +239,7 @@ export const AppOnboarding: Story = {
             controllerRef={controller}
             steps={[
               {
-                title: "Welcome aboard! 👋",
+                title: "Welcome aboard!",
                 content: "Let's take a quick look around your new dashboard.",
               },
               {
@@ -510,7 +510,7 @@ const RENDER_STEP_CODE = `import { SpotlightTour } from "@usefy/spotlight-tour";
   renderStep={({ step, index, count, controller, tooltipProps }) => (
     <section
       {...tooltipProps}
-      style={{ background: "#1e1b4b", color: "#e0e7ff", padding: 20,
+      style={{ background: "#1e1b4b", color: "#ede9fe", padding: 20,
                borderRadius: 14, maxWidth: 320, fontFamily: "system-ui" }}
     >
       <p style={{ margin: 0 }}>{step.content}</p>
@@ -565,7 +565,7 @@ export const CustomRenderStep: Story = {
                 data-testid="custom-step"
                 style={{
                   background: "#1e1b4b",
-                  color: "#e0e7ff",
+                  color: "#ede9fe",
                   padding: 20,
                   borderRadius: 14,
                   maxWidth: 320,
@@ -637,7 +637,7 @@ export const InteractionTest: Story = {
             controllerRef={controller}
             steps={[
               {
-                title: "Welcome aboard! 👋",
+                title: "Welcome aboard!",
                 content: "Let's take a quick look around your new dashboard.",
               },
               {
@@ -687,7 +687,7 @@ export const InteractionTest: Story = {
         // Step 1: centered welcome.
         const dialog = await body.findByRole("dialog");
         await expect(dialog).toHaveAttribute("aria-modal", "true");
-        await expect(body.getByText("Welcome aboard! 👋")).toBeVisible();
+        await expect(body.getByText("Welcome aboard!")).toBeVisible();
         await expect(body.getByText("1 / 5")).toBeVisible();
 
         // Click through the spotlighted steps.
@@ -715,7 +715,7 @@ export const InteractionTest: Story = {
 
     await step("Keyboard pass: ArrowRight / ArrowLeft / Escape", async () => {
       await userEvent.click(canvas.getByTestId("start-interaction"));
-      await body.findByText("Welcome aboard! 👋");
+      await body.findByText("Welcome aboard!");
 
       // ArrowRight advances through the non-gated leading steps…
       await userEvent.keyboard("{ArrowRight}");

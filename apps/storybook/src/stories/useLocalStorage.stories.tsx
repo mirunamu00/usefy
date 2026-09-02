@@ -28,11 +28,11 @@ function LocalStorageDemo({
       </p>
 
       {/* Current Value Display */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <label className={storyTheme.statLabel + " mb-2"}>Stored Value:</label>
         <div
           data-testid="stored-value"
-          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 text-slate-800"
+          className="text-lg font-mono bg-zinc-50 p-4 rounded-md border border-zinc-200 text-zinc-800"
         >
           {value}
         </div>
@@ -46,7 +46,7 @@ function LocalStorageDemo({
           value={inputValue}
           onChange={(e) => setInputValue(e.target.value)}
           placeholder="Enter new value..."
-          className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+          className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
           data-testid="value-input"
         />
       </div>
@@ -73,8 +73,8 @@ function LocalStorageDemo({
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           Storage Key: <code className="font-mono">{storageKey}</code>
         </p>
       </div>
@@ -109,10 +109,10 @@ function ObjectStorageDemo() {
       </p>
 
       {/* Settings Display */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-slate-800 mb-4">Current Settings:</h3>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-4">Current Settings:</h3>
         <pre
-          className="font-mono text-sm bg-slate-50 p-4 rounded-xl border border-slate-200 overflow-auto text-slate-700"
+          className="font-mono text-sm bg-zinc-50 p-4 rounded-md border border-zinc-200 overflow-auto text-zinc-700"
           data-testid="settings-display"
         >
           {JSON.stringify(settings, null, 2)}
@@ -210,9 +210,9 @@ function CounterDemo() {
       </p>
 
       {/* Counter Display */}
-      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-3xl shadow-2xl text-center"}>
+      <div className={storyTheme.gradientBox + " mb-8 p-10 rounded-lg shadow-[0_4px_12px_rgba(0,0,0,0.08)] text-center"}>
         <div
-          className="text-8xl font-black text-white m-0 drop-shadow-sm"
+          className="text-8xl font-semibold text-white m-0"
           data-testid="counter-value"
         >
           {count}
@@ -223,21 +223,21 @@ function CounterDemo() {
       <div className="flex gap-3 justify-center flex-wrap">
         <button
           onClick={() => setCount((c) => c - 1)}
-          className={storyTheme.buttonSecondary + " flex-1 py-3 rounded-xl font-bold"}
+          className={storyTheme.buttonSecondary + " flex-1 py-3 rounded-md font-bold"}
           data-testid="decrement"
         >
           - Decrement
         </button>
         <button
           onClick={() => setCount((c) => c + 1)}
-          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-xl font-bold shadow-lg"}
+          className={storyTheme.buttonPrimary + " flex-1 py-3 rounded-md font-bold shadow-sm"}
           data-testid="increment"
         >
           + Increment
         </button>
         <button
           onClick={resetCount}
-          className={storyTheme.buttonNeutral + " px-6 py-3 rounded-xl font-bold"}
+          className={storyTheme.buttonNeutral + " px-6 py-3 rounded-md font-bold"}
           data-testid="reset-counter"
         >
           Reset
@@ -274,7 +274,7 @@ function MultipleKeysDemo() {
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
             placeholder="John"
-            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+            className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
             data-testid="first-name-input"
           />
         </div>
@@ -285,7 +285,7 @@ function MultipleKeysDemo() {
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
             placeholder="Doe"
-            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+            className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
             data-testid="last-name-input"
           />
         </div>
@@ -296,15 +296,15 @@ function MultipleKeysDemo() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="john@example.com"
-            className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300 shadow-sm focus:ring-2 focus:ring-indigo-100 focus:border-indigo-500 transition-all"}
+            className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300 shadow-sm focus:ring-2 focus:ring-violet-100 focus:border-violet-500 transition-all"}
             data-testid="email-input"
           />
         </div>
       </div>
 
       {/* Summary Card */}
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-slate-800 mb-4">Saved Profile:</h3>
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-4">Saved Profile:</h3>
         <p data-testid="full-name">
           <span className={storyTheme.statLabel}>Name:</span>{" "}
           <span className={storyTheme.statValue}>{fullName}</span>
@@ -338,16 +338,16 @@ function CrossTabSyncDemo() {
       </p>
 
       {/* Message Display */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <label className={storyTheme.statLabel + " mb-2"}>Current Message:</label>
         <div
-          className="text-lg font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 min-h-[60px] text-slate-800"
+          className="text-lg font-mono bg-zinc-50 p-4 rounded-md border border-zinc-200 min-h-[60px] text-zinc-800"
           data-testid="sync-message"
         >
           {message || "(empty)"}
         </div>
         {lastUpdate && (
-          <p className="text-sm text-slate-500 mt-3 text-right italic">
+          <p className="text-sm text-zinc-500 mt-3 text-right italic">
             Last local update: {lastUpdate}
           </p>
         )}
@@ -371,8 +371,8 @@ function CrossTabSyncDemo() {
       </div>
 
       {/* Instructions */}
-      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>How to test:</strong>
           <br />
           1. Open this page in another browser tab
@@ -411,8 +411,8 @@ function ComponentSyncDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>How it works:</strong>
           <br />
           All three components use{" "}
@@ -441,30 +441,30 @@ function SyncedComponent({ name, color }: { name: string; color: string }) {
 
   const colorClasses = {
     blue: "bg-blue-500 hover:bg-blue-600 border-blue-600",
-    green: "bg-green-500 hover:bg-green-600 border-green-600",
-    purple: "bg-purple-500 hover:bg-purple-600 border-purple-600",
+    green: "bg-emerald-500 hover:bg-emerald-600 border-emerald-600",
+    purple: "bg-violet-600 hover:bg-violet-700 border-violet-600",
   };
 
   const borderColors = {
     blue: "border-blue-300",
-    green: "border-green-300",
-    purple: "border-purple-300",
+    green: "border-emerald-300",
+    purple: "border-violet-300",
   };
 
   const bgColors = {
     blue: "bg-blue-50",
-    green: "bg-green-50",
-    purple: "bg-purple-50",
+    green: "bg-emerald-50",
+    purple: "bg-violet-50",
   };
 
   return (
     <div
-      className={`p-8 rounded-2xl border-2 ${
+      className={`p-8 rounded-md border ${
         borderColors[color as keyof typeof borderColors]
       } ${bgColors[color as keyof typeof bgColors]}`}
       data-testid={`sync-component-${name.toLowerCase().replace(" ", "-")}`}
     >
-      <h3 className="font-semibold text-gray-800 mb-3 text-center">{name}</h3>
+      <h3 className="font-semibold text-zinc-800 mb-3 text-center">{name}</h3>
 
       {/* Count Display */}
       <div
@@ -505,7 +505,7 @@ function SyncedComponent({ name, color }: { name: string; color: string }) {
         </button>
         <button
           onClick={resetCount}
-          className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium transition-colors"
+          className="px-3 py-2 rounded-lg bg-zinc-200 hover:bg-zinc-300 text-zinc-700 font-medium transition-colors"
           data-testid={`sync-reset-${name.toLowerCase().replace(" ", "-")}`}
         >
           Reset
@@ -551,10 +551,10 @@ function ErrorHandlingDemo() {
       </p>
 
       {/* Current Value */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
         <label className={storyTheme.label}>Current Value:</label>
         <div
-          className="font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 truncate text-slate-800"
+          className="font-mono bg-zinc-50 p-4 rounded-md border border-zinc-200 truncate text-zinc-800"
           data-testid="error-demo-value"
         >
           {value.length > 100 ? `${value.slice(0, 100)}...` : value}
@@ -580,14 +580,14 @@ function ErrorHandlingDemo() {
       </div>
 
       {/* Error Log */}
-      <div className={storyTheme.card + " bg-slate-900 rounded-2xl p-6 shadow-lg border border-slate-800"}>
-        <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-3">🚨 Error Log:</h3>
+      <div className={storyTheme.card + " bg-zinc-900 rounded-md p-6 shadow-sm border border-zinc-800"}>
+        <h3 className="text-sm font-bold text-zinc-400 mb-3">Error Log:</h3>
         <div
-          className="font-mono text-sm bg-red-900/20 p-4 rounded-lg border-l-4 border-red-500 min-h-[100px] max-h-[200px] overflow-auto"
+          className="font-mono text-sm bg-red-950/40 p-4 rounded-md border border-red-900 min-h-[100px] max-h-[200px] overflow-auto"
           data-testid="error-log"
         >
           {errorLog.length === 0 ? (
-            <span className="text-slate-500 italic">No errors yet</span>
+            <span className="text-zinc-500 italic">No errors yet</span>
           ) : (
             errorLog.map((log, i) => (
               <div key={i} className="text-red-400">
@@ -647,18 +647,18 @@ function CustomSerializerDemo() {
       </p>
 
       {/* Date Storage Example */}
-      <div className={storyTheme.statBox + " mb-6 bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-gray-800 mb-4">
-          📅 Date Object Storage
+      <div className={storyTheme.statBox + " mb-6 bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-4">
+          Date Object Storage
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-zinc-600 mb-4">
           Stores Date objects as ISO strings and restores them as Date objects
         </p>
 
         <div className="mb-4">
           <label className={storyTheme.label}>Last Visit Date:</label>
           <div
-            className="font-mono bg-slate-50 p-4 rounded-xl border border-slate-200 mb-3"
+            className="font-mono bg-zinc-50 p-4 rounded-md border border-zinc-200 mb-3"
             data-testid="last-visit-display"
           >
             <div className="text-lg font-semibold mb-1">
@@ -668,10 +668,10 @@ function CustomSerializerDemo() {
                 day: "numeric",
               })}
             </div>
-            <div className="text-sm text-gray-500">
+            <div className="text-sm text-zinc-500">
               {lastVisit.toLocaleTimeString("en-US")}
             </div>
-            <div className="text-xs text-gray-400 mt-2">
+            <div className="text-xs text-zinc-400 mt-2">
               ISO String: {lastVisit.toISOString()}
             </div>
           </div>
@@ -687,11 +687,11 @@ function CustomSerializerDemo() {
       </div>
 
       {/* Custom Array Storage Example */}
-      <div className={storyTheme.statBox + " bg-white rounded-2xl p-6 shadow-sm border border-slate-200"}>
-        <h3 className="font-semibold text-gray-800 mb-4">
-          🎨 Custom Array Storage (Comma-separated)
+      <div className={storyTheme.statBox + " bg-white rounded-md p-6 shadow-sm border border-zinc-200"}>
+        <h3 className="font-semibold text-zinc-800 mb-4">
+          Custom Array Storage (Comma-separated)
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-zinc-600 mb-4">
           Stores arrays as comma-separated strings
         </p>
 
@@ -703,7 +703,7 @@ function CustomSerializerDemo() {
               value={colorInput}
               onChange={(e) => setColorInput(e.target.value)}
               placeholder="Enter color name..."
-              className={storyTheme.input + " w-full p-3 rounded-xl border border-slate-300"}
+              className={storyTheme.input + " w-full p-3 rounded-md border border-zinc-300"}
               data-testid="color-input"
               onKeyPress={(e) => {
                 if (e.key === "Enter") addColor();
@@ -719,21 +719,21 @@ function CustomSerializerDemo() {
           </div>
 
           <div
-            className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-slate-50 rounded-xl border border-slate-200"
+            className="flex flex-wrap gap-2 min-h-[60px] p-3 bg-zinc-50 rounded-md border border-zinc-200"
             data-testid="colors-list"
           >
             {favoriteColors.length === 0 ? (
-              <span className="text-gray-400 text-sm">No colors added yet</span>
+              <span className="text-zinc-400 text-sm">No colors added yet</span>
             ) : (
               favoriteColors.map((color, index) => (
                 <span
                   key={index}
-                  className="inline-flex items-center gap-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
+                  className="inline-flex items-center gap-2 px-3 py-1 bg-violet-50 text-violet-700 rounded text-sm"
                 >
                   {color}
                   <button
                     onClick={() => removeColor(index)}
-                    className="text-blue-600 hover:text-blue-800 font-bold"
+                    className="text-violet-600 hover:text-violet-800 font-semibold"
                     data-testid={`remove-color-${index}`}
                   >
                     ×
@@ -756,8 +756,8 @@ function CustomSerializerDemo() {
       </div>
 
       {/* Info Box */}
-      <div className={storyTheme.infoBox + " mt-6 bg-slate-50 border border-slate-200 rounded-2xl p-5"}>
-        <p className={storyTheme.infoText + " text-slate-600"}>
+      <div className={storyTheme.infoBox + " mt-6 bg-zinc-50 border border-zinc-200 rounded-md p-5"}>
+        <p className={storyTheme.infoText + " text-zinc-600"}>
           <strong>How it works:</strong>
           <br />• <code>serializer</code>: Function that converts values to
           strings when storing in localStorage
@@ -804,21 +804,20 @@ function SyncTabsOptionDemo() {
       {/* Comparison Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Sync Enabled */}
-        <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border-2 border-green-300"}>
+        <div className={storyTheme.card + " p-6"}>
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-2xl">✅</span>
-            <h3 className="font-semibold text-gray-800">
+            <h3 className="font-semibold text-zinc-800">
               syncTabs: true (default)
             </h3>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-zinc-600 mb-4">
             Automatically syncs when changed in other tabs
           </p>
 
           <div className="mb-4">
             <label className={storyTheme.label}>Value:</label>
             <div
-              className="font-mono bg-slate-50 p-3 rounded-lg border border-slate-200 text-lg"
+              className="font-mono bg-zinc-50 p-3 rounded-lg border border-zinc-200 text-lg"
               data-testid="synced-value"
             >
               {syncedValue}
@@ -851,19 +850,18 @@ function SyncTabsOptionDemo() {
         </div>
 
         {/* Sync Disabled */}
-        <div className={storyTheme.card + " bg-white rounded-2xl p-6 shadow-sm border-2 border-orange-300"}>
+        <div className={storyTheme.card + " p-6"}>
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-2xl">❌</span>
-            <h3 className="font-semibold text-gray-800">syncTabs: false</h3>
+            <h3 className="font-semibold text-zinc-800">syncTabs: false</h3>
           </div>
-          <p className="text-sm text-gray-600 mb-4">
+          <p className="text-sm text-zinc-600 mb-4">
             Changes from other tabs are not reflected
           </p>
 
           <div className="mb-4">
             <label className={storyTheme.label}>Value:</label>
             <div
-              className="font-mono bg-slate-50 p-3 rounded-lg border border-slate-200 text-lg"
+              className="font-mono bg-zinc-50 p-3 rounded-lg border border-zinc-200 text-lg"
               data-testid="non-synced-value"
             >
               {nonSyncedValue}

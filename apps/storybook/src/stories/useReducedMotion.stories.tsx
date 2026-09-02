@@ -23,7 +23,7 @@ function Demo() {
 
       <div className="flex justify-center my-8">
         <div
-          className="w-16 h-16 rounded-full border-[6px] border-indigo-500 border-t-transparent"
+          className="w-16 h-16 rounded-full border-[6px] border-violet-500 border-t-transparent"
           style={{ animation: reduced ? "none" : "usefy-spin 0.9s linear infinite" }}
           data-testid="spinner"
         />
@@ -64,7 +64,7 @@ function Demo() {
           <span className={storyTheme.statValue} data-testid="flag">{String(reduced)}</span>{" "}
           — {reduced ? "animation disabled" : "animation running"}
         </p>
-        <p className="text-gray-500 text-sm mt-2">
+        <p className="text-zinc-500 text-sm mt-2">
           The buttons simulate the setting for this demo. In a real app the value
           comes from the OS — change it via DevTools → Rendering → “Emulate CSS
           prefers-reduced-motion”, or your OS accessibility settings.

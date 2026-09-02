@@ -30,7 +30,7 @@ function Demo() {
 
       {opened && (
         <div className={`${storyTheme.cardInfo} mb-5`} role="dialog" data-testid="dialog">
-          <p className="font-semibold mb-3">🪟 Dialog is open</p>
+          <p className="font-semibold mb-3">Dialog is open</p>
           <button className={storyTheme.buttonNeutral} data-testid="close" onClick={close}>
             Close
           </button>

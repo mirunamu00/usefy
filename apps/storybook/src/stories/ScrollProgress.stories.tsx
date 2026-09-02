@@ -52,7 +52,7 @@ const meta: Meta<typeof ScrollProgress> = {
 - **\`position\`** — pin the bar to the \`"top"\` (default) or \`"bottom"\` edge
 - **\`color\` / \`height\` / \`zIndex\`** — restyle the bar without CSS
 - **\`target\`** — pass a ref to measure a scrollable container instead of the window
-- **\`throttleMs\`** — forwarded to \`useScrollPosition\` (default \`0\` — every scroll event; the fill is a GPU-composited transform, so it stays cheap)
+- **\`throttleMs\`** — forwarded to \`useScrollPosition\` (default \`0\` — every scroll event; the fill is a GPU-composited, so it stays cheap)
 - **\`render\`** — escape hatch receiving the current progress (0–1) to fully own the UI
 - **Accessible** — \`role="progressbar"\` with \`aria-valuenow/min/max\` and an overridable \`aria-label\`; \`pointer-events: none\`
 - **SSR-safe** — no \`window\` access at render; servers render the bar at 0
@@ -265,7 +265,7 @@ function Article() {
   return (
     <>
       {/* Measures the container's scroll, not the window's */}
-      <ScrollProgress target={ref} color="#8b5cf6" />
+      <ScrollProgress target={ref} color="#7c3aed" />
       <div ref={ref} style={{ height: 320, overflowY: "auto" }}>
         <LongContent />
       </div>
@@ -278,7 +278,7 @@ function ContainerTargetDemo() {
 
   return (
     <div className={storyTheme.container}>
-      <ScrollProgress target={ref} color="#8b5cf6" height={4} />
+      <ScrollProgress target={ref} color="#7c3aed" height={4} />
       <h2 className={storyTheme.title}>Container target</h2>
       <p className={storyTheme.subtitle}>
         The purple bar at the top of the viewport tracks the scrollable box
@@ -368,7 +368,7 @@ function RenderPropDemo() {
               borderRadius: 999,
               color: "#fff",
               background: "#334155",
-              boxShadow: "0 8px 24px rgba(0,0,0,0.25)",
+              boxShadow: "0 1px 2px rgba(0, 0, 0, 0.05)",
               fontVariantNumeric: "tabular-nums",
             }}
           >

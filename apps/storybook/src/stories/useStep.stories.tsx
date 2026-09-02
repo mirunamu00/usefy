@@ -10,7 +10,7 @@ const STEPS = [
   { title: "정보 입력", body: "Enter your details" },
   { title: "확인", body: "Review your order" },
   { title: "결제", body: "Complete payment" },
-  { title: "완료", body: "All done! 🎉" },
+  { title: "완료", body: "All done!" },
 ];
 
 /**
@@ -32,12 +32,12 @@ function WizardDemo() {
         {STEPS.map((s, i) => (
           <li
             key={s.title}
-            className={`flex-1 text-center px-2 py-2 rounded-lg text-sm border-2 ${
+            className={`flex-1 text-center px-2 py-2 rounded-lg text-sm border ${
               i === step
-                ? "border-indigo-500 bg-indigo-50 text-indigo-700 font-semibold"
+                ? "border-violet-500 bg-violet-50 text-violet-700 font-semibold"
                 : i < step
-                  ? "border-green-400 bg-green-50 text-green-700"
-                  : "border-gray-200 bg-white text-gray-400"
+                  ? "border-emerald-400 bg-emerald-50 text-emerald-700"
+                  : "border-zinc-200 bg-white text-zinc-400"
             }`}
             data-testid={`indicator-${i}`}
           >
@@ -48,9 +48,9 @@ function WizardDemo() {
       </ol>
 
       <div className={`${storyTheme.card} mb-6`} data-testid="panel">
-        <p className="text-lg font-medium text-gray-800">{STEPS[step].title}</p>
-        <p className="text-gray-500">{STEPS[step].body}</p>
-        <p className="mt-2 text-sm text-gray-400" data-testid="progress">
+        <p className="text-lg font-medium text-zinc-800">{STEPS[step].title}</p>
+        <p className="text-zinc-500">{STEPS[step].body}</p>
+        <p className="mt-2 text-sm text-zinc-400" data-testid="progress">
           Step {step + 1} of {STEPS.length}
         </p>
       </div>
@@ -88,7 +88,7 @@ function WizardDemo() {
  * A carousel-style demo driven by `setStep` (jump to any dot).
  */
 function CarouselDemo() {
-  const slides = ["🏔️", "🌊", "🏜️", "🌆", "🌲"];
+  const slides = ["Mountains", "Ocean", "Desert", "City", "Forest"];
   const [index, { setStep, canGoToNextStep, goToNextStep }] = useStep(
     slides.length
   );
@@ -101,7 +101,7 @@ function CarouselDemo() {
       </p>
 
       <div
-        className={`${storyTheme.gradientBox} text-center text-7xl mb-4`}
+        className={`${storyTheme.panel} text-center text-4xl font-semibold tracking-tight mb-4`}
         data-testid="slide"
       >
         {slides[index]}
@@ -113,7 +113,7 @@ function CarouselDemo() {
             key={i}
             onClick={() => setStep(i)}
             className={`w-3 h-3 rounded-full transition-colors ${
-              i === index ? "bg-indigo-600" : "bg-gray-300 hover:bg-gray-400"
+              i === index ? "bg-violet-600" : "bg-zinc-300 hover:bg-zinc-400"
             }`}
             data-testid={`dot-${i}`}
             aria-label={`Go to slide ${i + 1}`}
@@ -255,18 +255,18 @@ function Carousel({ slides }) {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
 
-    await expect(canvas.getByTestId("slide")).toHaveTextContent("🏔️");
+    await expect(canvas.getByTestId("slide")).toHaveTextContent("Mountains");
 
     // Jump directly to the 4th slide via its dot.
     await userEvent.click(canvas.getByTestId("dot-3"));
     await waitFor(() => {
-      expect(canvas.getByTestId("slide")).toHaveTextContent("🌆");
+      expect(canvas.getByTestId("slide")).toHaveTextContent("City");
     });
 
     // Advance once more.
     await userEvent.click(canvas.getByTestId("next-slide"));
     await waitFor(() => {
-      expect(canvas.getByTestId("slide")).toHaveTextContent("🌲");
+      expect(canvas.getByTestId("slide")).toHaveTextContent("Forest");
       expect(canvas.getByTestId("next-slide")).toBeDisabled();
     });
   },

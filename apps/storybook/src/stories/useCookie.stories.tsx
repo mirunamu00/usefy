@@ -30,7 +30,7 @@ function CookieDemo({
         <label className={storyTheme.statLabel}>Cookie value:</label>
         <div
           data-testid="cookie-value"
-          className="text-lg font-mono bg-white p-4 rounded-xl border border-slate-200 text-slate-800"
+          className="text-lg font-mono bg-white p-4 rounded-md border border-zinc-200 text-zinc-800"
         >
           {value ?? "(none)"}
         </div>
@@ -71,12 +71,12 @@ function CookieDemo({
       <div className={storyTheme.card}>
         <label className={storyTheme.statLabel}>Raw document.cookie:</label>
         <pre
-          className="font-mono text-xs bg-white p-3 rounded-lg border border-slate-200 overflow-auto text-slate-600 whitespace-pre-wrap break-all"
+          className="font-mono text-xs bg-white p-3 rounded-lg border border-zinc-200 overflow-auto text-zinc-600 whitespace-pre-wrap break-all"
           data-testid="raw-cookie"
         >
           {typeof document !== "undefined" ? document.cookie || "(empty)" : ""}
         </pre>
-        <p className={storyTheme.infoText + " mt-3 text-slate-500"}>
+        <p className={storyTheme.infoText + " mt-3 text-zinc-500"}>
           Cookie key: <code className="font-mono">{cookieKey}</code>
         </p>
       </div>
@@ -109,7 +109,7 @@ function ObjectCookieDemo() {
 
       <div className={storyTheme.statBox + " mb-6"}>
         <pre
-          className="font-mono text-sm bg-white p-4 rounded-xl border border-slate-200 overflow-auto text-slate-700"
+          className="font-mono text-sm bg-white p-4 rounded-md border border-zinc-200 overflow-auto text-zinc-700"
           data-testid="prefs-display"
         >
           {JSON.stringify(current, null, 2)}
@@ -203,7 +203,7 @@ function SyncPanel({ name }: { name: string }) {
 
   return (
     <div className={storyTheme.card} data-testid={`panel-${name}`}>
-      <h3 className="font-semibold text-gray-800 mb-3 text-center">
+      <h3 className="font-semibold text-zinc-800 mb-3 text-center">
         Panel {name}
       </h3>
       <div

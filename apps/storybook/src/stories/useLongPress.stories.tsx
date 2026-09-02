@@ -63,15 +63,15 @@ function PressAndHoldDemo() {
       </p>
 
       <div className="mb-4 flex items-center justify-between">
-        <span className="text-sm font-semibold text-gray-600">Status</span>
+        <span className="text-sm font-semibold text-zinc-600">Status</span>
         <span
           data-testid="status"
           className={`rounded-full px-3 py-1 text-xs font-semibold ${
             fired
-              ? "bg-green-500 text-white"
+              ? "bg-emerald-500 text-white"
               : status === "pressing"
-                ? "bg-indigo-500 text-white"
-                : "bg-gray-100 text-gray-500"
+                ? "bg-violet-600 text-white"
+                : "bg-zinc-100 text-zinc-500"
           }`}
         >
           {fired ? "fired" : status === "pressing" ? "holding…" : "idle"}
@@ -85,13 +85,13 @@ function PressAndHoldDemo() {
         style={{ touchAction: "none" }}
         {...bind}
       >
-        {fired ? "Fired! 🎉" : "Press and hold"}
+        {fired ? "Fired!" : "Press and hold"}
       </button>
 
-      <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-gray-200">
+      <div className="mt-4 h-3 w-full overflow-hidden rounded-full bg-zinc-200">
         <div
           data-testid="progress"
-          className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-purple-600"
+          className="h-full rounded-full bg-violet-600"
           style={{ width: `${progress}%` }}
         />
       </div>
@@ -108,10 +108,10 @@ function CancellationDemo() {
   const [log, setLog] = useState<string[]>([]);
   const push = (entry: string) => setLog((l) => [entry, ...l].slice(0, 5));
 
-  const bind = useLongPress<HTMLButtonElement>(() => push("fired ✅"), {
+  const bind = useLongPress<HTMLButtonElement>(() => push("fired"), {
     threshold: 500,
     moveThreshold: 10,
-    onCancel: (_event, { reason }) => push(`cancelled: ${reason} ✋`),
+    onCancel: (_event, { reason }) => push(`cancelled: ${reason}`),
   });
 
   return (
@@ -134,7 +134,7 @@ function CancellationDemo() {
 
       <div className={`${storyTheme.card} mt-4`}>
         <div className={storyTheme.statLabel}>Outcome log</div>
-        <div data-testid="log" className="font-mono text-sm text-gray-700">
+        <div data-testid="log" className="font-mono text-sm text-zinc-700">
           {log.length === 0 ? "—" : log.join("  ·  ")}
         </div>
       </div>

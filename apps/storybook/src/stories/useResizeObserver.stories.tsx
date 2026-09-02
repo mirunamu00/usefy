@@ -24,28 +24,28 @@ function BasicUsageDemo() {
       <div
         ref={ref}
         data-testid="resize-target"
-        className="relative bg-gradient-to-br from-indigo-100 to-purple-100 rounded-xl border-2 border-indigo-300 p-6 min-h-[150px] overflow-auto resize"
+        className="relative bg-violet-100 rounded-md border border-violet-300 p-6 min-h-[150px] overflow-auto resize"
         style={{ resize: "both" }}
       >
         <div className="text-center">
-          <p className="text-3xl font-bold text-indigo-600 mb-2">
+          <p className="text-3xl font-bold text-violet-600 mb-2">
             <span data-testid="width">{width ?? "-"}</span> x{" "}
             <span data-testid="height">{height ?? "-"}</span>
           </p>
-          <p className="text-gray-500 text-sm">pixels</p>
+          <p className="text-zinc-500 text-sm">pixels</p>
         </div>
       </div>
 
       <div className={storyTheme.statBox + " mt-4"}>
         <p className="text-sm">
           <span className="font-semibold">Supported:</span>{" "}
-          <span data-testid="supported" className="text-indigo-600">
+          <span data-testid="supported" className="text-violet-600">
             {isSupported ? "Yes" : "No"}
           </span>
         </p>
         <p className="text-sm mt-1">
           <span className="font-semibold">Observing:</span>{" "}
-          <span data-testid="observing" className="text-indigo-600">
+          <span data-testid="observing" className="text-violet-600">
             {isObserving ? "Yes" : "No"}
           </span>
         </p>
@@ -96,7 +96,7 @@ function BoxOptionsDemo() {
       <div
         ref={ref}
         data-testid="box-target"
-        className="bg-gradient-to-br from-pink-100 to-rose-100 rounded-xl border-4 border-pink-300 p-8 resize overflow-auto"
+        className="bg-pink-100 rounded-md border-2 border-pink-300 p-8 resize overflow-auto"
         style={{ resize: "both", minHeight: "150px" }}
       >
         <div className="text-center">
@@ -104,21 +104,21 @@ function BoxOptionsDemo() {
             <span data-testid="box-width">{width ?? "-"}</span> x{" "}
             <span data-testid="box-height">{height ?? "-"}</span>
           </p>
-          <p className="text-gray-500 text-sm">({boxOption})</p>
+          <p className="text-zinc-500 text-sm">({boxOption})</p>
         </div>
       </div>
 
       <div className={storyTheme.statBox + " mt-4 grid grid-cols-2 gap-4"}>
         <div>
-          <p className="font-semibold text-sm text-gray-600">Content Box</p>
-          <p className="text-indigo-600" data-testid="content-size">
+          <p className="font-semibold text-sm text-zinc-600">Content Box</p>
+          <p className="text-violet-600" data-testid="content-size">
             {contentBoxSize
               ? `${Math.round(contentBoxSize.inlineSize)} x ${Math.round(contentBoxSize.blockSize)}`
               : "-"}
           </p>
         </div>
         <div>
-          <p className="font-semibold text-sm text-gray-600">Border Box</p>
+          <p className="font-semibold text-sm text-zinc-600">Border Box</p>
           <p className="text-pink-600" data-testid="border-size">
             {borderBoxSize
               ? `${Math.round(borderBoxSize.inlineSize)} x ${Math.round(borderBoxSize.blockSize)}`
@@ -191,7 +191,7 @@ function DebounceDemo() {
           }
         }}
         data-testid="debounce-target"
-        className="bg-gradient-to-br from-amber-100 to-yellow-100 rounded-xl border-2 border-amber-300 p-6 resize overflow-auto"
+        className="bg-amber-100 rounded-md border border-amber-300 p-6 resize overflow-auto"
         style={{ resize: "both", minHeight: "150px" }}
       >
         <div className="text-center">
@@ -203,16 +203,16 @@ function DebounceDemo() {
 
       <div className={storyTheme.statBox + " mt-4 grid grid-cols-2 gap-4"}>
         <div>
-          <p className="font-semibold text-sm text-gray-600">Raw Events</p>
+          <p className="font-semibold text-sm text-zinc-600">Raw Events</p>
           <p className="text-red-600 text-xl" data-testid="raw-count">
             {resizeCount}
           </p>
         </div>
         <div>
-          <p className="font-semibold text-sm text-gray-600">
+          <p className="font-semibold text-sm text-zinc-600">
             Debounced Callbacks
           </p>
-          <p className="text-green-600 text-xl" data-testid="debounced-count">
+          <p className="text-emerald-600 text-xl" data-testid="debounced-count">
             {callbackCount}
           </p>
         </div>
@@ -257,10 +257,10 @@ function CallbackModeDemo() {
       <div
         ref={ref}
         data-testid="callback-target"
-        className="bg-gradient-to-br from-green-100 to-emerald-100 rounded-xl border-2 border-green-300 p-6 resize overflow-auto"
+        className="bg-emerald-100 rounded-md border border-emerald-300 p-6 resize overflow-auto"
         style={{ resize: "both", minHeight: "150px" }}
       >
-        <p className="text-center text-green-600 font-semibold">
+        <p className="text-center text-emerald-600 font-semibold">
           Resize me - check the log below
         </p>
       </div>
@@ -269,15 +269,15 @@ function CallbackModeDemo() {
         ref={logRef}
         className={storyTheme.statBox + " mt-4 h-[200px] overflow-y-auto"}
       >
-        <p className="font-semibold text-sm text-gray-600 mb-2">Resize Log:</p>
+        <p className="font-semibold text-sm text-zinc-600 mb-2">Resize Log:</p>
         {logs.length === 0 ? (
-          <p className="text-gray-400 text-sm" data-testid="no-logs">
+          <p className="text-zinc-400 text-sm" data-testid="no-logs">
             No resize events yet
           </p>
         ) : (
           <ul className="text-sm space-y-1">
             {logs.map((log, i) => (
-              <li key={i} className="text-gray-600" data-testid="log-entry">
+              <li key={i} className="text-zinc-600" data-testid="log-entry">
                 {log}
               </li>
             ))}
@@ -323,7 +323,7 @@ function ResponsiveLayoutDemo() {
       <div
         ref={ref}
         data-testid="responsive-target"
-        className="bg-gradient-to-br from-cyan-100 to-blue-100 rounded-xl border-2 border-cyan-300 p-4 resize overflow-auto"
+        className="bg-cyan-100 rounded-md border border-cyan-300 p-4 resize overflow-auto"
         style={{ resize: "horizontal", minHeight: "250px", minWidth: "150px" }}
       >
         <div className="mb-4 text-center">
@@ -331,15 +331,15 @@ function ResponsiveLayoutDemo() {
             data-testid="layout-type"
             className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${
               layoutType === "Desktop"
-                ? "bg-green-200 text-green-800"
+                ? "bg-emerald-200 text-emerald-800"
                 : layoutType === "Tablet"
-                  ? "bg-yellow-200 text-yellow-800"
+                  ? "bg-amber-100 text-amber-800"
                   : "bg-red-200 text-red-800"
             }`}
           >
             {layoutType}
           </span>
-          <p className="text-gray-500 text-sm mt-1">
+          <p className="text-zinc-500 text-sm mt-1">
             Width: <span data-testid="responsive-width">{width ?? "-"}</span>px
             | Columns: <span data-testid="columns">{columns}</span>
           </p>
@@ -355,7 +355,7 @@ function ResponsiveLayoutDemo() {
               className="bg-white rounded-lg p-3 shadow-sm text-center"
             >
               <div className="w-8 h-8 bg-cyan-200 rounded-full mx-auto mb-2" />
-              <p className="text-xs text-gray-600">Item {i + 1}</p>
+              <p className="text-xs text-zinc-600">Item {i + 1}</p>
             </div>
           ))}
         </div>
@@ -414,16 +414,16 @@ function ManualControlDemo() {
       <div
         ref={handleRef}
         data-testid="manual-target"
-        className={`rounded-xl border-2 p-6 resize overflow-auto transition-colors ${
+        className={`rounded-md border p-6 resize overflow-auto transition-colors ${
           isObserving
-            ? "bg-gradient-to-br from-green-100 to-emerald-100 border-green-300"
-            : "bg-gradient-to-br from-gray-100 to-gray-200 border-gray-300"
+            ? "bg-emerald-100 border-emerald-300"
+            : "bg-zinc-100 border-zinc-300"
         }`}
         style={{ resize: "both", minHeight: "150px" }}
       >
         <div className="text-center">
           <p
-            className={`text-2xl font-bold ${isObserving ? "text-green-600" : "text-gray-400"}`}
+            className={`text-2xl font-bold ${isObserving ? "text-emerald-600" : "text-zinc-400"}`}
           >
             {width ?? "-"} x {height ?? "-"}
           </p>
@@ -431,7 +431,7 @@ function ManualControlDemo() {
             Status:{" "}
             <span
               data-testid="manual-status"
-              className={`font-semibold ${isObserving ? "text-green-600" : "text-red-600"}`}
+              className={`font-semibold ${isObserving ? "text-emerald-600" : "text-red-600"}`}
             >
               {isObserving ? "Observing" : "Not Observing"}
             </span>
@@ -471,16 +471,16 @@ function EnableDisableDemo() {
       <div
         ref={ref}
         data-testid="enable-target"
-        className={`rounded-xl border-2 p-6 resize overflow-auto transition-all ${
+        className={`rounded-md border p-6 resize overflow-auto transition-all ${
           enabled
-            ? "bg-gradient-to-br from-violet-100 to-purple-100 border-violet-300"
-            : "bg-gray-100 border-gray-300 opacity-50"
+            ? "bg-violet-100 border-violet-300"
+            : "bg-zinc-100 border-zinc-300 opacity-50"
         }`}
         style={{ resize: "both", minHeight: "150px" }}
       >
         <div className="text-center">
           <p
-            className={`text-2xl font-bold ${enabled ? "text-violet-600" : "text-gray-400"}`}
+            className={`text-2xl font-bold ${enabled ? "text-violet-600" : "text-zinc-400"}`}
           >
             {width ?? "-"} x {height ?? "-"}
           </p>
@@ -489,7 +489,7 @@ function EnableDisableDemo() {
               data-testid="enabled-status"
               className={`px-2 py-1 rounded-full text-xs font-semibold ${
                 enabled
-                  ? "bg-green-200 text-green-800"
+                  ? "bg-emerald-200 text-emerald-800"
                   : "bg-red-200 text-red-800"
               }`}
             >
@@ -555,7 +555,7 @@ function CustomRoundingDemo() {
       <div
         ref={ref}
         data-testid="round-target"
-        className="bg-gradient-to-br from-orange-100 to-red-100 rounded-xl border-2 border-orange-300 p-6 resize overflow-auto"
+        className="bg-orange-100 rounded-md border border-orange-300 p-6 resize overflow-auto"
         style={{ resize: "both", minHeight: "150px" }}
       >
         <div className="text-center">
@@ -563,7 +563,7 @@ function CustomRoundingDemo() {
             <span data-testid="round-width">{width ?? "-"}</span> x{" "}
             <span data-testid="round-height">{height ?? "-"}</span>
           </p>
-          <p className="text-gray-500 text-sm mt-2">
+          <p className="text-zinc-500 text-sm mt-2">
             Rounding: <span className="font-semibold">{roundMode}</span>
           </p>
         </div>
@@ -604,12 +604,12 @@ function MultipleElementsDemo() {
             data-id={id}
             data-testid={`multi-${id}`}
             ref={hook.ref}
-            className="bg-gradient-to-br from-teal-100 to-cyan-100 rounded-xl border-2 border-teal-300 p-4 resize overflow-auto"
+            className="bg-teal-100 rounded-md border border-teal-300 p-4 resize overflow-auto"
             style={{ resize: "both", minHeight: "100px" }}
           >
             <div className="text-center">
               <p className="font-bold text-teal-600 text-lg">{id}</p>
-              <p className="text-sm text-gray-600" data-testid={`size-${id}`}>
+              <p className="text-sm text-zinc-600" data-testid={`size-${id}`}>
                 {hook.width !== undefined && hook.height !== undefined
                   ? `${hook.width} x ${hook.height}`
                   : "- x -"}
@@ -638,7 +638,7 @@ function MultipleElementsDemo() {
         </button>
       </div>
 
-      <p className={`text-center mt-2 text-sm ${isEnabled ? "text-green-600" : "text-red-600"}`}>
+      <p className={`text-center mt-2 text-sm ${isEnabled ? "text-emerald-600" : "text-red-600"}`}>
         Status: {isEnabled ? "Observing" : "Disconnected"}
       </p>
     </div>
@@ -688,7 +688,7 @@ function InitialDimensionsDemo() {
           >
             Mount Element
           </button>
-          <p className="text-gray-500 text-sm mt-2">
+          <p className="text-zinc-500 text-sm mt-2">
             Values above are initial (SSR) values
           </p>
         </div>
@@ -696,14 +696,14 @@ function InitialDimensionsDemo() {
         <div
           ref={ref}
           data-testid="initial-target"
-          className="bg-gradient-to-br from-slate-100 to-gray-100 rounded-xl border-2 border-slate-300 p-6 resize overflow-auto"
+          className="bg-zinc-100 rounded-md border border-zinc-300 p-6 resize overflow-auto"
           style={{ resize: "both", minHeight: "150px" }}
         >
           <div className="text-center">
-            <p className="text-2xl font-bold text-slate-600">
+            <p className="text-2xl font-bold text-zinc-600">
               {width ?? "-"} x {height ?? "-"}
             </p>
-            <p className="text-gray-500 text-sm mt-2">Actual dimensions</p>
+            <p className="text-zinc-500 text-sm mt-2">Actual dimensions</p>
           </div>
         </div>
       )}
@@ -817,7 +817,7 @@ export const BoxOptions: Story = {
     // Verify UI updated (button should show selected state)
     await waitFor(() => {
       const borderBoxBtn = canvas.getByTestId("box-option-border-box");
-      expect(borderBoxBtn.className).toContain("from-indigo");
+      expect(borderBoxBtn.className).toContain("bg-violet-600");
     });
   },
 };

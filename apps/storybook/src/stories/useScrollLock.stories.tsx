@@ -9,10 +9,10 @@ import { storyTheme } from "../styles/storyTheme";
 /** Tall filler content that sits "behind" the overlay so the scroll lock is visible. */
 function PageBackdrop() {
   return (
-    <div className="mb-6 h-40 overflow-auto rounded-xl border-2 border-gray-200 shadow-inner">
-      <div className="bg-gradient-to-b from-white to-indigo-50 p-4">
+    <div className="mb-6 h-40 overflow-auto rounded-md border border-zinc-200 shadow-inner">
+      <div className="bg-white p-4">
         {Array.from({ length: 30 }, (_, i) => (
-          <p key={i} className="py-1 text-sm text-gray-500">
+          <p key={i} className="py-1 text-sm text-zinc-500">
             Background line {i + 1} — scroll me while the overlay is closed.
           </p>
         ))}
@@ -77,12 +77,12 @@ function ModalScrollLockDemo() {
           <div
             role="dialog"
             aria-modal="true"
-            className="w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl"
+            className="w-full max-w-sm rounded-md bg-white p-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
           >
-            <h3 className="mb-2 text-lg font-semibold text-gray-800">
+            <h3 className="mb-2 text-lg font-semibold text-zinc-800">
               Scroll is locked
             </h3>
-            <p className="mb-5 text-sm text-gray-500">
+            <p className="mb-5 text-sm text-zinc-500">
               Try to scroll the page behind this dialog — it won't move.
             </p>
             <button
@@ -139,10 +139,10 @@ function DrawerScrollLockDemo() {
       {open && (
         <aside
           data-testid="drawer"
-          className="fixed inset-y-0 right-0 z-50 w-72 bg-white p-6 shadow-2xl"
+          className="fixed inset-y-0 right-0 z-50 w-72 bg-white p-6 shadow-[0_4px_12px_rgba(0,0,0,0.08)]"
         >
-          <h3 className="mb-2 text-lg font-semibold text-gray-800">Drawer</h3>
-          <p className="text-sm text-gray-500">
+          <h3 className="mb-2 text-lg font-semibold text-zinc-800">Drawer</h3>
+          <p className="text-sm text-zinc-500">
             The page scroll stays locked as long as this drawer is open.
           </p>
         </aside>

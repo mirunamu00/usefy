@@ -35,10 +35,10 @@ function MultiSelectDemo() {
         {ITEMS.map((item) => (
           <li key={item.id}>
             <label
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg border-2 cursor-pointer transition-colors ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-lg border cursor-pointer transition-colors ${
                 has(item.id)
-                  ? "border-indigo-500 bg-indigo-50 text-indigo-700"
-                  : "border-gray-200 bg-white text-gray-700"
+                  ? "border-violet-500 bg-violet-50 text-violet-700"
+                  : "border-zinc-200 bg-white text-zinc-700"
               }`}
               data-testid={`row-${item.id}`}
             >
@@ -60,7 +60,7 @@ function MultiSelectDemo() {
           <span className={storyTheme.statValue} data-testid="count">
             {selected.size}
           </span>{" "}
-          <span className="text-gray-500 text-sm" data-testid="selected-ids">
+          <span className="text-zinc-500 text-sm" data-testid="selected-ids">
             [{[...selected].join(", ")}]
           </span>
         </p>
@@ -105,8 +105,8 @@ function TagFilterDemo() {
             onClick={() => toggle(tag)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
               has(tag)
-                ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-violet-600 text-white shadow"
+                : "bg-zinc-100 text-zinc-600 hover:bg-zinc-200"
             }`}
             data-testid={`tag-${tag}`}
           >

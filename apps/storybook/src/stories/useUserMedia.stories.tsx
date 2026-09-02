@@ -50,12 +50,12 @@ type Story = StoryObj;
 function StatusPill({ status }: { status: string }) {
   const tone =
     status === "granted"
-      ? "bg-green-100 text-green-800"
+      ? "bg-emerald-100 text-emerald-800"
       : status === "denied" || status === "error"
         ? "bg-red-100 text-red-800"
         : status === "prompting"
           ? "bg-amber-100 text-amber-800"
-          : "bg-gray-100 text-gray-700";
+          : "bg-zinc-100 text-zinc-700";
 
   return (
     <span
@@ -94,13 +94,13 @@ export const Default: Story = {
         <div className="mb-4 flex items-center gap-3">
           <StatusPill status={camera.status} />
           {!camera.isSupported && (
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-zinc-500">
               This browser cannot open a camera here.
             </span>
           )}
         </div>
 
-        <div className="overflow-hidden rounded-2xl bg-gray-900" style={{ maxWidth: 360 }}>
+        <div className="overflow-hidden rounded-md bg-zinc-900" style={{ maxWidth: 360 }}>
           <video
             ref={setVideoElement}
             autoPlay

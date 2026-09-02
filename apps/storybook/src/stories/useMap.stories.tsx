@@ -69,11 +69,11 @@ function BasicDemo() {
         {[...map.entries()].map(([k, v]) => (
           <li
             key={k}
-            className="flex items-center justify-between px-4 py-2 bg-white border border-gray-200 rounded-lg"
+            className="flex items-center justify-between px-4 py-2 bg-white border border-zinc-200 rounded-lg"
             data-testid={`entry-${k}`}
           >
             <span>
-              <strong className="text-indigo-600">{k}</strong>: {v}
+              <strong className="text-violet-600">{k}</strong>: {v}
             </span>
             <button
               className="text-red-500 hover:text-red-700 text-sm font-medium"
@@ -85,7 +85,7 @@ function BasicDemo() {
           </li>
         ))}
         {map.size === 0 && (
-          <li className="text-gray-400 italic text-sm">Map is empty</li>
+          <li className="text-zinc-400 italic text-sm">Map is empty</li>
         )}
       </ul>
 
@@ -146,8 +146,8 @@ function UserDirectoryDemo() {
           >
             <div className="flex items-center justify-between">
               <div>
-                <p className="font-semibold text-gray-800 m-0">{user.name}</p>
-                <p className="text-gray-400 text-sm m-0">id: {user.id}</p>
+                <p className="font-semibold text-zinc-800 m-0">{user.name}</p>
+                <p className="text-zinc-400 text-sm m-0">id: {user.id}</p>
               </div>
               <button
                 className="text-red-500 hover:text-red-700 text-sm font-medium"
