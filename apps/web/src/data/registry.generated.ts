@@ -79,7 +79,7 @@ export const generatedPackages: PackageEntry[] = [
       "inspector",
       "headless"
     ],
-    "version": "0.1.0",
+    "version": "0.2.0",
     "category": "component",
     "quickStart": "import { JsonViewer } from \"@usefy/json-viewer\";\n\nexport function ResponseInspector({ payload }: { payload: unknown }) {\n  return <JsonViewer data={payload} height={480} />;\n}",
     "apiMarkdown": "",
