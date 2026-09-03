@@ -8,6 +8,10 @@ description: >-
   "update the story for useHover", "scaffold the confetti component"). Drives the
   add-usefy-* skills end-to-end so a package ships complete (source + tests +
   umbrella wiring for hooks + story + READMEs + changeset), not just a source file.
+# No `tools:` allowlist on purpose — this agent needs the full toolset, and an
+# explicit list would have to re-enumerate it (dropping Skill would leave the
+# agent unable to see, let alone invoke, the workflow skills below).
+skills: [add-usefy-story]
 model: opus
 ---
 
@@ -18,7 +22,9 @@ packages, not just implementation files.
 ## Operate through the skills — do not restate them
 
 This repo already encodes the full workflow in skills. **Invoke them; never
-paraphrase or duplicate their steps** (that causes drift when the skill updates):
+paraphrase or duplicate their steps** (that causes drift when the skill updates).
+Cite and invoke them by bare name — the Skill tool answers with the skill's base
+directory, so you never need a path for its `references/`:
 
 - **`add-usefy-hook`** — the end-to-end workflow for a new **hook**
   (`packages/hooks/use-<name>`, `@usefy/use-<name>`): scaffold → implement →
@@ -34,7 +40,8 @@ paraphrase or duplicate their steps** (that causes drift when the skill updates)
   `add-usefy-hook`.
 - **`add-usefy-story`** — authoring/reviewing a Storybook story to the house
   standard (real copy-pasteable "Show code", play tests, docs description).
-- **`verify`** / **`simplify`** — exercise a change end-to-end / tidy it before
+  Preloaded for you: its text is already in context, no invocation needed.
+- **`run`** / **`simplify`** — drive the change in the real app / tidy it before
   finishing, when appropriate.
 
 `CLAUDE.md` is the source of truth for repo conventions (layout, commands,
@@ -59,10 +66,9 @@ release process). Follow it.
   standalone has an accent-colored landing card with a signature micro-demo AND
   a real interactive live demo on its product page — registry wiring alone
   renders a bare fallback card next to fully-presented siblings. It ships in the
-  same branch as the package; `add-usefy-component` Phase 7 lists the six
-  touchpoints (registry, `PRODUCTS` entry, accent tokens ×3, card micro-demo,
-  `product-demos/<slug>-demo.tsx` + `DEMOS` map, workspace dep). Hooks have no
-  web presentation of their own — this is component-only.
+  same branch as the package. **The touchpoint list lives in `add-usefy-component`
+  Phase 7 — read it there, don't work from memory.** Hooks have no web
+  presentation of their own; this is component-only.
 - **Changeset or it doesn't release.** New feature = `minor` on the package (plus
   `@usefy/hooks` for a hook; a standalone component has no umbrella so just the
   component package). The hook family (`@usefy/hooks` + `@usefy/use-*`) is a fixed
@@ -83,7 +89,7 @@ shipped one embarrassing release. Before you report completion on any change tha
 touches a component or a story:
 
 1. **Run the real Storybook** (`pnpm storybook`, :6006) and drive every affected
-   story in a browser (Playwright via the `example-skills:webapp-testing` skill)
+   story in a browser (Playwright via the `webapp-testing` skill)
    **like a first-time visitor**: open the canvas idle — nothing may auto-run or
    self-complete (a `play` function auto-runs when its canvas opens!) — then click
    through the demo and confirm it's restartable after finishing.

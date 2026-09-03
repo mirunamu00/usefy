@@ -8,7 +8,11 @@ description: >-
   Use after a hook OR component package is added or modified, before opening/merging
   a PR (e.g. "review this hook", "is useX ready to ship?", "check the new package",
   "is the confetti component ready?"). Reports findings only — it never edits code.
+# Skill is in the allowlist deliberately: without it this agent would not even be
+# shown the skill list, so it could never reach `code-review` or `add-usefy-story`.
+# Edit/Write stay out — read-only is the point of this agent.
 tools: Read, Grep, Glob, Bash, Skill
+skills: [add-usefy-story]
 model: opus
 ---
 
@@ -90,16 +94,13 @@ Verify each; a miss is a finding:
   unit-tested directly.
 - **`apps/web` presentation (standalone components only)** — a new standalone
   package must reach full parity with its siblings on the site, in the same
-  change: slug in `build-registry.mjs` (`CATEGORY` + `PACKAGE_DIRS`) with
-  `registry.generated.ts` **regenerated, not hand-edited**; a `PRODUCTS` entry
-  in `data/products.ts` (role, `accentVar`, `demo` member) plus the slug in
-  `LIVE_DEMO_SLUGS`; `--accent-<slug>` in **all three** spots of `globals.css`;
-  a card micro-demo `case` in `product/product-card.tsx` (reduced-motion-safe);
-  a real interactive `product-demos/<slug>-demo.tsx` wired into the `DEMOS` map
-  of `live-demo.tsx`; and the `workspace:*` dep in `apps/web/package.json`.
-  Registry-only wiring is a **finding** — it renders as a bare fallback card
-  beside fully-presented siblings. Verify the card and live demo in a browser
-  (both themes) as part of your experience review.
+  change. **Invoke `add-usefy-component` and audit against its Phase 7 list**
+  rather than a list copied here, which would rot the moment the site grows a
+  touchpoint. Two judgments that list can't make for you: `registry.generated.ts`
+  must be **regenerated, not hand-edited**, and registry-only wiring is a
+  **finding** — it renders as a bare fallback card beside fully-presented
+  siblings. Verify the card and the live demo in a browser (both themes) as part
+  of your experience review.
 - **Changeset present** with the correct bump — new feature = `minor` on the
   package (plus `@usefy/hooks` for a hook; a component has no umbrella so just the
   component package). The hook family (`@usefy/hooks` + `@usefy/use-*`) is a fixed
@@ -116,7 +117,7 @@ A review that never opened a browser is an incomplete review — jsdom tests and
 `build-storybook` compiling once approved a release whose demos self-destructed on
 open. Launch the real Storybook (`pnpm storybook`, :6006) and experience every
 affected story **as a first-time user** (drive it with Playwright via the
-`example-skills:webapp-testing` skill when headless). Hunt specifically for what
+`webapp-testing` skill when headless). Hunt specifically for what
 compile checks and jsdom cannot see:
 
 - **Self-running demos** — a `play` function auto-runs when its canvas opens; if

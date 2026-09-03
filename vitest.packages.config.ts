@@ -8,6 +8,9 @@ export default defineConfig({
     include: [
       "packages/hooks/*/src/**/*.test.{ts,tsx}",
       "packages/*/src/**/*.test.{ts,tsx}",
+      // Repo-hygiene guards (agent/skill wiring). Not a package, but they belong
+      // in the same `pnpm test` gate so a broken brief fails like broken code.
+      "tools/**/*.test.ts",
     ],
     coverage: {
       provider: "v8",
