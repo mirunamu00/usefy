@@ -1,0 +1,34 @@
+{
+  "_comment": "Provenance and integrity for the skills under .claude/skills/ that were vendored from upstream repos rather than written here. Enforced by vendored-skills.test.ts; regenerate with `node tools/agent-config/hash-vendored-skills.mjs` after a deliberate re-sync. Replaces the old skills-lock.json, which recorded the same provenance but was read by nothing.",
+  "version": 2,
+  "skills": {
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "fileCount": 2,
+      "contentHash": "0d297b80637ace8594318a395bb8c04bae2a87c79c792a8985a1f3a66501574f"
+    },
+    "vercel-composition-patterns": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/composition-patterns/SKILL.md",
+      "fileCount": 14,
+      "contentHash": "0f1b4abc01245d94244f4453b0dc3eb5af73c0d760407e8818f035b4e39dc2d4"
+    },
+    "vercel-react-best-practices": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "fileCount": 76,
+      "contentHash": "dab69987f7acf884777fbe47a38ae6b4272d45e5f07af7833b81a8f84b905ae7"
+    },
+    "web-design-guidelines": {
+      "source": "vercel-labs/agent-skills",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "fileCount": 1,
+      "contentHash": "8acf578e55ecf81b628b6a3882ff0395a674f9da20dcc01984b7e3c7710188c0"
+    }
+  }
+}

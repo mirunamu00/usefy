@@ -52,17 +52,44 @@ const trackedFiles = execSync("git ls-files", {
   .split("\n")
   .filter(Boolean);
 
-const agentBriefs = readdirSync(AGENT_DIR)
-  .filter((f) => f.endsWith(".md"))
-  .map((f) => ({ name: f, text: readFileSync(join(AGENT_DIR, f), "utf8") }));
+/** Skills vendored from upstream describe other repos' files — not ours to police. */
+const vendoredSkills = new Set(
+  Object.keys(
+    (
+      JSON.parse(readFileSync(join(__dirname, "vendored-skills.json"), "utf8")) as {
+        skills: Record<string, unknown>;
+      }
+    ).skills
+  )
+);
+
+const briefs = [
+  ...readdirSync(AGENT_DIR)
+    .filter((f) => f.endsWith(".md"))
+    .map((f) => ({ name: `agents/${f}`, text: readFileSync(join(AGENT_DIR, f), "utf8") })),
+  // House skills are briefs too: they cite repo files and each other, and rot the
+  // same way. Vendored ones are excluded — their citations point upstream.
+  ...[...installedSkills]
+    .filter((s) => !vendoredSkills.has(s))
+    .map((s) => ({
+      name: `skills/${s}`,
+      text: readFileSync(join(SKILL_DIR, s, "SKILL.md"), "utf8"),
+    })),
+];
 
 /** `**\`name\`**` or "`name` skill" — the two markers the briefs use for a skill. */
 function skillCitations(text: string): string[] {
   const found = new Set<string>();
   for (const m of text.matchAll(/\*\*`([^`\n]+)`\*\*/g)) found.add(m[1]);
   for (const m of text.matchAll(/`([^`\n]+)`\s+skill/g)) found.add(m[1]);
-  // A leading slash is how the briefs write a slash-command invocation.
-  return [...found].map((s) => s.replace(/^\//, ""));
+  return (
+    [...found]
+      // A leading slash is how the briefs write a slash-command invocation.
+      .map((s) => s.replace(/^\//, ""))
+      // Bold code is also how a brief writes a package or a placeholder
+      // (**`@usefy/<name>`**); a skill name is a bare kebab-case slug.
+      .filter((s) => /^[a-z][a-z0-9-]*(:[a-z0-9-]+)?$/.test(s))
+  );
 }
 
 const FILE_EXT = /\.(ts|tsx|js|jsx|mjs|cjs|json|css|scss|md|ya?ml)$/;
@@ -75,17 +102,19 @@ function pathCitations(text: string): string[] {
     if (!FILE_EXT.test(c)) continue;
     if (c.startsWith("@") || c.startsWith("./") || c.startsWith("dist/")) continue;
     if (/[<>*\s]/.test(c)) continue; // templated (`use-<name>`) or a command line
+    if (c.startsWith(".") && !c.includes("/")) continue; // prose about an extension (`.mjs`)
     found.add(c);
   }
   return [...found];
 }
 
-describe("agent briefs cite only things that exist", () => {
-  it("has agent briefs to check", () => {
-    expect(agentBriefs.length).toBeGreaterThan(0);
+describe("briefs cite only things that exist", () => {
+  it("found both agents and house skills to check", () => {
+    expect(briefs.filter((b) => b.name.startsWith("agents/")).length).toBeGreaterThan(0);
+    expect(briefs.filter((b) => b.name.startsWith("skills/")).length).toBeGreaterThan(0);
   });
 
-  describe.each(agentBriefs)("$name", ({ text }) => {
+  describe.each(briefs)("$name", ({ text }) => {
     it("cites only installed or explicitly-allowed skills", () => {
       const unknown = skillCitations(text).filter(
         (s) => !installedSkills.has(s) && !EXTERNAL_SKILLS.has(s)
@@ -103,7 +132,7 @@ describe("agent briefs cite only things that exist", () => {
 });
 
 describe("agent frontmatter preloads only installed skills", () => {
-  it.each(agentBriefs)("$name", ({ text }) => {
+  it.each(briefs)("$name", ({ text }) => {
     const frontmatter = text.match(/^---\n([\s\S]*?)\n---/)?.[1] ?? "";
     const declared = frontmatter.match(/^skills:\s*\[([^\]]*)\]/m)?.[1];
     if (declared === undefined) return; // preloading is optional
